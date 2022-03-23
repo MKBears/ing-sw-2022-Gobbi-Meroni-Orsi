@@ -1,0 +1,20 @@
+@startuml
+class player{
+-board
+-tower
+-Mazzo_Assistente
++getboard()
++gettower()
++getMazzo()
+}
+
+
+enum tower{
+-colore
++getcolore()
+}
+
+class plancia{
+
+}
+@enduml
