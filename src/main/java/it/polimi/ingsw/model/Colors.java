@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-public enum Color {
+public enum Colors {
 
     WHITE ("white"),
     BLACK ("black"),
@@ -8,7 +8,7 @@ public enum Color {
 
     private final String color;
 
-    Color(String color) {
+    Colors(String color) {
         this.color = color;
     }
 

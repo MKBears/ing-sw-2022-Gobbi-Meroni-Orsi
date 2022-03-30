@@ -7,6 +7,16 @@ import java.util.Random;
 public class Bag {
     private List<Student> students;
 
+    public Bag(){
+        Student s;
+
+        for (Type_Student t : Type_Student.values()){
+            for (int i=0; i<26; i++){
+                s = new Student(t);
+                students.add(s);
+            }
+        }
+    }
 
     public Student getrandomStudent(){
         Random a=new Random();
@@ -14,4 +24,5 @@ public class Bag {
         x=x%students.size();
         return students.remove(x);
     }
+
 }

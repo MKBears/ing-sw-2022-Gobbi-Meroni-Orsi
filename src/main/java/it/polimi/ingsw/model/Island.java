@@ -28,7 +28,7 @@ public class Island {
         return temp;
     }
 
-    public Color getControllingColor() throws NoControlException{
+    public Colors getControllingColor() throws NoControlException{
         if (tower == null){
             throw new NoControlException("This island isn't controlled by any player");
         }

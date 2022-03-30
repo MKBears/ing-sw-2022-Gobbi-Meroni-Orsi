@@ -1,13 +1,13 @@
 package it.polimi.ingsw.model;
 
 public class Tower {
-    private final Color color;
+    private final Colors color;
 
-    public Tower (Color color){
+    public Tower (Colors color){
         this.color = color;
     }
 
-    public Color getColor() {
+    public Colors getColor() {
         return color;
     }
 }
