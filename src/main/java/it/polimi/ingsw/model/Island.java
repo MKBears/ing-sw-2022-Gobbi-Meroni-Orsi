@@ -93,7 +93,7 @@ public class Island {
 
     public void setNoEntry(boolean noEntry) throws DuplicateValueException{
         if (noEntry == this.noEntry){
-            throw new DuplicateValueException();
+            throw new DuplicateValueException("A No Entry tile has already been set on this island");
         }
         this.noEntry = noEntry;
     }
