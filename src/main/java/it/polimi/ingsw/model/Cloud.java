@@ -39,4 +39,5 @@ public class Cloud {
     public void reset(){
         hasBeenChosen = false;
     }
+
 }
