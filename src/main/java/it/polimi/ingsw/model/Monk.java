@@ -29,6 +29,9 @@ public class Monk implements CharacterCard{
 
         island.setStudents(students[student]);
         students[student] = bag.getrandomStudent();
+        if (!activated){
+            activated = true;
+        }
     }
 
     @Override
