@@ -30,7 +30,7 @@ public class Island {
 
     public Color getControllingColor() throws NoControlException{
         if (tower == null){
-            throw new NoControlException();
+            throw new NoControlException("This island isn't controlled by any player");
         }
         return tower.getColor();
     }
