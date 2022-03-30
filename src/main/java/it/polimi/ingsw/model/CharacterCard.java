@@ -4,7 +4,7 @@ public interface CharacterCard {
 
     void activatePowerUp();
 
-    int getPrice();
+    short getPrice();
 
     boolean hasBeenActivated();
 
