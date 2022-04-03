@@ -18,7 +18,7 @@ public class Bag {
         }
     }
 
-    public Student getrandomStudent(){
+    public Student getRandomStudent(){
         Random a=new Random();
         int x=a.nextInt();
         x=x%students.size();

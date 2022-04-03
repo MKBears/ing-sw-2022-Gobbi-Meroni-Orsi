@@ -102,4 +102,10 @@ public class Island {
         this.tower = tower;
     }
 
+    public ArrayList<Student> transferStudents(){
+        ArrayList<Student> cpy = students;
+        students = null;
+        return cpy;
+    }
+
 }

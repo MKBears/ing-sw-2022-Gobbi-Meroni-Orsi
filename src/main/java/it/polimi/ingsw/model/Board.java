@@ -4,22 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-    private List<Student> dragons;
-    private List<Student> unicorns;
-    private List<Student> fairies;
-    private List<Student> gnomes;
-    private List<Student> frogs;
-    private List<Tower> towers;
+    private final List<Student> dragons;
+    private final List<Student> unicorns;
+    private final List<Student> fairies;
+    private final List<Student> gnomes;
+    private final List<Student> frogs;
+    private final List<Tower> towers;
     private List<Student> entrance;
 
     public Board(){
-        dragons=new ArrayList<Student>();
-        unicorns= new ArrayList<Student>();
-        fairies= new ArrayList<Student>();
-        gnomes= new ArrayList<Student>();
-        frogs=new ArrayList<Student>();
-        towers=new ArrayList<Tower>();
-        entrance=new ArrayList<Student>();
+        dragons=new ArrayList<>();
+        unicorns= new ArrayList<>();
+        fairies= new ArrayList<>();
+        gnomes= new ArrayList<>();
+        frogs=new ArrayList<>();
+        towers=new ArrayList<>();
+        entrance=new ArrayList<>();
     }
 
     public int getdragons(){

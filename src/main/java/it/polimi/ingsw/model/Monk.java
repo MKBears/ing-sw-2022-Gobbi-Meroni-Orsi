@@ -16,7 +16,7 @@ public class Monk implements CharacterCard{
         this. bag = bag;
 
         for (int i=0; i<4; i++){
-            students[i] = bag.getrandomStudent();
+            students[i] = bag.getRandomStudent();
         }
     }
 
@@ -28,7 +28,8 @@ public class Monk implements CharacterCard{
         //fa scegliere al player lo studente e l'isola su cui mandarlo
 
         island.setStudents(students[student]);
-        students[student] = bag.getrandomStudent();
+        //in match bisogna fare in modo di mandare sempre riferimenti alla prima isola di un gruppo
+        students[student] = bag.getRandomStudent();
         if (!activated){
             activated = true;
         }

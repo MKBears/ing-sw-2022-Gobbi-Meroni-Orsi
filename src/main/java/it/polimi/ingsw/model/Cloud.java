@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Cloud {
 
-    private Student[] students;
+    private final Student[] students;
     private final Bag bag;
     private boolean hasBeenChosen;
 
@@ -15,7 +15,7 @@ public class Cloud {
 
     public void importStudents(){
         for (int i=0; i<3; i++){
-            students[i] = bag.getrandomStudent();
+            students[i] = bag.getRandomStudent();
         }
     }
 
