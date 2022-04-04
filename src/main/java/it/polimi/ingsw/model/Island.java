@@ -23,9 +23,7 @@ public class Island {
     }
 
     public ArrayList<Student> getStudents(){
-        ArrayList<Student> temp = students;
-        students = null;
-        return temp;
+        return students;
     }
 
     public Colors getControllingColor() throws NoControlException{

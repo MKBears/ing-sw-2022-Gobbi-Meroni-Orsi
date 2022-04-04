@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-    private final List<Student> dragons;
-    private final List<Student> unicorns;
-    private final List<Student> fairies;
-    private final List<Student> gnomes;
-    private final List<Student> frogs;
-    private final List<Tower> towers;
-    private List<Student> entrance;
+    protected final List<Student> dragons;
+    protected final List<Student> unicorns;
+    protected final List<Student> fairies;
+    protected final List<Student> gnomes;
+    protected final List<Student> frogs;
+    protected final List<Tower> towers;
+    protected List<Student> entrance;
 
     public Board(){
         dragons=new ArrayList<>();
