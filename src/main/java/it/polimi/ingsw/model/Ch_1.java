@@ -1,13 +1,13 @@
 package it.polimi.ingsw.model;
 
-public class Monk implements CharacterCard{
+public class Ch_1 implements CharacterCard{
     private final short price;
     private boolean activated;
     private final String powerUp;
     private final Bag bag;
     private Student[] students;
 
-    public Monk(Bag bag){
+    public Ch_1(Bag bag){
         students = new Student[4];
         price = 1;
         activated = false;
@@ -58,5 +58,4 @@ public class Monk implements CharacterCard{
     public Student[] getStudents() {
         return students;
     }
-
 }

@@ -7,6 +7,7 @@ public class Island {
     private final short islandID;
     private Tower tower;
     private boolean noEntry;
+    private short Influence; //fare il getter e il metodo che calcola in automatico il tot dell'influenza
 
     public Island (short id){
         islandID = id;

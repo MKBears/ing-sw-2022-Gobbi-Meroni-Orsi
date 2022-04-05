@@ -1,12 +1,12 @@
 package it.polimi.ingsw.model;
 
-public class Innkeeper implements CharacterCard{
+public class Ch_2 implements CharacterCard{
     private final short price;
     private boolean activated;
     private final String powerUp;
     private Player player;
 
-    public Innkeeper(){
+    public Ch_2(){
         price = 2;
         activated = false;
         powerUp = "During this turn you take control of any number " +
