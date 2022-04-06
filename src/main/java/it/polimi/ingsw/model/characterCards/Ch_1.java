@@ -1,6 +1,11 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.characterCards;
 
-public class Ch_1 implements CharacterCard{
+import it.polimi.ingsw.model.Bag;
+import it.polimi.ingsw.model.CharacterCard;
+import it.polimi.ingsw.model.Island;
+import it.polimi.ingsw.model.Student;
+
+public class Ch_1 implements CharacterCard {
     private final short price;
     private boolean activated;
     private final String powerUp;

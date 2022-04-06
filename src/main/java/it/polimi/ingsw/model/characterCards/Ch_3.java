@@ -1,6 +1,9 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.characterCards;
 
-public class Ch_3 implements CharacterCard{
+import it.polimi.ingsw.model.CharacterCard;
+import it.polimi.ingsw.model.GroupOfIslands;
+
+public class Ch_3 implements CharacterCard {
 
     private final short price;
     private boolean activated;
