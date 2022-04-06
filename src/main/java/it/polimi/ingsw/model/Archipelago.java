@@ -2,13 +2,13 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
-public class GroupOfIslands {
+public class Archipelago {
     private final ArrayList<Island> group;
     private short size;
     private final Island head;
     private Colors color;
 
-    public GroupOfIslands(ArrayList<Island> group){
+    public Archipelago(ArrayList<Land> group){
         this.group = new ArrayList<>(group);
         size = (short) this.group.size();
         head = this.group.get(0);

@@ -46,7 +46,7 @@ public class Ch_3 implements CharacterCard {
         return powerUp;
     }
 
-    public GroupOfIslands getIslands() {
-        return Islands;
-    }
+    //public GroupOfIslands getIslands() {
+    //    return Islands;
+    //}
 }

@@ -32,7 +32,7 @@ public class Ch_1 implements CharacterCard {
 
         //fa scegliere al player lo studente e l'isola su cui mandarlo
 
-        island.setStudents(students[student]);
+        //island.setStudents(students[student]);
         //in match bisogna fare in modo di mandare sempre riferimenti alla prima isola di un gruppo
         students[student] = bag.getRandomStudent();
         if (!activated){
