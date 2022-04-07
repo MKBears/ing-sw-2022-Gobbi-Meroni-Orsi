@@ -9,7 +9,6 @@ public class Archipelago implements Land {
     private Colors color;
 
     public Archipelago(ArrayList<Island> group){  //non so se manca qualcosa
-
         this.group.addAll(group);
         size = (short) this.group.size();
         head = this.group.get(0);
@@ -18,8 +17,7 @@ public class Archipelago implements Land {
 
     @Override
     public  Tower getTower() {   //grea get color tower e get all towers
-        Tower t=this.head.getTower();
-        return t;
+        return this.head.getTower();
     }
 
     @Override
@@ -68,10 +66,12 @@ public class Archipelago implements Land {
 
     @Override
     public Tower changeTower(Tower n_tower) {
+        Tower t=head.getTower();
         for(Island i : group){
             i.changeTower(n_tower);
         }
-        return null;
+        color=head.getTowerColor();
+        return t;
     }
 
     @Override
@@ -84,6 +84,7 @@ public class Archipelago implements Land {
         for(Land i: others){
             group.addAll(i.getIslands());
         }
+        this.size= (short) group.size();
         return this; //ritorna me stesso
     }
 
@@ -103,12 +104,12 @@ public class Archipelago implements Land {
     }
 
     public short size(){
-        return (short) group.size();
+        return size;
     }
 
     @Override
     public Colors getTowerColor() {
-        return head.getTowerColor();
+        return color;
     }
 
     public Island getHead() {

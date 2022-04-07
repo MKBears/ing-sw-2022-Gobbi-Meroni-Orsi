@@ -3,19 +3,16 @@ package it.polimi.ingsw.model;
 import java.util.ArrayList;
 
 public class Island implements Land {  //METTERE A POSTO
-    private ArrayList<Student> students;
+    private final ArrayList<Student> students;
     private final short islandID;
     private Tower tower;
     private boolean noEntry;
-    private ArrayList<Island>archi;
 
     public Island (short id){
         islandID = id;
         tower = null;
         noEntry = false;
-        if(!archi.isEmpty()){
-            archi.clear();
-        }
+        students=null;
     }
 
     public short getID() {
@@ -41,7 +38,7 @@ public class Island implements Land {  //METTERE A POSTO
     @Override
     public short getInfluence(Student input) {
         short i=0;
-        for (Student s:students)
+        for (Student s: this.students)
             if(input.getType()==s.getType()){
                 i++;
         }
@@ -62,7 +59,6 @@ public class Island implements Land {  //METTERE A POSTO
 
     @Override
     public Archipelago uniteIslands(ArrayList<Land> others) throws Exception {
-        short a=0;
         for(Land i:others) {
             if (i.getTower().getColor() != this.tower.getColor()) {
                 throw new Exception("Wrong Color of Towers");
@@ -73,8 +69,7 @@ public class Island implements Land {  //METTERE A POSTO
         for(Land i: others){
             arr.addAll(i.getIslands());
         }
-        Archipelago union= new Archipelago(arr);
-        return union;
+        return new Archipelago(arr);
     }
 
     public ArrayList<Island> getIslands(){
