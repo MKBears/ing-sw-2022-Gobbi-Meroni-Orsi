@@ -2,83 +2,125 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
-public class Archipelago {
-    private final ArrayList<Island> group;
+public class Archipelago implements Land {
+    private final ArrayList<Island> group=new ArrayList<>();
     private short size;
     private final Island head;
     private Colors color;
 
-    public Archipelago(ArrayList<Land> group){
-        this.group = new ArrayList<>(group);
+    public Archipelago(ArrayList<Island> group){  //non so se manca qualcosa
+
+        this.group.addAll(group);
         size = (short) this.group.size();
         head = this.group.get(0);
+        color=this.group.get(0).getTower().getColor();
+    }
 
-        for (short i=1; i<size; i++){
-            head.setStudents(group.get(i).transferStudents());
+    @Override
+    public  Tower getTower() {   //grea get color tower e get all towers
+        Tower t=this.head.getTower();
+        return t;
+    }
+
+    @Override
+    public ArrayList<Student> getStudents() {
+        ArrayList<Student> t= new ArrayList<>();
+        for(Island i: group)
+        {
+            t.addAll(i.getStudents());
         }
-        /*
-        il parametro in ingresso al costruttore arriva da una subList fatta nel Match prima di creare
-        il gruppo di isole.
-        */
-        try {
-            color = head.getControllingColor();
-        }catch (NoControlException e){
-            //se abbiamo fatto bene le cose non dovrebbe mai arrivare qui
+        return t;
+    }
+
+    @Override
+    public short getID() {
+        return head.getID();
+    }
+
+    @Override
+    public void addStudent(Student s) {
+        head.addStudent(s);
+    }
+
+    @Override
+    public short getInfluence(Student input) {
+        short influence=0;
+        for(Island i: group){
+            influence= (short) (influence+i.getInfluence(input));
         }
+        return influence;
+    }
+
+    @Override
+    public boolean isThereNoEntry() {
+        return head.isThereNoEntry();
+    }
+
+    @Override
+    public void setNoEntry(boolean noEntry) throws DuplicateValueException {
+        if (noEntry == this.isThereNoEntry()){
+            throw new DuplicateValueException("A No Entry tile has already been set on this island");
+        }
+        for(Island i: group){
+            i.setNoEntry(noEntry);
+        }
+    }
+
+    @Override
+    public Tower changeTower(Tower n_tower) {
+        for(Island i : group){
+            i.changeTower(n_tower);
+        }
+        return null;
+    }
+
+    @Override
+    public Archipelago uniteIslands(ArrayList<Land> others) throws Exception {
+        for(Land i:others) {
+            if (i.getTower().getColor() != this.color) {
+                throw new Exception("Wrong Color of Towers");
+            }
+        }
+        for(Land i: others){
+            group.addAll(i.getIslands());
+        }
+        return this; //ritorna me stesso
+    }
+
+    @Override
+    public ArrayList<Island> getIslands() {
+        return group;
+    }
+
+    @Override
+    public ArrayList<Tower> getAllTowers() {
+        ArrayList<Tower> t= new ArrayList<>();
+        for(Island i : group)
+        {
+            t.add(i.getTower());
+        }
+        return t;
     }
 
     public short size(){
         return (short) group.size();
     }
 
-    public ArrayList<Island> getGroup() {
-        return group;
+    @Override
+    public Colors getTowerColor() {
+        return head.getTowerColor();
     }
 
     public Island getHead() {
         return head;
     }
 
-    public void addIsland(Island i){
-        group.add(i);
-        head.setStudents(i.transferStudents());
-        size++;
-    }
-
-    public void mergeGroups(ArrayList<Island> group){
-        short size = (short) group.size();
-        for (Island i : group){
-            this.group.add(i);
-            group.remove(i);
-            this.size++;
-        }
-    }
-
-    public Colors getTowerColor(){
-        return color;
-    }
-
-    public void changeControllingColor(ArrayList<Tower> towers){
-        if (towers.size() < size){
-            /*
-            Questo player ha vinto, ma direi che si puo' fare un controllo in Match prima di chiamare
-            questo metodo.
-            Se abbiamo fato le cose bene in Match, towers.size() non dovrebbe poter essere > size
-            */
-        }
-
-        for (short i=0; i<size; i++){
-            group.get(i).setTower(towers.get(i));
-        }
-    }
-
-    public Type_Student getControllingColor(){
-        return head.getControllingType();
-    }
-
-    public void setStudents(ArrayList<Student> students){
-        head.setStudents(students);
-        //Non so se sia necessario questo metodo
-    }
-
+    //public void mergeGroups(ArrayList<Island> group){
+    //    short size = (short) group.size();
+    //    for (Island i : group){
+    //        this.group.add(i);
+    //        group.remove(i);
+    //        this.size++;
+    //    }
+    //}
 }

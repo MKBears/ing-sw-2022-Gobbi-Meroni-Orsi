@@ -2,8 +2,7 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
-public class Island implements Land {
-
+public class Island implements Land {  //METTERE A POSTO
     private ArrayList<Student> students;
     private final short islandID;
     private Tower tower;
@@ -24,7 +23,7 @@ public class Island implements Land {
     }
 
     @Override
-    public void addStudents(Student s) {  //implementazione sbagliata: uno per volta sempre?
+    public void addStudent(Student s) {
         students.add(s);
     }
 
@@ -61,18 +60,19 @@ public class Island implements Land {
             return old;
     }
 
-
     @Override
-    public Archipelago uniteIsland(ArrayList<Land> altre) throws Exception{
+    public Archipelago uniteIslands(ArrayList<Land> others) throws Exception {
         short a=0;
-        for(Land i:altre) {
+        for(Land i:others) {
             if (i.getTower().getColor() != this.tower.getColor()) {
                 throw new Exception("Wrong Color of Towers");
             }
         }
-        ArrayList<Land> arr=new ArrayList<>();
+        ArrayList<Island> arr=new ArrayList<>();
         arr.add(this);
-        arr.addAll(altre);
+        for(Land i: others){
+            arr.addAll(i.getIslands());
+        }
         Archipelago union= new Archipelago(arr);
         return union;
     }
@@ -81,6 +81,26 @@ public class Island implements Land {
         ArrayList<Island> me=new ArrayList<>();
         me.add(this);
         return me;
+    }
+
+    @Override
+    public ArrayList<Tower> getAllTowers() {
+        return null;
+    }
+
+    @Override
+    public Island getHead() {
+        return this;
+    }
+
+    @Override
+    public short size() {
+        return 0;
+    }
+
+    @Override
+    public Colors getTowerColor() {
+        return null;
     }
 
 
