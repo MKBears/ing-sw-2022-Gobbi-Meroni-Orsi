@@ -41,7 +41,7 @@ public class Archipelago implements Land {
     }
 
     @Override
-    public int getInfluence(Student input) {
+    public int getInfluence(Type_Student input) {
         int influence=0;
         for(Island i: group){
             influence= (int) (influence+i.getInfluence(input));
@@ -78,15 +78,11 @@ public class Archipelago implements Land {
     }
 
     @Override
-    public Archipelago uniteIslands(ArrayList<Land> others) throws Exception {
-        for(Land i:others) {
-            if (i.getTower().getColor() != this.color) {
-                throw new Exception("Wrong Color of Towers");
-            }
+    public Archipelago uniteIslands(Land other) throws Exception {
+        if (other.getTower().getColor() != this.color) {
+            throw new Exception("Wrong Color of Towers");
         }
-        for(Land i: others){
-            group.addAll(i.getIslands());
-        }
+        group.addAll(other.getIslands());
         this.size= (int) group.size();
         return this; //ritorna me stesso
     }

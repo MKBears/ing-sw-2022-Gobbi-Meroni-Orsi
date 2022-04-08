@@ -36,10 +36,10 @@ public class Island implements Land {  //METTERE A POSTO
     }
 
     @Override
-    public int getInfluence(Student input) {
+    public int getInfluence(Type_Student input) {
         int i=0;
         for (Student s: this.students)
-            if(input.getType()==s.getType()){
+            if(input==s.getType()){
                 i++;
         }
         return i;
@@ -58,17 +58,13 @@ public class Island implements Land {  //METTERE A POSTO
     }
 
     @Override
-    public Archipelago uniteIslands(ArrayList<Land> others) throws Exception {
-        for(Land i:others) {
-            if (i.getTower().getColor() != this.tower.getColor()) {
-                throw new Exception("Wrong Color of Towers");
-            }
+    public Archipelago uniteIslands(Land other) throws Exception {
+        if (other.getTower().getColor() != this.tower.getColor()) {
+            throw new Exception("Wrong Color of Towers");
         }
         ArrayList<Island> arr=new ArrayList<>();
         arr.add(this);
-        for(Land i: others){
-            arr.addAll(i.getIslands());
-        }
+        arr.addAll(other.getIslands());
         return new Archipelago(arr);
     }
 

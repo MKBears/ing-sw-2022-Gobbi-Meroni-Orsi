@@ -7,11 +7,11 @@ public interface Land {
     ArrayList<Student> getStudents();
     int getID();
     void addStudent(Student s);  //allo start
-    int getInfluence(Student input);
+    int getInfluence(Type_Student input);
     boolean isThereNoEntry();
     void setNoEntry(boolean noEntry) throws DuplicateValueException;
     Tower changeTower(Tower n_tower);
-    Archipelago uniteIslands(ArrayList<Land> altra)throws Exception;
+    Archipelago uniteIslands(Land other)throws Exception;
     ArrayList<Island> getIslands();
     ArrayList<Tower> getAllTowers();
     Island getHead();

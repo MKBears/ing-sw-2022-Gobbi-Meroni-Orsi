@@ -34,7 +34,7 @@ public class Ch_1 implements CharacterCard {
 
         //island.setStudents(students[student]);
         //in match bisogna fare in modo di mandare sempre riferimenti alla prima isola di un gruppo
-        students[student] = bag.getRandomStudent();
+        //students[student] = bag.getRandomStudent();
         if (!activated){
             activated = true;
         }
