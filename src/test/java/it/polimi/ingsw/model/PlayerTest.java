@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerTest {
-    private static Player player;
+    private static Player player1, player2;
     private static int id;
     private static boolean[] values;
     private static Colors color;
@@ -17,14 +17,17 @@ class PlayerTest {
         values = new boolean[10];
         color = Colors.BLACK;
         wizard = Wizards.WIZARD1;
-        player = new Player(id, color, 8, wizard);
+        player1 = new Player(id, color, 8, wizard, false);
+        player2 = new Player(id, color, 8, wizard, true);
     }
 
     @Test
     public void instanceTest(){
-        assertFalse (player.hasNoCardsLeft());
-        assertSame(player.getPlayerID(), id);
-        assertSame(player.getColor(), color);
+        assertFalse (player1.hasNoCardsLeft());
+        assertSame(player1.getPlayerID(), id);
+        assertSame(player1.getColor(), color);
+        assertNotNull(player1.getBoard());
+        assertTrue(player2.getBoard() instanceof Board_Experts);
     }
 
     @Test
@@ -33,7 +36,7 @@ class PlayerTest {
 
         for (int i=0; i<10; i++){
 
-            card = player.draw();
+            card = player1.draw();
             if (card == null){
                 fail();
             }
@@ -46,12 +49,12 @@ class PlayerTest {
             }
             assertSame(card.getMNSteps(), (card.getValue()+1)/2);
         }
-        assertTrue(player.hasNoCardsLeft());
+        assertTrue(player1.hasNoCardsLeft());
     }
 
     @Test
     public void wizardTest() {
-        assertSame(player.getWizard(), wizard);
+        assertSame(player1.getWizard(), wizard);
     }
 
 }

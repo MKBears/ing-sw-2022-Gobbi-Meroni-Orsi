@@ -10,11 +10,16 @@ public class Player {
     private final Wizards wizard;
     private ArrayList<AssistantCard> deck;
 
-    public Player(int ID, Colors color, int towersNum, Wizards wizard){
+    public Player(int ID, Colors color, int towersNum, Wizards wizard, boolean expert){
         playerID = ID;
         this.color = color;
         this.wizard = wizard;
-        board= new Board(towersNum, color);
+        if (expert){
+            board = new Board_Experts(towersNum, color);
+        }
+        else {
+            board = new Board(towersNum, color);
+        }
         initializeDeck();
     }
 
