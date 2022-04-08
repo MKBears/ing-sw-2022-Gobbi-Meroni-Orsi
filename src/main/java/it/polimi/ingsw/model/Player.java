@@ -7,13 +7,13 @@ public class Player {
     private final int playerID;
     private final Colors color;
     private final Board board;
-    private final Wizards wizards;
+    private final Wizards wizard;
     private ArrayList<AssistantCard> deck;
 
-    public Player(int ID, Colors color, int towersNum, Wizards wizards){
+    public Player(int ID, Colors color, int towersNum, Wizards wizard){
         playerID = ID;
         this.color = color;
-        this.wizards = wizards;
+        this.wizard = wizard;
         board= new Board(towersNum, color);
         initializeDeck();
     }
@@ -38,7 +38,7 @@ public class Player {
     }
 
     public Wizards getWizard() {
-        return wizards;
+        return wizard;
     }
 
     public Board getBoard() {
