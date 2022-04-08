@@ -12,7 +12,7 @@ public class Island implements Land {  //METTERE A POSTO
         islandID = id;
         tower = null;
         noEntry = false;
-        students=null;
+        students=new ArrayList<>();
     }
 
     public int getID() {

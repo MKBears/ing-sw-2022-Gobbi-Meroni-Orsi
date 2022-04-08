@@ -7,13 +7,13 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class IslandTest {
+public class IslandTest {
 
     Island island;
     int id;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         //Bag bag=new Bag();
         id=0;
         island=new Island(id);
@@ -23,17 +23,17 @@ class IslandTest {
     }
 
     @Test
-    void initializationTest(){
+    public void initializationTest(){
         assertEquals(id,island.getID());
         assertEquals(null,island.getTower());
         assertFalse(island.isThereNoEntry());
-        assertEquals(null,island.getStudents());
+        assertTrue(island.getStudents().isEmpty());
         assertEquals(1,island.size());
         assertEquals(island,island.getHead());
     }
 
     @Test
-    void studentsTest(){
+    public void studentsTest(){
         ArrayList<Student> stu=new ArrayList<>();
         Bag bag=new Bag();
         for(int i=0; i<10; i++){
@@ -46,7 +46,7 @@ class IslandTest {
     }
 
     @Test
-    void towersTest(){
+    public void towersTest(){
         Colors c=Colors.BLACK;
         Board b= new Board(2,c);
         Tower t=new Tower(c,b);
@@ -58,7 +58,7 @@ class IslandTest {
     }
 
     @Test
-    void influenceTest(){
+    public void influenceTest(){
         ArrayList<Student> stu=new ArrayList<>();
         int d=0;
         int fa=0;
@@ -95,7 +95,7 @@ class IslandTest {
     }
 
     @Test
-    void entryTest(){
+    public void entryTest(){
         assertFalse(island.isThereNoEntry());
         try {
             island.setNoEntry(true);
@@ -112,7 +112,7 @@ class IslandTest {
     }
 
     @Test
-    void unionTest(){
+    public void unionTest(){
         Colors c=Colors.BLACK;
         Board b= new Board(3,c);
         Tower t=new Tower(c,b);
