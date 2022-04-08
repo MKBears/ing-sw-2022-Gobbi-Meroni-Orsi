@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public interface Land {
     Tower getTower();
     ArrayList<Student> getStudents();
-    short getID();
+    int getID();
     void addStudent(Student s);  //allo start
-    short getInfluence(Student input);
+    int getInfluence(Student input);
     boolean isThereNoEntry();
     void setNoEntry(boolean noEntry) throws DuplicateValueException;
     Tower changeTower(Tower n_tower);
@@ -15,6 +15,6 @@ public interface Land {
     ArrayList<Island> getIslands();
     ArrayList<Tower> getAllTowers();
     Island getHead();
-    short size();
+    int size();
     Colors getTowerColor();
 }

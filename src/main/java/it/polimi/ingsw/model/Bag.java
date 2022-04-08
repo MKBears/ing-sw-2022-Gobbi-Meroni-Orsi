@@ -4,7 +4,7 @@ package it.polimi.ingsw.model;
 import java.util.List;
 import java.util.Random;
 
-public class Bag {
+public class Bag {  //fare che in input mi dicono anche quanti estrarre
     private List<Student> students;
 
     public Bag(){

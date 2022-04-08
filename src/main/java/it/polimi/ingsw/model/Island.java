@@ -4,18 +4,18 @@ import java.util.ArrayList;
 
 public class Island implements Land {  //METTERE A POSTO
     private final ArrayList<Student> students;
-    private final short islandID;
+    private final int islandID;
     private Tower tower;
     private boolean noEntry;
 
-    public Island (short id){
+    public Island (int id){
         islandID = id;
         tower = null;
         noEntry = false;
         students=null;
     }
 
-    public short getID() {
+    public int getID() {
         return islandID;
     }
 
@@ -36,8 +36,8 @@ public class Island implements Land {  //METTERE A POSTO
     }
 
     @Override
-    public short getInfluence(Student input) {
-        short i=0;
+    public int getInfluence(Student input) {
+        int i=0;
         for (Student s: this.students)
             if(input.getType()==s.getType()){
                 i++;
@@ -89,7 +89,7 @@ public class Island implements Land {  //METTERE A POSTO
     }
 
     @Override
-    public short size() {
+    public int size() {
         return 0;
     }
 

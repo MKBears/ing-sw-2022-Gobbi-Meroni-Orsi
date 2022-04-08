@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public class Archipelago implements Land {
     private final ArrayList<Island> group=new ArrayList<>();
-    private short size;
+    private int size;
     private final Island head;
     private Colors color;
 
     public Archipelago(ArrayList<Island> group){  //non so se manca qualcosa
         this.group.addAll(group);
-        size = (short) this.group.size();
+        size = (int) this.group.size();
         head = this.group.get(0);
         color=this.group.get(0).getTower().getColor();
     }
@@ -31,7 +31,7 @@ public class Archipelago implements Land {
     }
 
     @Override
-    public short getID() {
+    public int getID() {
         return head.getID();
     }
 
@@ -41,10 +41,10 @@ public class Archipelago implements Land {
     }
 
     @Override
-    public short getInfluence(Student input) {
-        short influence=0;
+    public int getInfluence(Student input) {
+        int influence=0;
         for(Island i: group){
-            influence= (short) (influence+i.getInfluence(input));
+            influence= (int) (influence+i.getInfluence(input));
         }
         return influence;
     }
@@ -84,7 +84,7 @@ public class Archipelago implements Land {
         for(Land i: others){
             group.addAll(i.getIslands());
         }
-        this.size= (short) group.size();
+        this.size= (int) group.size();
         return this; //ritorna me stesso
     }
 
@@ -103,7 +103,7 @@ public class Archipelago implements Land {
         return t;
     }
 
-    public short size(){
+    public int size(){
         return size;
     }
 
@@ -117,7 +117,7 @@ public class Archipelago implements Land {
     }
 
     //public void mergeGroups(ArrayList<Island> group){
-    //    short size = (short) group.size();
+    //    int size = (int) group.size();
     //    for (Island i : group){
     //        this.group.add(i);
     //        group.remove(i);
