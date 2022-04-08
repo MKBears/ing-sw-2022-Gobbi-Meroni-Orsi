@@ -1,19 +1,16 @@
 package it.polimi.ingsw.model;
 
 public class Board_Experts extends Board{
-
+    private final int c1 = 2, c2 = 5, c3 = 8;
     private int coins;
 
-    public Board_Experts(){
+    public Board_Experts(int towersNum, Colors color){
+        super(towersNum, color);
         coins=1;
     }
 
     public int getCoinsNumber() {
         return coins;
-    }
-
-    public void addCoin(){
-        coins++;
     }
 
     public void playCharacter(int cost) throws Exception{
@@ -27,34 +24,47 @@ public class Board_Experts extends Board{
 
     }
 
-    public void addDragon(Student dragon){
-        dragons.add(dragon);
-        if(getdragons()==2 || getdragons()==5 || getdragons()==8){
-            addCoin();
+    @Override
+    public void addStudent(Student student){
+        int temp;
+        
+        switch (student.getType()){
+            case DRAGON:
+                dragons.add(student);
+                temp = dragons.size();
+                if(temp==c1 || temp==c2 || temp==c3) {
+                    coins++;
+                }
+                break;
+            case GNOME:
+                gnomes.add(student);
+                temp = gnomes.size();
+                if(temp==c1 || temp==c2 || temp==c3){
+                    coins++;
+                }
+                break;
+            case FAIRIE:
+                fairies.add(student);
+                temp = fairies.size();
+                if(temp==c1 || temp==c2 || temp==c3){
+                    coins++;
+                }
+                break;
+            case UNICORN:
+                unicorns.add(student);
+                temp = unicorns.size();
+                if(temp==c1 || temp==c2 || temp==c3){
+                    coins++;
+                }
+                break;
+            case FROG:
+                frogs.add(student);
+                temp = frogs.size();
+                if(temp==c1 || temp==c2 || temp==c3){
+                    coins++;
+                }
+                break;
         }
     }
-    public void addGnome(Student gnome){
-        gnomes.add(gnome);
-        if(getgnomes()==2 || getgnomes()==5 || getgnomes()==8){
-            addCoin();
-        }
-    }
-    public void addFairie(Student fairie){
-        fairies.add(fairie);
-        if(getfairies()==2 || getfairies()==5 || getfairies()==8){
-            addCoin();
-        }
-    }
-    public void addFrog(Student frog){
-        frogs.add(frog);
-        if(getfrogs()==2 || getfrogs()==5 || getfrogs()==8){
-            addCoin();
-        }
-    }
-    public void addUnicorn(Student unicorn){
-        unicorns.add(unicorn);
-        if(getunicorns()==2 || getunicorns()==5 || getunicorns()==8){
-            addCoin();
-        }
-    }
+    
 }

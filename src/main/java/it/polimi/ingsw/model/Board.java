@@ -12,36 +12,46 @@ public class Board {
     protected final List<Tower> towers;
     protected List<Student> entrance;
 
-    public Board(){
+    public Board(int towersNum, Colors color){
         dragons=new ArrayList<>();
         unicorns= new ArrayList<>();
         fairies= new ArrayList<>();
         gnomes= new ArrayList<>();
         frogs=new ArrayList<>();
-        towers=new ArrayList<>();
+        towers=new ArrayList<>(towersNum);
+        initializeTowers(towersNum, color);
         entrance=new ArrayList<>();
     }
 
-    public int getdragons(){
+    private void initializeTowers(int towersNum, Colors color){
+        Tower temp;
+
+        for (int i=0; i< towersNum; i++){
+            temp = new Tower(color, this);
+            towers.add(temp);
+        }
+    }
+
+    public int getDragons(){
         return dragons.size();
     }
 
-    public int getunicorns() {
+    public int getUnicorns() {
         return unicorns.size();
     }
 
-    public int getfairies() {
+    public int getFairies() {
         return fairies.size();
     }
 
-    public int getgnomes(){
+    public int getGnomes(){
         return gnomes.size();
     }
-    public int getfrogs(){
+    public int getFrogs(){
         return frogs.size();
     }
 
-    public int gettowers(){
+    public int getTowers(){
        return towers.size();
     }
 
@@ -51,20 +61,25 @@ public class Board {
     public void addTower(Tower tower){
         towers.add(tower);
     }
-    public void addDragon(Student dragon){
-        dragons.add(dragon);
-    }
-    public void addGnome(Student gnome){
-        gnomes.add(gnome);
-    }
-    public void addFairie(Student fairie){
-        fairies.add(fairie);
-    }
-    public void addFrog(Student frog){
-        frogs.add(frog);
-    }
-    public void addUnicorn(Student unicorn){
-        unicorns.add(unicorn);
+
+    public void addStudent(Student student){
+        switch (student.getType()){
+            case DRAGON:
+                dragons.add(student);
+                break;
+            case GNOME:
+                gnomes.add(student);
+                break;
+            case FAIRIE:
+                fairies.add(student);
+                break;
+            case UNICORN:
+                unicorns.add(student);
+                break;
+            case FROG:
+                frogs.add(student);
+                break;
+        }
     }
 
     public void setEntrance(List<Student> entrance) {
@@ -77,6 +92,14 @@ public class Board {
 
     public Tower removeTower(){
         return towers.remove(0);
+    }
+
+    public void returnTower(Tower tower){
+        towers.add(tower);
+    }
+
+    public boolean hasNoTowersLeft(){
+        return towers.isEmpty();
     }
 
 }

@@ -7,48 +7,27 @@ public class Player {
     private final int playerID;
     private final Colors color;
     private final Board board;
-    private ArrayList<Tower> towers;
-    private final Wizard wizard;
+    private final Wizards wizards;
     private ArrayList<AssistantCard> deck;
-    private final MotherNature motherNature;
 
-    public Player(int ID, Colors color, short towersNum, Wizard wizard, MotherNature mn){
+    public Player(int ID, Colors color, int towersNum, Wizards wizards){
         playerID = ID;
         this.color = color;
-        this.wizard = wizard;
-        board= new Board();
-        motherNature = mn;
+        this.wizards = wizards;
+        board= new Board(towersNum, color);
         initializeDeck();
-        initializeTowers(towersNum);
     }
 
     private void initializeDeck(){
         AssistantCard temp;
-        short steps;
 
-        deck = new ArrayList<>();
-        for (short i=0; i<10; i++){
-            steps = (short) (i%3);
-            if (steps == 0){
-                temp = new AssistantCard(i, (short) 3);
-            }
-            else {
-                temp = new AssistantCard(i, steps);
-            }
+        deck = new ArrayList<>(10);
+        for (int i=1; i<=10; i++){
+            temp = new AssistantCard(i,(i+1)/2);
             deck.add(temp);
         }
     }
 
-    private void initializeTowers(short towersNum){
-        Tower temp;
-
-        towers = new ArrayList<>();
-
-        for (int i=0; i< towersNum; i++){
-            temp = new Tower(color);
-            towers.add(temp);
-        }
-    }
 
     public int getPlayerID() {
         return playerID;
@@ -58,21 +37,21 @@ public class Player {
         return color;
     }
 
-    public Tower getTower() {
-        return towers.remove(0);
+    public Wizards getWizard() {
+        return wizards;
     }
 
-    public void returnTower(Tower tower){
-        towers.add(tower);
+    public Board getBoard() {
+        return board;
     }
 
     public AssistantCard draw (){
         Random card = new Random();
-        return deck.remove(card.nextInt(10));
+        return deck.remove(card.nextInt(deck.size()));
     }
 
-    public void importStudents(Cloud c){
-        board.setEntrance(c.getStudents());
+    public boolean hasNoCardsLeft(){
+        return deck.isEmpty();
     }
 
 }
