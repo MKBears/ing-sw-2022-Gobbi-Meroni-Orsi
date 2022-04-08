@@ -46,6 +46,12 @@ class IslandTest {
 
     @Test
     void towersTest(){
-
+        Colors c=Colors.BLACK;
+        Tower t=new Tower(c);
+        ArrayList<Tower> old=new ArrayList<>();
+        old.add(t);
+        assertEquals(island.changeTower(t),null);
+        assertEquals(island.getTower(),t);
+        assertEquals(island.getAllTowers(),old);
     }
 }

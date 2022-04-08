@@ -80,7 +80,9 @@ public class Island implements Land {  //METTERE A POSTO
 
     @Override
     public ArrayList<Tower> getAllTowers() {
-        return null;
+        ArrayList<Tower>t=new ArrayList<>();
+        t.add(tower);
+        return t;
     }
 
     @Override
