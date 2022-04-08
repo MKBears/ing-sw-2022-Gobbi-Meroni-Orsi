@@ -4,7 +4,7 @@ public enum Colors {
 
     WHITE ("white"),
     BLACK ("black"),
-    GRAY ("gray");
+    GREY ("grey");
 
     private final String color;
 
