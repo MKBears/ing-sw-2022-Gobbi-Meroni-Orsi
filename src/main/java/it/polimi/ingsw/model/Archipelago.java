@@ -70,7 +70,10 @@ public class Archipelago implements Land {
         for(Island i : group){
             i.changeTower(n_tower);
         }
-        color=head.getTowerColor();
+        try {
+            color = head.getTowerColor();
+        }
+        catch(Exception e){};
         return t;
     }
 

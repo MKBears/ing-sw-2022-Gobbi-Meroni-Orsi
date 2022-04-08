@@ -1,19 +1,19 @@
 package it.polimi.ingsw.model;
 
 public class AssistantCard {
-    private final short value;
-    private final short MNSteps;
+    private final int value;
+    private final int MNSteps;
 
-    public AssistantCard (short value, short steps){
+    public AssistantCard (int value, int steps){
         this.value = value;
         MNSteps = steps;
     }
 
-    public short getValue() {
+    public int getValue() {
         return value;
     }
 
-    public short getMNSteps() {
+    public int getMNSteps() {
         return MNSteps;
     }
 }

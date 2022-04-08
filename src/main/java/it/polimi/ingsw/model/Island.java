@@ -92,12 +92,16 @@ public class Island implements Land {  //METTERE A POSTO
 
     @Override
     public int size() {
-        return 0;
+        return 1;
     }
 
     @Override
-    public Colors getTowerColor() {
-        return null;
+    public Colors getTowerColor() throws Exception{
+        if (tower != null) {
+            return tower.getColor();
+        }
+        else
+            throw new Exception("There is currently no Towers here");
     }
 
 

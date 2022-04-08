@@ -16,5 +16,5 @@ public interface Land {
     ArrayList<Tower> getAllTowers();
     Island getHead();
     int size();
-    Colors getTowerColor();
+    Colors getTowerColor() throws Exception;
 }
