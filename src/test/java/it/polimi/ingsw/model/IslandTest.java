@@ -140,7 +140,7 @@ public class IslandTest {
         for(Land l: lands){
             is.addAll(l.getIslands());
         }
-        assertEquals(t,is.get(0).getTower());
+        assertEquals(t,is.get(0).getTower()); ///
         Archipelago pelago=new Archipelago(is);
         Archipelago out;
         for(Land i: lands){
