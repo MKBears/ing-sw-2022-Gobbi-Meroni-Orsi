@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model;
 
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 
 import java.util.ArrayList;
 
@@ -9,18 +8,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class IslandTest {
 
-    Island island;
-    int id;
+    int id=0;
+    Island island= new Island(id);
 
-    @BeforeEach
-    public void setUp() {
-        //Bag bag=new Bag();
-        id=0;
-        island=new Island(id);
-        /*for(int i=0; i<10; i++){
-            island.addStudent(bag.getRandomStudent());
-        }*/
-    }
 
     @Test
     public void initializationTest(){
@@ -133,7 +123,11 @@ public class IslandTest {
             if(h>3)
             {
                 ArrayList<Island>isles=new ArrayList<>();
-                isles.add(i);
+                for(int z=h+3; z<(h+22);z++){
+                    Island isl=new Island(z);
+                    isl.changeTower(t);
+                    isles.add(isl);
+                }
                 Archipelago arch=new Archipelago(isles);
                 lands.add(arch);
             }
@@ -141,14 +135,20 @@ public class IslandTest {
         }
 
         ArrayList<Island>is=new ArrayList<>();
+        island.changeTower(t);
         is.add(island);
         for(Land l: lands){
             is.addAll(l.getIslands());
         }
+        assertEquals(t,is.get(0).getTower());
         Archipelago pelago=new Archipelago(is);
+        Archipelago out;
         for(Land i: lands){
             try {
-                assertEquals(pelago, island.uniteIslands(i));
+                out=island.uniteIslands(i);
+                for(int j=0; j<out.size(); j++){
+                    assertTrue(pelago.getIslands().containsAll(out.getIslands()));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
