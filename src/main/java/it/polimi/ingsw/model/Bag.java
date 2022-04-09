@@ -18,11 +18,15 @@ public class Bag {  //fare che in input mi dicono anche quanti estrarre
         }
     }
 
-    public Student getRandomStudent(){
-        Random a=new Random();
-        int x=a.nextInt();
-        x=x%students.size();
-        return students.remove(x);
+    public Student getRandomStudent() throws Exception{
+        if(students.size()>0) {
+            Random a = new Random();
+            int x = a.nextInt(2000);
+            x = x % students.size();
+            return students.remove(x);
+        }
+        else
+            throw new Exception("No more students");
     }
 
 }

@@ -1,0 +1,60 @@
+package it.polimi.ingsw.model;
+
+import org.junit.Test;
+
+import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class CloudTest {
+
+
+    Bag bag=new Bag();
+    int l=3;
+    Cloud cloud;
+
+    {
+        try {
+            cloud = new Cloud(bag,2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    public void controlSetUp(){
+        int s=cloud.getStudents().size();
+        assertEquals(l,s);
+    }
+
+    @Test
+    public void studentTest(){
+        boolean b;
+        ArrayList<Student> arr=new ArrayList<>();
+        for (Type_Student t : Type_Student.values()){
+            for (int i=0; i<26; i++){
+                Student s = new Student(t);
+                arr.add(s);
+            }
+        }
+        for(int i=0; i<l;i++) {
+            assertNull(cloud.getStudents().get(i));
+        }
+        cloud.importStudents();
+        for(int i=0; i<l; i++) {
+            b = !arr.contains(cloud.getStudents().get(i));
+            assertTrue(b);
+        }
+    }
+
+    @Test
+    public void choiceTest(){
+        assertFalse(cloud.hasBeenChosen());
+        cloud.choose();
+        assertTrue(cloud.hasBeenChosen());
+        cloud.reset();
+        assertFalse(cloud.hasBeenChosen());
+    }
+
+}

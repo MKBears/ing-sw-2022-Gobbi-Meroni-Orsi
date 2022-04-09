@@ -37,7 +37,11 @@ public class IslandTest {
         ArrayList<Student> stu=new ArrayList<>();
         Bag bag=new Bag();
         for(int i=0; i<10; i++){
-            stu.add(bag.getRandomStudent());
+            try {
+                stu.add(bag.getRandomStudent());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         for(Student s : stu){
             island.addStudent(s);
@@ -67,7 +71,12 @@ public class IslandTest {
         int u=0;
         Bag bag=new Bag();
         for(int i=0; i<20; i++){
-            Student s=bag.getRandomStudent();
+            Student s= null;
+            try {
+                s = bag.getRandomStudent();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             island.addStudent(s);
             switch (s.getType()){
                 case FROG:

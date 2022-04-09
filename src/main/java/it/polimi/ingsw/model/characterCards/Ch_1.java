@@ -21,7 +21,11 @@ public class Ch_1 implements CharacterCard {
         this. bag = bag;
 
         for (int i=0; i<4; i++){
-            students[i] = bag.getRandomStudent();
+            try {
+                students[i] = bag.getRandomStudent();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
