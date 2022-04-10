@@ -21,6 +21,7 @@ public class Cloud {
 
     public ArrayList<Student> getStudents() {
         ArrayList<Student> s = new ArrayList<>();
+
         for (int i=0; i<3; i++){
             s.add(students[i]);
             students[i] = null;

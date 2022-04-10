@@ -20,6 +20,11 @@ public class Island implements Land {  //METTERE A POSTO
     }
 
     @Override
+    public void addStudents(Student s) {
+
+    }
+
+    @Override
     public void addStudent(Student s) {
         students.add(s);
     }
@@ -55,6 +60,11 @@ public class Island implements Land {  //METTERE A POSTO
             Tower old=this.tower;
             this.tower=n_tower;
             return old;
+    }
+
+    @Override
+    public Archipelago uniteIsland(ArrayList<Land> altra) throws Exception {
+        return null;
     }
 
     @Override
@@ -105,9 +115,9 @@ public class Island implements Land {  //METTERE A POSTO
     }
 
 
-    public void setNoEntry(boolean noEntry) throws DuplicateValueException{  //vedi bene cosa deve fare
+    public void setNoEntry(boolean noEntry) throws Exception{  //vedi bene cosa deve fare
         if (noEntry == this.noEntry){
-            throw new DuplicateValueException("A No Entry tile has already been set on this island");
+            throw new Exception("A No Entry tile has already been set on this island");
         }
         this.noEntry = noEntry;
     }

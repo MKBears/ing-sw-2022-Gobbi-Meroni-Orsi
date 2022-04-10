@@ -12,7 +12,7 @@ class PlayerTest {
     private static Wizards wizard;
 
     @BeforeAll
-    public static void initialize() {
+    public static void instantiate() {
         id = 0;
         values = new boolean[10];
         color = Colors.BLACK;
@@ -24,8 +24,8 @@ class PlayerTest {
     @Test
     public void instanceTest(){
         assertFalse (player1.hasNoCardsLeft());
-        assertSame(player1.getPlayerID(), id);
-        assertSame(player1.getColor(), color);
+        assertSame(id, player1.getPlayerID());
+        assertSame(color, player1.getColor());
         assertNotNull(player1.getBoard());
         assertTrue(player2.getBoard() instanceof Board_Experts);
     }
@@ -47,14 +47,14 @@ class PlayerTest {
             else{
                 values[card.getValue()-1] = true;
             }
-            assertSame(card.getMNSteps(), (card.getValue()+1)/2);
+            assertSame((card.getValue()+1)/2, card.getMNSteps());
         }
         assertTrue(player1.hasNoCardsLeft());
     }
 
     @Test
     public void wizardTest() {
-        assertSame(player1.getWizard(), wizard);
+        assertSame(wizard, player1.getWizard());
     }
 
 }
