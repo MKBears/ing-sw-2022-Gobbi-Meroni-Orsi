@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BagTest {
+public class BagTest {   //fai initialization test
 
     Bag bag=new Bag();
 

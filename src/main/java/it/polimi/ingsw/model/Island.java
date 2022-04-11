@@ -51,10 +51,16 @@ public class Island implements Land {  //METTERE A POSTO
 
 
     @Override
-    public Tower changeTower(Tower n_tower) {
-            Tower old=this.tower;
+    public void changeTower(Tower n_tower) {
+        ArrayList<Tower> old=new ArrayList<>();
+        if(this.tower!=null){
+            this.tower.getBoard().addTower(this.tower);
             this.tower=n_tower;
-            return old;
+        }
+        else{
+            this.tower=n_tower;
+        }
+        return;
     }
 
     @Override

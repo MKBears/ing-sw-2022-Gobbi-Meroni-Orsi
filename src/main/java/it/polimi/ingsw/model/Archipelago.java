@@ -65,8 +65,7 @@ public class Archipelago implements Land {
     }
 
     @Override
-    public Tower changeTower(Tower n_tower) {
-        Tower t=head.getTower();
+    public void changeTower(Tower n_tower) {
         for(Island i : group){
             i.changeTower(n_tower);
         }
@@ -74,7 +73,7 @@ public class Archipelago implements Land {
             color = head.getTowerColor();
         }
         catch(Exception e){};
-        return t;
+        return;
     }
 
     @Override

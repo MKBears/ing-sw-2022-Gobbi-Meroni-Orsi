@@ -15,7 +15,7 @@ public class IslandTest {
     @Test
     public void initializationTest(){
         assertEquals(id,island.getID());
-        assertEquals(null,island.getTower());
+        assertNull(island.getTower());
         assertFalse(island.isThereNoEntry());
         assertTrue(island.getStudents().isEmpty());
         assertEquals(1,island.size());
@@ -40,20 +40,18 @@ public class IslandTest {
     }
 
     @Test
-    public void towersTest(){
+    public void towersTest(){  //da rivedere
         Colors c=Colors.BLACK;
         Board b= new Board(2,c);
         Tower t=new Tower(c,b);
         ArrayList<Tower> old=new ArrayList<>();
         old.add(t);
-        assertEquals(null,island.changeTower(t));
         assertEquals(t,island.getTower());
         assertEquals(old,island.getAllTowers());
     }
 
     @Test
     public void influenceTest(){
-        ArrayList<Student> stu=new ArrayList<>();
         int d=0;
         int fa=0;
         int fr=0;
@@ -115,11 +113,10 @@ public class IslandTest {
         Colors c=Colors.BLACK;
         Board b= new Board(3,c);
         Tower t=new Tower(c,b);
-        Tower s;
         ArrayList<Land>lands=new ArrayList<>();
         for(int h=2; h<7; h++) {
             Island i = new Island(h);
-            s = i.changeTower(t);
+            i.changeTower(t);
             if(h>3)
             {
                 ArrayList<Island>isles=new ArrayList<>();
