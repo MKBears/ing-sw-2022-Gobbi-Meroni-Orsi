@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.characterCards.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -62,6 +63,7 @@ class BoardExpertsTest {
         ArrayList<Student> students = new ArrayList<>();
         Student student;
         final int dragons = 10;
+        CharacterCard c = new Ch_2();
 
         for(int i=0; i<dragons; i++){
             students.add(new Student(Type_Student.DRAGON));
@@ -92,12 +94,13 @@ class BoardExpertsTest {
         assertFalse(board.getEntrance().contains(student));
 
         try {
-            board.payCharacter(2);
+            board.playCharacter(c);
+            assertTrue(c.hasBeenActivated());
         }catch (Exception e){
             fail();
         }
         assertSame(2, board.getCoinsNumber());
-        assertThrows(Exception.class, ()->board.payCharacter(3));
+        assertThrows(Exception.class, ()->board.playCharacter(new Ch_3()));
     }
 
     @Test

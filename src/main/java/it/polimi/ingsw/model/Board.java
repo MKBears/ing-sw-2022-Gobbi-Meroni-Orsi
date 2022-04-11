@@ -2,6 +2,10 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
+/**
+ * The class representing the board each player controls in an ordinary match.
+ * It contains all the towers, has an entrance to put students from a cloud and a table for each type of student.
+ */
 public class Board {
     private final ArrayList<Student> dragons;
     private final ArrayList<Student> unicorns;
@@ -13,7 +17,9 @@ public class Board {
 
     /**
      *
-     * @param towersNum 8 if there are 2 or 4 players, 6 if the number of players is 3
+     * @param towersNum 8: 2 players
+     *                  6: 3 players
+     *                  0 or 8: 4 players
      * @param color the color of the towers
      */
     public Board(int towersNum, Colors color){
@@ -28,7 +34,9 @@ public class Board {
 
     /**
      * Creates the correct number of towers with the specified color
-     * @param towersNum 8 if there are 2 or 4 players, 6 if the number of players is 3
+     * @param towersNum 8: 2 players
+     *                  6: 3 players
+     *                  0 or 8: 4 players
      * @param color the color of the towers
      */
     private void initializeTowers(int towersNum, Colors color){

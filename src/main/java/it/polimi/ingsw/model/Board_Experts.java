@@ -2,12 +2,19 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
+/**
+ * The class representing the board each player controls in an experts match.
+ * Contains the same things as Board (non-experts) does and has the same methods.
+ * Moreover, contains all the coins gained during the game by the player and has a method to activate the power of a Character card.
+ */
 public class Board_Experts extends Board{
     private int coins;
 
     /**
      *
-     * @param towersNum 8 if there are 2 or 4 players, 6 if the number of players is 3
+     * @param towersNum 8: 2 players
+     *                  6: 3 players
+     *                  0 or 8: 4 players
      * @param color the color of the towers
      */
     public Board_Experts(int towersNum, Colors color){
@@ -20,17 +27,20 @@ public class Board_Experts extends Board{
     }
 
     /**
-     * Subtracts the cost of the activation of the power of a character card from the coins collected in the board
-     * @param cost represents the cost a character card needs to be paid in coins to activate its power
-     * @throws Exception if there are not enough coins to activate the power of the card
+     * Controls if the player has enough coins to play the specified card and activates its power
+     * @param card the card a player chooses to play
+     * @throws Exception if there are not enough coins to activate the card's power
      */
-    public void payCharacter(int cost) throws Exception{
+    public void playCharacter(CharacterCard card) throws Exception{
+        int cost = card.getPrice();
+
         if(coins<cost){
-            throw new Exception("You don't have enough money");
+            throw new Exception("You don't have enough money to activate this card.");
         }
         else
         {
             coins=coins-cost;
+            card.activatePowerUp();
         }
     }
 
