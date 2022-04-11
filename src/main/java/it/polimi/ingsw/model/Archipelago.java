@@ -76,7 +76,7 @@ public class Archipelago implements Land {
         return;
     }
 
-    @Override
+    @Override ///////////
     public Archipelago uniteIslands(Land other) throws Exception {
         if (other.getTower().getColor() != this.color) {
             throw new Exception("Wrong Color of Towers");
