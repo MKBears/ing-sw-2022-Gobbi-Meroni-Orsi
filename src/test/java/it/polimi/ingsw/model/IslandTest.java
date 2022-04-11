@@ -46,8 +46,20 @@ public class IslandTest {
         Tower t=new Tower(c,b);
         ArrayList<Tower> old=new ArrayList<>();
         old.add(t);
+        int h=b.getTowers();
+        assertNull(island.getTower());
+        island.changeTower(t);
+        assertEquals(h,island.getTower().getBoard().getTowers()); //dovrebbe essere uguale perchè null
         assertEquals(t,island.getTower());
+        assertEquals(b,island.getTower().getBoard());
         assertEquals(old,island.getAllTowers());
+        Colors colo=Colors.GRAY;
+        Board boa= new Board(2,colo);
+        Tower tow=new Tower(colo,boa);
+        island.changeTower(tow);
+        assertEquals(3,b.getTowers());
+        assertEquals(tow,island.getTower());
+        assertEquals(boa,island.getTower().getBoard());
     }
 
     @Test
