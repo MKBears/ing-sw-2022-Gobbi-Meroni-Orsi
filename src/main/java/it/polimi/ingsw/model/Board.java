@@ -17,8 +17,8 @@ public class Board {
 
     /**
      *
-     * @param towersNum 8: 2 players
-     *                  6: 3 players
+     * @param towersNum 8: 2 players;
+     *                  6: 3 players;
      *                  0 or 8: 4 players
      * @param color the color of the towers
      */
@@ -34,8 +34,8 @@ public class Board {
 
     /**
      * Creates the correct number of towers with the specified color
-     * @param towersNum 8: 2 players
-     *                  6: 3 players
+     * @param towersNum 8: 2 players;
+     *                  6: 3 players;
      *                  0 or 8: 4 players
      * @param color the color of the towers
      */

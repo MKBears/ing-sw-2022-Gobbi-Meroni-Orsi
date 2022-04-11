@@ -12,8 +12,8 @@ public class Board_Experts extends Board{
 
     /**
      *
-     * @param towersNum 8: 2 players
-     *                  6: 3 players
+     * @param towersNum 8: 2 players;
+     *                  6: 3 players;
      *                  0 or 8: 4 players
      * @param color the color of the towers
      */
