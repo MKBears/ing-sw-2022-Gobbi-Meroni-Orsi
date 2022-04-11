@@ -2,109 +2,113 @@ package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 
-public class Island {
-    private ArrayList<Student> students;
-    private final short islandID;
+public class Island implements Land {  //METTERE A POSTO
+    private final ArrayList<Student> students;
+    private final int islandID;
     private Tower tower;
     private boolean noEntry;
-    private short Influence; //fare il getter e il metodo che calcola in automatico il tot dell'influenza
 
-    public Island (short id){
+    public Island (int id){
         islandID = id;
         tower = null;
         noEntry = false;
+        students=null;
     }
 
-    public short getIslandID() {
+    public int getID() {
         return islandID;
     }
 
-    public void setStudents(ArrayList<Student> students) {
-        this.students = students;
+    @Override
+    public void addStudent(Student s) {
+        students.add(s);
     }
+
+
+    @Override
+    public Tower getTower() {
+        return tower;
+    }
+
 
     public ArrayList<Student> getStudents(){
         return students;
     }
 
-    public Colors getControllingColor() throws NoControlException{
-        if (tower == null){
-            throw new NoControlException("This island isn't controlled by any player");
+    @Override
+    public int getInfluence(Student input) {
+        int i=0;
+        for (Student s: this.students)
+            if(input.getType()==s.getType()){
+                i++;
         }
-        return tower.getColor();
-    }
-
-    public Type_Student getControllingType() {
-        short[] counter = new short[5];
-        short max = 0;
-
-        if (students.isEmpty()) {
-            return null;
-        } else {
-            for (short i = 0; i < 5; i++) {
-                counter[i] = 0;
-            }
-
-            for (Student s : students) {
-                switch (s.getType().getName()) {
-                    case "dragon":
-                        counter[0]++;
-                        break;
-                    case "gnome":
-                        counter[1]++;
-                        break;
-                    case "fairie":
-                        counter[2]++;
-                        break;
-                    case "unicorn":
-                        counter[3]++;
-                        break;
-                    default:
-                        counter[4]++;
-                        break;
-                }
-            }
-
-            for (short i = 1; i < 5; i++) {
-                if (counter[i] > counter[max]) {
-                    max = i;
-                }
-            }
-
-            switch (max) {
-                case 0:
-                    return Type_Student.DRAGON;
-                case 1:
-                    return Type_Student.GNOME;
-                case 2:
-                    return Type_Student.FAIRIE;
-                case 3:
-                    return Type_Student.UNICORN;
-                default:
-                    return Type_Student.FROG;
-            }
-        }
+        return i;
     }
 
     public boolean isThereNoEntry(){
         return noEntry;
     }
 
-    public void setNoEntry(boolean noEntry) throws DuplicateValueException{
+
+    @Override
+    public Tower changeTower(Tower n_tower) {
+            Tower old=this.tower;
+            this.tower=n_tower;
+            return old;
+    }
+
+    @Override
+    public Archipelago uniteIslands(ArrayList<Land> others) throws Exception {
+        for(Land i:others) {
+            if (i.getTower().getColor() != this.tower.getColor()) {
+                throw new Exception("Wrong Color of Towers");
+            }
+        }
+        ArrayList<Island> arr=new ArrayList<>();
+        arr.add(this);
+        for(Land i: others){
+            arr.addAll(i.getIslands());
+        }
+        return new Archipelago(arr);
+    }
+
+    public ArrayList<Island> getIslands(){
+        ArrayList<Island> me=new ArrayList<>();
+        me.add(this);
+        return me;
+    }
+
+    @Override
+    public ArrayList<Tower> getAllTowers() {
+        ArrayList<Tower>t=new ArrayList<>();
+        t.add(tower);
+        return t;
+    }
+
+    @Override
+    public Island getHead() {
+        return this;
+    }
+
+    @Override
+    public int size() {
+        return 1;
+    }
+
+    @Override
+    public Colors getTowerColor() throws Exception{
+        if (tower != null) {
+            return tower.getColor();
+        }
+        else
+            throw new Exception("There is currently no Towers here");
+    }
+
+
+    public void setNoEntry(boolean noEntry) throws DuplicateValueException{  //vedi bene cosa deve fare
         if (noEntry == this.noEntry){
             throw new DuplicateValueException("A No Entry tile has already been set on this island");
         }
         this.noEntry = noEntry;
     }
-
-    public void setTower(Tower tower) {
-        this.tower = tower;
-    }
-
-    public ArrayList<Student> transferStudents(){
-        ArrayList<Student> cpy = students;
-        students = null;
-        return cpy;
-    }
-
 }

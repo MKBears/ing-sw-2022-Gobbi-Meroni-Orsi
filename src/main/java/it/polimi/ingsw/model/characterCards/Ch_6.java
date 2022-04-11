@@ -1,11 +1,14 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.characterCards;
 
-public class Ch_6 implements CharacterCard{
+import it.polimi.ingsw.model.CharacterCard;
+import it.polimi.ingsw.model.Island;
+
+public class Ch_6 implements CharacterCard {
 
     private final short price;
     private boolean activated;
     private final String powerUp;
-    private Island Island;
+    private it.polimi.ingsw.model.Island Island;
 
     public Ch_6(){
         price=3;

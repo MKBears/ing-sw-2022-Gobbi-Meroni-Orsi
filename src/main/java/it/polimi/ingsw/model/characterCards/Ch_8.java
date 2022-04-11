@@ -1,20 +1,18 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.characterCards;
 
-import java.util.ArrayList;
+import it.polimi.ingsw.model.CharacterCard;
 
-public class Ch_7 implements CharacterCard{
+public class Ch_8 implements CharacterCard {
 
     private final short price;
     private boolean activated;
     private final String powerUp;
-    private ArrayList<Student> Students=new ArrayList<>(6);
 
-    public Ch_7(ArrayList<Student> Input){
-        price=1;
+    public Ch_8(){
+        price=2;
         activated=false;
-        powerUp="You may wake up to 3 Students form this card and"+
-                " replace them with the same number of Students from your Entrance.";
-        Students=Input;
+        powerUp="During this turn, you count as "+
+                "having 2 more influence.";
     }
 
     @Override
@@ -45,8 +43,5 @@ public class Ch_7 implements CharacterCard{
     public String getPowerUp() {
         return powerUp;
     }
-
-    public ArrayList<Student> getStudents() {
-        return Students;
-    }
 }
+

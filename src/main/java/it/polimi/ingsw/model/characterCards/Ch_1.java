@@ -1,6 +1,11 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.characterCards;
 
-public class Ch_1 implements CharacterCard{
+import it.polimi.ingsw.model.Bag;
+import it.polimi.ingsw.model.CharacterCard;
+import it.polimi.ingsw.model.Island;
+import it.polimi.ingsw.model.Student;
+
+public class Ch_1 implements CharacterCard {
     private final short price;
     private boolean activated;
     private final String powerUp;
@@ -27,7 +32,7 @@ public class Ch_1 implements CharacterCard{
 
         //fa scegliere al player lo studente e l'isola su cui mandarlo
 
-        island.setStudents(students[student]);
+        //island.setStudents(students[student]);
         //in match bisogna fare in modo di mandare sempre riferimenti alla prima isola di un gruppo
         students[student] = bag.getRandomStudent();
         if (!activated){
