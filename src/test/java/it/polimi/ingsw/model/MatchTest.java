@@ -37,6 +37,23 @@ class MatchTest {
         assertTrue(a.getLands().get(2).size()==2);
     }
 
+
+    @Test
+    void uniteLandAfterLast() throws Exception {
+        Player pl1,pl2;
+        pl1=new Player(1,GREY,8,Wizards.WIZARD1);
+        pl2=new Player(2,BLACK,8,Wizards.WIZARD2);
+        Match a=new Match(pl1,pl2);
+        a.getLands().get(0).changeTower(pl1.getBoard().removeTower());
+        a.getLands().get(11).changeTower(pl1.getBoard().removeTower());
+        a.uniteLandAfter(11);
+        assertTrue(a.getLands().size()==11);
+        assertTrue(a.getLands().get(0).getTowerColor()== GREY);
+        assertTrue(a.getLands().get(1).getID()==1);
+        assertTrue(a.getLands().get(2).getID()==2);
+        assertTrue(a.getLands().get(0).size()==2);
+    }
+
     @Test
     void uniteLandBefore() throws Exception {
         Player pl1,pl2;
@@ -51,6 +68,21 @@ class MatchTest {
         assertTrue(a.getLands().get(1).getID()==1);
         assertTrue(a.getLands().get(3).getID()==4);
         assertTrue(a.getLands().get(2).size()==2);
+    }
+    @Test
+    void uniteLandBeforeFirst() throws Exception {
+        Player pl1,pl2;
+        pl1=new Player(1,GREY,8,Wizards.WIZARD1);
+        pl2=new Player(2,BLACK,8,Wizards.WIZARD2);
+        Match a=new Match(pl1,pl2);
+        a.getLands().get(0).changeTower(pl1.getBoard().removeTower());
+        a.getLands().get(11).changeTower(pl1.getBoard().removeTower());
+        a.uniteLandBefore(0);
+        assertTrue(a.getLands().size()==11);
+        assertTrue(a.getLands().get(0).getTowerColor()== GREY);
+        assertTrue(a.getLands().get(1).getID()==1);
+        assertTrue(a.getLands().get(2).getID()==2);
+        assertTrue(a.getLands().get(0).size()==2);
     }
 
     @Test

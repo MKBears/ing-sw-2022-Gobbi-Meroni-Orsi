@@ -80,28 +80,44 @@ List<Land> lands;
 
     public void uniteLandAfter(int i) throws Exception,IllegalArgumentException
     {
-        if(i<0 || i>lands.size()-1) throw new IllegalArgumentException();
-        if(!(lands.get(i).getTower().getColor()==lands.get(i+1).getTower().getColor()))throw new IllegalArgumentException();
-        ArrayList<Land> a=new ArrayList<>();
-        Land unito;
-        a.add(lands.remove(i+1));
-        unito=lands.remove(i);
-        lands.add(i,unito.uniteIslands(a));
+        if(i<0 || i>=lands.size()) throw new IllegalArgumentException();
+        if (i>=0 && i<lands.size()-1){
+            if(!(lands.get(i).getTower().getColor()==lands.get(i+1).getTower().getColor()))throw new IllegalArgumentException();
+            ArrayList<Land> a=new ArrayList<>();
+            Land unito;
+            a.add(lands.remove(i+1));
+            unito=lands.remove(i);
+            lands.add(i,unito.uniteIslands(a));
+        }else{
+            if(!(lands.get(0).getTower().getColor()==lands.get(i).getTower().getColor()))throw new IllegalArgumentException();
+            ArrayList<Land> a=new ArrayList<>();
+            Land unito;
+            a.add(lands.remove(i));
+            unito=lands.remove(0);
+            lands.add(0,unito.uniteIslands(a));
+        }
     }
 
     public void uniteLandBefore(int i) throws Exception,IllegalArgumentException
     {
-        if(i<1 || i>lands.size()) throw new IllegalArgumentException();
-        if(!(lands.get(i).getTower().getColor()==lands.get(i-1).getTower().getColor()))throw new IllegalArgumentException();
+        if(i<0 || i>lands.size()-1) throw new IllegalArgumentException();
         ArrayList<Land> a=new ArrayList<>();
-        a.add(lands.remove(i));
-        lands.add(i,lands.get(i-1).uniteIslands(a));
-        lands.remove(i-1);
+        if(i>=1 && i<lands.size()) {
+            if(!(lands.get(i).getTower().getColor()==lands.get(i-1).getTower().getColor()))throw new IllegalArgumentException();
+            a.add(lands.remove(i));
+            lands.add(i,lands.get(i-1).uniteIslands(a));
+            lands.remove(i-1);
+        }else{
+            if(!(lands.get(0).getTower().getColor()==lands.get(lands.size()-1).getTower().getColor()))throw new IllegalArgumentException();
+            a.add(lands.remove(lands.size()-1));
+            lands.add(1,lands.get(0).uniteIslands(a));
+            lands.remove(0);
+        }
     }
 
     public void uniteLandBeforeAndAfter(int i) throws Exception,IllegalArgumentException
     {
-        if(i<1 || i>lands.size()-1) throw new IllegalArgumentException();
+        if(i<1 || i>=lands.size()-1) throw new IllegalArgumentException();
         if(!(lands.get(i).getTower().getColor()==lands.get(i-1).getTower().getColor() &&
                 lands.get(i).getTower().getColor()==lands.get(i+1).getTower().getColor()))throw new IllegalArgumentException();
         ArrayList<Land> a=new ArrayList<>();
