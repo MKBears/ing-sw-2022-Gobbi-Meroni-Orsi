@@ -9,11 +9,14 @@ class TowerTest {
 
     @Test
     void getColor() {
-        Tower t=new Tower(BLACK);
+        Board b=new Board(1,BLACK);
+        Tower t=new Tower(BLACK,b);
         assertEquals(t.getColor().getColor(),"black");
-        t=new Tower(GREY);
+        b=new Board(1,GREY);
+        t=new Tower(GREY,b);
         assertEquals(t.getColor().getColor(),"grey");
-        t=new Tower(WHITE);
+        b=new Board(1,WHITE);
+        t=new Tower(WHITE,b);
         assertEquals(t.getColor().getColor(),"white");
     }
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import javax.naming.directory.InvalidAttributeIdentifierException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
@@ -75,5 +76,52 @@ List<Land> lands;
         int pos=lands.indexOf(mothernature.getPosition());
         pos=(step+pos)%lands.size();
         mothernature.setPosition(lands.get(pos));
+    }
+
+    public void uniteLandAfter(int i) throws Exception,IllegalArgumentException
+    {
+        if(i<0 || i>lands.size()-1) throw new IllegalArgumentException();
+        if(!(lands.get(i).getTower().getColor()==lands.get(i+1).getTower().getColor()))throw new IllegalArgumentException();
+        ArrayList<Land> a=new ArrayList<>();
+        Land unito;
+        a.add(lands.remove(i+1));
+        unito=lands.remove(i);
+        lands.add(i,unito.uniteIslands(a));
+    }
+
+    public void uniteLandBefore(int i) throws Exception,IllegalArgumentException
+    {
+        if(i<1 || i>lands.size()) throw new IllegalArgumentException();
+        if(!(lands.get(i).getTower().getColor()==lands.get(i-1).getTower().getColor()))throw new IllegalArgumentException();
+        ArrayList<Land> a=new ArrayList<>();
+        a.add(lands.remove(i));
+        lands.add(i,lands.get(i-1).uniteIslands(a));
+        lands.remove(i-1);
+    }
+
+    public void uniteLandBeforeAndAfter(int i) throws Exception,IllegalArgumentException
+    {
+        if(i<1 || i>lands.size()-1) throw new IllegalArgumentException();
+        if(!(lands.get(i).getTower().getColor()==lands.get(i-1).getTower().getColor() &&
+                lands.get(i).getTower().getColor()==lands.get(i+1).getTower().getColor()))throw new IllegalArgumentException();
+        ArrayList<Land> a=new ArrayList<>();
+        a.add(lands.remove(i+1));
+        a.add(lands.remove(i));
+        Land unito=lands.get(i-1);
+        lands.add(i,lands.get(i-1).uniteIslands(a));
+        lands.remove(unito);
+    }
+
+    public Player checkProfessor(Type_Student e) {
+        int a=0;
+        int i;
+        for (i = 0; i < player.length; i++)
+            if(player[i].getBoard().getStudent(e)>player[a].getBoard().getStudent(e))
+                a=i;
+        if(professors.containsKey(e))
+            professors.replace(e,player[a]);
+        else
+            professors.put(e,player[a]);
+        return player[a];
     }
 }

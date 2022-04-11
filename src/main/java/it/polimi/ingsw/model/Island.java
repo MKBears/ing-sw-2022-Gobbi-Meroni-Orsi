@@ -111,4 +111,6 @@ public class Island implements Land {  //METTERE A POSTO
         }
         this.noEntry = noEntry;
     }
+
+
 }

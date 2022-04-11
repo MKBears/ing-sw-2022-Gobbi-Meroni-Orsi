@@ -28,7 +28,7 @@ public class Ch_1 implements CharacterCard {
     @Override
     public void activatePowerUp() {
         Island island;
-        int student;
+        int student=0;
 
         //fa scegliere al player lo studente e l'isola su cui mandarlo
 

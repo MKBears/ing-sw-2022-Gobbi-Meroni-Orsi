@@ -47,7 +47,8 @@ class IslandTest {
     @Test
     void towersTest(){
         Colors c=Colors.BLACK;
-        Tower t=new Tower(c);
+        Board b=new Board(8,Colors.GREY);
+        Tower t=new Tower(c,b);
         ArrayList<Tower> old=new ArrayList<>();
         old.add(t);
         assertEquals(island.changeTower(t),null);

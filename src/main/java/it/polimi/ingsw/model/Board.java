@@ -82,6 +82,22 @@ public class Board {
         }
     }
 
+    public int getStudent(Type_Student e){
+        switch (e){
+            case DRAGON:
+                return getDragons();
+            case GNOME:
+                return getGnomes();
+            case FAIRIE:
+                return getFairies();
+            case UNICORN:
+                return getUnicorns();
+            case FROG:
+                return getFrogs();
+        }
+        return 0;
+    }
+
     public void setEntrance(List<Student> entrance) {
         this.entrance = entrance;
     }
