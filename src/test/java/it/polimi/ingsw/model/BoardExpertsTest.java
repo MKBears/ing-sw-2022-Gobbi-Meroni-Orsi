@@ -35,13 +35,12 @@ class BoardExpertsTest {
     @Test
     public void entranceTest(){
         ArrayList<Student> students = new ArrayList<>();
-        Student student;
-        int dragons = 9;
 
         for (Type_Student t : Type_Student.values()){
             students.add(new Student(t));
         }
         board.setEntrance(students);
+        assertEquals(students, board.getEntrance());
 
         for (Student s : students){
             try {
@@ -56,14 +55,19 @@ class BoardExpertsTest {
             assertSame(1, board.getStudentsOfType(t));
         }
         assertSame(1, board.getCoinsNumber());
-        students.clear();
+    }
+
+    @Test
+    public void tablesTest(){
+        ArrayList<Student> students = new ArrayList<>();
+        Student student;
+        final int dragons = 10;
 
         for(int i=0; i<dragons; i++){
             students.add(new Student(Type_Student.DRAGON));
         }
 
         board.setEntrance(students);
-        assertEquals(students, board.getEntrance());
 
         for(Student s : students) {
             try {
@@ -73,11 +77,11 @@ class BoardExpertsTest {
             }
         }
         assertSame(4, board.getCoinsNumber());
-        assertSame(dragons+1, board.getStudentsOfType(Type_Student.DRAGON));
+        assertSame(dragons, board.getStudentsOfType(Type_Student.DRAGON));
         assertTrue(board.getEntrance().isEmpty());
 
-        assertThrows(Exception.class, ()->board.placeStudent(new Student(Type_Student.DRAGON)));
         student = new Student(Type_Student.DRAGON);
+        assertThrows(Exception.class, ()->board.placeStudent(student));
         try {
             board.addStudent(student);
         }catch (Exception e){
@@ -117,7 +121,7 @@ class BoardExpertsTest {
         board.returnTower(temp);
         assertFalse(board.hasNoTowersLeft());
         assertSame(1, board.getTowers().size());
-        assertEquals(temp, board.getTowers().get(0));
+        assertTrue(board.getTowers().contains(temp));
     }
 
 }

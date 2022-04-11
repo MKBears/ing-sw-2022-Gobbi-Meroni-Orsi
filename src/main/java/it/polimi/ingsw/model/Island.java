@@ -111,7 +111,7 @@ public class Island implements Land {  //METTERE A POSTO
             return tower.getColor();
         }
         else
-            throw new Exception("There is currently no Towers here");
+            throw new Exception("There are currently no Towers here");
     }
 
 

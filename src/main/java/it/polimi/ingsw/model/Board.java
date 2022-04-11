@@ -23,7 +23,7 @@ public class Board {
         gnomes= new ArrayList<>();
         frogs=new ArrayList<>();
         initializeTowers(towersNum, color);
-        entrance=new ArrayList<>();
+        entrance=new ArrayList<>(4);
     }
 
     /**
@@ -83,12 +83,12 @@ public class Board {
      * @throws Exception if the specified student is not present in the entrance
      */
     public void placeStudent(Student student) throws Exception{
-        if (getStudentsOfType(student.getType()) == 10){
-            throw new Exception("This table is already full. Please place that student on a cloud.");
-        }
-
         if (!entrance.contains(student)){
             throw new Exception("This student is not placed in the entrance");
+        }
+
+        if (getStudentsOfType(student.getType()) == 10){
+            throw new Exception("This table is already full. Please place that student on a cloud.");
         }
 
         switch (student.getType()){
