@@ -132,7 +132,7 @@ public class ArchipelagoTest {
     }
 
     @Test
-    public void unionTest(){  //qui ci inserisco solo una isola
+    public void unionTest(){
         e=1;
         i.changeTower(t);
         pelago.changeTower(t);
