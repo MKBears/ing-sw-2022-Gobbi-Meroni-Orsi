@@ -31,7 +31,7 @@ public class Cloud {
         for (int i = 0; i < nop; i++) {
             try {
                 students[i] = bag.getRandomStudent();
-            } catch (Exception e) {
+            } catch (Exception e) { //
                 e.printStackTrace();
             }
         }

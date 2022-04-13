@@ -60,7 +60,6 @@ public class Island implements Land {  //METTERE A POSTO
         else{
             this.tower=n_tower;
         }
-        return;
     }
 
     @Override
@@ -100,7 +99,7 @@ public class Island implements Land {  //METTERE A POSTO
     @Override
     public Colors getTowerColor() throws Exception{
         if (tower != null) {
-            return tower.getColor();
+            return tower.getColor(); //
         }
         else
             throw new Exception("There is currently no Towers here");

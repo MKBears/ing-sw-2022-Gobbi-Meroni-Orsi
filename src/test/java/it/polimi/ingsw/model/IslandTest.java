@@ -41,6 +41,12 @@ public class IslandTest {
 
     @Test
     public void towersTest(){  //da rivedere
+        Island d=new Island(12345);
+        try {
+            d.getTowerColor();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Colors c=Colors.BLACK;
         Board b= new Board(2,c);
         Tower t=new Tower(c,b);
@@ -51,6 +57,11 @@ public class IslandTest {
         island.changeTower(t);
         assertEquals(h,island.getTower().getBoard().getTowers()); //dovrebbe essere uguale perchè null
         assertEquals(t,island.getTower());
+        try {
+            assertEquals(t.getColor(),island.getTowerColor());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         assertEquals(b,island.getTower().getBoard());
         assertEquals(old,island.getAllTowers());
         Colors colo=Colors.GRAY;
@@ -118,6 +129,11 @@ public class IslandTest {
             e.printStackTrace();
         }
         assertFalse(island.isThereNoEntry());
+        try {
+            island.setNoEntry(false);
+        } catch (DuplicateValueException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -126,6 +142,10 @@ public class IslandTest {
         Board b= new Board(3,c);
         Tower t=new Tower(c,b);
         ArrayList<Land>lands=new ArrayList<>();
+        Island isa=new Island(9999);
+        Board bruh=new Board(3,Colors.GRAY);
+        Tower tow=new Tower(Colors.GRAY,bruh);
+        isa.changeTower(tow);
         for(int h=2; h<7; h++) {
             Island i = new Island(h);
             i.changeTower(t);
@@ -149,7 +169,7 @@ public class IslandTest {
         for(Land l: lands){
             is.addAll(l.getIslands());
         }
-        assertEquals(t,is.get(0).getTower()); ///
+        assertEquals(t,is.get(0).getTower());
         Archipelago pelago=new Archipelago(is);
         Archipelago out;
         for(Land i: lands){
@@ -161,6 +181,11 @@ public class IslandTest {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+        try {
+            island.uniteIslands(isa);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -12,10 +12,22 @@ public class CloudTest {
     Bag bag=new Bag();
     int l=3;
     Cloud cloud;
+    Cloud cloudd;
+    Bag bagg=new Bag();
 
     {
         try {
             cloud = new Cloud(bag,2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            cloudd=new Cloud(bagg,3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            cloudd=new Cloud(bagg,5);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -45,6 +57,9 @@ public class CloudTest {
         for(int i=0; i<l; i++) {
             b = !arr.contains(cloud.getStudents().get(i));
             assertTrue(b);
+        }
+        for (int j=0; j<500; j++) {
+            cloudd.importStudents();
         }
     }
 

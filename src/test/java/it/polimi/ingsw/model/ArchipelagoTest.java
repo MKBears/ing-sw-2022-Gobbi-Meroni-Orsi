@@ -17,9 +17,13 @@ public class ArchipelagoTest {
     public static Student s;
     public static Archipelago pelago;
     public static int c_torri;
+    public static int e;
+    public static Island i;
 
     @BeforeAll
     public static void setUp() {
+        i=new Island(8888);
+        e=0;
         c_torri=0;
         color=Colors.GRAY;
         board=new Board(20, color);
@@ -40,39 +44,61 @@ public class ArchipelagoTest {
     }
 
     @Test
-    public void initializationTest(){
-        assertEquals(is,pelago.getIslands());
-        assertEquals(is.size(),pelago.size());
-        assertEquals(is.get(0),pelago.getHead());
-        assertEquals(is.get(0).getTower().getColor(),pelago.getTowerColor());
-        int h=0;
-        for(Island i: is){
-            h=h+i.getInfluence(Type_Student.DRAGON);
+    public void initializationTest() {
+        if (e == 1) {
+            is.add(i);
+            assertEquals(is, pelago.getIslands());
+            assertEquals(is.size(), pelago.size());
+            assertEquals(is.get(0), pelago.getHead());
+            assertEquals(is.get(0).getTower().getColor(), pelago.getTowerColor());
+            int h = 0;
+            for (Island i : is) {
+                h = h + i.getInfluence(Type_Student.DRAGON);
+            }
+            assertEquals(h, pelago.getInfluence(Type_Student.DRAGON));
+            assertEquals(is.get(0).getID(), pelago.getID());
+        } else {
+            assertEquals(is, pelago.getIslands());
+            assertEquals(is.size(), pelago.size());
+            assertEquals(is.get(0), pelago.getHead());
+            assertEquals(is.get(0).getTower().getColor(), pelago.getTowerColor());
+            int h = 0;
+            for (Island i : is) {
+                h = h + i.getInfluence(Type_Student.DRAGON);
+            }
+            assertEquals(h, pelago.getInfluence(Type_Student.DRAGON));
+            assertEquals(is.get(0).getID(), pelago.getID());
         }
-        assertEquals(h,pelago.getInfluence(Type_Student.DRAGON));
-        assertEquals(is.get(0).getID(),pelago.getID());
     }
 
     @Test
     public void towersTest(){
+        int x=20;
+        if(e==1){
+            c_torri=c_torri+22;
+            x++;
+        }
         assertEquals(t,pelago.getTower());
         Colors c=Colors.BLACK;
-        //Board b=new Board(20,c);
-        Tower to=new Tower(c,board);
+        Board b=new Board(20,c);
+        Tower to=new Tower(c,b);
         pelago.changeTower(to);
-        c_torri=c_torri+20;
+        c_torri=c_torri+20; ////////
         assertFalse(board.hasNoTowersLeft());
-        assertEquals((int)c_torri,(int)board.getTowers());
+        assertEquals(c_torri,board.getTowers());
         assertEquals(to,pelago.getTower());
-        assertEquals(20,pelago.getAllTowers().size());
+        assertEquals(x,pelago.getAllTowers().size());
     }
 
     @Test
     public void studentsTest(){
         ArrayList<Student>stu=new ArrayList<>();
-        for(Island i:is){
-            stu.addAll(i.getStudents());
+        for(Island p:is){
+            stu.addAll(p.getStudents());
         }
+        //if(e==1){
+        //    stu.addAll(i.getStudents());
+        //}
         assertEquals(stu,pelago.getStudents());
         Student s=new Student(Type_Student.FROG);
         pelago.addStudent(s);
@@ -98,10 +124,49 @@ public class ArchipelagoTest {
         } catch (DuplicateValueException e) {
             e.printStackTrace();
         }
+        try {
+            pelago.setNoEntry(false);
+        } catch (DuplicateValueException ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Test
-    public void unionTest(){
-
+    public void unionTest(){  //qui ci inserisco solo una isola
+        e=1;
+        i.changeTower(t);
+        pelago.changeTower(t);
+        Board bb=new Board(3,Colors.WHITE);
+        Board h=new Board(3,Colors.WHITE);
+        Tower tow=new Tower(Colors.WHITE,bb);
+        Island isa=new Island(88);
+        isa.changeTower(tow);
+        ArrayList<Island> k= new ArrayList<>();
+        k.add(isa);
+        Archipelago a= new Archipelago(k);
+        for (int j=0; j<3; j++){
+            Student stud=new Student(Type_Student.GNOME);
+            i.addStudent(stud);
+        }
+        try {
+            a=pelago.uniteIslands(i);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Tower y=new Tower(Colors.WHITE,h);
+        i.changeTower(y);
+        try {
+            a=pelago.uniteIslands(i);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        i.changeTower(t);
+        ArrayList<Island> arr = new ArrayList<>(pelago.getIslands());
+        //arr.add(i);
+        for (Island isl:a.getIslands()){
+            assertTrue(arr.contains(isl));
+        }
+        assertEquals(arr.size(),a.size());
+        assertEquals(pelago.getID(),a.getID());
     }
 }
