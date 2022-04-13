@@ -28,7 +28,7 @@ class BoardExpertsTest {
         assertSame(0, board.getStudentsOfType(Type_Student.UNICORN));
         assertSame(0, board.getStudentsOfType(Type_Student.FROG));
         assertSame(1, board.getCoinsNumber());
-        assertSame(towersNum, board.getTowers().size());
+        assertSame(towersNum, board.getTowersNum());
         assertFalse(board.hasNoTowersLeft());
         assertTrue(board.getEntrance().isEmpty());
     }
@@ -123,7 +123,7 @@ class BoardExpertsTest {
         temp = new Tower(color, board);
         board.returnTower(temp);
         assertFalse(board.hasNoTowersLeft());
-        assertSame(1, board.getTowers().size());
+        assertSame(1, board.getTowersNum());
         assertTrue(board.getTowers().contains(temp));
     }
 

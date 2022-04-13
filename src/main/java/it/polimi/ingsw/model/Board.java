@@ -70,11 +70,19 @@ public class Board {
     }
 
     /**
-     *
-     * @return the list of the towers on the board
+     * @deprecated
+     * @return a copy of the list of the towers on the board
      */
     public ArrayList<Tower> getTowers() {
         return (ArrayList<Tower>) towers.clone();
+    }
+
+    /**
+     *
+     * @return the number of towers on the board
+     */
+    public int getTowersNum() {
+        return towers.size();
     }
 
     /**
