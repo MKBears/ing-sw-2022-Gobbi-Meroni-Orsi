@@ -2,8 +2,7 @@ package it.polimi.ingsw.model;
 
 import org.junit.jupiter.api.Test;
 
-import static it.polimi.ingsw.model.Colors.BLACK;
-import static it.polimi.ingsw.model.Colors.GREY;
+import static it.polimi.ingsw.model.Colors.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MatchTest {
@@ -56,10 +55,11 @@ class MatchTest {
 
     @Test
     void uniteLandBefore() throws Exception {
-        Player pl1,pl2;
-        pl1=new Player(1,GREY,8,Wizards.WIZARD1);
-        pl2=new Player(2,BLACK,8,Wizards.WIZARD2);
-        Match a=new Match(pl1,pl2);
+        Player pl1,pl2,pl3;
+        pl1=new Player(1,GREY,6,Wizards.WIZARD1);
+        pl2=new Player(2,BLACK,6,Wizards.WIZARD2);
+        pl3=new Player(3,WHITE,6,Wizards.WIZARD3);
+        Match a=new Match(pl1,pl2,pl3);
         a.getLands().get(2).changeTower(pl1.getBoard().removeTower());
         a.getLands().get(3).changeTower(pl1.getBoard().removeTower());
         a.uniteLandBefore(3);

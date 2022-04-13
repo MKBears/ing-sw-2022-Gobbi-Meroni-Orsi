@@ -39,6 +39,7 @@ List<Land> lands;
         cloud[1]=new Cloud(bag);
         cloud[2]=new Cloud(bag);
         professors=new HashMap<Type_Student,Player>();
+        lands=new ArrayList<Land>();
         for(short i=0;i<12;i++)
             lands.add(new Island(i));
         mothernature=new MotherNature(lands.get(0));
