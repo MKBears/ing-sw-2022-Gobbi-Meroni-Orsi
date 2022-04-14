@@ -1,30 +1,47 @@
 package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * The class representing the board each player controls in an ordinary match.
+ * It contains all the towers, has an entrance to put students from a cloud and a table for each type of student.
+ */
 public class Board {
-    protected final List<Student> dragons;
-    protected final List<Student> unicorns;
-    protected final List<Student> fairies;
-    protected final List<Student> gnomes;
-    protected final List<Student> frogs;
-    protected final List<Tower> towers;
-    protected List<Student> entrance;
+    private final ArrayList<Student> dragons;
+    private final ArrayList<Student> unicorns;
+    private final ArrayList<Student> fairies;
+    private final ArrayList<Student> gnomes;
+    private final ArrayList<Student> frogs;
+    private ArrayList<Tower> towers;
+    private ArrayList<Student> entrance;
 
+    /**
+     *
+     * @param towersNum 8: 2 players;
+     *                  6: 3 players;
+     *                  0 or 8: 4 players
+     * @param color the color of the towers
+     */
     public Board(int towersNum, Colors color){
         dragons=new ArrayList<>();
         unicorns= new ArrayList<>();
         fairies= new ArrayList<>();
         gnomes= new ArrayList<>();
         frogs=new ArrayList<>();
-        towers=new ArrayList<>(towersNum);
         initializeTowers(towersNum, color);
-        entrance=new ArrayList<>();
+        entrance=new ArrayList<>(4);
     }
 
+    /**
+     * Creates the correct number of towers with the specified color
+     * @param towersNum 8: 2 players;
+     *                  6: 3 players;
+     *                  0 or 8: 4 players
+     * @param color the color of the towers
+     */
     private void initializeTowers(int towersNum, Colors color){
         Tower temp;
+        towers=new ArrayList<>(towersNum);
 
         for (int i=0; i< towersNum; i++){
             temp = new Tower(color, this);
@@ -32,37 +49,64 @@ public class Board {
         }
     }
 
-    public int getDragons(){
-        return dragons.size();
+    /**
+     *
+     * @param t indicates the type of students you want to check
+     * @return the number of students of the specified type sitting in a table
+     */
+    public int getStudentsOfType(Type_Student t) {
+        switch (t) {
+            case DRAGON:
+                return dragons.size();
+            case GNOME:
+                return gnomes.size();
+            case FAIRIE:
+                return fairies.size();
+            case UNICORN:
+                return unicorns.size();
+            default:
+                return frogs.size();
+        }
     }
 
-    public int getUnicorns() {
-        return unicorns.size();
+    /**
+     * @deprecated
+     * @return a copy of the list of the towers on the board
+     */
+    public ArrayList<Tower> getTowers() {
+        return (ArrayList<Tower>) towers.clone();
     }
 
-    public int getFairies() {
-        return fairies.size();
+    /**
+     *
+     * @return the number of towers on the board
+     */
+    public int getTowersNum() {
+        return towers.size();
     }
 
-    public int getGnomes(){
-        return gnomes.size();
-    }
-    public int getFrogs(){
-        return frogs.size();
-    }
-
-    public int getTowers(){
-       return towers.size();
+    /**
+     *
+     * @return a copy of the list of the students waiting in the entrance
+     */
+    public ArrayList<Student> getEntrance() {
+        return (ArrayList<Student>) entrance.clone();
     }
 
-    public List<Student> getEntrance() {
-        return entrance;
-    }
-    public void addTower(Tower tower){
-        towers.add(tower);
-    }
+    /**
+     * Checks if the specified student is waiting in the entrance and transfers it to the correct table
+     * @param student
+     * @throws Exception if the specified student is not present in the entrance
+     */
+    public void placeStudent(Student student) throws Exception{
+        if (!entrance.contains(student)){
+            throw new Exception("This student is not placed in the entrance");
+        }
 
-    public void addStudent(Student student){
+        if (getStudentsOfType(student.getType()) == 10){
+            throw new Exception("This table is already full. Please place that student on a cloud.");
+        }
+
         switch (student.getType()){
             case DRAGON:
                 dragons.add(student);
@@ -80,24 +124,44 @@ public class Board {
                 frogs.add(student);
                 break;
         }
+        entrance.remove(student);
     }
 
-    public void setEntrance(List<Student> entrance) {
-        this.entrance = entrance;
+    /**
+     * Transfers the specified list of students to the entrance
+     * @param entrance
+     */
+    public void setEntrance(ArrayList<Student> entrance) {
+        this.entrance = (ArrayList<Student>) entrance.clone();
     }
 
-    public Student removeEntrance(int e){
-        return entrance.remove(e);
+    /**
+     * Removes the specified student from the entrance
+     * @param s
+     */
+    public void removeStudent(Student s){
+        entrance.remove(s);
     }
 
-    public Tower removeTower(){
+    public Tower removeTower() throws Exception{
+        if (towers.isEmpty()){
+            throw new Exception("You have no towers in your board");
+        }
         return towers.remove(0);
     }
 
+    /**
+     * Inserts the specified tower in the board
+     * @param tower
+     */
     public void returnTower(Tower tower){
         towers.add(tower);
     }
 
+    /**
+     *
+     * @return true if there are no more towers in the board
+     */
     public boolean hasNoTowersLeft(){
         return towers.isEmpty();
     }
