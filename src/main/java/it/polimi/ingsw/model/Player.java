@@ -17,15 +17,15 @@ public class Player {
      * @param wizard associated with the rear of the cards
      * @param expert indicates if we are playing an ordinary match or an expert one
      */
-    public Player(int ID, Colors color, int towersNum, Wizards wizard, boolean expert){
+    public Player(int ID, Colors color, int towersNum, Wizards wizard, boolean expert, ArrayList<Student>entrance){
         playerID = ID;
         this.color = color;
         this.wizard = wizard;
         if (expert){
-            board = new Board_Experts(towersNum, color);
+            board = new Board_Experts(towersNum, color, entrance);
         }
         else {
-            board = new Board(towersNum, color);
+            board = new Board(towersNum, color, entrance);
         }
         initializeDeck();
     }

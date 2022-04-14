@@ -13,7 +13,7 @@ public class Board {
     private final ArrayList<Student> gnomes;
     private final ArrayList<Student> frogs;
     private ArrayList<Tower> towers;
-    private ArrayList<Student> entrance;
+    private final ArrayList<Student> entrance;
 
     /**
      *
@@ -22,14 +22,14 @@ public class Board {
      *                  0 or 8: 4 players
      * @param color the color of the towers
      */
-    public Board(int towersNum, Colors color){
-        dragons=new ArrayList<>();
-        unicorns= new ArrayList<>();
-        fairies= new ArrayList<>();
-        gnomes= new ArrayList<>();
-        frogs=new ArrayList<>();
+    public Board(int towersNum, Colors color, ArrayList<Student>entrance){
+        dragons = new ArrayList<>();
+        unicorns = new ArrayList<>();
+        fairies = new ArrayList<>();
+        gnomes = new ArrayList<>();
+        frogs = new ArrayList<>();
         initializeTowers(towersNum, color);
-        entrance=new ArrayList<>(4);
+        this.entrance = new ArrayList<>(entrance);
     }
 
     /**
@@ -99,10 +99,6 @@ public class Board {
      * @throws Exception if the specified student is not present in the entrance
      */
     public void placeStudent(Student student) throws Exception{
-        if (!entrance.contains(student)){
-            throw new Exception("This student is not placed in the entrance");
-        }
-
         if (getStudentsOfType(student.getType()) == 10){
             throw new Exception("This table is already full. Please place that student on a cloud.");
         }
@@ -131,8 +127,8 @@ public class Board {
      * Transfers the specified list of students to the entrance
      * @param entrance
      */
-    public void setEntrance(ArrayList<Student> entrance) {
-        this.entrance = (ArrayList<Student>) entrance.clone();
+    public void importStudents(ArrayList<Student> entrance) {
+        this.entrance.addAll(entrance);
     }
 
     /**

@@ -2,6 +2,9 @@ package it.polimi.ingsw.model;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerTest {
@@ -13,12 +16,14 @@ class PlayerTest {
 
     @BeforeAll
     public static void instantiate() {
+        ArrayList<Student> entrance;
         id = 0;
         values = new boolean[10];
         color = Colors.BLACK;
         wizard = Wizards.WIZARD1;
-        player1 = new Player(id, color, 8, wizard, false);
-        player2 = new Player(id, color, 8, wizard, true);
+        entrance = new ArrayList<>();
+        player1 = new Player(id, color, 8, wizard, false, entrance);
+        player2 = new Player(id, color, 8, wizard, true, entrance);
     }
 
     @Test
