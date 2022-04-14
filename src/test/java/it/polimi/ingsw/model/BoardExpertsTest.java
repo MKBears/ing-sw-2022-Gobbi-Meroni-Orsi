@@ -12,25 +12,29 @@ class BoardExpertsTest {
     private int towersNum;
     private Colors color;
     private Board_Experts board;
+    private ArrayList<Student> entrance;
 
     @BeforeEach
     public void instantiate(){
         towersNum = 6;
         color = Colors.WHITE;
-        board = new Board_Experts(towersNum, color);
+        entrance = new ArrayList<>();
+
+        for (Type_Student t : Type_Student.values()){
+            entrance.add(new Student(t));
+        }
+        board = new Board_Experts(towersNum, color, entrance);
     }
 
     @Test
     public void instanceTest(){
-        assertSame(0, board.getStudentsOfType(Type_Student.DRAGON));
-        assertSame(0, board.getStudentsOfType(Type_Student.GNOME));
-        assertSame(0, board.getStudentsOfType(Type_Student.FAIRIE));
-        assertSame(0, board.getStudentsOfType(Type_Student.UNICORN));
-        assertSame(0, board.getStudentsOfType(Type_Student.FROG));
+        for (Type_Student t : Type_Student.values()) {
+            assertSame(0, board.getStudentsOfType(t));
+        }
         assertSame(1, board.getCoinsNumber());
         assertSame(towersNum, board.getTowersNum());
         assertFalse(board.hasNoTowersLeft());
-        assertTrue(board.getEntrance().isEmpty());
+        assertEquals(entrance, board.getEntrance());
     }
 
     @Test
@@ -40,15 +44,20 @@ class BoardExpertsTest {
         for (Type_Student t : Type_Student.values()){
             students.add(new Student(t));
         }
-        board.setEntrance(students);
-        assertEquals(students, board.getEntrance());
+        board.importStudents(students);
 
         for (Student s : students){
+            assertTrue(board.getEntrance().contains(s));
             try {
                 board.placeStudent(s);
             }catch (Exception e){
                 fail();
             }
+        }
+
+        for (Student s : entrance){
+            board.removeStudent(s);
+            assertFalse(board.getEntrance().contains(s));
         }
         assertTrue(board.getEntrance().isEmpty());
 
@@ -69,7 +78,7 @@ class BoardExpertsTest {
             students.add(new Student(Type_Student.DRAGON));
         }
 
-        board.setEntrance(students);
+        board.importStudents(students);
 
         for(Student s : students) {
             try {
@@ -80,18 +89,9 @@ class BoardExpertsTest {
         }
         assertSame(4, board.getCoinsNumber());
         assertSame(dragons, board.getStudentsOfType(Type_Student.DRAGON));
-        assertTrue(board.getEntrance().isEmpty());
 
         student = new Student(Type_Student.DRAGON);
         assertThrows(Exception.class, ()->board.placeStudent(student));
-        try {
-            board.addStudent(student);
-        }catch (Exception e){
-            fail();
-        }
-        assertThrows(Exception.class, ()->board.placeStudent(student));
-        board.removeStudent(student);
-        assertFalse(board.getEntrance().contains(student));
 
         try {
             board.playCharacter(c);

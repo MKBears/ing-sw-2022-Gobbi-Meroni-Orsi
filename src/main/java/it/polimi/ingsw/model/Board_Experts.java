@@ -17,8 +17,8 @@ public class Board_Experts extends Board{
      *                  0 or 8: 4 players
      * @param color the color of the towers
      */
-    public Board_Experts(int towersNum, Colors color){
-        super(towersNum, color);
+    public Board_Experts(int towersNum, Colors color, ArrayList<Student>entrance){
+        super(towersNum, color, entrance);
         coins=1;
     }
 
@@ -42,16 +42,6 @@ public class Board_Experts extends Board{
             coins=coins-cost;
             card.activatePowerUp();
         }
-    }
-
-    /**
-     * Adds a single student to the entrance
-     * @param student
-     */
-    public void addStudent(Student student){
-        ArrayList<Student> s = getEntrance();
-        s.add(student);
-        setEntrance(s);
     }
 
     @Override
