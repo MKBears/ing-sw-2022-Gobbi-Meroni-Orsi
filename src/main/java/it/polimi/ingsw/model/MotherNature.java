@@ -1,13 +1,13 @@
 package it.polimi.ingsw.model;
 
 public class MotherNature {
-    private Island position;
+    private Land position;
 
-    public MotherNature (Island position){
+    public MotherNature (Land position){
         this. position = position;
     }
 
-    public Island getPosition() {
+    public Land getPosition() {
         return position;
     }
 
@@ -17,7 +17,7 @@ public class MotherNature {
         un intero/short col numero di passi che MN deve fare (pero' serve un riferimento alle isole anche in
         questa classe)
      */
-    public void setPosition(Island position) {
+    public void setPosition(Land position) {
         this.position = position;
     }
 }

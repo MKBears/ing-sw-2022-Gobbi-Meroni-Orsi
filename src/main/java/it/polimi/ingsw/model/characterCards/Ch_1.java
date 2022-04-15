@@ -27,14 +27,14 @@ public class Ch_1 implements CharacterCard {
 
     @Override
     public void activatePowerUp() {
-        //Island island;
-        //int student;
+        Island island;
+        int student=0;
 
         //fa scegliere al player lo studente e l'isola su cui mandarlo
 
         //island.setStudents(students[student]);
         //in match bisogna fare in modo di mandare sempre riferimenti alla prima isola di un gruppo
-        //students[student] = bag.getRandomStudent();
+        students[student] = bag.getRandomStudent();
         if (!activated){
             activated = true;
         }
