@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model;
 
-import javax.naming.directory.InvalidAttributeIdentifierException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
@@ -61,7 +60,7 @@ List<Land> lands;
         return player;
     }
 
-    public MotherNature getMothernature() {
+    public MotherNature getMotherNature() {
         return mothernature;
     }
 
@@ -133,7 +132,7 @@ List<Land> lands;
         int a=0;
         int i;
         for (i = 0; i < player.length; i++)
-            if(player[i].getBoard().getStudent(e)>player[a].getBoard().getStudent(e))
+            if(player[i].getBoard().getStudentsOfType(e)>player[a].getBoard().getStudentsOfType(e))
                 a=i;
         if(professors.containsKey(e))
             professors.replace(e,player[a]);
