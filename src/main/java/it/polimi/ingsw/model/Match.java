@@ -19,8 +19,12 @@ List<Land> lands;
         this.player[1] = player1;
         bag=new Bag();
         cloud=new Cloud[2];
-        cloud[0]=new Cloud(bag);
-        cloud[1]=new Cloud(bag);
+        try {
+        cloud[0]=new Cloud(bag,2);
+        cloud[1]=new Cloud(bag,2);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         professors=new HashMap<Type_Student,Player>();
         lands=new ArrayList<Land>();
         for(short i=0;i<12;i++)
@@ -34,9 +38,13 @@ List<Land> lands;
         this.player[2] = player2;
         cloud=new Cloud[3];
         bag=new Bag();
-        cloud[0]=new Cloud(bag);
-        cloud[1]=new Cloud(bag);
-        cloud[2]=new Cloud(bag);
+        try {
+            cloud[0] = new Cloud(bag,3);
+            cloud[1] = new Cloud(bag,3);
+            cloud[2] = new Cloud(bag,3);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         professors=new HashMap<Type_Student,Player>();
         lands=new ArrayList<Land>();
         for(short i=0;i<12;i++)
@@ -83,16 +91,16 @@ List<Land> lands;
         if(i<0 || i>=lands.size()) throw new IllegalArgumentException();
         if (i>=0 && i<lands.size()-1){
             if(!(lands.get(i).getTower().getColor()==lands.get(i+1).getTower().getColor()))throw new IllegalArgumentException();
-            ArrayList<Land> a=new ArrayList<>();
+            Land a;
             Land unito;
-            a.add(lands.remove(i+1));
+            a=lands.remove(i+1);
             unito=lands.remove(i);
             lands.add(i,unito.uniteIslands(a));
         }else{
             if(!(lands.get(0).getTower().getColor()==lands.get(i).getTower().getColor()))throw new IllegalArgumentException();
-            ArrayList<Land> a=new ArrayList<>();
+            Land a;
             Land unito;
-            a.add(lands.remove(i));
+            a=lands.remove(i);
             unito=lands.remove(0);
             lands.add(0,unito.uniteIslands(a));
         }
@@ -101,15 +109,15 @@ List<Land> lands;
     public void uniteLandBefore(int i) throws Exception,IllegalArgumentException
     {
         if(i<0 || i>lands.size()-1) throw new IllegalArgumentException();
-        ArrayList<Land> a=new ArrayList<>();
+        Land a;
         if(i>=1 && i<lands.size()) {
             if(!(lands.get(i).getTower().getColor()==lands.get(i-1).getTower().getColor()))throw new IllegalArgumentException();
-            a.add(lands.remove(i));
+            a=lands.remove(i);
             lands.add(i,lands.get(i-1).uniteIslands(a));
             lands.remove(i-1);
         }else{
             if(!(lands.get(0).getTower().getColor()==lands.get(lands.size()-1).getTower().getColor()))throw new IllegalArgumentException();
-            a.add(lands.remove(lands.size()-1));
+            a=lands.remove(lands.size()-1);
             lands.add(1,lands.get(0).uniteIslands(a));
             lands.remove(0);
         }
@@ -120,12 +128,8 @@ List<Land> lands;
         if(i<1 || i>=lands.size()-1) throw new IllegalArgumentException();
         if(!(lands.get(i).getTower().getColor()==lands.get(i-1).getTower().getColor() &&
                 lands.get(i).getTower().getColor()==lands.get(i+1).getTower().getColor()))throw new IllegalArgumentException();
-        ArrayList<Land> a=new ArrayList<>();
-        a.add(lands.remove(i+1));
-        a.add(lands.remove(i));
-        Land unito=lands.get(i-1);
-        lands.add(i,lands.get(i-1).uniteIslands(a));
-        lands.remove(unito);
+        uniteLandAfter(i);
+        uniteLandBefore(i);
     }
 
     public Player checkProfessor(Type_Student e) {
