@@ -1,14 +1,14 @@
 package it.polimi.ingsw.model.characterCards;
 
 import it.polimi.ingsw.model.CharacterCard;
-import it.polimi.ingsw.model.Land;
+import it.polimi.ingsw.model.Archipelago;
 
 public class Ch_3 implements CharacterCard {
 
     private final short price;
     private boolean activated;
     private final String powerUp;
-    private Land Islands;
+    private Archipelago Islands;
 
     public Ch_3(){
         price=3;

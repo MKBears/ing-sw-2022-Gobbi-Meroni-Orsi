@@ -12,16 +12,11 @@ public class Island implements Land {  //METTERE A POSTO
         islandID = id;
         tower = null;
         noEntry = false;
-        students=null;
+        students=new ArrayList<>();
     }
 
     public int getID() {
         return islandID;
-    }
-
-    @Override
-    public void addStudents(Student s) {
-
     }
 
     @Override
@@ -41,10 +36,10 @@ public class Island implements Land {  //METTERE A POSTO
     }
 
     @Override
-    public int getInfluence(Student input) {
+    public int getInfluence(Type_Student input) {
         int i=0;
         for (Student s: this.students)
-            if(input.getType()==s.getType()){
+            if(input==s.getType()){
                 i++;
         }
         return i;
@@ -56,29 +51,25 @@ public class Island implements Land {  //METTERE A POSTO
 
 
     @Override
-    public Tower changeTower(Tower n_tower) {
-            Tower old=this.tower;
+    public void changeTower(Tower n_tower) {
+        ArrayList<Tower> old=new ArrayList<>();
+        if(this.tower!=null){
+            this.tower.getBoard().addTower(this.tower);
             this.tower=n_tower;
-            return old;
+        }
+        else{
+            this.tower=n_tower;
+        }
     }
 
     @Override
-    public Archipelago uniteIsland(ArrayList<Land> altra) throws Exception {
-        return null;
-    }
-
-    @Override
-    public Archipelago uniteIslands(ArrayList<Land> others) throws Exception {
-        for(Land i:others) {
-            if (i.getTower().getColor() != this.tower.getColor()) {
-                throw new Exception("Wrong Color of Towers");
-            }
+    public Archipelago uniteIslands(Land other) throws Exception {
+        if (other.getTower().getColor() != this.tower.getColor()) {
+            throw new Exception("Wrong Color of Towers");
         }
         ArrayList<Island> arr=new ArrayList<>();
         arr.add(this);
-        for(Land i: others){
-            arr.addAll(i.getIslands());
-        }
+        arr.addAll(other.getIslands());
         return new Archipelago(arr);
     }
 
@@ -108,19 +99,17 @@ public class Island implements Land {  //METTERE A POSTO
     @Override
     public Colors getTowerColor() throws Exception{
         if (tower != null) {
-            return tower.getColor();
+            return tower.getColor(); //
         }
         else
-            throw new Exception("There are currently no Towers here");
+            throw new Exception("There is currently no Towers here");
     }
 
 
-    public void setNoEntry(boolean noEntry) throws Exception{  //vedi bene cosa deve fare
+    public void setNoEntry(boolean noEntry) throws DuplicateValueException{  //vedi bene cosa deve fare
         if (noEntry == this.noEntry){
-            throw new Exception("A No Entry tile has already been set on this island");
+            throw new DuplicateValueException("A No Entry tile has already been set on this island");
         }
         this.noEntry = noEntry;
     }
-
-
 }

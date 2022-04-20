@@ -21,7 +21,11 @@ public class Ch_1 implements CharacterCard {
         this. bag = bag;
 
         for (int i=0; i<4; i++){
-            students[i] = bag.getRandomStudent();
+            try {
+                students[i] = bag.getRandomStudent();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -34,7 +38,7 @@ public class Ch_1 implements CharacterCard {
 
         //island.setStudents(students[student]);
         //in match bisogna fare in modo di mandare sempre riferimenti alla prima isola di un gruppo
-        students[student] = bag.getRandomStudent();
+        //students[student] = bag.getRandomStudent();
         if (!activated){
             activated = true;
         }

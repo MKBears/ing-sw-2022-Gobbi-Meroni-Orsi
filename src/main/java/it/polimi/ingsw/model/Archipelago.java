@@ -36,17 +36,12 @@ public class Archipelago implements Land {
     }
 
     @Override
-    public void addStudents(Student s) {
-
-    }
-
-    @Override
     public void addStudent(Student s) {
         head.addStudent(s);
     }
 
     @Override
-    public int getInfluence(Student input) {
+    public int getInfluence(Type_Student input) {
         int influence=0;
         for(Island i: group){
             influence= (int) (influence+i.getInfluence(input));
@@ -60,9 +55,9 @@ public class Archipelago implements Land {
     }
 
     @Override
-    public void setNoEntry(boolean noEntry) throws Exception {
+    public void setNoEntry(boolean noEntry) throws DuplicateValueException {
         if (noEntry == this.isThereNoEntry()){
-            throw new Exception("A No Entry tile has already been set on this island");
+            throw new DuplicateValueException("A No Entry tile has already been set on this island");
         }
         for(Island i: group){
             i.setNoEntry(noEntry);
@@ -70,8 +65,7 @@ public class Archipelago implements Land {
     }
 
     @Override
-    public Tower changeTower(Tower n_tower) {
-        Tower t=head.getTower();
+    public void changeTower(Tower n_tower) {
         for(Island i : group){
             i.changeTower(n_tower);
         }
@@ -79,24 +73,15 @@ public class Archipelago implements Land {
             color = head.getTowerColor();
         }
         catch(Exception e){};
-        return t;
+        return;
     }
 
-    @Override
-    public Archipelago uniteIsland(ArrayList<Land> altra) throws Exception {
-        return null;
-    }
-
-    @Override
-    public Archipelago uniteIslands(ArrayList<Land> others) throws Exception {
-        for(Land i:others) {
-            if (i.getTower().getColor() != this.color) {
-                throw new Exception("Wrong Color of Towers");
-            }
+    @Override ///////////
+    public Archipelago uniteIslands(Land other) throws Exception {
+        if (other.getTower().getColor() != this.color) {
+            throw new Exception("Wrong Color of Towers"); //
         }
-        for(Land i: others){
-            group.addAll(i.getIslands());
-        }
+        group.addAll(other.getIslands());
         this.size= (int) group.size();
         return this; //ritorna me stesso
     }
