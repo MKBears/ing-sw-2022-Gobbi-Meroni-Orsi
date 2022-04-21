@@ -6,13 +6,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Match {
-Player[] player;
-Cloud cloud[];
-Bag bag;
-MotherNature mothernature;
-Map<Type_Student,Player> professors;
-List<Land> lands;
+    Player[] player;
+    Cloud cloud[];
+    Bag bag;
+    MotherNature mothernature;
+    Map<Type_Student,Player> professors;
+    List<Land> lands;
 
+    /**
+     * create an instance of the match with two players
+     * @param player first player who play
+     * @param player1 second player who play
+     */
     public Match(Player player,Player player1) {
         this.player=new Player[2];
         this.player[0] = player;
@@ -21,12 +26,8 @@ List<Land> lands;
         cloud=new Cloud[2];
         try {
             cloud[0]=new Cloud(bag,2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
             cloud[1]=new Cloud(bag,2);
-        } catch (Exception e) {
+        }catch(Exception e){
             e.printStackTrace();
         }
         professors=new HashMap<Type_Student,Player>();
@@ -35,6 +36,13 @@ List<Land> lands;
             lands.add(new Island(i));
         mothernature=new MotherNature(lands.get(0));
     }
+
+    /**
+     * create an instance of match of three players
+     * @param player first player of the match
+     * @param player1 second player of the match
+     * @param player2 third player of the match
+     */
     public Match(Player player,Player player1,Player player2) {
         this.player=new Player[3];
         this.player[0] = player;
@@ -43,18 +51,10 @@ List<Land> lands;
         cloud=new Cloud[3];
         bag=new Bag();
         try {
-            cloud[0]=new Cloud(bag,3);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            cloud[1]=new Cloud(bag,3);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            cloud[2]=new Cloud(bag,3);
-        } catch (Exception e) {
+            cloud[0] = new Cloud(bag,3);
+            cloud[1] = new Cloud(bag,3);
+            cloud[2] = new Cloud(bag,3);
+        }catch (Exception e){
             e.printStackTrace();
         }
         professors=new HashMap<Type_Student,Player>();
@@ -64,101 +64,138 @@ List<Land> lands;
         mothernature=new MotherNature(lands.get(0));
     }
 
+    /**
+     *
+     * @return the cloud of the match
+     */
     public Cloud[] getCloud() {
         return cloud;
     }
 
+    /**
+     * set the cloud on the match
+     * @param cloud cloud to set in the match
+     */
     public void setCloud(Cloud[] cloud) {
         this.cloud = cloud;
     }
 
+    /**
+     *
+     * @return the map with the professors and the player who has the professor
+     */
     public Map<Type_Student, Player> getProfessors() {
         return professors;
     }
 
+    /**
+     *
+     * @return the players of the match
+     */
     public Player[] getPlayer() {
         return player;
     }
 
+    /**
+     *
+     * @return the mother nature of the match
+     */
     public MotherNature getMotherNature() {
         return mothernature;
     }
 
+    /**
+     *
+     * @return the bag of the match
+     */
     public Bag getBag() {
         return bag;
     }
 
+    /**
+     *
+     * @return the lands of the match
+     */
     public List<Land> getLands() {
         return lands;
     }
 
+    /**
+     * move mother nature to the land after the number of step
+     * @param step number of step that mother nature has to do
+     */
     public void moveMotherNature(int step){
         int pos=lands.indexOf(mothernature.getPosition());
         pos=(step+pos)%lands.size();
         mothernature.setPosition(lands.get(pos));
     }
 
+    /**
+     * unite the land with the land after
+     * @param i index of the first to unite with after
+     * @throws IllegalArgumentException  if i is i<0 or i>lands.size() or the colors of the towers are different
+     */
     public void uniteLandAfter(int i) throws Exception,IllegalArgumentException
     {
         if(i<0 || i>=lands.size()) throw new IllegalArgumentException();
         if (i>=0 && i<lands.size()-1){
             if(!(lands.get(i).getTower().getColor()==lands.get(i+1).getTower().getColor()))throw new IllegalArgumentException();
-            ArrayList<Land> a=new ArrayList<>();
+            Land a;
             Land unito;
-            a.add(lands.remove(i+1));
+            a=lands.remove(i+1);
             unito=lands.remove(i);
-            for(Land j : a){
-                lands.add(i,unito.uniteIslands(j));
-            }
-
+            lands.add(i,unito.uniteIslands(a));
         }else{
             if(!(lands.get(0).getTower().getColor()==lands.get(i).getTower().getColor()))throw new IllegalArgumentException();
-            ArrayList<Land> a=new ArrayList<>();
+            Land a;
             Land unito;
-            a.add(lands.remove(i));
+            a=lands.remove(i);
             unito=lands.remove(0);
-            for(Land j : a){
-                lands.add(0,unito.uniteIslands(j));
-            }
+            lands.add(0,unito.uniteIslands(a));
         }
     }
 
+    /**
+     * unite the land with the one before
+     * @param i is the index of the land to unite to the one before
+     * @throws IllegalArgumentException if the islands have different colors of tower or i<0 or i>lands.size()-1
+     */
     public void uniteLandBefore(int i) throws Exception,IllegalArgumentException
     {
         if(i<0 || i>lands.size()-1) throw new IllegalArgumentException();
-        ArrayList<Land> a=new ArrayList<>();
+        Land a;
         if(i>=1 && i<lands.size()) {
             if(!(lands.get(i).getTower().getColor()==lands.get(i-1).getTower().getColor()))throw new IllegalArgumentException();
-            a.add(lands.remove(i));
-            for(Land j : a){
-                lands.add(i,lands.get(i-1).uniteIslands(j));
-            }
+            a=lands.remove(i);
+            lands.add(i,lands.get(i-1).uniteIslands(a));
             lands.remove(i-1);
         }else{
             if(!(lands.get(0).getTower().getColor()==lands.get(lands.size()-1).getTower().getColor()))throw new IllegalArgumentException();
-            a.add(lands.remove(lands.size()-1));
-            for(Land j : a){
-                lands.add(i,lands.get(0).uniteIslands(j));
-            }
+            a=lands.remove(lands.size()-1);
+            lands.add(1,lands.get(0).uniteIslands(a));
             lands.remove(0);
         }
     }
 
+    /**
+     * unite the island in the center with the land before and after
+     * @param i is the position of the island that is in the center
+     * @throws Exception if the position of the land is i<1 or i>lands.size()-1 or if the towers of the island have different colors
+     */
     public void uniteLandBeforeAndAfter(int i) throws Exception,IllegalArgumentException
     {
         if(i<1 || i>=lands.size()-1) throw new IllegalArgumentException();
         if(!(lands.get(i).getTower().getColor()==lands.get(i-1).getTower().getColor() &&
                 lands.get(i).getTower().getColor()==lands.get(i+1).getTower().getColor()))throw new IllegalArgumentException();
-        ArrayList<Land> a=new ArrayList<>();
-        a.add(lands.remove(i+1));
-        a.add(lands.remove(i));
-        Land unito=lands.get(i-1);
-        for(Land j : a){
-            lands.add(i,lands.get(i-1).uniteIslands(j));
-        }
-        lands.remove(unito);
+        uniteLandAfter(i);
+        uniteLandBefore(i);
     }
 
+    /**
+     * change the professor of type e
+     * @param e type of the student
+     * @return the player who have the professor of type e
+     */
     public Player checkProfessor(Type_Student e) {
         int a=0;
         int i;
