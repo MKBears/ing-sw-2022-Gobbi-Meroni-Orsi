@@ -23,7 +23,10 @@ public class Ch_11 implements CharacterCard {
         this.bag = bag;
 
         for (int i=0; i<4; i++){
-            students.add(bag.getRandomStudent());
+            try {
+                students.add(bag.getRandomStudent());
+            }
+            catch (Exception e){};
         }
     }
 

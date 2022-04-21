@@ -60,12 +60,15 @@ public class Player {
         return board;
     }
 
+    public ArrayList<AssistantCard> getDeck() {
+        return (ArrayList<AssistantCard>) deck.clone();
+    }
+
     /**
      * @return a random card from the deck (and removes it)
      */
-    public AssistantCard draw (){
-        Random card = new Random();
-        return deck.remove(card.nextInt(deck.size()));
+    public void draw (AssistantCard card){
+        deck.remove(card);
     }
 
     /**

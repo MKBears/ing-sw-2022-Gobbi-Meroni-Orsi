@@ -54,12 +54,9 @@ public class Island implements Land {  //METTERE A POSTO
     public void changeTower(Tower n_tower) {
         ArrayList<Tower> old=new ArrayList<>();
         if(this.tower!=null){
-            this.tower.getBoard().addTower(this.tower);
-            this.tower=n_tower;
+            this.tower.getBoard().returnTower(this.tower);
         }
-        else{
-            this.tower=n_tower;
-        }
+        this.tower=n_tower;
     }
 
     @Override
@@ -106,9 +103,9 @@ public class Island implements Land {  //METTERE A POSTO
     }
 
 
-    public void setNoEntry(boolean noEntry) throws DuplicateValueException{  //vedi bene cosa deve fare
+    public void setNoEntry(boolean noEntry) throws Exception{  //vedi bene cosa deve fare
         if (noEntry == this.noEntry){
-            throw new DuplicateValueException("A No Entry tile has already been set on this island");
+            throw new Exception("A No Entry tile has already been set on this island");
         }
         this.noEntry = noEntry;
     }

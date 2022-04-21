@@ -10,6 +10,7 @@ public class IslandTest {
 
     int id=0;
     Island island= new Island(id);
+    private ArrayList<Student> entrance = new ArrayList<>();
 
 
     @Test
@@ -48,11 +49,11 @@ public class IslandTest {
             e.printStackTrace();
         }
         Colors c=Colors.BLACK;
-        Board b= new Board(2,c);
+        Board b= new Board(2,c, entrance);
         Tower t=new Tower(c,b);
         ArrayList<Tower> old=new ArrayList<>();
         old.add(t);
-        int h=b.getTowers();
+        int h=b.getTowers().size();
         assertNull(island.getTower());
         island.changeTower(t);
         assertEquals(h,island.getTower().getBoard().getTowers()); //dovrebbe essere uguale perchè null
@@ -64,8 +65,8 @@ public class IslandTest {
         }
         assertEquals(b,island.getTower().getBoard());
         assertEquals(old,island.getAllTowers());
-        Colors colo=Colors.GRAY;
-        Board boa= new Board(2,colo);
+        Colors colo=Colors.GREY;
+        Board boa= new Board(2,colo, entrance);
         Tower tow=new Tower(colo,boa);
         island.changeTower(tow);
         assertEquals(3,b.getTowers());
@@ -119,19 +120,19 @@ public class IslandTest {
         assertFalse(island.isThereNoEntry());
         try {
             island.setNoEntry(true);
-        } catch (DuplicateValueException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         assertTrue(island.isThereNoEntry());
         try {
             island.setNoEntry(false);
-        } catch (DuplicateValueException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         assertFalse(island.isThereNoEntry());
         try {
             island.setNoEntry(false);
-        } catch (DuplicateValueException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -139,12 +140,12 @@ public class IslandTest {
     @Test
     public void unionTest(){
         Colors c=Colors.BLACK;
-        Board b= new Board(3,c);
+        Board b= new Board(3,c, entrance);
         Tower t=new Tower(c,b);
         ArrayList<Land>lands=new ArrayList<>();
         Island isa=new Island(9999);
-        Board bruh=new Board(3,Colors.GRAY);
-        Tower tow=new Tower(Colors.GRAY,bruh);
+        Board bruh=new Board(3,Colors.GREY, entrance);
+        Tower tow=new Tower(Colors.GREY,bruh);
         isa.changeTower(tow);
         for(int h=2; h<7; h++) {
             Island i = new Island(h);

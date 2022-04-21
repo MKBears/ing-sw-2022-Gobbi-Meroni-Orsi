@@ -19,14 +19,16 @@ public class ArchipelagoTest {
     public static int c_torri;
     public static int e;
     public static Island i;
+    private static ArrayList<Student> entrance;
 
     @BeforeAll
     public static void setUp() {
+        entrance = new ArrayList<>();
         i=new Island(8888);
         e=0;
         c_torri=0;
-        color=Colors.GRAY;
-        board=new Board(20, color);
+        color=Colors.GREY;
+        board=new Board(20, color, entrance);
         t=new Tower(color, board);
         is= new ArrayList<>();
         type=Type_Student.DRAGON;
@@ -80,12 +82,12 @@ public class ArchipelagoTest {
         }
         assertEquals(t,pelago.getTower());
         Colors c=Colors.BLACK;
-        Board b=new Board(20,c);
+        Board b=new Board(20,c, entrance);
         Tower to=new Tower(c,b);
         pelago.changeTower(to);
         c_torri=c_torri+20; ////////
         assertFalse(board.hasNoTowersLeft());
-        assertEquals(c_torri,board.getTowers());
+        assertEquals(c_torri,board.getTowers().size());
         assertEquals(to,pelago.getTower());
         assertEquals(x,pelago.getAllTowers().size());
     }
@@ -115,20 +117,16 @@ public class ArchipelagoTest {
         assertFalse(pelago.isThereNoEntry());
         try {
             pelago.setNoEntry(true);
-        } catch (DuplicateValueException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            fail();
         }
         assertTrue(pelago.isThereNoEntry());
         try {
             pelago.setNoEntry(false);
-        } catch (DuplicateValueException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            fail();
         }
-        try {
-            pelago.setNoEntry(false);
-        } catch (DuplicateValueException ex) {
-            ex.printStackTrace();
-        }
+        assertThrows(Exception.class, ()->pelago.setNoEntry(false));
     }
 
     @Test
@@ -136,8 +134,8 @@ public class ArchipelagoTest {
         e=1;
         i.changeTower(t);
         pelago.changeTower(t);
-        Board bb=new Board(3,Colors.WHITE);
-        Board h=new Board(3,Colors.WHITE);
+        Board bb=new Board(3,Colors.WHITE, entrance);
+        Board h=new Board(3,Colors.WHITE, entrance);
         Tower tow=new Tower(Colors.WHITE,bb);
         Island isa=new Island(88);
         isa.changeTower(tow);
