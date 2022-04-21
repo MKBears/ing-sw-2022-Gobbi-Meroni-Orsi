@@ -19,8 +19,16 @@ List<Land> lands;
         this.player[1] = player1;
         bag=new Bag();
         cloud=new Cloud[2];
-        cloud[0]=new Cloud(bag);
-        cloud[1]=new Cloud(bag);
+        try {
+            cloud[0]=new Cloud(bag,2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            cloud[1]=new Cloud(bag,2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         professors=new HashMap<Type_Student,Player>();
         lands=new ArrayList<Land>();
         for(short i=0;i<12;i++)
@@ -34,9 +42,21 @@ List<Land> lands;
         this.player[2] = player2;
         cloud=new Cloud[3];
         bag=new Bag();
-        cloud[0]=new Cloud(bag);
-        cloud[1]=new Cloud(bag);
-        cloud[2]=new Cloud(bag);
+        try {
+            cloud[0]=new Cloud(bag,3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            cloud[1]=new Cloud(bag,3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            cloud[2]=new Cloud(bag,3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         professors=new HashMap<Type_Student,Player>();
         lands=new ArrayList<Land>();
         for(short i=0;i<12;i++)
@@ -87,14 +107,19 @@ List<Land> lands;
             Land unito;
             a.add(lands.remove(i+1));
             unito=lands.remove(i);
-            lands.add(i,unito.uniteIslands(a));
+            for(Land j : a){
+                lands.add(i,unito.uniteIslands(j));
+            }
+
         }else{
             if(!(lands.get(0).getTower().getColor()==lands.get(i).getTower().getColor()))throw new IllegalArgumentException();
             ArrayList<Land> a=new ArrayList<>();
             Land unito;
             a.add(lands.remove(i));
             unito=lands.remove(0);
-            lands.add(0,unito.uniteIslands(a));
+            for(Land j : a){
+                lands.add(0,unito.uniteIslands(j));
+            }
         }
     }
 
@@ -105,12 +130,16 @@ List<Land> lands;
         if(i>=1 && i<lands.size()) {
             if(!(lands.get(i).getTower().getColor()==lands.get(i-1).getTower().getColor()))throw new IllegalArgumentException();
             a.add(lands.remove(i));
-            lands.add(i,lands.get(i-1).uniteIslands(a));
+            for(Land j : a){
+                lands.add(i,lands.get(i-1).uniteIslands(j));
+            }
             lands.remove(i-1);
         }else{
             if(!(lands.get(0).getTower().getColor()==lands.get(lands.size()-1).getTower().getColor()))throw new IllegalArgumentException();
             a.add(lands.remove(lands.size()-1));
-            lands.add(1,lands.get(0).uniteIslands(a));
+            for(Land j : a){
+                lands.add(i,lands.get(0).uniteIslands(j));
+            }
             lands.remove(0);
         }
     }
@@ -124,7 +153,9 @@ List<Land> lands;
         a.add(lands.remove(i+1));
         a.add(lands.remove(i));
         Land unito=lands.get(i-1);
-        lands.add(i,lands.get(i-1).uniteIslands(a));
+        for(Land j : a){
+            lands.add(i,lands.get(i-1).uniteIslands(j));
+        }
         lands.remove(unito);
     }
 

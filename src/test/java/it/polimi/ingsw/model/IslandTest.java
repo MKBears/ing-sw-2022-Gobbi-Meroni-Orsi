@@ -48,11 +48,14 @@ public class IslandTest {
             e.printStackTrace();
         }
         Colors c=Colors.BLACK;
-        Board b= new Board(2,c);
+        ArrayList<Student>s=new ArrayList<>();
+        Student gg= new Student(Type_Student.GNOME);
+        s.add(gg);
+        Board b= new Board(2,c, s);
         Tower t=new Tower(c,b);
         ArrayList<Tower> old=new ArrayList<>();
         old.add(t);
-        int h=b.getTowers();
+        ArrayList<Tower> h=b.getTowers();
         assertNull(island.getTower());
         island.changeTower(t);
         assertEquals(h,island.getTower().getBoard().getTowers()); //dovrebbe essere uguale perchè null
@@ -64,11 +67,11 @@ public class IslandTest {
         }
         assertEquals(b,island.getTower().getBoard());
         assertEquals(old,island.getAllTowers());
-        Colors colo=Colors.GRAY;
-        Board boa= new Board(2,colo);
+        Colors colo=Colors.GREY;
+        Board boa= new Board(2,colo,s);
         Tower tow=new Tower(colo,boa);
         island.changeTower(tow);
-        assertEquals(3,b.getTowers());
+        assertEquals(3,b.getTowers().size());
         assertEquals(tow,island.getTower());
         assertEquals(boa,island.getTower().getBoard());
     }
@@ -119,19 +122,19 @@ public class IslandTest {
         assertFalse(island.isThereNoEntry());
         try {
             island.setNoEntry(true);
-        } catch (DuplicateValueException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         assertTrue(island.isThereNoEntry());
         try {
             island.setNoEntry(false);
-        } catch (DuplicateValueException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         assertFalse(island.isThereNoEntry());
         try {
             island.setNoEntry(false);
-        } catch (DuplicateValueException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -139,12 +142,15 @@ public class IslandTest {
     @Test
     public void unionTest(){
         Colors c=Colors.BLACK;
-        Board b= new Board(3,c);
+        ArrayList<Student>s=new ArrayList<>();
+        Student gg= new Student(Type_Student.GNOME);
+        s.add(gg);
+        Board b= new Board(3,c,s );
         Tower t=new Tower(c,b);
         ArrayList<Land>lands=new ArrayList<>();
         Island isa=new Island(9999);
-        Board bruh=new Board(3,Colors.GRAY);
-        Tower tow=new Tower(Colors.GRAY,bruh);
+        Board bruh=new Board(3,Colors.GREY, s);
+        Tower tow=new Tower(Colors.GREY,bruh);
         isa.changeTower(tow);
         for(int h=2; h<7; h++) {
             Island i = new Island(h);

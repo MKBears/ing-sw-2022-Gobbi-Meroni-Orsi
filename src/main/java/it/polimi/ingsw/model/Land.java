@@ -9,7 +9,7 @@ public interface Land {
     void addStudent(Student s);  //allo start
     int getInfluence(Type_Student input);
     boolean isThereNoEntry();
-    void setNoEntry(boolean noEntry) throws DuplicateValueException;
+    void setNoEntry(boolean noEntry) throws Exception;
     void changeTower(Tower n_tower);
     Archipelago uniteIslands(Land other)throws Exception;
     ArrayList<Island> getIslands();

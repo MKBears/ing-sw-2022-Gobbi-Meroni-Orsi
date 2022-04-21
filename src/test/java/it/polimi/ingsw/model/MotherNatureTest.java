@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MotherNatureTest {  //fai initialization test
+public class MotherNatureTest {
 
     Island i= new Island(1);
     MotherNature mn=new MotherNature(i);

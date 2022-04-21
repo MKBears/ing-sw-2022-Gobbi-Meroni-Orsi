@@ -55,9 +55,9 @@ public class Archipelago implements Land {
     }
 
     @Override
-    public void setNoEntry(boolean noEntry) throws DuplicateValueException {
+    public void setNoEntry(boolean noEntry) throws Exception {
         if (noEntry == this.isThereNoEntry()){
-            throw new DuplicateValueException("A No Entry tile has already been set on this island");
+            throw new Exception("A No Entry tile has already been set on this island");
         }
         for(Island i: group){
             i.setNoEntry(noEntry);

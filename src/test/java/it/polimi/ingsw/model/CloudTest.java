@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CloudTest {
+public class CloudTest { //
 
 
     Bag bag=new Bag();
@@ -42,7 +42,6 @@ public class CloudTest {
 
     @Test
     public void studentTest(){
-        boolean b;
         ArrayList<Student> arr=new ArrayList<>();
         for (Type_Student t : Type_Student.values()){
             for (int i=0; i<26; i++){
@@ -54,10 +53,7 @@ public class CloudTest {
             assertNull(cloud.getStudents().get(i));
         }
         cloud.importStudents();
-        for(int i=0; i<l; i++) {
-            b = !arr.contains(cloud.getStudents().get(i));
-            assertTrue(b);
-        }
+        assertTrue(arr.containsAll(cloud.getStudents()));
         for (int j=0; j<500; j++) {
             cloudd.importStudents();
         }
