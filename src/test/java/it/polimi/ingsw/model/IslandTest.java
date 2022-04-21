@@ -22,7 +22,7 @@ public class IslandTest {
         assertEquals(island,island.getHead());
     }
 
-    @Test
+    @Test //
     public void studentsTest(){
         ArrayList<Student> stu=new ArrayList<>();
         Bag bag=new Bag();
