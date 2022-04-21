@@ -19,18 +19,14 @@ public class CloudTest { //
         try {
             cloud = new Cloud(bag,2);
         } catch (Exception e) {
-            e.printStackTrace();
+            fail();
         }
         try {
             cloudd=new Cloud(bagg,3);
         } catch (Exception e) {
-            e.printStackTrace();
+            fail();
         }
-        try {
-            cloudd=new Cloud(bagg,5);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        assertThrows(Exception.class,()->cloudd=new Cloud(bagg,5));
     }
 
 

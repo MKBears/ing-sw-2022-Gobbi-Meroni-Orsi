@@ -122,19 +122,15 @@ public class ArchipelagoTest {
         try {
             pelago.setNoEntry(true);
         } catch (Exception e) {
-            e.printStackTrace();
+            fail();
         }
         assertTrue(pelago.isThereNoEntry());
         try {
             pelago.setNoEntry(false);
         } catch (Exception e) {
-            e.printStackTrace();
+            fail();
         }
-        try {
-            pelago.setNoEntry(false);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        assertThrows(Exception.class,()->pelago.setNoEntry(false));
     }
 
     @Test
@@ -160,15 +156,11 @@ public class ArchipelagoTest {
         try {
             a=pelago.uniteIslands(i);
         } catch (Exception e) {
-            e.printStackTrace();
+            fail();
         }
         Tower y=new Tower(Colors.WHITE,h);
         i.changeTower(y);
-        try {
-            a=pelago.uniteIslands(i);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        assertThrows(Exception.class,()->pelago.uniteIslands(i));
         i.changeTower(t);
         ArrayList<Island> arr = new ArrayList<>(pelago.getIslands());
         //arr.add(i);

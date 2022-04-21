@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BagTest {
 
@@ -50,9 +51,6 @@ public class BagTest {
         assertEquals(26,d);
         assertEquals(26,fa);
         assertEquals(26,u);
-        try {
-            Student stu = bag.getRandomStudent();
-        }
-        catch(Exception e){}
+        assertThrows(Exception.class,()->bag.getRandomStudent());
     }
 }
