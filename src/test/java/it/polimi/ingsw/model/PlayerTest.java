@@ -37,15 +37,9 @@ class PlayerTest {
 
     @Test
     public void deckTest(){
-        AssistantCard card;
+        ArrayList<AssistantCard> deck = player1.getDeck();
 
-        for (int i=0; i<10; i++){
-
-            card = player1.draw();
-            if (card == null){
-                fail();
-            }
-
+        for (AssistantCard card : deck){
             if (values[card.getValue()-1]){
                 fail();
             }
@@ -53,6 +47,10 @@ class PlayerTest {
                 values[card.getValue()-1] = true;
             }
             assertSame((card.getValue()+1)/2, card.getMNSteps());
+
+            player1.draw(card);
+            assertFalse(player1.getDeck().contains(card));
+            values[card.getValue()-1] = true;
         }
         assertTrue(player1.hasNoCardsLeft());
     }
