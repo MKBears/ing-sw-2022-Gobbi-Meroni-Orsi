@@ -9,7 +9,6 @@ public class MotherNatureTest {
     Island i= new Island(1);
     MotherNature mn=new MotherNature(i);
 
-
     @Test
     public void Test(){
         assertEquals(i,mn.getPosition());

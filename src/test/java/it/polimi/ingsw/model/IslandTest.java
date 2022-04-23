@@ -30,7 +30,7 @@ public class IslandTest {
             try {
                 stu.add(bag.getRandomStudent());
             } catch (Exception e) {
-                e.printStackTrace();
+                fail();
             }
         }
         for(Student s : stu){
@@ -42,11 +42,7 @@ public class IslandTest {
     @Test
     public void towersTest(){  //da rivedere
         Island d=new Island(12345);
-        try {
-            d.getTowerColor();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        assertThrows(Exception.class,()->d.getTowerColor());
         Colors c=Colors.BLACK;
         Board b= new Board(2,c);
         Tower t=new Tower(c,b);
@@ -60,7 +56,7 @@ public class IslandTest {
         try {
             assertEquals(t.getColor(),island.getTowerColor());
         } catch (Exception e) {
-            e.printStackTrace();
+            fail();
         }
         assertEquals(b,island.getTower().getBoard());
         assertEquals(old,island.getAllTowers());
@@ -86,7 +82,7 @@ public class IslandTest {
             try {
                 s = bag.getRandomStudent();
             } catch (Exception e) {
-                e.printStackTrace();
+                fail();
             }
             island.addStudent(s);
             switch (s.getType()){
@@ -120,20 +116,16 @@ public class IslandTest {
         try {
             island.setNoEntry(true);
         } catch (Exception e) {
-            e.printStackTrace();
+            fail();
         }
         assertTrue(island.isThereNoEntry());
         try {
             island.setNoEntry(false);
         } catch (Exception e) {
-            e.printStackTrace();
+            fail();
         }
         assertFalse(island.isThereNoEntry());
-        try {
-            island.setNoEntry(false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        assertThrows(Exception.class,()->island.setNoEntry(false));
     }
 
     @Test
@@ -179,14 +171,10 @@ public class IslandTest {
                     assertTrue(pelago.getIslands().containsAll(out.getIslands()));
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                fail();
             }
         }
-        try {
-            island.uniteIslands(isa);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        assertThrows(Exception.class,()->island.uniteIslands(isa));
     }
 }
 
