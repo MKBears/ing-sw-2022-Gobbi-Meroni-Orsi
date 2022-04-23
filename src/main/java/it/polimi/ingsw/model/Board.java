@@ -48,6 +48,10 @@ public class Board {
         }
     }
 
+    /**
+     * To use before the start of the match to initialize the entrance
+     * @param entrance
+     */
     public void setEntrance(ArrayList<Student> entrance){
         this.entrance = (ArrayList<Student>) entrance.clone();
     }
