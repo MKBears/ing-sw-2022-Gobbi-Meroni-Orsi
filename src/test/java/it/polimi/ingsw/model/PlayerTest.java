@@ -39,8 +39,9 @@ class PlayerTest {
         ArrayList<AssistantCard> deck;
 
         for (int i=1; i<=10; i++){
-            card = player1.draw(i);
-            assertSame((i+1)/2, card);
+            player1.draw(i);
+            assertSame(i, player1.getPlayedCard().getValue());
+            assertSame((i+1)/2, player1.getPlayedCard().getMNSteps());
             deck = player1.getDeck();
 
             for (AssistantCard c : deck){

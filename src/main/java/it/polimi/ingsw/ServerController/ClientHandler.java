@@ -1,5 +1,6 @@
 package it.polimi.ingsw.ServerController;
 
+import it.polimi.ingsw.model.AssistantCard;
 import it.polimi.ingsw.model.Colors;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Wizards;
@@ -24,6 +25,7 @@ public class ClientHandler extends Thread{
         socket = s;
     }
 
+    //Non credo sia necessario il multithreading perché si gioca un player alla volta
     @Override
     public void run() {
         try{
@@ -105,6 +107,45 @@ public class ClientHandler extends Thread{
             towersNum = 6;
         }
         avatar = new Player(userName, color, towersNum, wizard, expert);
+    }
+
+    public Player getAvatar(){
+        return avatar;
+    }
+
+    public int playAssistant(int[] played){
+        //Played sono le carte giocate dagli altri giocatori
+        // played[i]==0 significa che il player i non ha ancora giocato una carta
+        boolean hasPlayableCard = false;
+        ArrayList<AssistantCard> deck = avatar.getDeck();
+        int i = 0;
+        int c;
+        int card;
+
+        //Si controlla se il player ha almeno una carta che non è ancora stata giocata nella mano corrente
+        while(!hasPlayableCard && played[i]!=0 && i<played.length){
+            c = 0;
+            while(c<deck.size() && !hasPlayableCard){
+                if (deck.get(c).getValue() != played[i]) {
+                    hasPlayableCard = true;
+                }
+                c++;
+            }
+            i++;
+        }
+        out.println("Assistant");
+
+        if (hasPlayableCard){
+            for (i=0; played[i]!=0; i++) {
+                out.println(played[i]);
+            }
+        }
+        out.println(0);
+        //Quando il controller lato client riceve 0 dopo "Assistant" ed eventualmente qualche int,
+        // sa che puo' inviare alla view il comando di fare scegliere al player la carta assistente da giocare
+        card = in.nextInt();
+        avatar.draw(card);
+        return card;
     }
 
 }

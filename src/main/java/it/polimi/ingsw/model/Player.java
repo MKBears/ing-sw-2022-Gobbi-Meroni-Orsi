@@ -8,6 +8,7 @@ public class Player {
     private final Board board;
     private final Wizards wizard;
     private ArrayList<AssistantCard> deck;
+    private AssistantCard playedCard;
 
     /**
      * @param userName
@@ -67,14 +68,18 @@ public class Player {
      * Plays the card with the specified value and removes it from the deck
      * @return Mother Nature's steps of the played card
      */
-    public int draw (int value){
+    public void draw (int value){
         int position = 0;
         for (int i=0; i<deck.size(); i++){
             if (value==deck.get(i).getValue()){
                 position = i;
             }
         }
-        return deck.remove(position).getMNSteps();
+        playedCard = deck.remove(position);
+    }
+
+    public AssistantCard getPlayedCard() {
+        return playedCard;
     }
 
     /**

@@ -48,10 +48,18 @@ public class CloudTest { //
         for(int i=0; i<l;i++) {
             assertNull(cloud.getStudents().get(i));
         }
-        cloud.importStudents();
+        try {
+            cloud.importStudents();
+        }catch (Exception e){
+            fail();
+        }
         assertTrue(arr.containsAll(cloud.getStudents()));
         for (int j=0; j<500; j++) {
-            cloudd.importStudents();
+            try {
+                cloudd.importStudents();
+            }catch (Exception e){
+                fail();//Qui fallisce per forza perché in Bag non ci sono 500 studenti
+            }
         }
     }
 

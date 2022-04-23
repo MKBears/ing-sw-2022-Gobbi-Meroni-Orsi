@@ -1,8 +1,7 @@
 package it.polimi.ingsw.ServerController;
 
-import it.polimi.ingsw.model.AssistantCard;
-import it.polimi.ingsw.model.Cloud;
 import it.polimi.ingsw.model.Colors;
+import it.polimi.ingsw.model.Match;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -13,6 +12,7 @@ public class Controller{
     private static final int port = 4096;
     private static int playersNum;
     private static boolean expertMatch;
+    private static Match match;
 
     public static void main(String[] args) {
         ServerSocket sSocket;
@@ -51,6 +51,11 @@ public class Controller{
             i++;
         }while (i<playersNum);
 
+        switch (playersNum){
+            case 2: match = new Match(players.get(0).getAvatar(), players.get(1).getAvatar());
+            case 3: match = new Match(players.get(0).getAvatar(), players.get(1).getAvatar(), players.get(2).getAvatar());
+        }
+
         for (i=0; i<playersNum; i++){
             wizards[players.get(i).setWizard(wizards)] = false;
         }
@@ -62,23 +67,6 @@ public class Controller{
 
     public static int getPlayersNum() {
         return playersNum;
-    }
-
-    public void fillClouds (ArrayList<Cloud> clouds){
-        for (Cloud c : clouds){
-            c.importStudents();
-        }
-    }
-
-    public void playAssistantCards(ArrayList<AssistantCard> played){
-        for (int i=0; i<played.size()-1; i++){
-            for (int j=i+1; j<played.size(); j++){
-                if (played.get(j).getValue()==played.get(i).getValue()){
-                    //pija le carte in mano al player j e controlla se ne ha almeno una che non é stata giocata in questa mano,
-                    //se non ce ne ha nemmeno una, allora va bene la carta che ha giocato
-                }
-            }
-        }
     }
 
 }

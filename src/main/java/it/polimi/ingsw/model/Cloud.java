@@ -39,13 +39,9 @@ public class Cloud {
     /**
      * refills the cloud automatically
      */
-    public void importStudents(){
+    public void importStudents() throws Exception{
         for (int i = 0; i < nop; i++) {
-            try {
-                students[i] = bag.getRandomStudent();
-            } catch (Exception e) { //
-                e.printStackTrace();
-            }
+            students[i] = bag.getRandomStudent();
         }
     }
 
