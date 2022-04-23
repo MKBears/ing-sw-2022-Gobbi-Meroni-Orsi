@@ -7,9 +7,9 @@ import java.util.Map;
 
 public class Match {
     Player[] player;
-    Cloud cloud[];
+    Cloud[] cloud;
     Bag bag;
-    MotherNature mothernature;
+    MotherNature motherNature;
     Map<Type_Student,Player> professors;
     List<Land> lands;
 
@@ -34,7 +34,7 @@ public class Match {
         lands=new ArrayList<Land>();
         for(short i=0;i<12;i++)
             lands.add(new Island(i));
-        mothernature=new MotherNature(lands.get(0));
+        motherNature =new MotherNature(lands.get(0));
     }
 
     /**
@@ -61,7 +61,7 @@ public class Match {
         lands=new ArrayList<Land>();
         for(short i=0;i<12;i++)
             lands.add(new Island(i));
-        mothernature=new MotherNature(lands.get(0));
+        motherNature =new MotherNature(lands.get(0));
     }
 
     /**
@@ -101,7 +101,7 @@ public class Match {
      * @return the mother nature of the match
      */
     public MotherNature getMotherNature() {
-        return mothernature;
+        return motherNature;
     }
 
     /**
@@ -125,9 +125,9 @@ public class Match {
      * @param step number of step that mother nature has to do
      */
     public void moveMotherNature(int step){
-        int pos=lands.indexOf(mothernature.getPosition());
+        int pos=lands.indexOf(motherNature.getPosition());
         pos=(step+pos)%lands.size();
-        mothernature.setPosition(lands.get(pos));
+        motherNature.setPosition(lands.get(pos));
     }
 
     /**

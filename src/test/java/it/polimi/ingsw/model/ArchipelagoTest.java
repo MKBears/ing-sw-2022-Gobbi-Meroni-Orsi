@@ -22,14 +22,11 @@ public class ArchipelagoTest {
 
     @BeforeAll
     public static void setUp() {
-        ArrayList<Student>si=new ArrayList<>();
-        Student gg= new Student(Type_Student.GNOME);
-        si.add(gg);
         i=new Island(8888);
         e=0;
         c_torri=0;
         color=Colors.GREY;
-        board=new Board(20, color,si);
+        board=new Board(20, color);
         t=new Tower(color, board);
         is= new ArrayList<>();
         type=Type_Student.DRAGON;
@@ -83,10 +80,7 @@ public class ArchipelagoTest {
         }
         assertEquals(t,pelago.getTower());
         Colors c=Colors.BLACK;
-        ArrayList<Student>s=new ArrayList<>();
-        Student gg= new Student(Type_Student.GNOME);
-        s.add(gg);
-        Board b=new Board(20,c,s);
+        Board b=new Board(20,c);
         Tower to=new Tower(c,b);
         pelago.changeTower(to);
         c_torri=c_torri+20; ////////
@@ -142,11 +136,8 @@ public class ArchipelagoTest {
         e=1;
         i.changeTower(t);
         pelago.changeTower(t);
-        ArrayList<Student>s=new ArrayList<>();
-        Student gg= new Student(Type_Student.GNOME);
-        s.add(gg);
-        Board bb=new Board(3,Colors.WHITE,s);
-        Board h=new Board(3,Colors.WHITE,s);
+        Board bb=new Board(3,Colors.WHITE);
+        Board h=new Board(3,Colors.WHITE);
         Tower tow=new Tower(Colors.WHITE,bb);
         Island isa=new Island(88);
         isa.changeTower(tow);

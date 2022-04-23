@@ -48,10 +48,7 @@ public class IslandTest {
             e.printStackTrace();
         }
         Colors c=Colors.BLACK;
-        ArrayList<Student>s=new ArrayList<>();
-        Student gg= new Student(Type_Student.GNOME);
-        s.add(gg);
-        Board b= new Board(2,c, s);
+        Board b= new Board(2,c);
         Tower t=new Tower(c,b);
         ArrayList<Tower> old=new ArrayList<>();
         old.add(t);
@@ -68,7 +65,7 @@ public class IslandTest {
         assertEquals(b,island.getTower().getBoard());
         assertEquals(old,island.getAllTowers());
         Colors colo=Colors.GREY;
-        Board boa= new Board(2,colo,s);
+        Board boa= new Board(2,colo);
         Tower tow=new Tower(colo,boa);
         island.changeTower(tow);
         assertEquals(3,b.getTowers().size());
@@ -142,14 +139,11 @@ public class IslandTest {
     @Test
     public void unionTest(){
         Colors c=Colors.BLACK;
-        ArrayList<Student>s=new ArrayList<>();
-        Student gg= new Student(Type_Student.GNOME);
-        s.add(gg);
-        Board b= new Board(3,c,s );
+        Board b= new Board(3,c);
         Tower t=new Tower(c,b);
         ArrayList<Land>lands=new ArrayList<>();
         Island isa=new Island(9999);
-        Board bruh=new Board(3,Colors.GREY, s);
+        Board bruh=new Board(3,Colors.GREY);
         Tower tow=new Tower(Colors.GREY,bruh);
         isa.changeTower(tow);
         for(int h=2; h<7; h++) {

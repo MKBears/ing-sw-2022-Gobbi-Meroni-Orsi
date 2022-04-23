@@ -1,25 +1,26 @@
-package it.polimi.ingsw.model.characterCards;
+package it.polimi.ingsw.ServerController.characterCards;
 
 import it.polimi.ingsw.model.CharacterCard;
 
-public class Ch_4 implements CharacterCard {
+public class Ch_10 implements CharacterCard {
 
     private final short price;
     private boolean activated;
     private final String powerUp;
 
-    public Ch_4(){
+    public Ch_10(){
         price=1;
         activated=false;
-        powerUp="You may move Mother Naure up to 2 additional Islands"+
-                " than is indicated by the Assistant card you've played.";
+        powerUp="You may excange up to 2 Students between your "+
+                "Entrance and your Dining Room.";
     }
+
 
     @Override
     public void activatePowerUp() {
         //...
 
-        if (!activated){
+        if(!activated){
             activated=true;
         }
     }

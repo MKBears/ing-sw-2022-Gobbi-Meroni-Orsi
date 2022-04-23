@@ -1,24 +1,24 @@
-package it.polimi.ingsw.model.characterCards;
+package it.polimi.ingsw.ServerController.characterCards;
 
 import it.polimi.ingsw.model.CharacterCard;
+import it.polimi.ingsw.model.Island;
 
-public class Ch_9 implements CharacterCard {
+public class Ch_6 implements CharacterCard {
 
     private final short price;
     private boolean activated;
     private final String powerUp;
+    private it.polimi.ingsw.model.Island Island;
 
-    public Ch_9(){
+    public Ch_6(){
         price=3;
         activated=false;
-        powerUp="Choose a color of Student: during the influence "+
-                "calculation this turn, that color adds no influence.";
+        powerUp="When resoling a Conquering on an Island, "+
+                "Towers do not count towards influence.";
     }
-
     @Override
     public void activatePowerUp() {
         //...
-
         if(!activated){
             activated=true;
         }
@@ -42,5 +42,9 @@ public class Ch_9 implements CharacterCard {
     @Override
     public String getPowerUp() {
         return powerUp;
+    }
+
+    public Island getIsland() {
+        return Island;
     }
 }

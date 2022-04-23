@@ -1,31 +1,30 @@
 package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Player {
-    private final int playerID;
+    private final String userName;
     private final Colors color;
     private final Board board;
     private final Wizards wizard;
     private ArrayList<AssistantCard> deck;
 
     /**
-     * @param ID
+     * @param userName
      * @param color the color of the towers this player has in their board
      * @param towersNum 8 if there are 2 or 4 players, 6 if the number of players is 3
      * @param wizard associated with the rear of the cards
      * @param expert indicates if we are playing an ordinary match or an expert one
      */
-    public Player(int ID, Colors color, int towersNum, Wizards wizard, boolean expert, ArrayList<Student>entrance){
-        playerID = ID;
+    public Player(String userName, Colors color, int towersNum, Wizards wizard, boolean expert){
+        this.userName = userName;
         this.color = color;
         this.wizard = wizard;
         if (expert){
-            board = new Board_Experts(towersNum, color, entrance);
+            board = new Board_Experts(towersNum, color);
         }
         else {
-            board = new Board(towersNum, color, entrance);
+            board = new Board(towersNum, color);
         }
         initializeDeck();
     }
@@ -44,8 +43,8 @@ public class Player {
     }
 
 
-    public int getPlayerID() {
-        return playerID;
+    public String getUserName() {
+        return userName;
     }
 
     public Colors getColor() {
@@ -65,10 +64,17 @@ public class Player {
     }
 
     /**
-     * @return a random card from the deck (and removes it)
+     * Plays the card with the specified value and removes it from the deck
+     * @return Mother Nature's steps of the played card
      */
-    public void draw (AssistantCard card){
-        deck.remove(card);
+    public int draw (int value){
+        int position = 0;
+        for (int i=0; i<deck.size(); i++){
+            if (value==deck.get(i).getValue()){
+                position = i;
+            }
+        }
+        return deck.remove(position).getMNSteps();
     }
 
     /**

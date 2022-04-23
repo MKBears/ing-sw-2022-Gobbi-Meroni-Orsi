@@ -9,27 +9,25 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerTest {
     private static Player player1, player2;
-    private static int id;
-    private static boolean[] values;
+    private static String id1, id2;
     private static Colors color;
     private static Wizards wizard;
 
     @BeforeAll
     public static void instantiate() {
-        ArrayList<Student> entrance;
-        id = 0;
-        values = new boolean[10];
+        id1 = "Abcd";
+        id2 = "MK00";
         color = Colors.BLACK;
         wizard = Wizards.WIZARD1;
-        entrance = new ArrayList<>();
-        player1 = new Player(id, color, 8, wizard, false, entrance);
-        player2 = new Player(id, color, 8, wizard, true, entrance);
+        player1 = new Player(id1, color, 8, wizard, false);
+        player2 = new Player(id2, color, 8, wizard, true);
     }
 
     @Test
     public void instanceTest(){
         assertFalse (player1.hasNoCardsLeft());
-        assertSame(id, player1.getPlayerID());
+        assertEquals(id1, player1.getUserName());
+        assertEquals(id2, player2.getUserName());
         assertSame(color, player1.getColor());
         assertNotNull(player1.getBoard());
         assertTrue(player2.getBoard() instanceof Board_Experts);
@@ -37,20 +35,17 @@ class PlayerTest {
 
     @Test
     public void deckTest(){
-        ArrayList<AssistantCard> deck = player1.getDeck();
+        int card;
+        ArrayList<AssistantCard> deck;
 
-        for (AssistantCard card : deck){
-            if (values[card.getValue()-1]){
-                fail();
-            }
-            else{
-                values[card.getValue()-1] = true;
-            }
-            assertSame((card.getValue()+1)/2, card.getMNSteps());
+        for (int i=1; i<=10; i++){
+            card = player1.draw(i);
+            assertSame((i+1)/2, card);
+            deck = player1.getDeck();
 
-            player1.draw(card);
-            assertFalse(player1.getDeck().contains(card));
-            values[card.getValue()-1] = true;
+            for (AssistantCard c : deck){
+                assertNotSame(i, c.getValue());
+            }
         }
         assertTrue(player1.hasNoCardsLeft());
     }

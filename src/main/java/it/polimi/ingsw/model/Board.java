@@ -13,7 +13,7 @@ public class Board {
     private final ArrayList<Student> gnomes;
     private final ArrayList<Student> frogs;
     private ArrayList<Tower> towers;
-    private final ArrayList<Student> entrance;
+    private ArrayList<Student> entrance;
 
     /**
      *
@@ -22,14 +22,13 @@ public class Board {
      *                  0 or 8: 4 players
      * @param color the color of the towers
      */
-    public Board(int towersNum, Colors color, ArrayList<Student>entrance){
+    public Board(int towersNum, Colors color){
         dragons = new ArrayList<>();
         unicorns = new ArrayList<>();
         fairies = new ArrayList<>();
         gnomes = new ArrayList<>();
         frogs = new ArrayList<>();
         initializeTowers(towersNum, color);
-        this.entrance = new ArrayList<>(entrance);
     }
 
     /**
@@ -47,6 +46,10 @@ public class Board {
             temp = new Tower(color, this);
             towers.add(temp);
         }
+    }
+
+    public void setEntrance(ArrayList<Student> entrance){
+        this.entrance = (ArrayList<Student>) entrance.clone();
     }
 
     /**
@@ -120,7 +123,7 @@ public class Board {
                 frogs.add(student);
                 break;
         }
-        entrance.remove(student);
+            entrance.remove(student);
     }
 
     /**

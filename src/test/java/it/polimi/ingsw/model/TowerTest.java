@@ -12,13 +12,13 @@ class TowerTest {
     @Test
     void getColor() {
         ArrayList<Student> entrance = new ArrayList<>();
-        Board b=new Board(1,BLACK, entrance);
+        Board b=new Board(1,BLACK);
         Tower t=new Tower(BLACK,b);
         assertEquals(t.getColor().getColor(),"black");
-        b=new Board(1,GREY, entrance);
+        b=new Board(1,GREY);
         t=new Tower(GREY,b);
         assertEquals(t.getColor().getColor(),"grey");
-        b=new Board(1,WHITE, entrance);
+        b=new Board(1,WHITE);
         t=new Tower(WHITE,b);
         assertEquals(t.getColor().getColor(),"white");
     }

@@ -8,13 +8,12 @@ import static it.polimi.ingsw.model.Colors.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MatchTest {
-
+    private final String u1 = "Pina", u2 = "Gino";
     @Test
     void moveMotherNature() {
         Player pl1,pl2;
-        ArrayList<Student> entrance = new ArrayList<>();
-        pl1=new Player(1, Colors.GREY,8,Wizards.WIZARD1, false, entrance);
-        pl2=new Player(2, Colors.BLACK,8,Wizards.WIZARD2, false, entrance);
+        pl1=new Player(u1, Colors.GREY,8,Wizards.WIZARD1, false);
+        pl2=new Player(u2, Colors.BLACK,8,Wizards.WIZARD2, false);
         Match a=new Match(pl1,pl2);
         assertSame(a.getLands().get(0), a.getMotherNature().getPosition());
         a.moveMotherNature(5);
@@ -26,9 +25,8 @@ class MatchTest {
     @Test
     void uniteLandAfter() throws Exception {
         Player pl1,pl2;
-        ArrayList<Student> entrance = new ArrayList<>();
-        pl1=new Player(1,GREY,8,Wizards.WIZARD1, false, entrance);
-        pl2=new Player(2,BLACK,8,Wizards.WIZARD2, false, entrance);
+        pl1=new Player(u1,GREY,8,Wizards.WIZARD1, false);
+        pl2=new Player(u2,BLACK,8,Wizards.WIZARD2, false);
         Match a=new Match(pl1,pl2);
         a.getLands().get(2).changeTower(pl1.getBoard().removeTower());
         a.getLands().get(3).changeTower(pl1.getBoard().removeTower());
@@ -44,9 +42,8 @@ class MatchTest {
     @Test
     void uniteLandAfterLast() throws Exception {
         Player pl1,pl2;
-        ArrayList<Student> entrance = new ArrayList<>();
-        pl1=new Player(1,GREY,8,Wizards.WIZARD1, false, entrance);
-        pl2=new Player(2,BLACK,8,Wizards.WIZARD2, false, entrance);
+        pl1=new Player(u1,GREY,8,Wizards.WIZARD1, false);
+        pl2=new Player(u2,BLACK,8,Wizards.WIZARD2, false);
         Match a=new Match(pl1,pl2);
         a.getLands().get(0).changeTower(pl1.getBoard().removeTower());
         a.getLands().get(11).changeTower(pl1.getBoard().removeTower());
@@ -61,10 +58,9 @@ class MatchTest {
     @Test
     void uniteLandBefore() throws Exception {
         Player pl1,pl2,pl3;
-        ArrayList<Student> entrance = new ArrayList<>();
-        pl1=new Player(1,GREY,6,Wizards.WIZARD1, false, entrance);
-        pl2=new Player(2,BLACK,6,Wizards.WIZARD2, false, entrance);
-        pl3=new Player(3,WHITE,6,Wizards.WIZARD3, false, entrance);
+        pl1=new Player(u1,GREY,6,Wizards.WIZARD1, false);
+        pl2=new Player(u2,BLACK,6,Wizards.WIZARD2, false);
+        pl3=new Player("Franco",WHITE,6,Wizards.WIZARD3, false);
         Match a=new Match(pl1,pl2,pl3);
         a.getLands().get(2).changeTower(pl1.getBoard().removeTower());
         a.getLands().get(3).changeTower(pl1.getBoard().removeTower());
@@ -78,9 +74,8 @@ class MatchTest {
     @Test
     void uniteLandBeforeFirst() throws Exception {
         Player pl1,pl2;
-        ArrayList<Student> entrance = new ArrayList<>();
-        pl1=new Player(1,GREY,8,Wizards.WIZARD1, false, entrance);
-        pl2=new Player(2,BLACK,8,Wizards.WIZARD2, false, entrance);
+        pl1=new Player(u1,GREY,8,Wizards.WIZARD1, false);
+        pl2=new Player(u2,BLACK,8,Wizards.WIZARD2, false);
         Match a=new Match(pl1,pl2);
         a.getLands().get(0).changeTower(pl1.getBoard().removeTower());
         a.getLands().get(11).changeTower(pl1.getBoard().removeTower());
@@ -95,9 +90,8 @@ class MatchTest {
     @Test
     void uniteLandBeforeAndAfter() throws Exception{
         Player pl1,pl2;
-        ArrayList<Student> entrance = new ArrayList<>();
-        pl1=new Player(1,GREY,8,Wizards.WIZARD1, false, entrance);
-        pl2=new Player(2,BLACK,8,Wizards.WIZARD2, false, entrance);
+        pl1=new Player(u1,GREY,8,Wizards.WIZARD1, false);
+        pl2=new Player(u2,BLACK,8,Wizards.WIZARD2, false);
         Match a=new Match(pl1,pl2);
         a.getLands().get(2).changeTower(pl1.getBoard().removeTower());
         a.getLands().get(3).changeTower(pl1.getBoard().removeTower());
@@ -114,8 +108,10 @@ class MatchTest {
     void checkProfessor() {
         Player pl1,pl2;
         ArrayList<Student> entrance = new ArrayList<>();
-        pl1=new Player(1,GREY,8,Wizards.WIZARD1, false, entrance);
-        pl2=new Player(2,BLACK,8,Wizards.WIZARD2, false, entrance);
+        pl1=new Player(u1,GREY,8,Wizards.WIZARD1, false);
+        pl2=new Player(u2,BLACK,8,Wizards.WIZARD2, false);
+        pl1.getBoard().setEntrance(entrance);
+        pl2.getBoard().setEntrance(entrance);
         Match a=new Match(pl1,pl2);
         Student drago=new Student(Type_Student.DRAGON);
         Student drago2=new Student(Type_Student.DRAGON);

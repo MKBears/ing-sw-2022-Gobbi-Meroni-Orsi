@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.characterCards;
+package it.polimi.ingsw.ServerController.characterCards;
 
 import it.polimi.ingsw.model.Bag;
 import it.polimi.ingsw.model.CharacterCard;

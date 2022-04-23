@@ -17,8 +17,8 @@ public class Board_Experts extends Board{
      *                  0 or 8: 4 players
      * @param color the color of the towers
      */
-    public Board_Experts(int towersNum, Colors color, ArrayList<Student>entrance){
-        super(towersNum, color, entrance);
+    public Board_Experts(int towersNum, Colors color){
+        super(towersNum, color);
         coins=1;
     }
 

@@ -1,28 +1,30 @@
-package it.polimi.ingsw.model.characterCards;
+package it.polimi.ingsw.ServerController.characterCards;
 
 import it.polimi.ingsw.model.CharacterCard;
 
-public class Ch_10 implements CharacterCard {
+public class Ch_12 implements CharacterCard {
 
     private final short price;
     private boolean activated;
     private final String powerUp;
 
-    public Ch_10(){
-        price=1;
+    public Ch_12(){
+        price=3;
         activated=false;
-        powerUp="You may excange up to 2 Students between your "+
-                "Entrance and your Dining Room.";
+        powerUp="Choose a type of Student: every player (including yourself) must" +
+                "return 3 Students of that type from their Dining Room to the bag." +
+                " If any player has fewer than 3 Students of that type, return has many " +
+                "Students as they have.";
     }
-
 
     @Override
     public void activatePowerUp() {
-        //...
+        //....
 
         if(!activated){
             activated=true;
         }
+
     }
 
     @Override

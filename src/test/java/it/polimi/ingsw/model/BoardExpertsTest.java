@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.characterCards.*;
+import it.polimi.ingsw.ServerController.characterCards.Ch_2;
+import it.polimi.ingsw.ServerController.characterCards.Ch_3;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +24,7 @@ class BoardExpertsTest {
         for (Type_Student t : Type_Student.values()){
             entrance.add(new Student(t));
         }
-        board = new Board_Experts(towersNum, color, entrance);
+        board = new Board_Experts(towersNum, color);
     }
 
     @Test
@@ -34,7 +35,7 @@ class BoardExpertsTest {
         assertSame(1, board.getCoinsNumber());
         assertSame(towersNum, board.getTowersNum());
         assertFalse(board.hasNoTowersLeft());
-        assertEquals(entrance, board.getEntrance());
+        assertThrows(NullPointerException.class, ()->board.getEntrance());
     }
 
     @Test
@@ -44,7 +45,7 @@ class BoardExpertsTest {
         for (Type_Student t : Type_Student.values()){
             students.add(new Student(t));
         }
-        board.importStudents(students);
+        board.setEntrance(students);
 
         for (Student s : students){
             assertTrue(board.getEntrance().contains(s));
@@ -73,6 +74,8 @@ class BoardExpertsTest {
         Student student;
         final int dragons = 10;
         CharacterCard c = new Ch_2();
+
+        board.setEntrance(new ArrayList<Student>());
 
         for(int i=0; i<dragons; i++){
             students.add(new Student(Type_Student.DRAGON));
