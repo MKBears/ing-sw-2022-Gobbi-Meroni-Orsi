@@ -145,6 +145,7 @@ public class Match {
             a=lands.remove(i+1);
             unito=lands.remove(i);
             lands.add(i,unito.uniteIslands(a));
+            motherNature.setPosition(lands.get(i));
         }else{
             if(!(lands.get(0).getTower().getColor()==lands.get(i).getTower().getColor()))throw new IllegalArgumentException();
             Land a;
@@ -152,6 +153,7 @@ public class Match {
             a=lands.remove(i);
             unito=lands.remove(0);
             lands.add(0,unito.uniteIslands(a));
+            motherNature.setPosition(lands.get(0));
         }
     }
 
@@ -169,11 +171,13 @@ public class Match {
             a=lands.remove(i);
             lands.add(i,lands.get(i-1).uniteIslands(a));
             lands.remove(i-1);
+            motherNature.setPosition(lands.get(i-1));
         }else{
             if(!(lands.get(0).getTower().getColor()==lands.get(lands.size()-1).getTower().getColor()))throw new IllegalArgumentException();
             a=lands.remove(lands.size()-1);
             lands.add(1,lands.get(0).uniteIslands(a));
             lands.remove(0);
+            motherNature.setPosition(lands.get(0));
         }
     }
 

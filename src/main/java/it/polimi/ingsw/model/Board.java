@@ -141,9 +141,10 @@ public class Board {
     /**
      * Removes the specified student from the entrance
      * @param s
+     * @return the student removed
      */
-    public void removeStudent(Student s){
-        entrance.remove(s);
+    public Student removeStudent(Student s){
+        return entrance.remove(entrance.indexOf(s));
     }
 
     public Tower removeTower() throws Exception{
