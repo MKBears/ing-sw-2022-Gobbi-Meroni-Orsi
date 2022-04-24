@@ -65,7 +65,7 @@ public class Player {
     }
 
     /**
-     * Plays the card with the specified value and removes it from the deck
+     * Plays the card with the specified value and removes it from the deck, but saves it as the played card
      * @return Mother Nature's steps of the played card
      */
     public void draw (int value){
@@ -78,6 +78,10 @@ public class Player {
         playedCard = deck.remove(position);
     }
 
+    /**
+     *
+     * @return the last saved played card
+     */
     public AssistantCard getPlayedCard() {
         return playedCard;
     }

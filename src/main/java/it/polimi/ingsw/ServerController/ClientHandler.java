@@ -11,46 +11,38 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class ClientHandler extends Thread{
-    private final int playerId;
+/**
+ * Manages all the interactions between Controller (server) and the remote player (client)
+ */
+public class ClientHandler{
     private final Socket socket;
     Scanner in;
     PrintWriter out;
-    private String userName;
+    private final String userName;
     private int wizardNumber;
     private Player avatar;
 
-    public ClientHandler (int id, Socket s){
-        playerId = id;
+    /**
+     *
+     * @param s the socket associated with this player
+     */
+    public ClientHandler (Socket s){
         socket = s;
-    }
 
-    //Non credo sia necessario il multithreading perché si gioca un player alla volta
-    @Override
-    public void run() {
         try{
             in = new Scanner(socket.getInputStream());
             out = new PrintWriter(socket.getOutputStream());
-
-            while (true){
-                setUserName();
-                System.out.println("Player"+(playerId+1)+": "+userName);
-                wait();
-                //I giocatori mandano roba
-                break;
-            }
-            in.close();
-            out.close();
-            socket.close();
-        } catch (IOException | InterruptedException e) {
+            out.println("Username");
+            userName = in.nextLine();
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public int getPlayerId() {
-        return playerId;
-    }
-
+    /**
+     * Asks the remote controller how many players will play the match
+     * @return the number of players
+     */
     public int choosePlayersNum (){
         out.println("Giocatori");
         return in.nextInt();
@@ -58,33 +50,41 @@ public class ClientHandler extends Thread{
         //  quindi non c'é bisogno di controllare quello che inserisce l'utente
     }
 
-    private void setUserName(){
-        out.println("Username");
-        userName = in.nextLine();
-    }
-
     public String getUserName() {
         return userName;
     }
 
+    /**
+     * Asks the remote controller to choose a Wizard between the available ones
+     * @param wizards are the wizards chosen by the players before
+     * @return
+     */
     public int setWizard(boolean[] wizards){
-        synchronized(wizards) {
-            out.println("Wizard");
-            for (int i = 0; i < wizards.length; i++) {
-                if (wizards[i]) {
-                    out.println(i);
-                }
+        out.println("Wizard");
+        for (int i = 0; i < wizards.length; i++) {
+            if (wizards[i]) {
+                out.println(i);
             }
-            wizardNumber = in.nextInt();
-            return wizardNumber;
         }
+        wizardNumber = in.nextInt();
+        return wizardNumber;
     }
 
+    /**
+     *
+     * @return true if the player wants to play an expert match
+     */
     public boolean expertMatch(){
         out.println("Pro");
         return in.nextBoolean();
     }
 
+    /**
+     * Creates an instance of the Class Player in the game model
+     * @param color the color of the towers this player controls
+     * @param playersNum to decide how many towers instantiate in the board
+     * @param expert true if it's an expert match
+     */
     public void createAvatar(Colors color, int playersNum, boolean expert){
         Wizards wizard;
         int towersNum;
@@ -109,10 +109,20 @@ public class ClientHandler extends Thread{
         avatar = new Player(userName, color, towersNum, wizard, expert);
     }
 
+    /**
+     *
+     * @return the representation of this player in the model
+     */
     public Player getAvatar(){
         return avatar;
     }
 
+    /**
+     * Asks the remote controller to play an Assistant Card, verifies it hasn't already been played by another player
+     * (if the player has only played cards in his deck, he can play any of them) and sets it as the plyed card in the model
+     * @param played are the values of the cards which have already been played
+     * @return the value of the played card
+     */
     public int playAssistant(int[] played){
         //Played sono le carte giocate dagli altri giocatori
         // played[i]==0 significa che il player i non ha ancora giocato una carta
@@ -141,11 +151,35 @@ public class ClientHandler extends Thread{
             }
         }
         out.println(0);
-        //Quando il controller lato client riceve 0 dopo "Assistant" ed eventualmente qualche int,
+        //Quando il controller lato client riceve (eventualmente qualche int e) 0 dopo "Assistant",
         // sa che puo' inviare alla view il comando di fare scegliere al player la carta assistente da giocare
         card = in.nextInt();
         avatar.draw(card);
         return card;
+    }
+
+    /**
+     * Closes inward and outward stream and the socket
+     * @throws Exception fails to close the socket
+     */
+    public void closeConnection() throws Exception{
+        in.close();
+        out.close();
+        socket.close();
+    }
+
+    /**
+     *
+     * @param endOfCurrentRound indicates if the match finishes at the end of the current round (true) or immediately (false)
+     */
+    public void notifyEndMatch(boolean endOfCurrentRound){
+        out.print("End ");
+        if (endOfCurrentRound){
+            out.println("round");
+        }
+        else{
+            out.println("immediately");
+        }
     }
 
 }

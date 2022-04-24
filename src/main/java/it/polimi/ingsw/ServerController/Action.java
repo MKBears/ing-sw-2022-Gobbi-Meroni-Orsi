@@ -57,7 +57,6 @@ public class Action {
 
     public void chooseCloud(Player player, Cloud cloud){
         player.getBoard().importStudents(cloud.getStudents());
-        cloud.importStudents();
     }
 
 

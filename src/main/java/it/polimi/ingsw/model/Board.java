@@ -147,6 +147,11 @@ public class Board {
         return entrance.remove(entrance.indexOf(s));
     }
 
+    /**
+     * Removes a tower
+     * @return the removed tower
+     * @throws Exception if there are no more towers
+     */
     public Tower removeTower() throws Exception{
         if (towers.isEmpty()){
             throw new Exception("You have no towers in your board");
