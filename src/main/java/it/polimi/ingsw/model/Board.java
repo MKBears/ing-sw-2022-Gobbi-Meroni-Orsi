@@ -28,6 +28,7 @@ public class Board {
         fairies = new ArrayList<>();
         gnomes = new ArrayList<>();
         frogs = new ArrayList<>();
+        entrance=new ArrayList<>();
         initializeTowers(towersNum, color);
     }
 

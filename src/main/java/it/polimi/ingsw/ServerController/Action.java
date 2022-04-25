@@ -38,20 +38,28 @@ public class Action {
 
     public void uniteLands()  {
         try{
-            if(match.getMotherNature().getPosition().getTowerColor()==
-                    match.getLands().get(match.getLands().indexOf(match.getMotherNature().getPosition())+1).getTowerColor()){
+            if(match.getLands().indexOf(match.getMotherNature().getPosition())!=match.getLands().size()-1) {
+                if (match.getMotherNature().getPosition().getTowerColor() ==
+                        match.getLands().get((match.getLands().indexOf(match.getMotherNature().getPosition()) + 1) % match.getLands().size()).getTowerColor()) {
+                    match.uniteLandAfter(match.getLands().indexOf(match.getMotherNature().getPosition()));
+                }
+            }else if (match.getLands().get(0).getTowerColor()==match.getLands().get(match.getLands().size()-1).getTowerColor()){
                 match.uniteLandAfter(match.getLands().indexOf(match.getMotherNature().getPosition()));
             }
         }catch (Exception e){
-            System.out.println("isola prima senza torre");
+            System.out.println("isola dopo senza torre");
         }
         try{
-            if(match.getMotherNature().getPosition().getTowerColor()==
-                    match.getLands().get(match.getLands().indexOf(match.getMotherNature().getPosition())-1).getTowerColor()){
+            if(match.getLands().indexOf(match.getMotherNature().getPosition())!=0){
+                if(match.getMotherNature().getPosition().getTowerColor()==
+                        match.getLands().get(match.getLands().indexOf(match.getMotherNature().getPosition())-1).getTowerColor()){
+                    match.uniteLandBefore(match.getLands().indexOf(match.getMotherNature().getPosition()));
+                }
+            }else if(match.getLands().get(0).getTowerColor()==match.getLands().get(match.getLands().size()-1).getTowerColor()){
                 match.uniteLandBefore(match.getLands().indexOf(match.getMotherNature().getPosition()));
             }
         }catch(Exception e){
-            System.out.println("isola dopo senza torri");
+            System.out.println("isola prima senza torri");
         }
     }
 
