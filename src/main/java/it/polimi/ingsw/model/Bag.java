@@ -14,7 +14,7 @@ public class Bag {  //fare che in input mi dicono anche quanti estrarre
     public Bag(){
         Student s;
         for (Type_Student t : Type_Student.values()){
-            for (int i=0; i<26; i++){
+            for (int i=0; i<24; i++){
                 s = new Student(t);
                 students.add(s);
             }

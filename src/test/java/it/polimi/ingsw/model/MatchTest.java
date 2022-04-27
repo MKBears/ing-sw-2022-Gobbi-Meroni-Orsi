@@ -10,6 +10,19 @@ import static org.junit.jupiter.api.Assertions.*;
 class MatchTest {
     private final String u1 = "Pina", u2 = "Gino";
     @Test
+    void checkInit(){
+        Player pl1,pl2;
+        pl1=new Player(u1, Colors.GREY,8,Wizards.WIZARD1, false);
+        pl2=new Player(u2, Colors.BLACK,8,Wizards.WIZARD2, false);
+        Match a=new Match(pl1,pl2);
+        for (int i=0;i<12;i++){
+            if(i==0 || i==6)
+                assertTrue(a.getLands().get(i).getStudents().size()==0);
+            else
+                assertTrue(a.getLands().get(i).getStudents().size()==1);
+        }
+    }
+    @Test
     void moveMotherNature() {
         Player pl1,pl2;
         pl1=new Player(u1, Colors.GREY,8,Wizards.WIZARD1, false);
