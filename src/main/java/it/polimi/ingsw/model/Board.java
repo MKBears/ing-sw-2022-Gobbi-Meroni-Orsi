@@ -29,7 +29,7 @@ public class Board implements Serializable {
         fairies = new ArrayList<>();
         gnomes = new ArrayList<>();
         frogs = new ArrayList<>();
-        entrance=new ArrayList<>();
+        entrance = null;
         initializeTowers(towersNum, color);
     }
 
@@ -54,7 +54,10 @@ public class Board implements Serializable {
      * To use before the start of the match to initialize the entrance
      * @param entrance
      */
-    public void setEntrance(ArrayList<Student> entrance){
+    public void setEntrance(ArrayList<Student> entrance)throws Exception{
+        if (this.entrance != null){
+            throw new Exception("Entrance already set.");
+        }
         this.entrance = (ArrayList<Student>) entrance.clone();
     }
 

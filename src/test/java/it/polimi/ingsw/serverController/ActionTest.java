@@ -41,12 +41,12 @@ class ActionTest {
         ArrayList<Student> array=new ArrayList<>();
         Student student= new Student(Type_Student.DRAGON);
         array.add(student);
-        match.getPlayer()[0].getBoard().importStudents(array);
+        match.getPlayer()[0].getBoard().setEntrance(array);
         match.getPlayer()[0].getBoard().placeStudent(student);
         student=new Student(Type_Student.FAIRIE);
         array.remove(0);
         array.add(student);
-        match.getPlayer()[1].getBoard().importStudents(array);
+        match.getPlayer()[1].getBoard().setEntrance(array);
         match.getPlayer()[1].getBoard().placeStudent(student);
         student= new Student(Type_Student.FROG);
         array.remove(0);
@@ -80,7 +80,7 @@ class ActionTest {
         ArrayList<Student> array=new ArrayList<>();
         Student student= new Student(Type_Student.DRAGON);
         array.add(student);
-        match.getPlayer()[0].getBoard().importStudents(array);
+        match.getPlayer()[0].getBoard().setEntrance(array);
         match.getPlayer()[0].getBoard().placeStudent(student);
         Student s1=new Student(Type_Student.DRAGON);
         match.getMotherNature().getPosition().addStudent(s1);
@@ -89,7 +89,7 @@ class ActionTest {
         assertTrue(pl1.getBoard().getTowersNum()==7);
         student= new Student(Type_Student.DRAGON);
         array.add(student);
-        match.getPlayer()[1].getBoard().importStudents(array);
+        match.getPlayer()[1].getBoard().setEntrance(array);
         match.getPlayer()[1].getBoard().placeStudent(student);
         match.getPlayer()[1].getBoard().placeStudent(student);
         a.controlLand(pl2);
@@ -137,7 +137,12 @@ class ActionTest {
         ArrayList<Student> array=new ArrayList<>();
         Student student= new Student(Type_Student.DRAGON);
         array.add(student);
-        match.getPlayer()[0].getBoard().setEntrance(array);
+
+        try {
+            match.getPlayer()[0].getBoard().setEntrance(array);
+        } catch (Exception e) {
+            fail();
+        }
         a.moveFromIngressToLand(match.getPlayer()[0],match.getPlayer()[0].getBoard().getEntrance().get(0),match.getLands().get(0));
         assertTrue(pl1.getBoard().getEntrance().isEmpty()==TRUE);
         assertTrue(match.getLands().get(0).getStudents().get(0)==student);

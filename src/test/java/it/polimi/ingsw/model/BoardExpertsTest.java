@@ -45,7 +45,12 @@ class BoardExpertsTest {
         for (Type_Student t : Type_Student.values()){
             students.add(new Student(t));
         }
-        board.setEntrance(students);
+        try {
+            board.setEntrance(students);
+        } catch (Exception e) {
+            fail();
+        }
+        assertThrows(Exception.class, ()->board.setEntrance(students));
 
         for (Student s : students){
             assertTrue(board.getEntrance().contains(s));
@@ -54,6 +59,12 @@ class BoardExpertsTest {
             }catch (Exception e){
                 fail();
             }
+        }
+
+        try{
+            board.importStudents(entrance);
+        }catch (Exception e){
+            fail();
         }
 
         for (Student s : entrance){
@@ -75,7 +86,11 @@ class BoardExpertsTest {
         final int dragons = 10;
         CharacterCard c = new Ch_2();
 
-        board.setEntrance(new ArrayList<Student>());
+        try {
+            board.setEntrance(new ArrayList<>());
+        } catch (Exception e) {
+            fail();
+        }
 
         for(int i=0; i<dragons; i++){
             students.add(new Student(Type_Student.DRAGON));

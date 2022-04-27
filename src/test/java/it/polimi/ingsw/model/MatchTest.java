@@ -123,8 +123,12 @@ class MatchTest {
         ArrayList<Student> entrance = new ArrayList<>();
         pl1=new Player(u1,GREY,8,Wizards.WIZARD1, false);
         pl2=new Player(u2,BLACK,8,Wizards.WIZARD2, false);
-        pl1.getBoard().setEntrance(entrance);
-        pl2.getBoard().setEntrance(entrance);
+        try {
+            pl1.getBoard().setEntrance(entrance);
+            pl2.getBoard().setEntrance(entrance);
+        }catch (Exception e){
+            fail();
+        }
         Match a=new Match(pl1,pl2);
         Student drago=new Student(Type_Student.DRAGON);
         Student drago2=new Student(Type_Student.DRAGON);

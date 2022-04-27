@@ -15,7 +15,7 @@ public class BagTest {
     public void getRandomStudentTest() throws Exception {
         ArrayList<Student> arr=new ArrayList<>();
         for (Type_Student t : Type_Student.values()){
-            for (int i=0; i<26; i++){
+            for (int i=0; i<24; i++){
                 Student s = new Student(t);
                 arr.add(s);
             }
@@ -27,7 +27,7 @@ public class BagTest {
             out.add(bag.getRandomStudent());
         }
         int fr=0;int g=0; int d=0; int fa=0; int u=0;
-        for(int i=0; i<130; i++){
+        for(int i=0; i<120; i++){
             switch (out.get(i).getType()) {
                 case FROG:
                     fr++;
@@ -46,11 +46,11 @@ public class BagTest {
                     break;
             }
         }
-        assertEquals(26,fr);
-        assertEquals(26,g);
-        assertEquals(26,d);
-        assertEquals(26,fa);
-        assertEquals(26,u);
+        assertEquals(24,fr);
+        assertEquals(24,g);
+        assertEquals(24,d);
+        assertEquals(24,fa);
+        assertEquals(24,u);
         assertThrows(Exception.class,()->bag.getRandomStudent());
     }
 }
