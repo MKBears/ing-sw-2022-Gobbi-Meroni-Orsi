@@ -18,9 +18,9 @@ public class PlanningPhase {
     public static void fillClouds (Cloud[] clouds) throws Exception{
         for (Cloud c : clouds){
             c.importStudents();
-            //Quando finiscono gli studenti, Bag lancia un'eccezione, che viene propagata prima da Cloud e poi da qui:
-            //  nel controller viene raccolta e si invia a ogni controller client il messaggio che gli studenti sono finiti,
-            //  e che quindi la partita terminera' alla fine di questo turno
+            //When Bag runs out of students, it throws an Exception which would be propagated to the class Controller
+            // through Cloud and this class. Controller will then notify all the remote players that the match would
+            // finish at the end of the current Round.
         }
     }
 

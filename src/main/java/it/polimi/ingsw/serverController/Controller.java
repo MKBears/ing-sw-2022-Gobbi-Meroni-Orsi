@@ -12,7 +12,7 @@ import java.util.Scanner;
 /**
  * The main class of the server side of the game Eriantys
  */
-public class Controller{
+public class Controller {
     private static final int port = 4096;
     private static int playersNum;
     private static boolean expertMatch;
@@ -47,10 +47,10 @@ public class Controller{
         seePhase = in.nextBoolean();
         players = new ArrayList<>();
 
-    //Start connection setup
+        //Start connection setup
         do {
             try {
-                if (seePhase){
+                if (seePhase) {
                     System.out.println("Waiting for a connection...");
                 }
                 socket = sSocket.accept();

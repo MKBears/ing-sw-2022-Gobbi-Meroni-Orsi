@@ -11,7 +11,7 @@ public class Cloud implements Serializable {
     private final Student[] students;
     private final Bag bag;
     private boolean hasBeenChosen;
-    private int nop=0;
+    private final int nop;
 
     /**
      *
@@ -52,9 +52,11 @@ public class Cloud implements Serializable {
      */
     public ArrayList<Student> getStudents() {
         ArrayList<Student> s = new ArrayList<>();
-        for (int i=0; i<nop; i++){
+        int i = 0;
+        while (i<nop && students[i]!=null){
             s.add(students[i]);
             students[i] = null;
+            i++;
         }
         return s;
     }
