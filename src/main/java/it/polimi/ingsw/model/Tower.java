@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
-public class Tower {
+import java.io.Serializable;
+
+public class Tower implements Serializable {
     private final Colors color;
     private final Board board;
 

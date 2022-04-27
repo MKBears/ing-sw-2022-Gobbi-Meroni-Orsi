@@ -1,8 +1,9 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public interface Land {
+public interface Land extends Serializable {
     Tower getTower();
     ArrayList<Student> getStudents();
     int getID();

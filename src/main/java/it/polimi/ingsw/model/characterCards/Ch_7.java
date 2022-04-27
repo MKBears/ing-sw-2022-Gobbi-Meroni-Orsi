@@ -1,30 +1,29 @@
-package it.polimi.ingsw.ServerController.characterCards;
+package it.polimi.ingsw.model.characterCards;
 
 import it.polimi.ingsw.model.CharacterCard;
-import it.polimi.ingsw.model.Island;
+import it.polimi.ingsw.model.Student;
 
-public class Ch_5 implements CharacterCard {
+import java.util.ArrayList;
+
+public class Ch_7 implements CharacterCard {
 
     private final short price;
     private boolean activated;
     private final String powerUp;
-    private Island[] Islands= new Island[4];
+    private ArrayList<Student> Students=new ArrayList<>(6);
 
-    public Ch_5(){
-        price=2;
+    public Ch_7(ArrayList<Student> Input){
+        price=1;
         activated=false;
-        for(int i=0; i<4; i++){
-            Islands[i]=null;
-        }
-        powerUp="Place a No Entry tile on an Island of your choice. "+"" +
-                "The first time Mother Nature ends her movement there, "+"" +
-                "put the No Entry tile back onto this card DO NOT calculate influence"+"" +
-                " on that Island, or place any Towers.";
+        powerUp="You may wake up to 3 Students form this card and"+
+                " replace them with the same number of Students from your Entrance.";
+        Students=Input;
     }
 
     @Override
     public void activatePowerUp() {
         //...
+
         if(!activated){
             activated=true;
         }
@@ -50,7 +49,7 @@ public class Ch_5 implements CharacterCard {
         return powerUp;
     }
 
-    public Island[] getIslands() {
-        return Islands;
+    public ArrayList<Student> getStudents() {
+        return Students;
     }
 }

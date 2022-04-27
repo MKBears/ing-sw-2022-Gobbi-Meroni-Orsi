@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.ServerController.characterCards.Ch_2;
-import it.polimi.ingsw.ServerController.characterCards.Ch_3;
+import it.polimi.ingsw.model.characterCards.Ch_2;
+import it.polimi.ingsw.model.characterCards.Ch_3;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

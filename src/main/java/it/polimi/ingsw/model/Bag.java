@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -8,7 +9,7 @@ import java.util.Random;
 /**
  * Contains all the Students to sort during the game
  */
-public class Bag {  //fare che in input mi dicono anche quanti estrarre
+public class Bag implements Serializable {  //fare che in input mi dicono anche quanti estrarre
     private final List<Student> students=new ArrayList<>();
 
     public Bag(){

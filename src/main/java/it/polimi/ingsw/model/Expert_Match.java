@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
-public class Expert_Match extends Match{
+import java.io.Serializable;
+
+public class Expert_Match extends Match {
     CharacterCard card[];
 
     /**

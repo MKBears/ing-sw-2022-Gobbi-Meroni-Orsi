@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
-public enum Type_Student {
+import java.io.Serializable;
+
+public enum Type_Student implements Serializable {
     DRAGON("dragon"),GNOME("gnome"),FAIRIE("fairie"),UNICORN("unicorn"),FROG("frog");
      private final String name;
 

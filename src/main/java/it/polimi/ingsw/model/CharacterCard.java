@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
-public interface CharacterCard {
+import java.io.Serializable;
+
+public interface CharacterCard extends Serializable {
 
     void activatePowerUp();
 

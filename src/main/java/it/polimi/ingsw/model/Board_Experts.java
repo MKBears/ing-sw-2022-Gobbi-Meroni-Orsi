@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -7,7 +8,7 @@ import java.util.ArrayList;
  * Contains the same things as Board (non-experts) does and has the same methods.
  * Moreover, contains all the coins gained during the game by the player and has a method to activate the power of a Character card.
  */
-public class Board_Experts extends Board{
+public class Board_Experts extends Board {
     private int coins;
 
     /**

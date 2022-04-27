@@ -1,8 +1,9 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Student{
+public class Student implements Serializable {
     private final Type_Student type;
 
     public Student(Type_Student type) {

@@ -1,8 +1,9 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Match {
+public class Match implements Serializable {
     Player[] player;
     Cloud[] cloud;
     Bag bag;
@@ -71,19 +72,6 @@ public class Match {
         lands=new ArrayList<Land>();
         for(short i=0;i<12;i++)
             lands.add(new Island(i));
-        List<Student> a=new ArrayList<>();
-        for (Type_Student e:Type_Student.values()) {
-            a.add(new Student(e));
-            a.add(new Student(e));
-        }
-        Random x=new Random();
-        int r;
-        for(int j=0;j<12;j++){
-            if(j!=0 && j!=6){
-            r= x.nextInt(2000);
-            lands.get(j).addStudent(a.remove(r%a.size()));
-            }
-        }
         motherNature =new MotherNature(lands.get(0));
     }
 

@@ -1,11 +1,9 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.ServerController.characterCards.Ch_2;
-import it.polimi.ingsw.ServerController.characterCards.Ch_4;
-import it.polimi.ingsw.ServerController.characterCards.Ch_5;
+import it.polimi.ingsw.model.characterCards.Ch_2;
+import it.polimi.ingsw.model.characterCards.Ch_4;
+import it.polimi.ingsw.model.characterCards.Ch_5;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 
 import static java.lang.Boolean.TRUE;
 import static org.junit.jupiter.api.Assertions.*;

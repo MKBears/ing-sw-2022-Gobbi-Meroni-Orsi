@@ -1,12 +1,13 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * The class representing the board each player controls in an ordinary match.
  * It contains all the towers, has an entrance to put students from a cloud and a table for each type of student.
  */
-public class Board {
+public class Board implements Serializable {
     private final ArrayList<Student> dragons;
     private final ArrayList<Student> unicorns;
     private final ArrayList<Student> fairies;

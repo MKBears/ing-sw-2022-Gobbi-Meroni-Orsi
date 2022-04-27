@@ -1,25 +1,25 @@
-package it.polimi.ingsw.ServerController.characterCards;
+package it.polimi.ingsw.model.characterCards;
 
 import it.polimi.ingsw.model.CharacterCard;
 
-public class Ch_4 implements CharacterCard {
+public class Ch_8 implements CharacterCard {
 
     private final short price;
     private boolean activated;
     private final String powerUp;
 
-    public Ch_4(){
-        price=1;
+    public Ch_8(){
+        price=2;
         activated=false;
-        powerUp="You may move Mother Naure up to 2 additional Islands"+
-                " than is indicated by the Assistant card you've played.";
+        powerUp="During this turn, you count as "+
+                "having 2 more influence.";
     }
 
     @Override
     public void activatePowerUp() {
         //...
 
-        if (!activated){
+        if(!activated){
             activated=true;
         }
     }
@@ -44,3 +44,4 @@ public class Ch_4 implements CharacterCard {
         return powerUp;
     }
 }
+
