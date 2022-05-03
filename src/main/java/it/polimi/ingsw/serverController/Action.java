@@ -19,8 +19,7 @@ public class Action {
     }
 
     public void checkAllProfessors(){
-        for (Type_Student e: Type_Student.values()
-             ) {
+        for (Type_Student e: Type_Student.values()) {
             match.checkProfessor(e);
         }
     }
@@ -80,7 +79,7 @@ public class Action {
                 match.uniteLandBefore(match.getLands().indexOf(match.getMotherNature().getPosition()));
             }
         }catch(Exception e){
-            System.out.println("isola prima senza torri");
+            System.out.println("isola prima senza torre");
         }
     }
 
