@@ -13,16 +13,13 @@ import java.util.Scanner;
  * The main class of the server side of the game Eriantys
  */
 public class Controller {
-    private static final int port = 4096;
     private static int playersNum;
     private static boolean expertMatch;
     private static Match match;
     private static ClientHandler firstPlayer;
 
-    public static void main(String[] args) {
-        ServerSocket sSocket;
-        Socket socket;
-        ClientHandler player;
+    public void run() {
+
         ArrayList<ClientHandler> players;
         boolean seePhase;
         boolean playing;
@@ -36,13 +33,6 @@ public class Controller {
         wizards = new boolean[4];
         in = new Scanner(System.in);
 
-        try {
-            sSocket = new ServerSocket(port);
-        } catch (IOException e) {
-            System.out.println("Unable to start the socket. Shutting down...");
-            throw new RuntimeException(e);
-        }
-        System.out.println("Server ready");
         System.out.println("Notify each phase? [true/false]");
         seePhase = in.nextBoolean();
         players = new ArrayList<>();
@@ -53,14 +43,8 @@ public class Controller {
                 if (seePhase) {
                     System.out.println("Waiting for a connection...");
                 }
-                socket = sSocket.accept();
-            } catch (IOException e) {
-                System.out.println("Server cannot connect with a client. Shutting down...");
-                throw new RuntimeException(e);
-            }
-            player = new ClientHandler(socket);
-            System.out.println("Connected with player " + (i + 1) + ": " + player.getUserName());
-            players.add(player);
+            } catch
+
 
             //Asks the first player to connect how many players will play and if they want an expert match
             if (playersNum == 0) {

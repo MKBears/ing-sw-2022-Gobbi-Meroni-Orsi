@@ -14,11 +14,12 @@ import java.util.Scanner;
 /**
  * Manages all the interactions between Controller (server) and the remote player (client)
  */
-public class ClientHandler{
+public class ClientHandler extends Thread{
     private final Socket socket;
+    private final Server server;
     Scanner in;
     PrintWriter out;
-    private final String userName;
+    private String userName;
     private int wizardNumber;
     private Player avatar;
 
@@ -26,17 +27,21 @@ public class ClientHandler{
      *
      * @param s the socket associated with this player
      */
-    public ClientHandler (Socket s){
+    public ClientHandler (Socket s, Server server){
         socket = s;
+        this.server = server;
 
         try{
             in = new Scanner(socket.getInputStream());
             out = new PrintWriter(socket.getOutputStream());
-            out.println("Username");
-            userName = in.nextLine();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void run(){
+        userName = in.nextLine();
+        System.out.println("Connected with player: " + userName);
     }
 
     /**
@@ -44,7 +49,7 @@ public class ClientHandler{
      * @return the number of players
      */
     public int choosePlayersNum (){
-        out.println("Giocatori");
+        out.println("Players");
         return in.nextInt();
         //Lato client metteremo tre bottoni: uno per 2 giocatori, uno per 3 e l'altro per 4
         //  quindi non c'é bisogno di controllare quello che inserisce l'utente
