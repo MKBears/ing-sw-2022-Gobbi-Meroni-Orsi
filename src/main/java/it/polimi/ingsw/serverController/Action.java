@@ -40,7 +40,8 @@ public class Action {
             }catch (Exception e){}
         }
         for (Type_Student e:Type_Student.values()) {
-            influenze.replace(match.checkProfessor(e),influenze.get(match.checkProfessor(e))+match.getMotherNature().getPosition().getInfluence(e));
+            if (match.checkProfessor(e)!=null)
+                influenze.replace(match.checkProfessor(e),influenze.get(match.checkProfessor(e))+match.getMotherNature().getPosition().getInfluence(e));
             }
         for(int j=0;j<match.getPlayer().length;j++){
             if(influenze.get(match.getPlayer()[j])>max) {

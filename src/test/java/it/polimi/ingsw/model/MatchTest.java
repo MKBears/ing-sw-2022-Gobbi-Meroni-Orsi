@@ -33,6 +33,7 @@ class MatchTest {
         assertSame(a.getLands().get(5), a.getMotherNature().getPosition());
         a.moveMotherNature(10);
         assertSame(a.getLands().get(3), a.getMotherNature().getPosition());
+        System.out.println(a);
     }
 
     @Test
@@ -136,6 +137,7 @@ class MatchTest {
         assertDoesNotThrow(()->a.getPlayer()[1].getBoard().placeStudent(drago));
         assertDoesNotThrow(()->a.getPlayer()[0].getBoard().placeStudent(drago2));
         assertDoesNotThrow(()->a.getPlayer()[1].getBoard().placeStudent(drago3));
+        System.out.println(a);
         assertSame(a.checkProfessor(Type_Student.DRAGON), pl2);
         assertSame(a.getProfessors().get(Type_Student.DRAGON), pl2);
         Student drago4=new Student(Type_Student.DRAGON);
@@ -144,5 +146,6 @@ class MatchTest {
         assertDoesNotThrow(()->a.getPlayer()[0].getBoard().placeStudent(drago5));
         assertSame(pl1, a.checkProfessor(Type_Student.DRAGON));
         assertSame(pl1, a.getProfessors().get(Type_Student.DRAGON));
+        System.out.println(a);
     }
 }

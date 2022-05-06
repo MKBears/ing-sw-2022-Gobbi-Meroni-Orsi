@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class Expert_Match extends Match {
     CharacterCard card[];
@@ -36,5 +37,11 @@ public class Expert_Match extends Match {
      */
     public CharacterCard[] getCard() {
         return card;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "carte personaggio= " + Arrays.toString(card);
     }
 }

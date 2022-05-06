@@ -87,6 +87,7 @@ class ActionTest {
         a.controlLand(pl1);
         assertTrue(match.getLands().get(0).getTower().getColor()==Colors.BLACK);
         assertTrue(pl1.getBoard().getTowersNum()==7);
+        System.out.println(match);
         student= new Student(Type_Student.DRAGON);
         s1=new Student(Type_Student.GNOME);
         array.add(student);
@@ -100,6 +101,7 @@ class ActionTest {
         assertTrue(match.getLands().get(0).getTower().getColor()==Colors.WHITE);
         assertTrue(pl2.getBoard().getTowersNum()==7);
         assertTrue(pl1.getBoard().getTowersNum()==8);
+        System.out.println(match);
 
     }
 
@@ -115,6 +117,7 @@ class ActionTest {
         a.uniteLands();
         assertTrue(match.getLands().size()==10);
         assertTrue(match.getLands().get(0).getTower().getColor()==Colors.BLACK);
+        System.out.println(match);
     }
 
     @Test
