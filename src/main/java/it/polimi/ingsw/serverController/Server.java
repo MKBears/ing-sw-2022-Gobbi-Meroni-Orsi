@@ -48,38 +48,72 @@ public class Server {
                     message = (String) in.readObject();
                     switch (message) {
                         case "ChoosingGame":
+                            System.out.println("Received!");
+                            //decision
                             break;
                         case "ACK":
+                            System.out.println("Received!");
+                            //decision
                             break;
                         case "NACK":
+                            System.out.println("Received!");
+                            //decision
                             break;
                         case "Login":
+                            System.out.println("Received!");
+                            //decision
                             break;
                         case "NewGame":
+                            System.out.println("Received!");
+                            //decision
                             break;
                         case "JoinGame":
+                            System.out.println("Received!");
+                            //decision
                             break;
                         case "ResumeGame":
+                            System.out.println("Received!");
+                            //decision
                             break;
                         case "GameSelected":
+                            System.out.println("Received!");
+                            //decision
                             break;
                         case "NumPlayers":
+                            System.out.println("Received!");
+                            //decision
                             break;
                         case "Choice":
+                            System.out.println("Received!");
+                            //decision
                             break;
                         case "ChosenCard":
+                            System.out.println("Received!");
+                            //decision
                             break;
                         case "Student1":
+                            System.out.println("Received!");
+                            //decision
                             break;
                         case "Student2":
+                            System.out.println("Received!");
+                            //decision
                             break;
                         case "Student3":
+                            System.out.println("Received!");
+                            //decision
                             break;
                         case "StepsMN":
+                            System.out.println("Received!");
+                            //decision
                             break;
                         case "ChoiceCloud":
+                            System.out.println("Received!");
+                            //decision
                             break;
                         case "ChChosen":
+                            System.out.println("Received!");
+                            //decision
                             break;
                     }
                 } catch (IOException e) {
