@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * One of the two implementation of Land
  */
-public class Island implements Land {
+public class Island implements Land{
     private final ArrayList<Student> students;
     private final int islandID;
     private Tower tower;
