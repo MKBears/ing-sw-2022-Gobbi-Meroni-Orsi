@@ -1,10 +1,9 @@
 package it.polimi.ingsw.serverController;
 
 import java.io.IOException;
-import java.net.Inet4Address;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,25 +11,81 @@ import java.util.concurrent.Executors;
 public class Server {
     private final int port = 4096;
     private ServerSocket sSocket;
+    private Socket client;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
+    private InetSocketAddress ip_mio;
+    private DatagramPacket packet;
+    private DatagramPacket packet4client;
+    private DatagramSocket sock;
     private final ExecutorService players;
     private final ArrayList<String> userNames;
 
+    private String message;
+
     public Server(){
         players = Executors.newCachedThreadPool();
-        Socket socket;
         userNames = new ArrayList<>();
 
         try {
             sSocket = new ServerSocket();
-            sSocket.bind(new InetSocketAddress(Inet4Address.getLocalHost(), port));
+            ip_mio=new InetSocketAddress(Inet4Address.getLocalHost(),port);
+            sSocket.bind(ip_mio);
             System.out.println("Server ready");
+            sock=new DatagramSocket(port);
+            byte[] buf=new byte[1];
+            packet=new DatagramPacket(buf, 0, 0);
+            sock.receive(packet);
+            client= new Socket(packet.getAddress(),packet.getPort());
+            packet4client=new DatagramPacket(buf,0,buf.length,client.getInetAddress(), client.getPort());
+            sock.send(packet4client);
+            client = sSocket.accept();
+            in= new ObjectInputStream(client.getInputStream());
+            out= new ObjectOutputStream(client.getOutputStream());
 
-            while (true){
+            while (true) {
                 try {
-                    socket = sSocket.accept();
-                    players.submit(new ClientHandler(socket, this));
-                }catch (IOException e) {
+                    message = (String) in.readObject();
+                    switch (message) {
+                        case "ChoosingGame":
+                            break;
+                        case "ACK":
+                            break;
+                        case "NACK":
+                            break;
+                        case "Login":
+                            break;
+                        case "NewGame":
+                            break;
+                        case "JoinGame":
+                            break;
+                        case "ResumeGame":
+                            break;
+                        case "GameSelected":
+                            break;
+                        case "NumPlayers":
+                            break;
+                        case "Choice":
+                            break;
+                        case "ChosenCard":
+                            break;
+                        case "Student1":
+                            break;
+                        case "Student2":
+                            break;
+                        case "Student3":
+                            break;
+                        case "StepsMN":
+                            break;
+                        case "ChoiceCloud":
+                            break;
+                        case "ChChosen":
+                            break;
+                    }
+                } catch (IOException e) {
                     System.out.println("Server cannot connect with a client. Trying a new connection.");
+                    throw new RuntimeException(e);
+                } catch (ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
             }
