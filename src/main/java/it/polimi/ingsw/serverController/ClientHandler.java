@@ -99,7 +99,7 @@ public class ClientHandler extends Thread{
      *
      * @return true if the player wants to play an expert match
      */
-    public boolean expertMatch(){
+    public boolean expertMatch(){ //non contemplare
         out.println("Pro");
         return in.nextBoolean();
     }
