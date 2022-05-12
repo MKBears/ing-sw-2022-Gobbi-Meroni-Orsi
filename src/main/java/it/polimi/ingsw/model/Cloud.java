@@ -40,10 +40,11 @@ public class Cloud implements Serializable {
     /**
      * refills the cloud automatically
      */
-    public void importStudents() throws Exception{
+    public Student[] importStudents() throws Exception{
         for (int i = 0; i < nop; i++) {
             students[i] = bag.getRandomStudent();
         }
+        return students.clone();
     }
 
     /**

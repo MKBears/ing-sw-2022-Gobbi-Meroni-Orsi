@@ -5,11 +5,9 @@ import it.polimi.ingsw.model.Colors;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Wizards;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Manages all the interactions between Controller (server) and the remote player (client)
@@ -17,31 +15,116 @@ import java.util.Scanner;
 public class ClientHandler extends Thread{
     private final Socket socket;
     private final Server server;
-    Scanner in;
-    PrintWriter out;
+    ObjectInputStream in;
+    ObjectOutputStream out;
+    private Controller controller;
     private String userName;
-    private int wizardNumber;
+    private Colors color;
+    private int wizard;
     private Player avatar;
+    private int state;
+    Controller match;
+    private boolean connected;
+    private boolean ongoingMatch;
 
     /**
      *
      * @param s the socket associated with this player
      */
-    public ClientHandler (Socket s, Server server){
+    public ClientHandler (Socket s, Server server, Colors color){
         socket = s;
         this.server = server;
 
         try{
-            in = new Scanner(socket.getInputStream());
-            out = new PrintWriter(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+            out = new ObjectOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        connected = true;
+        this.color = color;
+        ongoingMatch = true;
     }
 
     public void run(){
-        userName = in.nextLine();
-        System.out.println("Connected with player: " + userName);
+
+    }
+
+    private void changeState(){
+        boolean control;
+
+        switch(state){
+            case 0:
+                String game;
+                try {
+                    game = (String) in.readObject();
+                    if (game.equals("NewGame")) {
+                        userName = (String) in.readObject();
+                        controller = server.createMatch(this, choosePlayersNum());
+                    }
+                    else {
+                        if (game.equals("JoinGame")){
+                            if (server.areThereJoinableMatches()){
+                                out.writeObject(server.getJoinableMatches());
+                                controller = server.joinGame((String) in.readObject(), this);
+                                do {
+                                    userName = (String) in.readObject();
+
+                                    if (controller.getUserNames().contains(userName)){
+                                        control = false;
+                                        loginFailed();
+                                    }
+                                    else {
+                                        control = true;
+                                    }
+                                }while (!control);
+                            }
+                        }
+                        else {
+                            out.writeObject(server.getResumeableMatches());
+                            controller = server.resumeGame((String) in.readObject(), this);
+                        }
+                    }
+                }catch (ClassNotFoundException | IOException e){
+                    out.writeChars("Nack");
+                }
+
+                state = 1;
+            case 1:
+                //Fase PIANIFICAZIONE: si notificano gli studenti spostati nelle nuvole
+                sendRefillClouds(match.getMovedStudents());
+                state = 2;
+                break;
+            case 2:
+                //Fase PIANIFICAZIONE: gioca una carta assistente
+                playAssistant(match.getPlayedAssistants());
+                state = 3;
+                break;
+            case 3:
+                //Fase AZIONE: si muovono i 3/4 studenti dall'ingresso
+                //Verifica se puo controllare qualche professore
+                state = 4;
+            case 4:
+                //Fase AZIONE: muove MN
+                //Verifica se l'isola diventa controllata o viene conquistata
+                //Unisce le isole
+                if (ongoingMatch){
+                    state = 5;
+                }
+                else{
+                    state = 6;
+                    break;
+                }
+            case 5:
+                //Fase AZIONE: sceglie una nuova nuvola e importa gli studenti
+                state = 1;
+                break;
+            case 6:
+                //Fine partita: si invia il vincitore
+                break;
+            case 7:
+                //Fase AZIONE: gioca una carta personaggio
+        }
     }
 
     /**
@@ -49,8 +132,8 @@ public class ClientHandler extends Thread{
      * @return the number of players
      */
     public int choosePlayersNum (){
-        out.println("Players");
-        return in.nextInt();
+        out.writeObject("Players");
+         return in.readInt();
         //Lato client metteremo tre bottoni: uno per 2 giocatori, uno per 3 e l'altro per 4
         //  quindi non c'é bisogno di controllare quello che inserisce l'utente
     }
@@ -65,7 +148,7 @@ public class ClientHandler extends Thread{
      * @return
      */
     public int setWizard(boolean[] wizards){
-        out.println("Wizard");
+        out.writeChars("Wizard");
         for (int i = 0; i < wizards.length; i++) {
             if (wizards[i]) {
                 out.println(i);
@@ -91,20 +174,6 @@ public class ClientHandler extends Thread{
      * @param expert true if it's an expert match
      */
     public void createAvatar(Colors color, int playersNum, boolean expert){
-        Wizards wizard;
-        int towersNum;
-
-        switch (wizardNumber){
-            case 1: wizard = Wizards.WIZARD1;
-            break;
-            case 2: wizard = Wizards.WIZARD2;
-            break;
-            case 3: wizard = Wizards.WIZARD3;
-            break;
-            default: wizard = Wizards.WIZARD4;
-            break;
-        }
-
         if(playersNum==2 || playersNum==4){
             towersNum = 8;
         }

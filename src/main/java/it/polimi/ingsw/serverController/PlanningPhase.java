@@ -1,8 +1,10 @@
 package it.polimi.ingsw.serverController;
 
 import it.polimi.ingsw.model.Cloud;
+import it.polimi.ingsw.model.Student;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Represents the phase of planning of the match: fills all clouds with the correct number of students
@@ -15,13 +17,15 @@ public class PlanningPhase {
      * @param clouds
      * @throws Exception if there aren't enough students to fill a cloud
      */
-    public static void fillClouds (Cloud[] clouds) throws Exception{
+    public static ArrayList<Student> fillClouds (Cloud[] clouds) throws Exception{
+        ArrayList<Student> students = new ArrayList<Student>();
         for (Cloud c : clouds){
-            c.importStudents();
+            students.addAll(Arrays.asList(c.importStudents()));
             //When Bag runs out of students, it throws an Exception which would be propagated to the class Controller
             // through Cloud and this class. Controller will then notify all the remote players that the match would
             // finish at the end of the current Round.
         }
+        return students;
     }
 
     /**
