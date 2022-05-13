@@ -1,12 +1,9 @@
 package it.polimi.ingsw.serverController;
 
-import it.polimi.ingsw.model.Colors;
-
 import java.io.IOException;
-import java.net.Inet4Address;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -14,9 +11,17 @@ import java.util.concurrent.Executors;
 public class Server {
     private final int port = 4096;
     private ServerSocket sSocket;
+    private Socket client;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
+    private InetSocketAddress ip_mio;
+    private DatagramPacket packet;
+    private DatagramPacket packet4client;
+    private DatagramSocket sock;
     private final ExecutorService players;
     private final ArrayList<String> userNames;
-    private final ArrayList<Controller> matches;
+
+    private String message;
 
     public Server(){
         players = Executors.newCachedThreadPool();
@@ -28,10 +33,21 @@ public class Server {
         try {
             Socket socket;
             sSocket = new ServerSocket();
-            sSocket.bind(new InetSocketAddress(Inet4Address.getLocalHost(), port));
+            ip_mio=new InetSocketAddress(Inet4Address.getLocalHost(),port);
+            sSocket.bind(ip_mio);
             System.out.println("Server ready");
+            sock=new DatagramSocket(port);
+            byte[] buf=new byte[1];
+            packet=new DatagramPacket(buf, 0, 0);
+            sock.receive(packet);
+            client= new Socket(packet.getAddress(),packet.getPort());
+            packet4client=new DatagramPacket(buf,0,buf.length,client.getInetAddress(), client.getPort());
+            sock.send(packet4client);
+            client = sSocket.accept();
+            in= new ObjectInputStream(client.getInputStream());
+            out= new ObjectOutputStream(client.getOutputStream());
 
-            while (true){
+            while (true) {
                 try {
                     socket = sSocket.accept();
                     players.submit(new ClientHandler(socket, this, Colors.BLACK));
