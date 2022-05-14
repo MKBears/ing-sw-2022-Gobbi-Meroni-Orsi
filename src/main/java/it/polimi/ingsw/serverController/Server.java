@@ -12,14 +12,14 @@ public class Server {
     private final int port = 4096;
     private ServerSocket sSocket;
     private Socket client;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
-    private InetSocketAddress ip_mio;
+    private InetSocketAddress myIP;
     private DatagramPacket packet;
     private DatagramPacket packet4client;
     private DatagramSocket sock;
     private final ExecutorService players;
     private final ArrayList<String> userNames;
+
+    private final ArrayList<Controller> matches;
 
     private String message;
 
@@ -33,24 +33,20 @@ public class Server {
         try {
             Socket socket;
             sSocket = new ServerSocket();
-            ip_mio=new InetSocketAddress(Inet4Address.getLocalHost(),port);
-            sSocket.bind(ip_mio);
+            myIP=new InetSocketAddress(InetAddress.getLocalHost(),port);
+            sSocket.bind(myIP);
             System.out.println("Server ready");
             sock=new DatagramSocket(port);
             byte[] buf=new byte[1];
             packet=new DatagramPacket(buf, 0, 0);
-            sock.receive(packet);
-            client= new Socket(packet.getAddress(),packet.getPort());
-            packet4client=new DatagramPacket(buf,0,buf.length,client.getInetAddress(), client.getPort());
-            sock.send(packet4client);
-            client = sSocket.accept();
-            in= new ObjectInputStream(client.getInputStream());
-            out= new ObjectOutputStream(client.getOutputStream());
 
             while (true) {
                 try {
-                    socket = sSocket.accept();
-                    players.submit(new ClientHandler(socket, this, Colors.BLACK));
+                    sock.receive(packet);
+                    packet4client = new DatagramPacket(buf, 0, buf.length, packet.getAddress(), packet.getPort());
+                    sock.send(packet4client);
+                    client = sSocket.accept();
+                    players.submit(new ClientHandler(client, this));
                 }catch (IOException e) {
                     System.out.println("Server cannot connect with a client. Trying a new connection.");
                     throw new RuntimeException(e);
@@ -62,46 +58,56 @@ public class Server {
         }
     }
 
-    public void addUserName(String userName){
+    public synchronized void addUserName(String userName) throws Exception{
+        if (userNames.contains(userName)){
+            throw new Exception("Username already existing");
+        }
         userNames.add(userName);
     }
 
-    public void removeUserName(String userName){
+    public synchronized void removeUserName(String userName){
         userNames.remove(userName);
     }
 
     public ArrayList<String> getUserNames() {
-        return userNames;
+        return (ArrayList<String>)userNames.clone();
     }
 
-    public synchronized Controller createMatch(ClientHandler creator, int playersNum){
-        Controller match = new Controller();
+    public synchronized Controller createMatch(ClientHandler creator, int playersNum, boolean expertMatch) throws Exception{
+        for (Controller match : matches){
+            if (match.getCreator().equals(creator.getUserName())){
+                matches.remove(match);
+                match.notifyDeletion();
+                break;
+            }
+        }
+        Controller match = new Controller(creator, playersNum, expertMatch);
         matches.add(match);
         return match;
     }
 
-    public boolean areThereJoinableMatches(){
-        if (!matches.isEmpty()){
-            return true;
+    public boolean areThereJoinableMatches(String userName){
+        for (Controller match : matches){
+            if (match.isNotFull() && match.getPlayers().contains(userName)){
+                return true;
+            }
         }
-        else {
-            return false;
-        }
+        return false;
     }
 
-    public ArrayList<String> getJoinableMatches() {
+    public ArrayList<String> getJoinableMatches(String userName) {
         ArrayList<String> creators = new ArrayList<>();
         for (Controller match : matches){
-            if (match.isNotFull()) {
+            if (match.isNotFull() && match.getPlayers().contains(userName)) {
                 creators.add(match.getCreator());
             }
         }
         return creators;
     }
 
-    public synchronized Controller joinGame (String creator, ClientHandler player){
+    public synchronized Controller joinGame (String creator, ClientHandler player) throws Exception {
         for (Controller match : matches){
-            if (match.getPlayers().contains(creator)){
+            if (match.getCreator().equals(creator)){
                 match.addPlayer(player);
                 return match;
             }
@@ -109,19 +115,19 @@ public class Server {
         return null;
     }
 
-    public ArrayList<String> getResumeableMatches(){
+    public ArrayList<String> getPausedMatches(String userName){
         ArrayList<String> creators = new ArrayList<>();
         for (Controller match : matches){
-            if (match.isPaused()) {
+            if (match.isPaused() && match.getPlayers().contains(userName)) {
                 creators.add(match.getCreator());
             }
         }
         return creators;
     }
 
-    public synchronized Controller resumeGame(String creator, ClientHandler player){
+    public synchronized Controller rejoinToGame(String creator, ClientHandler player){
         for (Controller match : matches){
-            if (match.getPlayers().contains(creator)){
+            if (match.getCreator().equals(creator)){
                 match.connectPlayer(player);
                 return match;
             }

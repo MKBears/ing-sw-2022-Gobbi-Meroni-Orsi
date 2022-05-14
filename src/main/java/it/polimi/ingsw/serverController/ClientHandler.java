@@ -1,9 +1,6 @@
 package it.polimi.ingsw.serverController;
 
-import it.polimi.ingsw.model.AssistantCard;
-import it.polimi.ingsw.model.Colors;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Wizards;
+import it.polimi.ingsw.model.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -23,7 +20,7 @@ public class ClientHandler extends Thread{
     private int wizard;
     private Player avatar;
     private int state;
-    Controller match;
+    private Match match;
     private boolean connected;
     private boolean ongoingMatch;
 
@@ -31,7 +28,7 @@ public class ClientHandler extends Thread{
      *
      * @param s the socket associated with this player
      */
-    public ClientHandler (Socket s, Server server, Colors color){
+    public ClientHandler (Socket s, Server server){
         socket = s;
         this.server = server;
 
@@ -42,7 +39,6 @@ public class ClientHandler extends Thread{
             throw new RuntimeException(e);
         }
         connected = true;
-        this.color = color;
         ongoingMatch = true;
     }
 
@@ -58,15 +54,20 @@ public class ClientHandler extends Thread{
                 String game;
                 try {
                     game = (String) in.readObject();
+
                     if (game.equals("NewGame")) {
                         userName = (String) in.readObject();
                         controller = server.createMatch(this, choosePlayersNum());
                     }
                     else {
                         if (game.equals("JoinGame")){
-                            if (server.areThereJoinableMatches()){
-                                out.writeObject(server.getJoinableMatches());
-                                controller = server.joinGame((String) in.readObject(), this);
+                            if (server.areThereJoinableMatches(userName)){
+                                out.writeObject(server.getJoinableMatches(userName));
+                                try {
+                                    controller = server.joinGame((String) in.readObject(), this);
+                                } catch (Exception e) {
+                                    //Dice al client che quel match é gia' pieno
+                                }
                                 do {
                                     userName = (String) in.readObject();
 
@@ -90,14 +91,13 @@ public class ClientHandler extends Thread{
                 }
 
                 state = 1;
+                break;
             case 1:
                 //Fase PIANIFICAZIONE: si notificano gli studenti spostati nelle nuvole
-                sendRefillClouds(match.getMovedStudents());
                 state = 2;
                 break;
             case 2:
                 //Fase PIANIFICAZIONE: gioca una carta assistente
-                playAssistant(match.getPlayedAssistants());
                 state = 3;
                 break;
             case 3:
@@ -127,44 +127,20 @@ public class ClientHandler extends Thread{
         }
     }
 
-    /**
-     * Asks the remote controller how many players will play the match
-     * @return the number of players
-     */
-    public int choosePlayersNum (){
-        out.writeObject("Players");
-         return in.readInt();
-        //Lato client metteremo tre bottoni: uno per 2 giocatori, uno per 3 e l'altro per 4
-        //  quindi non c'é bisogno di controllare quello che inserisce l'utente
-    }
-
     public String getUserName() {
         return userName;
     }
 
-    /**
-     * Asks the remote controller to choose a Wizard between the available ones
-     * @param wizards are the wizards chosen by the players before
-     * @return
-     */
-    public int setWizard(boolean[] wizards){
-        out.writeChars("Wizard");
-        for (int i = 0; i < wizards.length; i++) {
-            if (wizards[i]) {
-                out.println(i);
-            }
-        }
-        wizardNumber = in.nextInt();
-        return wizardNumber;
+    public void setColor(Colors color) {
+        this.color = color;
     }
 
-    /**
-     *
-     * @return true if the player wants to play an expert match
-     */
-    public boolean expertMatch(){
-        out.println("Pro");
-        return in.nextBoolean();
+    public Colors getColor() {
+        return color;
+    }
+
+    public void setMatch(Match match) {
+        this.match = match;
     }
 
     /**
@@ -174,10 +150,12 @@ public class ClientHandler extends Thread{
      * @param expert true if it's an expert match
      */
     public void createAvatar(Colors color, int playersNum, boolean expert){
-        if(playersNum==2 || playersNum==4){
+        int towersNum;
+
+        if (playersNum==2 || playersNum==4){
             towersNum = 8;
         }
-        else{
+        else {
             towersNum = 6;
         }
         avatar = new Player(userName, color, towersNum, wizard, expert);
@@ -232,6 +210,22 @@ public class ClientHandler extends Thread{
         return card;
     }
 
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public int seeState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    public void matchHasBeenDeleted (String creator){
+        //Nei messaggi ne va aggiunto uno per notificare che il match è stato eliminato
+    }
+
     /**
      * Closes inward and outward stream and the socket
      * @throws Exception fails to close the socket
@@ -240,20 +234,6 @@ public class ClientHandler extends Thread{
         in.close();
         out.close();
         socket.close();
-    }
-
-    /**
-     *
-     * @param endOfCurrentRound indicates if the match finishes at the end of the current round (true) or immediately (false)
-     */
-    public void notifyEndMatch(boolean endOfCurrentRound){
-        out.print("End ");
-        if (endOfCurrentRound){
-            out.println("round");
-        }
-        else{
-            out.println("immediately");
-        }
     }
 
 }
