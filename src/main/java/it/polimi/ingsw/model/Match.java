@@ -223,4 +223,37 @@ public class Match implements Serializable {
             professors.put(e,player[a]);
         return player[a];
     }
+
+    public Player getWinner() {
+        int minIndex, min, temp, countProf1, countProf2;
+        minIndex = 0;
+        min = player[0].getBoard().getTowersNum();
+        countProf1 = 0;
+
+        for (int i=1; i<player.length; i++){
+            temp = player[i].getBoard().getTowersNum();
+
+            if (temp < min) {
+                minIndex = i;
+                min = temp;
+                countProf1 = 0;
+            } else if (temp == min) {
+                countProf2 = 0;
+                for (Type_Student professor : Type_Student.values()) {
+                    if (professors.get(professor).equals(player[min]) && countProf1==0) {
+                        countProf1++;
+                    } else if (professors.get(professor).equals(player[i])) {
+                        countProf2++;
+                    }
+                }
+                if (countProf2 > countProf1) {
+                    minIndex = i;
+                    countProf1 = countProf2;
+                }
+            }
+        }
+
+        return player[minIndex];
+    }
+
 }

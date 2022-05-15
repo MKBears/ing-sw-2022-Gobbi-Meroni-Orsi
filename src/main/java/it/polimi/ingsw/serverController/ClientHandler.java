@@ -101,13 +101,12 @@ public class ClientHandler extends Thread{
                 state = 3;
                 break;
             case 3:
-                //Fase AZIONE: si muovono i 3/4 studenti dall'ingresso
-                //Verifica se puo controllare qualche professore
+                //ACTION phase: moving students from the entrance
+                    //check if they can control any professor
                 state = 4;
             case 4:
-                //Fase AZIONE: muove MN
-                //Verifica se l'isola diventa controllata o viene conquistata
-                //Unisce le isole
+                ///ACTION phase: moving Mother Nature
+                    //calculate the influence in that Land and verify if it joins other lands
                 if (ongoingMatch){
                     state = 5;
                 }
@@ -116,7 +115,7 @@ public class ClientHandler extends Thread{
                     break;
                 }
             case 5:
-                //Fase AZIONE: sceglie una nuova nuvola e importa gli studenti
+                //ACTION phase: choose a cloud and import students to the entrance
                 state = 1;
                 break;
             case 6:

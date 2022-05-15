@@ -22,6 +22,7 @@ public class Controller {
     private final AssistantCard[] playedAssistants;
     private int numOfPlayedAssistants;
     private CharacterCard[] characters;
+    private ClientHandler winner;
 
     public Controller (ClientHandler creator, int playersNum, boolean expertMatch){
         state = 0;
@@ -47,20 +48,6 @@ public class Controller {
         //Start match
         while (playing) {
 
-
-
-            currentPlayer = firstPlayer;
-            //ACTION phase:
-            for (i=0; i<playersNum; i++){
-                notifyAll();
-
-                if (currentPlayer<playersNum-1){
-                    currentPlayer++;
-                }
-                else {
-                    currentPlayer = 0;
-                }
-            }
         }
         //End match
 
@@ -112,6 +99,7 @@ public class Controller {
                 for (ClientHandler player : players){
                     player.setMatch(match);
                 }
+                state = 1;
                 break;
             case 1:
                 //PLANNING phase: all the clouds are filled with 3 or 4 students
@@ -123,12 +111,14 @@ public class Controller {
                     //Notifica il player remoto che sono finiti gli studenti
                 }
                 notifyAll();
+                state = 2;
                 break;
             case 2:
                 //PLANNING phase: each player plays an assistant card
                 notifyAll();
                 wait();
                 numOfPlayedAssistants++;
+                state = 3;
                 break;
             case 3:
                 //PLANNING phase: deciding the first player of the following action phase
@@ -139,9 +129,29 @@ public class Controller {
                         firstPlayer = i;
                     }
                 }
+                state = 4;
                 break;
             case 4:
-                //ACTION phase:
+                //ACTION phase
+                currentPlayer = firstPlayer;
+                    //foreach player : players ==> play action phase
+                if (playing){
+                    state = 1;
+                }
+                else {
+                    state = 5;
+                }
+                break;
+            case 5:
+                //Match END: determine the winner
+                Player winner;
+                winner = match.getWinner();
+                for (ClientHandler player : players) {
+                    if (player.getAvatar().equals(winner)){
+                        this.winner = player;
+                    }
+                }
+                break;
         }
     }
 
@@ -260,5 +270,12 @@ public class Controller {
             // finish at the end of the current Round.
         }
         return students;
+    }
+
+    public ClientHandler getWinner() throws Exception {
+        if (playing){
+            throw new Exception("The match isn't concluded yet");
+        }
+        return winner;
     }
 }
