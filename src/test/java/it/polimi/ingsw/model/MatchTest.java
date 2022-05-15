@@ -21,6 +21,7 @@ class MatchTest {
             else
                 assertTrue(a.getLands().get(i).getStudents().size()==1);
         }
+        System.out.println(a);
     }
     @Test
     void moveMotherNature() {

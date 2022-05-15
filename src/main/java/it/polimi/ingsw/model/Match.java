@@ -101,6 +101,14 @@ public class Match implements Serializable {
 
     /**
      *
+     * @param professors to be insert in the professors
+     */
+    public void setProfessors(Map<Type_Student, Player> professors) {
+        this.professors = professors;
+    }
+
+    /**
+     *
      * @return the players of the match
      */
     public Player[] getPlayer() {
@@ -204,6 +212,14 @@ public class Match implements Serializable {
                 lands.get(i).getTower().getColor()==lands.get(i+1).getTower().getColor()))throw new IllegalArgumentException();
         uniteLandAfter(i);
         uniteLandBefore(i);
+    }
+
+    /**
+     *
+     * @param lands update of the lands
+     */
+    public void setLands(List<Land> lands) {
+        this.lands = lands;
     }
 
     /**
