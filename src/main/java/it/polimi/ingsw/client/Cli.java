@@ -2,9 +2,7 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 
@@ -22,35 +20,25 @@ public class Cli {
         return user;
     }
 
-    public Wizards getWizard(){
-        Wizards wizard=null;
+    public Wizards getWizard(List<Wizards> wizards){
         System.out.println("scegli il mago:");
+        for (Wizards e:wizards) {
+            System.out.println((wizards.indexOf(e)+1)+" per "+e.toString());
+        }
         int choose=in.nextInt();
         while(choose<1 || choose>4){
             System.out.println("scegli il mago:");
             in.nextInt();
         }
-        switch (choose) {
-            case (1):
-                return Wizards.WIZARD1;
-            case (2):
-                return Wizards.WIZARD2;
-            case (3):
-                return Wizards.WIZARD3;
-            case (4):
-                return Wizards.WIZARD4;
-        }
-        return wizard;
+        return wizards.get(choose-1);
     }
 
-    public Cloud getCloud(Match match){
+    public Cloud getCloud(List<Cloud> clouds){
         int i =1;
-        Map<Integer,Cloud> map=new HashMap<>();
         System.out.println("Scegli la nuvola tra: \n");
-        for (Cloud e: match.getCloud()) {
+        for (Cloud e: clouds) {
             if(!e.hasBeenChosen()){
                 System.out.println("nuvola "+i+" "+e);
-                map.put(i,e);
                 i++;
             }
         }
@@ -59,20 +47,20 @@ public class Cli {
             System.out.println("scegli un numero tra 1 e "+(i-1)+":");
             in.nextInt();
         }
-        return map.get(choose);
+        return clouds.get(choose-1);
     }
 
-    public AssistantCard getAssistantCard(Player pl){
+    public AssistantCard getAssistantCard(List<AssistantCard> cards){
         System.out.println("scegli la carta assistente tra: \n");
-        for(int i=0;i<pl.getDeck().size();i++){
-            System.out.println(i+" "+pl.getDeck().get(i)+"\n");
+        for(int i=0;i<cards.size();i++){
+            System.out.println(i+" "+cards.get(i)+"\n");
         }
         int choose=in.nextInt();
-        while (choose<1 ||choose>pl.getDeck().size()){
+        while (choose<1 ||choose>cards.size()){
             System.out.println("scegli la carta assistente tra: \n");
             choose=in.nextInt();
         }
-        return pl.getDeck().get(choose-1);
+        return cards.get(choose-1);
     }
 
 

@@ -180,4 +180,11 @@ public class Board implements Serializable {
         return towers.isEmpty();
     }
 
+    /**
+     *
+     * @param towers towers to insert in the board
+     */
+    public void setTowers(ArrayList<Tower> towers) {
+        this.towers = towers;
+    }
 }
