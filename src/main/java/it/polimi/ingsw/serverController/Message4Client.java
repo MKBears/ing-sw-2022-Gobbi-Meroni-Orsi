@@ -12,20 +12,20 @@ import it.polimi.ingsw.model.*;
 /**
  * This class contains all the possible message to send to the client
  */
-public class message4Client {
+public class Message4Client {
 
     private ObjectOutputStream out;
     private ObjectInputStream in;
     private String name;
     private String message;
-    private message4Client toclient;
+    private Message4Client toclient;
 
     /**
      *
      * @param out the out parameter for TCP connection
      * @param in the in parameter for TCP connection
      */
-    public message4Client(ObjectOutputStream out, ObjectInputStream in){
+    public Message4Client(ObjectOutputStream out, ObjectInputStream in){
         this.out=out;
         this.in=in;
     }
@@ -182,17 +182,17 @@ public class message4Client {
     }
 
     /**
-     * The server sends the students to refill the clouds
-     * @param students1 students for the first cloud
-     * @param students2 students for the second cloud
+     * The server sends the clouds full of new students
+     * @param cloud1 new cloud full of new students
+     * @param cloud2 new cloud full of new students
      * @return ACK or NACK
      */
-    public String sendRefillClouds(ArrayList<Student> students1, ArrayList<Student> students2){
+    public String sendRefillClouds(Cloud cloud1, Cloud cloud2){
         name="RefillClouds";
         try {
             out.writeObject(name);
-            out.writeObject(students1);
-            out.writeObject(students2);
+            out.writeObject(cloud1);
+            out.writeObject(cloud2);
             return (String) in.readObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -202,19 +202,19 @@ public class message4Client {
     }
 
     /**
-     * The server sends the students to refill the clouds
-     * @param students1 students for the first cloud
-     * @param students2 students for the second cloud
-     * @param students3 students for the third cloud
+     * The server sends the clouds full of new students
+     * @param cloud1 new cloud full of new students
+     * @param cloud2 new cloud full of new students
+     * @param cloud3 new cloud full of new students
      * @return ACK or NACK
      */
-    public String sendRefillClouds(ArrayList<Student> students1, ArrayList<Student> students2, ArrayList<Student> students3){
+    public String sendRefillClouds(Cloud cloud1, Cloud cloud2, Cloud cloud3){
         name="RefillClouds";
         try {
             out.writeObject(name);
-            out.writeObject(students1);
-            out.writeObject(students2);
-            out.writeObject(students3);
+            out.writeObject(cloud1);
+            out.writeObject(cloud2);
+            out.writeObject(cloud3);
             return (String) in.readObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -224,21 +224,21 @@ public class message4Client {
     }
 
     /**
-     * The server sends the students to refill the clouds
-     * @param students1 students for the first cloud
-     * @param students2 students for the second cloud
-     * @param students3 students for the third cloud
-     * @param students4 students fot the fourth cloud
+     * The server sends the clouds full of new students
+     * @param cloud1 new cloud full of new students
+     * @param cloud2 new cloud full of new students
+     * @param cloud3 new cloud full of new students
+     * @param cloud4 new cloud full of new students
      * @return ACK or NACK
      */
-    public String sendRefillClouds(ArrayList<Student> students1, ArrayList<Student> students2, ArrayList<Student> students3, ArrayList<Student> students4){
+    public String sendRefillClouds(Cloud cloud1, Cloud cloud2, Cloud cloud3, Cloud cloud4){
         name="RefillClouds";
         try {
             out.writeObject(name);
-            out.writeObject(students1);
-            out.writeObject(students2);
-            out.writeObject(students3);
-            out.writeObject(students4);
+            out.writeObject(cloud1);
+            out.writeObject(cloud2);
+            out.writeObject(cloud3);
+            out.writeObject(cloud4);
             return (String) in.readObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -365,13 +365,14 @@ public class message4Client {
      * @param id the id of the island or archipelago
      * @return ACK or NACK
      */
-    public String sendNotifyMoveStudents(Student student, Player player, int id){
+    public String sendNotifyMoveStudents(Student student, Player player, int id, String username){
         name="NotifyMoveStudents (id)";
         try {
             out.writeObject(name);
             out.writeObject(student);
             out.writeObject(player);
             out.writeObject(id);
+            out.writeObject(username);
             return (String)in.readObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -387,13 +388,14 @@ public class message4Client {
      * @param board the board of the player
      * @return ACk or NACK
      */
-    public String sendNotifyMoveStudents(Student student, Player player, Board board){
+    public String sendNotifyMoveStudents(Student student, Player player, Board board, String username){
         name="NotifyMoveStudents (board)";
         try {
             out.writeObject(name);
             out.writeObject(student);
             out.writeObject(player);
             out.writeObject(board);
+            out.writeObject(username);
             return (String)in.readObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -466,12 +468,13 @@ public class message4Client {
      * @param land the land involved
      * @return ACK or NACK
      */
-    public String sendNotifyTowers(ArrayList<Tower> towers, Land land){
+    public String sendNotifyTowers(ArrayList<Tower> towers, Land land, String username){
         name="NotifyTowers (land)";
         try {
             out.writeObject(name);
             out.writeObject(towers);
             out.writeObject(land);
+            out.writeObject(username);
             return (String)in.readObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -486,12 +489,13 @@ public class message4Client {
      * @param board the board involved
      * @return ACK or NACK
      */
-    public String sendNotifyTowers(ArrayList<Tower> towers, Board board){
+    public String sendNotifyTowers(ArrayList<Tower> towers, Board board, String username){
         name="NotifyTowers (board)";
         try {
             out.writeObject(name);
             out.writeObject(towers);
             out.writeObject(board);
+            out.writeObject(username);
             return (String)in.readObject();
         } catch (IOException e) {
             throw new RuntimeException(e);

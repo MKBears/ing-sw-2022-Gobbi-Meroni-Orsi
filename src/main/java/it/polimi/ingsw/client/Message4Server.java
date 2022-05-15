@@ -7,13 +7,13 @@ import it.polimi.ingsw.model.Wizards;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Map;
+
 import it.polimi.ingsw.model.*;
 
 /**
  * This class contains all the possible message to send to the sever
  */
-public class message4Server {
+public class Message4Server {
     private ObjectOutputStream out;
     private ObjectInputStream in;
     private String name;
@@ -24,7 +24,7 @@ public class message4Server {
      * @param in the in parameter for TCP connection
      * @param out the out parameter for TCP connection
      */
-    message4Server(ObjectInputStream in, ObjectOutputStream out){
+    Message4Server(ObjectInputStream in, ObjectOutputStream out){
         this.out=out;
         this.in=in;
     }

@@ -1,107 +1,147 @@
 package it.polimi.ingsw.serverController;
 
-import it.polimi.ingsw.model.AssistantCard;
-import it.polimi.ingsw.model.Colors;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Wizards;
+import it.polimi.ingsw.model.*;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.net.*;
+import java.io.*;
+import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.concurrent.ExecutorService;
 
 /**
  * Manages all the interactions between Controller (server) and the remote player (client)
  */
 public class ClientHandler extends Thread{
-    private final int port = 4096;
-    private ServerSocket sSocket;
-    private Socket client;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
-    private InetSocketAddress ip_mio;
-    private DatagramPacket packet;
-    private DatagramPacket packet4client;
-    private DatagramSocket sock;
-
-    private String message;
+    private final Socket socket;
+    private final Server server;
+    ObjectInputStream in;
+    ObjectOutputStream out;
+    private Controller controller;
     private String userName;
-    private int wizardNumber;
+    private Colors color;
+    private int wizard;
     private Player avatar;
-    private boolean condition;
+    private int state;
+    private Match match;
+    private boolean connected;
+    private boolean ongoingMatch;
 
     /**
      *
      * @param s the socket associated with this player
      */
-    public ClientHandler (Socket s, Server server){ /////METTI A POSTO POI
-        condition=true;
-        try {
-            sSocket = new ServerSocket();
-            ip_mio = new InetSocketAddress(Inet4Address.getLocalHost(), port);
-            sSocket.bind(ip_mio);
-            System.out.println("Server ready");
-            sock = new DatagramSocket(port);
-            byte[] buf = new byte[1];
-            packet = new DatagramPacket(buf, 0, 0);
-            sock.receive(packet);
-            client = new Socket(packet.getAddress(), packet.getPort());
-            packet4client = new DatagramPacket(buf, 0, buf.length, client.getInetAddress(), client.getPort());
-            sock.send(packet4client);
-            client = sSocket.accept();
-            in = new ObjectInputStream(client.getInputStream());
-            out = new ObjectOutputStream(client.getOutputStream());
+    public ClientHandler (Socket s, Server server){
+        socket = s;
+        this.server = server;
+
+        try{
+            in = new ObjectInputStream(socket.getInputStream());
+            out = new ObjectOutputStream(socket.getOutputStream());
+            out.writeObject(4500); //gli mando inirizzo di porta TCP, speriamo funzioni
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        connected = true;
+        ongoingMatch = true;
     }
 
-    public void run() {
+    public void run(){
 
     }
 
-    /**
-     * Asks the remote controller how many players will play the match
-     * @return the number of players
-     */
-    public int choosePlayersNum (){
-        out.println("Players");
-        return in.nextInt();
-        //Lato client metteremo tre bottoni: uno per 2 giocatori, uno per 3 e l'altro per 4
-        //  quindi non c'é bisogno di controllare quello che inserisce l'utente
+    private void changeState(){
+        boolean control;
+
+        switch(state){
+            case 0:
+                String game;
+                try {
+                    game = (String) in.readObject();
+
+                    if (game.equals("NewGame")) {
+                        userName = (String) in.readObject();
+                        controller = server.createMatch(this, choosePlayersNum());
+                    }
+                    else {
+                        if (game.equals("JoinGame")){
+                            if (server.areThereJoinableMatches(userName)){
+                                out.writeObject(server.getJoinableMatches(userName));
+                                try {
+                                    controller = server.joinGame((String) in.readObject(), this);
+                                } catch (Exception e) {
+                                    //Dice al client che quel match é gia' pieno
+                                }
+                                do {
+                                    userName = (String) in.readObject();
+
+                                    if (controller.getUserNames().contains(userName)){
+                                        control = false;
+                                        loginFailed();
+                                    }
+                                    else {
+                                        control = true;
+                                    }
+                                }while (!control);
+                            }
+                        }
+                        else {
+                            out.writeObject(server.getResumeableMatches());
+                            controller = server.resumeGame((String) in.readObject(), this);
+                        }
+                    }
+                }catch (ClassNotFoundException | IOException e){
+                    out.writeChars("Nack");
+                }
+
+                state = 1;
+                break;
+            case 1:
+                //Fase PIANIFICAZIONE: si notificano gli studenti spostati nelle nuvole
+                state = 2;
+                break;
+            case 2:
+                //Fase PIANIFICAZIONE: gioca una carta assistente
+                state = 3;
+                break;
+            case 3:
+                //Fase AZIONE: si muovono i 3/4 studenti dall'ingresso
+                //Verifica se puo controllare qualche professore
+                state = 4;
+            case 4:
+                //Fase AZIONE: muove MN
+                //Verifica se l'isola diventa controllata o viene conquistata
+                //Unisce le isole
+                if (ongoingMatch){
+                    state = 5;
+                }
+                else{
+                    state = 6;
+                    break;
+                }
+            case 5:
+                //Fase AZIONE: sceglie una nuova nuvola e importa gli studenti
+                state = 1;
+                break;
+            case 6:
+                //Fine partita: si invia il vincitore
+                break;
+            case 7:
+                //Fase AZIONE: gioca una carta personaggio
+        }
     }
 
     public String getUserName() {
         return userName;
     }
 
-    /**
-     * Asks the remote controller to choose a Wizard between the available ones
-     * @param wizards are the wizards chosen by the players before
-     * @return
-     */
-    public int setWizard(boolean[] wizards){
-        out.println("Wizard");
-        for (int i = 0; i < wizards.length; i++) {
-            if (wizards[i]) {
-                out.println(i);
-            }
-        }
-        wizardNumber = in.nextInt();
-        return wizardNumber;
+    public void setColor(Colors color) {
+        this.color = color;
     }
 
-    /**
-     *
-     * @return true if the player wants to play an expert match
-     */
-    public boolean expertMatch(){ //non contemplare
-        out.println("Pro");
-        return in.nextBoolean();
+    public Colors getColor() {
+        return color;
+    }
+
+    public void setMatch(Match match) {
+        this.match = match;
     }
 
     /**
@@ -111,24 +151,12 @@ public class ClientHandler extends Thread{
      * @param expert true if it's an expert match
      */
     public void createAvatar(Colors color, int playersNum, boolean expert){
-        Wizards wizard;
         int towersNum;
 
-        switch (wizardNumber){
-            case 1: wizard = Wizards.WIZARD1;
-            break;
-            case 2: wizard = Wizards.WIZARD2;
-            break;
-            case 3: wizard = Wizards.WIZARD3;
-            break;
-            default: wizard = Wizards.WIZARD4;
-            break;
-        }
-
-        if(playersNum==2 || playersNum==4){
+        if (playersNum==2 || playersNum==4){
             towersNum = 8;
         }
-        else{
+        else {
             towersNum = 6;
         }
         avatar = new Player(userName, color, towersNum, wizard, expert);
@@ -183,6 +211,22 @@ public class ClientHandler extends Thread{
         return card;
     }
 
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public int seeState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    public void matchHasBeenDeleted (String creator){
+        //Nei messaggi ne va aggiunto uno per notificare che il match è stato eliminato
+    }
+
     /**
      * Closes inward and outward stream and the socket
      * @throws Exception fails to close the socket
@@ -193,17 +237,4 @@ public class ClientHandler extends Thread{
         socket.close();
     }
 
-    /**
-     *
-     * @param endOfCurrentRound indicates if the match finishes at the end of the current round (true) or immediately (false)
-     */
-    public void notifyEndMatch(boolean endOfCurrentRound){
-        out.print("End ");
-        if (endOfCurrentRound){
-            out.println("round");
-        }
-        else{
-            out.println("immediately");
-        }
-    }
 }

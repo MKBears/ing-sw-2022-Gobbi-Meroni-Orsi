@@ -40,7 +40,7 @@ public class Client{
             addr[3]=(byte)255;
             dSokk=new DatagramSocket();
             System.out.println("Client: Inizializzato");
-            byte[] buf = new byte[30];
+            byte[] buf = new byte[1];
             starting= new DatagramPacket(buf, 0, buf.length, InetAddress.getByAddress(addr), 4898);
             do { //non do while... va messo un timer che ripete l'operazione dopo un po' e dopo 3 volte lancia eccezione
                 dSokk.send(starting);
@@ -55,7 +55,7 @@ public class Client{
             }while(!condition);
             System.out.println("Client: Ricevuto pacchetto da Marco");
             InetAddress ip= packet.getAddress();
-            int port= packet.getPort();
+            int port= 2836;
             //String connesso="Sono connesso TCP";
             System.out.println("Client: Ho creato la stringa da mandare: indirizzo di Marco "+ port +" "+ ip);
             /*try {
@@ -66,7 +66,7 @@ public class Client{
             socket= new Socket(ip.getHostAddress(),port);
             out = new ObjectOutputStream(socket.getOutputStream());
             in= new ObjectInputStream(socket.getInputStream());
-            server=new message4Server(in,out);
+            server=new Message4Server(in,out);
             received="base1";
             while (true){
                 if(received!="base1") {
