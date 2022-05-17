@@ -18,7 +18,6 @@ public class Message4Client {
     private ObjectInputStream in;
     private String name;
     private String message;
-    private Message4Client toclient;
 
     /**
      *
@@ -103,7 +102,7 @@ public class Message4Client {
      * @param games a list of games that is possible to join
      * @return the name of the chosen game or "ERROR"
      */
-    public String sendListOfGames(ArrayList<String> games){
+    public String sendListOfGames(ArrayList<String> games){  //unisci  con started
         name="ListOfGames";
         try {
             out.writeObject(name);
@@ -134,7 +133,7 @@ public class Message4Client {
             if(message=="GameSelected"){
                 return (String)in.readObject();
             }
-            else return "ERROR";
+            else return "ERROR"; //propaga eccezione, non fare così
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
@@ -183,62 +182,14 @@ public class Message4Client {
 
     /**
      * The server sends the clouds full of new students
-     * @param cloud1 new cloud full of new students
-     * @param cloud2 new cloud full of new students
+     * @param newclouds list of the new clouds full of new students
      * @return ACK or NACK
      */
-    public String sendRefillClouds(Cloud cloud1, Cloud cloud2){
+    public String sendRefillClouds(ArrayList<Cloud> newclouds){
         name="RefillClouds";
         try {
             out.writeObject(name);
-            out.writeObject(cloud1);
-            out.writeObject(cloud2);
-            return (String) in.readObject();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * The server sends the clouds full of new students
-     * @param cloud1 new cloud full of new students
-     * @param cloud2 new cloud full of new students
-     * @param cloud3 new cloud full of new students
-     * @return ACK or NACK
-     */
-    public String sendRefillClouds(Cloud cloud1, Cloud cloud2, Cloud cloud3){
-        name="RefillClouds";
-        try {
-            out.writeObject(name);
-            out.writeObject(cloud1);
-            out.writeObject(cloud2);
-            out.writeObject(cloud3);
-            return (String) in.readObject();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * The server sends the clouds full of new students
-     * @param cloud1 new cloud full of new students
-     * @param cloud2 new cloud full of new students
-     * @param cloud3 new cloud full of new students
-     * @param cloud4 new cloud full of new students
-     * @return ACK or NACK
-     */
-    public String sendRefillClouds(Cloud cloud1, Cloud cloud2, Cloud cloud3, Cloud cloud4){
-        name="RefillClouds";
-        try {
-            out.writeObject(name);
-            out.writeObject(cloud1);
-            out.writeObject(cloud2);
-            out.writeObject(cloud3);
-            out.writeObject(cloud4);
+            out.writeObject(newclouds);
             return (String) in.readObject();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -594,15 +545,13 @@ public class Message4Client {
 
     /**
      * Ping message
-     * @return ACK or NACK
+     * @return ACK or nothing
      */
-    public String sendPing(){ //ritorna ACK o NACK
+    public String sendPing() throws IOException { //ritorna ACK o NACK
         name="Ping";
+        out.writeObject(name);
         try {
-            out.writeObject(name);
             return (String)in.readObject();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }

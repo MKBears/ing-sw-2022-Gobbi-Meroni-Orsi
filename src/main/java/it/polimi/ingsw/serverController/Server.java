@@ -44,6 +44,7 @@ public class Server {
 
             while (true) {
                 try {
+                   //connectionEstablishment(sock,packet4client,sSocket,client,players,buf);
                     sock.receive(packet); //ricevo richiesta di connessione dal client
                     packet4client = new DatagramPacket(buf, 0, buf.length, packet.getAddress(), packet.getPort());
                     sock.send(packet4client);//gli mando un datagrampacket all'indirizzo al pacchetto che ho ricevuto
@@ -59,6 +60,14 @@ public class Server {
             throw new RuntimeException(e);
         }
     }
+
+    /*private void connectionEstablishment(DatagramSocket sock, DatagramPacket packet4client, ServerSocket sSocket, Socket client, ExecutorService players, byte[] buf){
+        sock.receive(packet); //ricevo richiesta di connessione dal client
+        packet4client = new DatagramPacket(buf, 0, buf.length, packet.getAddress(), packet.getPort());
+        sock.send(packet4client);//gli mando un datagrampacket all'indirizzo al pacchetto che ho ricevuto
+        client = sSocket.accept(); //accetto connessione tcp dal client
+        players.submit(new ClientHandler(client, this));
+    }*/
 
     public synchronized void addUserName(String userName) throws Exception{
         if (userNames.contains(userName)){

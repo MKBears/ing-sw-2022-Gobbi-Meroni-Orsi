@@ -3,10 +3,7 @@ package it.polimi.ingsw.client;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -27,13 +24,15 @@ public class Client{
         String received;
         String send;
         String response;
-        message4Server server;
+        Message4Server server;
         Match match=null;
-        Cli cli=new Cli();;
+        Cli cli=new Cli();
         Action action=null;
         String username=null;
         Player me=null;
         Boolean end=false;
+        int counter=0;
+
         try {
             condition=false;
             addr= InetAddress.getLocalHost().getAddress();
@@ -42,31 +41,34 @@ public class Client{
             System.out.println("Client: Inizializzato");
             byte[] buf = new byte[1];
             starting= new DatagramPacket(buf, 0, buf.length, InetAddress.getByAddress(addr), 4898);
-            do { //non do while... va messo un timer che ripete l'operazione dopo un po' e dopo 3 volte lancia eccezione
+            do {
+                dSokk.setSoTimeout(5000); //Ho messo il timeout per la ricezione dei messaggi
                 dSokk.send(starting);
-                System.out.println("Client: Ho mandato riciesta, ora vediamo di ricevere...");
+                System.out.println("Client: Ho mandato richiesta, ora vediamo di ricevere...");
                 buf = new byte[1];
-                buf[1]=-1;
                 packet = new DatagramPacket(buf, buf.length);
-                dSokk.receive(packet);
-                if(packet.getData()==buf){
+                try{
+                    dSokk.receive(packet);
+                }
+                catch (SocketTimeoutException e){
+                    counter ++;
+                    if(counter==3){
+                        System.out.println("Connessione fallita. Far ripartire il client"); //fai eccezione
+                    }
+                }
+                if(packet.getData()[0]==1){ //inizializza a 1 nel server
                     condition=true;
                 }
             }while(!condition);
-            System.out.println("Client: Ricevuto pacchetto da Marco");
+
             InetAddress ip= packet.getAddress();
             int port= 2836;
-            //String connesso="Sono connesso TCP";
-            System.out.println("Client: Ho creato la stringa da mandare: indirizzo di Marco "+ port +" "+ ip);
-            /*try {
-                this.wait(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }*/
             socket= new Socket(ip.getHostAddress(),port);
             out = new ObjectOutputStream(socket.getOutputStream());
             in= new ObjectInputStream(socket.getInputStream());
+            out.writeObject("Prova prova 1 2 3");
             server=new Message4Server(in,out);
+
             received="base1";
             while (true){
                 if(received!="base1") {

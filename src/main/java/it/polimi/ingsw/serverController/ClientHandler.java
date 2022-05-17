@@ -24,6 +24,8 @@ public class ClientHandler extends Thread{
     private boolean connected;
     private boolean ongoingMatch;
 
+    private Ping ping;
+
     /**
      *
      * @param s the socket associated with this player
@@ -35,7 +37,6 @@ public class ClientHandler extends Thread{
         try{
             in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
-            out.writeObject(4500); //gli mando inirizzo di porta TCP, speriamo funzioni
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -44,6 +45,12 @@ public class ClientHandler extends Thread{
     }
 
     public void run(){
+        ping=new Ping(in,out);
+        try {
+            ping.start();
+        }catch (RuntimeException e){
+            //è saltata la connessione con un client
+        }
 
     }
 
