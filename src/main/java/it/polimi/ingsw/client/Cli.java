@@ -6,7 +6,7 @@ import java.util.*;
 
 import static java.lang.Integer.parseInt;
 
-public class Cli {
+public class Cli implements view{
     Scanner in;
     public void Cli(){
        in=new Scanner(System.in);
@@ -127,6 +127,20 @@ public class Cli {
     }
 
     public void printTurn(Player pl,String phase){
-        System.out.println("tocca a: "+pl.getUserName()+"in fase di"+phase);
+        System.out.println("tocca a: "+pl.getUserName()+"in fase di"+phase+"\n");
+    }
+
+    public void lastRound(){
+        System.out.println("sono finiti gli studenti nel sacchetto questo sarà l'ultimo round\n");
+    }
+
+    public int getNumPlayer(){
+        System.out.println("inserire il numero di giocatori: ");
+        int num=in.nextInt();
+        while(num<=1 || num>=5){
+            System.out.println("inserire il numero di giocatori: ");
+            num=in.nextInt();
+        }
+        return num;
     }
 }

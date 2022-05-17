@@ -95,6 +95,10 @@ public class Player implements Serializable {
         return deck.isEmpty();
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Giocatore:" + userName +'\n'+
+                "Colore corrispondente: " + color +'\n'+
+                "con Sala:" + board;
+    }
 }

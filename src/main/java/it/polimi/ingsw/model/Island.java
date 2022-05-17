@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * One of the two implementation of Land
  */
-public class Island implements Land{
+public class Island implements Land {
     private final ArrayList<Student> students;
     private final int islandID;
     private Tower tower;
@@ -177,5 +177,19 @@ public class Island implements Land{
             throw new Exception("A No Entry tile has already been set on this island");
         }
         this.noEntry = noEntry;
+    }
+
+    @Override
+    public String toString() {
+        String a= "isola " + islandID +
+                " con studenti: " + students;
+        if(tower!=null)
+            a=a+" e " + tower;
+        else a=a+" non ha torri";
+        if (noEntry==false){
+            return a;
+        }
+        else
+            return a+" entrata chiusa";
     }
 }
