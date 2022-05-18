@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.*;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 
 /**
@@ -33,7 +34,11 @@ public class ClientHandler extends Thread{
     public ClientHandler (Socket s, Server server){
         socket = s;
         this.server = server;
-
+        try {
+            socket.setSoTimeout(1000);
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
         try{
             in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -45,13 +50,9 @@ public class ClientHandler extends Thread{
     }
 
     public void run(){
-        ping=new Ping(in,out);
-        try {
-            ping.start();
-        }catch (RuntimeException e){
-            //è saltata la connessione con un client
-        }
-
+        ping=new Ping(in,out, this);
+        ping.run();
+        //ho già fatto set disconnected
     }
 
     private void changeState(){

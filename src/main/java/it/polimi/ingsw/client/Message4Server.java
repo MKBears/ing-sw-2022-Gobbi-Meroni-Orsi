@@ -47,7 +47,7 @@ public class Message4Server {
      * The client sends which type of game wants to do
      * @param choice the choice
      */
-    public void sendChoosingGame(String choice){
+    public void sendChoosingGame(String choice){ /////////MODIFICARE
         try {
             name = "ChoosingGame";
             out.writeObject(name);

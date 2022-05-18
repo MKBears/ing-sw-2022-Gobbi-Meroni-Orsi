@@ -3,7 +3,10 @@ package it.polimi.ingsw.client;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -32,6 +35,7 @@ public class Client{
         Player me=null;
         Boolean end=false;
         int counter=0;
+        MessageFromServer mfs;
 
         try {
             condition=false;
@@ -68,11 +72,12 @@ public class Client{
             in= new ObjectInputStream(socket.getInputStream());
             out.writeObject("Prova prova 1 2 3");
             server=new Message4Server(in,out);
+            mfs=new MessageFromServer(in,this);
 
             received="base1";
             while (true){
                 if(received!="base1") {
-                    received = (String) in.readObject();
+                    received= mfs.message;
                 }
                 switch (received){
                     case "base1": //login
