@@ -72,10 +72,10 @@ public class ClientHandler extends Thread{
                                 do {
                                     userName = (String) in.readObject();
 
-                                    if (controller.getUserNames().contains(userName)){
-                                        control = false;
-                                        loginFailed();
-                                    }
+                                    //if (controller.getUserNames().contains(userName)){
+                                        //control = false;
+                                        //loginFailed();
+                                    //}
                                     else {
                                         control = true;
                                     }
@@ -83,12 +83,12 @@ public class ClientHandler extends Thread{
                             }
                         }
                         else {
-                            out.writeObject(server.getResumeableMatches());
-                            controller = server.resumeGame((String) in.readObject(), this);
+                            //out.writeObject(server.getResumeableMatches());
+                            //controller = server.resumeGame((String) in.readObject(), this);
                         }
                     }
                 }catch (ClassNotFoundException | IOException e){
-                    out.writeChars("Nack");
+                    //out.writeChars("Nack");
                 }
 
                 state = 1;
@@ -196,18 +196,18 @@ public class ClientHandler extends Thread{
             }
             i++;
         }
-        out.println("Assistant");
+        System.out.println("Assistant");
 
         if (hasPlayableCard){
             for (i=0; played[i]!=0; i++) {
-                out.println(played[i]);
+                System.out.println(played[i]);
             }
         }
-        out.println(0);
+        System.out.println(0);
         //Quando il controller lato client riceve (eventualmente qualche int e) 0 dopo "Assistant",
         // sa che puo' inviare alla view il comando di fare scegliere al player la carta assistente da giocare
         card = in.nextInt();
-        avatar.draw(card);
+        //avatar.draw(card);
         return card;
     }
 

@@ -1,22 +1,50 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.client.Message4Server;
+import it.polimi.ingsw.serverController.Action;
 
+import java.awt.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.*;
+import java.util.List;
+
 
 import static java.lang.Integer.parseInt;
 
-public class Cli implements view{
-    Scanner in;
-    public void Cli(){
-       in=new Scanner(System.in);
+public class Cli implements View,Runnable{
+    Scanner input;
+    String state;
+    Boolean end;
+    Message4Server server;
+    ObjectInputStream in;
+    ObjectOutputStream out;
+    Player me;
+    Match match;
+    Action action;
+    public Cli(Message4Server server, ObjectInputStream in, ObjectOutputStream out){
+       input=new Scanner(System.in);
+       end=false;
+       this.server=server;
+       this.in=in;
+       this.out=out;
     }
 
+    public void setMe(Player me) {
+        this.me = me;
+    }
+
+    public void setMatch(Match match) {
+        this.match = match;
+        action=new Action(match);
+    }
 
     public String getUsername(){
         String user;
         System.out.println("inserire username:");
-        user=in.nextLine();
+        user=input.nextLine();
         return user;
     }
 
@@ -25,10 +53,10 @@ public class Cli implements view{
         for (Wizards e:wizards) {
             System.out.println((wizards.indexOf(e)+1)+" per "+e.toString());
         }
-        int choose=in.nextInt();
+        int choose=input.nextInt();
         while(choose<1 || choose>4){
             System.out.println("scegli il mago:");
-            in.nextInt();
+            input.nextInt();
         }
         return wizards.get(choose-1);
     }
@@ -42,10 +70,10 @@ public class Cli implements view{
                 i++;
             }
         }
-        int choose= in.nextInt();
+        int choose= input.nextInt();
         while (choose<1 || choose>=i){
             System.out.println("scegli un numero tra 1 e "+(i-1)+":");
-            in.nextInt();
+            input.nextInt();
         }
         return clouds.get(choose-1);
     }
@@ -55,10 +83,10 @@ public class Cli implements view{
         for(int i=0;i<cards.size();i++){
             System.out.println(i+" "+cards.get(i)+"\n");
         }
-        int choose=in.nextInt();
+        int choose=input.nextInt();
         while (choose<1 ||choose>cards.size()){
             System.out.println("scegli la carta assistente tra: \n");
-            choose=in.nextInt();
+            choose=input.nextInt();
         }
         return cards.get(choose-1);
     }
@@ -67,11 +95,11 @@ public class Cli implements view{
     public int getNumStep(Player pl){
         System.out.println("scegli di spostare Madre Natura di? (deve " +
                 "essere un numero compreso tra 0 e "+pl.getPlayedCard().getMNSteps());
-        int step= in.nextInt();
+        int step= input.nextInt();
         while (step<0 || step>pl.getPlayedCard().getMNSteps()){
             System.out.println("scegli di spostare Madre Natura di? (deve " +
                     "essere un numero compreso tra 0 e "+pl.getPlayedCard().getMNSteps());
-            step=in.nextInt();
+            step=input.nextInt();
         }
         return step;
     }
@@ -88,10 +116,10 @@ public class Cli implements view{
             i++;
         }
         System.out.println("scegli un numero tra 1 e "+i+" :");
-        choose=in.nextInt();
+        choose=input.nextInt();
         while (choose<1 || choose>i){
             System.out.println("scegli un numero tra 1 e "+i+" :");
-            choose=in.nextInt();
+            choose=input.nextInt();
         }
         return pl.getBoard().removeStudent(pl.getBoard().getEntrance().get(choose-1));
     }
@@ -106,11 +134,11 @@ public class Cli implements view{
             i++;
         }
         System.out.println("inserire scelta: ");
-        choose=in.nextLine();
+        choose=input.nextLine();
         int chooseInt=parseInt(choose);
         while (choose.toLowerCase()!="sala" && (chooseInt<1 || chooseInt>i)){
             System.out.println("inserire scelta: ");
-            choose=in.nextLine();
+            choose=input.nextLine();
             chooseInt=parseInt(choose);
         }
         if(choose.toLowerCase()=="sala"){
@@ -136,11 +164,107 @@ public class Cli implements view{
 
     public int getNumPlayer(){
         System.out.println("inserire il numero di giocatori: ");
-        int num=in.nextInt();
+        int num=input.nextInt();
         while(num<=1 || num>=5){
             System.out.println("inserire il numero di giocatori: ");
-            num=in.nextInt();
+            num=input.nextInt();
         }
         return num;
+    }
+
+    public void getTitolo(){
+        System.out.println( "\t\t\t████ ███  █    █     █    █ ███████ █     █  ███  \n" +
+                            "\t\t\t█    █  █ █   █ █    ██   █    █     █   █  █     \n" +
+                            "\t\t\t███  ███  █  █   █   █ █  █    █      █ █    ███  \n" +
+                            "\t\t\t█    █ █  █ ███████  █  █ █    █       █        █ \n" +
+                            "\t\t\t████ █  █ █ █     █  █   ██    █       █     ███  \n");
+    }
+
+    @Override
+    public void run() {
+        while (end==false){
+            try {
+                this.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            switch (state){
+                case("Wizard"):
+                    List<Wizards> willy= null;
+                    try {
+                        willy = (ArrayList<Wizards>)in.readObject();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    server.sendChoice(this.getWizard(willy));
+                    break;
+                case("ChooseCard"):
+                    List<AssistantCard> cards= null;
+                    try {
+                        cards = (ArrayList<AssistantCard>) in.readObject();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    AssistantCard a;
+                    a=this.getAssistantCard(cards);
+                    me.draw(a.getValue());
+                    server.sendChosenCard(a);
+                    break;
+                case("MoveMN"):
+                    int step=this.getNumStep(me);
+                    action.cardAndMoveMN(me.getPlayedCard(),step);
+                    server.sendStepsMN(step);
+                    try {
+                        action.controlLand(me);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    this.printMatch(match);
+                    break;
+                case("ChooseCloud"):
+                    List<Cloud> clouds= null;
+                    try {
+                        clouds = (ArrayList<Cloud>) in.readObject();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    Cloud clo=this.getCloud(clouds);
+                    action.chooseCloud(me,clo);
+                    server.sendChoiceCloud(clo);
+                    this.printMatch(match);
+                case("MoveStudents"):
+                    Student st;
+                    String move;
+                    for (int i=0;i<match.getPlayer().length+1;i++) {
+                        st = this.getStudent(me);
+                        move = this.getDestination(match);
+                        server.sendMovedStudent("Student"+(i+1), st, move);
+                        if (move.equals("board")) {
+                            try {
+                                action.moveFromIngressToBoard(me, st);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Integer temp = parseInt(move);
+                            action.moveFromIngressToLand(me, st, match.getLands().get(temp.intValue()));
+                        }
+                    }
+                    break;
+                case("EndGame"):
+                    end=true;
+            }
+        }
+    }
+
+    public void wakeUp(String state){
+        this.state=state;
+        this.notifyAll();
     }
 }

@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.*;
 
 import java.util.List;
 
-public interface view {
+public interface View extends Runnable {
     String getUsername();
     Wizards getWizard(List<Wizards> wizards);
     Cloud getCloud(List<Cloud> clouds);
@@ -16,4 +16,9 @@ public interface view {
     void printTurn(Player pl,String phase);
     void lastRound();
     int getNumPlayer();
+    Student getStudent(Player pl);
+    void getTitolo();
+    void wakeUp(String state);
+    void setMe(Player me);
+    void setMatch(Match match);
 }

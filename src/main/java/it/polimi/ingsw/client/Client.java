@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.Integer.parseInt;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.serverController.Action;
 
@@ -31,11 +30,12 @@ public class Client{
         String response;
         Message4Server server;
         Match match=null;
-        Cli cli=new Cli();;
+        View cli;
         Action action=null;
         String username=null;
         Player me=null;
         Boolean end=false;
+        Thread view;
         try {
             condition=false;
             addr= InetAddress.getLocalHost().getAddress();
@@ -69,6 +69,7 @@ public class Client{
             out = new ObjectOutputStream(socket.getOutputStream());
             in= new ObjectInputStream(socket.getInputStream());
             server=new Message4Server(in,out);
+            cli=new Cli(server,in,out);
             received="base1";
             while (true){
                 if(received!="base1") {
@@ -119,8 +120,7 @@ public class Client{
                         //decisione
                         break;
                     case "Wizard":
-                        List<Wizards> willy=(ArrayList<Wizards>)in.readObject();
-                        server.sendChoice(cli.getWizard(willy));
+                        cli.wakeUp(received);
                         break;
                     case "Creation":
                         match=(Match) in.readObject();
@@ -130,6 +130,10 @@ public class Client{
                                 me=match.getPlayer()[i];
                         }
                         cli.printMatch(match);
+                        cli.setMe(me);
+                        cli.setMatch(match);
+                        view=new Thread(cli);
+                        view.start();
                         server.sendACK();
                         break;
                     case "RefillClouds": //posso ricevere da 2 a 4 ArrayList<Students>, uno per ogni nuvola
@@ -140,45 +144,20 @@ public class Client{
                         server.sendACK();
                         break;
                     case "ChooseCard":
-                        List<AssistantCard> cards=(ArrayList<AssistantCard>) in.readObject();
-                        AssistantCard a;
-                        a=cli.getAssistantCard(cards);
-                        me.draw(a.getValue());
-                        server.sendChosenCard(a);
+                        cli.wakeUp(received);
                         break;
                     case "MoveStudents":
-                        Student st;
-                        String move;
-                        for (int i=0;i<match.getPlayer().length+1;i++) {
-                            st = cli.getStudent(me);
-                            move = cli.getDestination(match);
-                            server.sendMovedStudent("Student"+(i+1), st, move);
-                            if (move.equals("board")) {
-                                action.moveFromIngressToBoard(me, st);
-                            } else {
-                                Integer temp = parseInt(move);
-                                action.moveFromIngressToLand(me, st, match.getLands().get(temp.intValue()));
-                            }
-                        }
+                        cli.wakeUp(received);
                         break;
                     case "MoveMN": //DA MODIFICARE IL PROTOCOLLO
-                        int step=cli.getNumStep(me);
-                        action.cardAndMoveMN(me.getPlayedCard(),step);
-                        server.sendStepsMN(step);
-                        action.controlLand(me);
-                        cli.printMatch(match);
+                        cli.wakeUp(received);
                         //nella nuova versione non è previsto ACK o NACK
                         break;
                     case "ChooseCloud":
-                        List<Cloud> clouds=(ArrayList<Cloud>) in.readObject();
-                        Cloud clo=cli.getCloud(clouds);
-                        action.chooseCloud(me,clo);
-                        server.sendChoiceCloud(clo);
-                        cli.printMatch(match);
+                        cli.wakeUp(received);
                         //server.sendChoiceCloud(cl);
                         break;
                     case "NotifyChosenCard":
-                        //decisione
                         AssistantCard card=(AssistantCard) in.readObject();
                         Player pl2=(Player) in.readObject();
                         for (int i = 0; i < match.getPlayer().length; i++) {
@@ -210,6 +189,7 @@ public class Client{
                                 action.moveFromIngressToBoard(match.getPlayer()[i],s);
                             }
                         }
+                        action.checkAllProfessors();
                         cli.printMatch(match);
                         server.sendACK();
                         //server.sendACK(); o server.sendNACK();
@@ -277,12 +257,14 @@ public class Client{
                         ArrayList<Land> landd=(ArrayList<Land>) in.readObject(); //situa finale lands
                         ArrayList<Board> boards=(ArrayList<Board>) in.readObject(); //situa di tutte le baoard
                         cli.getWinner(winner);
+                        cli.wakeUp("EndGame");
                         end=true;
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "LastTower":
                         Player pl=(Player) in.readObject();
                         cli.getWinner(pl);
+                        cli.wakeUp("EndGame");
                         end=true;
                         //server.sendACK(); o server.sendNACK();
                         break;
