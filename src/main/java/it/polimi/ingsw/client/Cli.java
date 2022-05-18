@@ -15,15 +15,18 @@ import java.util.List;
 import static java.lang.Integer.parseInt;
 
 public class Cli implements View,Runnable{
-    Scanner input;
-    String state;
-    Boolean end;
-    Message4Server server;
-    ObjectInputStream in;
-    ObjectOutputStream out;
-    Player me;
-    Match match;
-    Action action;
+    private Scanner input;
+    private String state;
+    private Boolean end;
+    private Message4Server server;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
+    private Player me;
+    private Match match;
+    private Action action;
+    private List<Wizards> willy;
+    private List<Cloud> clouds;
+    private List<AssistantCard> cards;
     public Cli(Message4Server server, ObjectInputStream in, ObjectOutputStream out){
        input=new Scanner(System.in);
        end=false;
@@ -190,25 +193,9 @@ public class Cli implements View,Runnable{
             }
             switch (state){
                 case("Wizard"):
-                    List<Wizards> willy= null;
-                    try {
-                        willy = (ArrayList<Wizards>)in.readObject();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
                     server.sendChoice(this.getWizard(willy));
                     break;
                 case("ChooseCard"):
-                    List<AssistantCard> cards= null;
-                    try {
-                        cards = (ArrayList<AssistantCard>) in.readObject();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
                     AssistantCard a;
                     a=this.getAssistantCard(cards);
                     me.draw(a.getValue());
@@ -220,20 +207,13 @@ public class Cli implements View,Runnable{
                     server.sendStepsMN(step);
                     try {
                         action.controlLand(me);
+                        action.uniteLands();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     this.printMatch(match);
                     break;
                 case("ChooseCloud"):
-                    List<Cloud> clouds= null;
-                    try {
-                        clouds = (ArrayList<Cloud>) in.readObject();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
                     Cloud clo=this.getCloud(clouds);
                     action.chooseCloud(me,clo);
                     server.sendChoiceCloud(clo);
@@ -259,6 +239,7 @@ public class Cli implements View,Runnable{
                     break;
                 case("EndGame"):
                     end=true;
+                    break;
             }
         }
     }
@@ -266,5 +247,17 @@ public class Cli implements View,Runnable{
     public void wakeUp(String state){
         this.state=state;
         this.notifyAll();
+    }
+
+    public void setWilly(List<Wizards> willy) {
+        this.willy = willy;
+    }
+
+    public void setCards(List<AssistantCard> cards) {
+        this.cards = cards;
+    }
+
+    public void setClouds(List<Cloud> clouds) {
+        this.clouds = clouds;
     }
 }

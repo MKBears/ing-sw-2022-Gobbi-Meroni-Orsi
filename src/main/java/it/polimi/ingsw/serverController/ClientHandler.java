@@ -207,7 +207,7 @@ public class ClientHandler extends Thread{
         //Quando il controller lato client riceve (eventualmente qualche int e) 0 dopo "Assistant",
         // sa che puo' inviare alla view il comando di fare scegliere al player la carta assistente da giocare
         card = in.nextInt();
-        //avatar.draw(card);
+        avatar.draw(card);
         return card;
     }
 

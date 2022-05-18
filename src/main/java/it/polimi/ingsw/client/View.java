@@ -2,6 +2,7 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface View extends Runnable {
@@ -21,4 +22,7 @@ public interface View extends Runnable {
     void wakeUp(String state);
     void setMe(Player me);
     void setMatch(Match match);
+    void setCards(List<AssistantCard> cards);
+    void setWilly(List<Wizards> willy);
+    void setClouds(List<Cloud> clouds);
 }

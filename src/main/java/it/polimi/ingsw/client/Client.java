@@ -120,6 +120,9 @@ public class Client{
                         //decisione
                         break;
                     case "Wizard":
+                        List<Wizards> willy;
+                        willy = (ArrayList<Wizards>)in.readObject();
+                        cli.setWilly(willy);
                         cli.wakeUp(received);
                         break;
                     case "Creation":
@@ -144,6 +147,9 @@ public class Client{
                         server.sendACK();
                         break;
                     case "ChooseCard":
+                        List<AssistantCard> cards;
+                        cards = (ArrayList<AssistantCard>) in.readObject();
+                        cli.setCards(cards);
                         cli.wakeUp(received);
                         break;
                     case "MoveStudents":
@@ -154,6 +160,9 @@ public class Client{
                         //nella nuova versione non è previsto ACK o NACK
                         break;
                     case "ChooseCloud":
+                        List<Cloud> clouds;
+                        clouds = (ArrayList<Cloud>) in.readObject();
+                        cli.setClouds(clouds);
                         cli.wakeUp(received);
                         //server.sendChoiceCloud(cl);
                         break;
