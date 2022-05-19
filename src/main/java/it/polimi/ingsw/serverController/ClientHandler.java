@@ -25,7 +25,7 @@ public class ClientHandler extends Thread{
     private boolean connected;
     private boolean ongoingMatch;
 
-    private Ping ping;
+    private Message4Client m4C;
 
     /**
      *

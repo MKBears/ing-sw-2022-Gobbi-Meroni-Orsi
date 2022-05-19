@@ -60,7 +60,7 @@ public class Island implements Land {
 
     /**
      *
-     * @param input the type of the Student of you want to know the influence
+     * @param input the type of the Student that you want to know the influence
      * @return an integer: the influence
      */
     @Override
@@ -84,16 +84,16 @@ public class Island implements Land {
 
     /**
      *
-     * @param n_tower change the tower on the island and returns the old towers on their board
+     * @param n_tower changes the tower on the island and puts them in their owner's board
      */
     @Override
-    public void changeTower(Tower n_tower) {
+    public void changeTower(ArrayList<Tower> n_tower) {
         if(this.tower!=null){
             this.tower.getBoard().returnTower(this.tower);
-            this.tower=n_tower;
+            this.tower=n_tower.get(0);
         }
         else{
-            this.tower=n_tower;
+            this.tower=n_tower.get(0);
         }
     }
 
@@ -116,7 +116,7 @@ public class Island implements Land {
 
     /**
      *
-     * @return ArryList with myself (size==1)
+     * @return ArrayList with all the island of this land
      */
     public ArrayList<Island> getIslands(){
         ArrayList<Island> me=new ArrayList<>();
@@ -126,7 +126,7 @@ public class Island implements Land {
 
     /**
      *
-     * @return ArryList with the tower of the island (size==1)
+     * @return ArrayList with the tower of the island (size==1)
      */
     @Override
     public ArrayList<Tower> getAllTowers() {
