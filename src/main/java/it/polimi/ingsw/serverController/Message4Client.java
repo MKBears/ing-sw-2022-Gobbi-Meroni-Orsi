@@ -21,6 +21,7 @@ public class Message4Client extends Thread{  //METTI DENTRO RUN DEL PING
     private String name;
     private String message;
     private ClientHandler ch;
+    private Socket socekt;
 
     /**
      *
@@ -103,12 +104,11 @@ public class Message4Client extends Thread{  //METTI DENTRO RUN DEL PING
     }
 
     /**
-     * When selected "join game"
+     * When the login is successful
      * @param joinGames a list of games that is possible to join
      * @param resumeGames a list of games that is possible to resume
-     * @return the name of the chosen game or "ERROR"
      */
-    public void sendListOfGames(ArrayList<String> joinGames, ArrayList<String> resumeGames){  //unisci  con started
+    public void sendListOfGames(ArrayList<String> joinGames, ArrayList<String> resumeGames){
         synchronized (this) {
             name = "ListOfGames";
             try {
@@ -138,7 +138,7 @@ public class Message4Client extends Thread{  //METTI DENTRO RUN DEL PING
     }
 
     /**
-     * Asks the clinent which wizard whants to choose
+     * Asks the client which wizard wants to choose
      * @param wizards a list of the possible wizard to choose
      */
     public void sendWizard(ArrayList<Wizards> wizards) { //ritorna il wizard scelto
@@ -155,14 +155,14 @@ public class Message4Client extends Thread{  //METTI DENTRO RUN DEL PING
 
     /**
      * The server sends the clouds full of new students
-     * @param newclouds list of the new clouds full of new students
+     * @param newClouds list of the new clouds full of new students
      */
-    public void sendRefillClouds(ArrayList<Cloud> newclouds){
+    public void sendRefillClouds(ArrayList<Cloud> newClouds){
         synchronized (this) {
             name = "RefillClouds";
             try {
                 out.writeObject(name);
-                out.writeObject(newclouds);
+                out.writeObject(newClouds);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -200,7 +200,7 @@ public class Message4Client extends Thread{  //METTI DENTRO RUN DEL PING
     }
 
     /**
-     * The server asks the client the cloud that choses the player
+     * The server asks the client the cloud that chooses the player
      * @param clouds the possible clouds to chose
      */
     public void sendChooseCloud(ArrayList<Cloud> clouds){
@@ -250,16 +250,15 @@ public class Message4Client extends Thread{  //METTI DENTRO RUN DEL PING
     /**
      * The server notifies to all the clients the movement of someone's students, we have to call it for every student moved
      * @param student the signle student
-     * @param player the students's player
+     * @param username the username of the player that moves the students
      * @param id the id of the island or archipelago
      */
-    public void sendNotifyMoveStudents(Student student, Player player, int id, String username){
+    public void sendNotifyMoveStudents(Student student, int id, String username){
         synchronized (this) {
             name = "NotifyMoveStudents (id)";
             try {
                 out.writeObject(name);
                 out.writeObject(student);
-                out.writeObject(player);
                 out.writeObject(id);
                 out.writeObject(username);
             } catch (IOException e) {
@@ -270,17 +269,16 @@ public class Message4Client extends Thread{  //METTI DENTRO RUN DEL PING
 
     /**
      * The server notifies to all the clients the movement of someone's students, we have to call it for every student moved
-     * @param student the signle student
-     * @param player the student's player
+     * @param student the single student
      * @param board the board of the player
+     * @param username the username of the player that moves the students
      */
-    public String sendNotifyMoveStudents(Student student, Player player, Board board, String username){
+    public void sendNotifyMoveStudents(Student student, Board board, String username){
         synchronized (this) {
             name = "NotifyMoveStudents (board)";
             try {
                 out.writeObject(name);
                 out.writeObject(student);
-                out.writeObject(player);
                 out.writeObject(board);
                 out.writeObject(username);
             } catch (IOException e) {
@@ -294,7 +292,7 @@ public class Message4Client extends Thread{  //METTI DENTRO RUN DEL PING
      * @param id the id of the island
      * @param lands an update of the situation of the lands
      */
-    public String sendNotifyMovementMN(int id, ArrayList<Land> lands){
+    public void sendNotifyMovementMN(int id, ArrayList<Land> lands){
         synchronized (this) {
             name = "NotifyMovementMN";
             try {
@@ -311,7 +309,7 @@ public class Message4Client extends Thread{  //METTI DENTRO RUN DEL PING
      * The server notifies to all the clients the changes of the professors situation
      * @param professors the professors of the board
      */
-    public String sendNotifyProfessors(Map<Type_Student, Player> professors){
+    public void sendNotifyProfessors(Map<Type_Student, Player> professors){
         synchronized (this) {
             name = "NotifyProfessors";
             try {
@@ -324,11 +322,11 @@ public class Message4Client extends Thread{  //METTI DENTRO RUN DEL PING
     }
 
     /**
-     * The server notifies to all the slients the cloud chosen by a player
+     * The server notifies to all the clients the cloud chosen by a player
      * @param player the player that chose
      * @param cloud the chosen cloud
      */
-    public String sendNotifyChosenCloud(Player player, Cloud cloud){
+    public void sendNotifyChosenCloud(Player player, Cloud cloud){
         synchronized (this) {
             name = "NotifyChosenCloud";
             try {
@@ -402,10 +400,10 @@ public class Message4Client extends Thread{  //METTI DENTRO RUN DEL PING
     }
 
     /**
-     * The server notifies to the players that someone has on elast tower
+     * The server notifies to the players that someone has on his board the last tower
      * @param player the involved player
      */
-    public String sendLastTower(Player player){
+    public void sendLastTower(Player player){
         synchronized (this) {
             name = "LastTower";
             try {
@@ -420,7 +418,7 @@ public class Message4Client extends Thread{  //METTI DENTRO RUN DEL PING
     /**
      * The server notifies the players that there are no more students
      */
-    public String sendNoMoreStudents(){
+    public void sendNoMoreStudents(){
         synchronized (this) {
             name = "NoMoreStudents";
             try {
@@ -431,6 +429,10 @@ public class Message4Client extends Thread{  //METTI DENTRO RUN DEL PING
         }
     }
 //NON C'è ChChosen
+
+    /**
+     * @deprecated
+     */
     public void sendChanges(){//DA MODIFICARE----------
         synchronized (this) {
             name = "Changes";
@@ -448,7 +450,7 @@ public class Message4Client extends Thread{  //METTI DENTRO RUN DEL PING
      * @param player the palyer that begins the turn
      * @param turn
      */
-    public String sendNextTurn(Player player, String turn){
+    public void sendNextTurn(Player player, String turn){
         synchronized (this) {
             name = "NextTurn";
             try {
@@ -488,9 +490,14 @@ public class Message4Client extends Thread{  //METTI DENTRO RUN DEL PING
                 synchronized (this) {
                     out.writeObject(name);
                     name = (String) in.readObject();
+                    if(name!="Pong"){
+                        throw new IOException("I didn't receive PONG");
+                    }
                 }
-            } catch (ClassNotFoundException | IOException e) {
+            } catch (IOException e) {
                 ch.setDisconnected();
+            } catch (ClassNotFoundException e){
+                throw new RuntimeException();
             }
 
         }

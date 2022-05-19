@@ -25,7 +25,7 @@ public class ClientHandler extends Thread{
     private boolean connected;
     private boolean ongoingMatch;
 
-    private Ping ping;
+    private Message4Client m4C;
 
     /**
      *
@@ -42,16 +42,21 @@ public class ClientHandler extends Thread{
         try{
             in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
+            this.m4C=new Message4Client(in, out);
+            if((String)in.readObject()!="Prova prova 1 2 3"){
+                throw new Error("Theres something wrong in the connection");
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (ClassNotFoundException e){
+            throw new RuntimeException();
         }
         connected = true;
         ongoingMatch = true;
     }
 
     public void run(){
-        ping=new Ping(in,out, this);
-        ping.run();
+        m4C.run();
         //ho già fatto set disconnected
     }
 

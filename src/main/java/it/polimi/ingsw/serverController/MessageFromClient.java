@@ -16,7 +16,7 @@ public class MessageFromClient extends Thread{
     private Controller controller;
     private ClientHandler ch;
     private String message;
-    Map<Student, String> map;
+    Map<Student, Integer> map;
 
     public MessageFromClient(ObjectInputStream in, Controller controller, ClientHandler ch){
         this.in=in;
@@ -37,49 +37,42 @@ public class MessageFromClient extends Thread{
                         ch.setUsername();
                         break;
                     case "ChoosingGame":  ///Da mettere a posto: ricevo direttamente il match che voglio joinare/resumare
-                        String choice=(String) in.readObject();
-                        ch.match(choice);
+                        String choice = (String) in.readObject();
+                        ch.game(choice);
+                        break;
+                    case "NewGame":
+                        //decisione da prendere: penso che mandi creation
                         break;
                     case "NACK":
                         ch.sendMessageAgain();
                         break;
                     case "NumPlayers":
-                        int num=(int)in.readObject();
+                        int num = (int) in.readObject();
                         ch.setPlayersNum(num);
                         break;
                     case "Choice":
-                        Wizards w=(Wizards) in.readObject();
+                        Wizards w = (Wizards) in.readObject();
                         ch.setWizard(w);
                         break;
                     case "ChosenCard":
-                        AssistantCard ass=(AssistantCard) in.readObject();
+                        AssistantCard ass = (AssistantCard) in.readObject();
                         ch.setChosenCard(ass);
                         break;
-                    case "Student1":
-                    case "Student2":
-                        Student s=(Student) in.readObject();
-                        String position=(String) in.readObject();
-                        if (s != null) {
-                            map.put(s,position);
-                        } else map.put(null, null);
-                        break;
-                    case "Student3":
-                        Student st=(Student) in.readObject();
-                        String positio=(String) in.readObject();
-                        if (st != null) {
-                            map.put(st,positio);
-                        } else map.put(null, null);
-                        ch.movedStudent(map);
+                    case "MovedStudent":
+                        Student s = (Student) in.readObject();
+                        int position = (int) in.readObject();
+                        ch.moveStudent(s, position);
                         map.clear();
+                        break;
                     case "StepsMN":
-                        int i=(int) in.readObject();
+                        int i = (int) in.readObject();
                         ch.stepsMN(i);
                         break;
                     case "ChoiceCloud":
-                        Cloud cloud=(Cloud) in.readObject();
+                        Cloud cloud = (Cloud) in.readObject();
                         ch.chosenCloud(cloud);
                         break;
-                }
+                    }
                 ch.notify();
             } catch (IOException e) {
                 throw new RuntimeException(e);

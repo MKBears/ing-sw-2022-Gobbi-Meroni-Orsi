@@ -83,27 +83,38 @@ public class Client{
                     case "base1": //login
                         username= cli.getUsername();
                         server.sendLogin(username); //Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
-                        response=(String)in.readObject(); //può essere LoginSucceeded o LoginFailed <------
-                        //decisione da prendere: il server sa che se il login non ha successo bisogna mandare un altro username
-                        //choosing game: decido se voglio fare new game, join game o resume game
-                        String decision="JoinGame"; //decision
-                        server.sendChoosingGame(decision); //la mando
-                        response=(String) in.readObject(); //risposta: o NoGames o ListOfGames o ListOfStartedGames
-                        //decisione da prendere
-                        String selected="Gioco di Pippo";
-                        //nel caso in cui stia creando una nuova partita: da mandare prima di GameSelected
-                        server.sendNumPlayers(3); //esempio
                         response=(String)in.readObject();
-                        if(response=="NACK"){
-                            //decisione
-                        }else if(response=="ACK"){
-                            //si va a avanti
+                        while(response.equals("LoginFailed")){
+                            username= cli.getUsername();
+                            server.sendLogin(username);
+                            response=(String) in.readObject();
                         }
-                        server.sendGameSelected(selected);
+                        response=(String)in.readObject();
+                        if(response.equals("ListOfGames")){
+                            ArrayList<String> join=new ArrayList<>();
+                            join=(ArrayList<String>) in.readObject();
+                            ArrayList<String> resume=new ArrayList<>();
+                            resume=(ArrayList<String>) in.readObject();
+                            String selected="Gioco di Pippo";
+                            //mandare choosingGame con la choice
+                            server.sendGameSelected(selected);
+                        }
+                        else if(response.equals("NoGames")) {
+                            //che famo? penso che farà new game di default
+                        }
                         response=(String) in.readObject();
                         if(response=="Creation"){
                             match=(Match) in.readObject();
                             server.sendACK();
+                            //nel caso in cui stia creando una nuova partita: da mandare prima di GameSelected
+                            int num=cli.getNumPlayer();
+                            server.sendNumPlayers(num);
+                            response=(String)in.readObject();
+                            if(response=="NACK"){
+                                //decisione
+                            }else if(response=="ACK"){
+                                //si va a avanti
+                            }
                         }
                         else{
                             server.sendNACK();
@@ -131,74 +142,73 @@ public class Client{
                                 me=match.getPlayer()[i];
                         }
                         cli.printMatch(match);
+                        cli.setMe(me);
+                        cli.setMatch(match);
+                        view=new Thread(cli);
+                        view.start();
                         server.sendACK();
                         break;
                     case "RefillClouds": //posso ricevere da 2 a 4 ArrayList<Students>, uno per ogni nuvola
-                        //decisione
+                        for(int i=0;i<match.getCloud().length;i++) {
+                            match.getCloud()[i] = (Cloud) in.readObject();
+                        }
+                        cli.printMatch(match);
                         server.sendACK();
                         break;
                     case "ChooseCard":
-                        //decisione
-                        AssistantCard a;
-                        a=cli.getAssistantCard(me);
-                        me.draw(a.getValue());
-                        server.sendChosenCard(a);
-                        //server.sendChosenCard();
+                        List<AssistantCard> cards;
+                        cards = (ArrayList<AssistantCard>) in.readObject();
+                        cli.setCards(cards);
+                        cli.wakeUp(received);
                         break;
                     case "MoveStudents":
-                        //decisione
-                        Student st=null;
-                        String move=null;
-                        st=cli.getStudent(me);
-                        move=cli.getDestination(match);
-                        server.sendMovedStudent("Student1",st,move);
-                        //server.sendMovedStudent(); con "Student1"
-                        st=cli.getStudent(me);
-                        move=cli.getDestination(match);
-                        server.sendMovedStudent("Student2",st,move);
-                        //server.sendMovedStudent(); con "Student2"
-                        st=cli.getStudent(me);
-                        move=cli.getDestination(match);
-                        server.sendMovedStudent("Student3",st,move);
-                        cli.printMatch(match);
-                        //server.sendMovedStudent(); con "Student3", ma se non si muovono tutti e tre posso mettere null negli ultimi due campi (da fixare)
+                        cli.wakeUp(received);
                         break;
                     case "MoveMN": //DA MODIFICARE IL PROTOCOLLO
-                        //decisone
-                        int step=cli.getNumStep(me);
-                        //server.sendStepsMN();
-                        action.cardAndMoveMN(me.getPlayedCard(),step);
-                        server.sendStepsMN(step);
-                        action.controlLand(me);
-                        cli.printMatch(match);
+                        cli.wakeUp(received);
                         //nella nuova versione non è previsto ACK o NACK
                         break;
                     case "ChooseCloud":
-                        //decisione
-                        Cloud clo=cli.getCloud(match);
-                        //Cloud cl=new Cloud(...);
-                        action.chooseCloud(me,clo);
-                        server.sendChoiceCloud(clo);
-                        cli.printMatch(match);
+                        List<Cloud> clouds;
+                        clouds = (ArrayList<Cloud>) in.readObject();
+                        cli.setClouds(clouds);
+                        cli.wakeUp(received);
                         //server.sendChoiceCloud(cl);
                         break;
                     case "NotifyChosenCard":
-                        //decisione
+                        AssistantCard card=(AssistantCard) in.readObject();
+                        Player pl2=(Player) in.readObject();
+                        for (int i = 0; i < match.getPlayer().length; i++) {
+                            if(match.getPlayer()[i].getUserName().equals(pl2.getUserName())){
+                                match.getPlayer()[i].draw(card.getValue());
+                            }
+                        }
+                        server.sendACK();
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "NotifyMoveStudents (id)":
-                        String name=(String)in.readObject(); //"Student1" o "Student2" o "Student3"
                         Student stu=(Student) in.readObject(); //lo studente stesso
                         int id=(int)in.readObject(); //id della Land
-
-                        //decisione
+                        String user=(String) in.readObject();
+                        for (Land e:match.getLands()) {
+                            if(id==e.getID())
+                                e.addStudent(stu);
+                        }
+                        cli.printMatch(match);
+                        server.sendACK();
                         break;
                     case "NotifyMoveStudents (board)":
-                        String n=(String)in.readObject(); //"Student1" o "Student2" o "Student3"
                         Student s=(Student) in.readObject(); //lo studente stesso
-                        Board boa=(Board) in.readObject(); //la board in cui finisce
-                        //decisione
-
+                        Board b=(Board) in.readObject();
+                        String usern=(String) in.readObject();
+                        for (int i=0;i<match.getPlayer().length;i++) {
+                            if(match.getPlayer()[i].getUserName().equals(user)) {
+                                action.moveFromIngressToBoard(match.getPlayer()[i],s);
+                            }
+                        }
+                        action.checkAllProfessors();
+                        cli.printMatch(match);
+                        server.sendACK();
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "NotifyMovementMN":
@@ -214,13 +224,13 @@ public class Client{
                             }
                         }
                         cli.printMatch(match);
-                        //decisione
+                        server.sendACK();
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "NotifyProfessors":
                         Map<Type_Student, Player> prof=(Map<Type_Student, Player>) in.readObject();
-                        //decisione
                         match.setProfessors(prof);
+                        cli.printMatch(match);
                         server.sendACK();
                         //server.sendACK(); o server.sendNACK();
                         break;
@@ -234,7 +244,6 @@ public class Client{
                             }
                         }
                         server.sendACK();
-                        //decisione
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "NotifyTowers (land)":
@@ -246,14 +255,17 @@ public class Client{
                         }
                         cli.printMatch(match);
                         server.sendACK();
-                        //decisione
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "NotifyTowers (board)":
                         ArrayList<Tower> towers1=(ArrayList<Tower>) in.readObject();
                         Board board=(Board) in.readObject();
-                        //decisione
-
+                        String us=(String) in.readObject();
+                        for (int i=0;i<match.getPlayer().length;i++) {
+                            if(match.getPlayer()[i].getUserName().equals(us))
+                                match.getPlayer()[i].getBoard().setTowers(towers1);
+                        }
+                        server.sendACK();
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "EndGame":
@@ -261,31 +273,31 @@ public class Client{
                         String ex=(String) in.readObject(); //spiegazione di perchè ha vinto
                         ArrayList<Land> landd=(ArrayList<Land>) in.readObject(); //situa finale lands
                         ArrayList<Board> boards=(ArrayList<Board>) in.readObject(); //situa di tutte le baoard
-                        //decisione
                         cli.getWinner(winner);
+                        cli.wakeUp("EndGame");
                         end=true;
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "LastTower":
                         Player pl=(Player) in.readObject();
                         cli.getWinner(pl);
+                        cli.wakeUp("EndGame");
                         end=true;
-                        //decisione
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "NoMoreStudents":
-                        //decisione
+                        cli.lastRound();
+                        server.sendACK();
                         //server.sendACK(); o server.sendNACK();
-                        break; //NON HO FATTO CHCHOSEN
+                        break;
                     case "NextTurn":
                         Player play=(Player) in.readObject();
                         String phase=(String)in.readObject();
-                        //decisione
                         cli.printTurn(play,phase);
                         server.sendACK(); //o server.sendNACK();
                         break;
                     case "Ping":
-                        server.sendACK();
+                        server.sendPONG();
                         break;
                 }
                 if(end==true)

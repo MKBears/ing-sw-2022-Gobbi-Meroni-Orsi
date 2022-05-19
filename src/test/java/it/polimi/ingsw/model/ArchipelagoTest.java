@@ -12,6 +12,7 @@ public class ArchipelagoTest {
     public static Colors color;
     public static Board board;
     public static Tower t;
+    public static ArrayList<Tower> tow;
     public static ArrayList<Island> is;
     public static Type_Student type;
     public static Student s;
@@ -28,13 +29,15 @@ public class ArchipelagoTest {
         color=Colors.GREY;
         board=new Board(20, color);
         t=new Tower(color, board);
+        tow=new ArrayList<>();
+        tow.add(t);
         is= new ArrayList<>();
         type=Type_Student.DRAGON;
         s=new Student(type);
         for (int i = 0; i < 20; i++) {
             Island island = new Island(i);
             for(int j=0; j<20; j++){
-                island.changeTower(t);
+                island.changeTower(tow);
                 c_torri++;
                 island.addStudent(s);
             }
@@ -82,7 +85,11 @@ public class ArchipelagoTest {
         Colors c=Colors.BLACK;
         Board b=new Board(20,c);
         Tower to=new Tower(c,b);
-        pelago.changeTower(to);
+        ArrayList<Tower> tt=new ArrayList<>();
+        for(int i=0; i<pelago.size();i++) {
+            tt.add(to);
+        }
+        pelago.changeTower(tt);
         c_torri=c_torri+20; ////////
         assertFalse(board.hasNoTowersLeft());
         assertEquals(c_torri,board.getTowers().size());
@@ -130,13 +137,15 @@ public class ArchipelagoTest {
     @Test
     public void unionTest(){
         e=1;
-        i.changeTower(t);
-        pelago.changeTower(t);
+        i.changeTower(tow);
+        pelago.changeTower(tow);
         Board bb=new Board(3,Colors.WHITE);
         Board h=new Board(3,Colors.WHITE);
-        Tower tow=new Tower(Colors.WHITE,bb);
+        Tower toww=new Tower(Colors.WHITE,bb);
         Island isa=new Island(88);
-        isa.changeTower(tow);
+        ArrayList<Tower> ttt=new ArrayList<>();
+        ttt.add(toww);
+        isa.changeTower(ttt);
         ArrayList<Island> k= new ArrayList<>();
         k.add(isa);
         Archipelago a= new Archipelago(k);
@@ -150,9 +159,11 @@ public class ArchipelagoTest {
             fail();
         }
         Tower y=new Tower(Colors.WHITE,h);
-        i.changeTower(y);
+        ArrayList<Tower> ll=new ArrayList<>();
+        ll.add(y);
+        i.changeTower(ll);
         assertThrows(Exception.class,()->pelago.uniteIslands(i));
-        i.changeTower(t);
+        i.changeTower(tow);
         ArrayList<Island> arr = new ArrayList<>(pelago.getIslands());
         //arr.add(i);
         for (Island isl:a.getIslands()){
