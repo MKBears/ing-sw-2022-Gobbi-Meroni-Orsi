@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server {
-    private final int port = 4096;
+    private final int portUDP = 4096;
+    private final int portTCP = 2836;
     private ServerSocket sSocket;
     private Socket client;
     private InetSocketAddress myIP;
@@ -33,19 +35,19 @@ public class Server {
         try {
             Socket socket;
             sSocket = new ServerSocket();
-            myIP=new InetSocketAddress(InetAddress.getLocalHost(),port);
+            myIP=new InetSocketAddress(InetAddress.getLocalHost(),portTCP); //indirizzo tcp
             sSocket.bind(myIP);
             System.out.println("Server ready");
-            sock=new DatagramSocket(port);
+            sock=new DatagramSocket(portUDP); //socket datagram UDP
             byte[] buf=new byte[1];
             packet=new DatagramPacket(buf, 0, 0);
 
             while (true) {
                 try {
-                    sock.receive(packet);
+                    sock.receive(packet); //ricevo richiesta di connessione dal client
                     packet4client = new DatagramPacket(buf, 0, buf.length, packet.getAddress(), packet.getPort());
-                    sock.send(packet4client);
-                    client = sSocket.accept();
+                    sock.send(packet4client);//gli mando un datagrampacket all'indirizzo al pacchetto che ho ricevuto
+                    client = sSocket.accept(); //accetto connessione tcp dal client
                     players.submit(new ClientHandler(client, this));
                 }catch (IOException e) {
                     System.out.println("Server cannot connect with a client. Trying a new connection.");
@@ -57,6 +59,14 @@ public class Server {
             throw new RuntimeException(e);
         }
     }
+
+    /*private void connectionEstablishment(DatagramSocket sock, DatagramPacket packet4client, ServerSocket sSocket, Socket client, ExecutorService players, byte[] buf){
+        sock.receive(packet); //ricevo richiesta di connessione dal client
+        packet4client = new DatagramPacket(buf, 0, buf.length, packet.getAddress(), packet.getPort());
+        sock.send(packet4client);//gli mando un datagrampacket all'indirizzo al pacchetto che ho ricevuto
+        client = sSocket.accept(); //accetto connessione tcp dal client
+        players.submit(new ClientHandler(client, this));
+    }*/
 
     public synchronized void addUserName(String userName) throws Exception{
         if (userNames.contains(userName)){
@@ -77,7 +87,7 @@ public class Server {
         for (Controller match : matches){
             if (match.getCreator().equals(creator.getUserName())){
                 matches.remove(match);
-                match.notifyDeletion();
+                match.notifyDeletion("Creator started a new match");
                 break;
             }
         }
@@ -108,7 +118,16 @@ public class Server {
     public synchronized Controller joinGame (String creator, ClientHandler player) throws Exception {
         for (Controller match : matches){
             if (match.getCreator().equals(creator)){
-                match.addPlayer(player);
+                if (match.isPaused()) {
+                    match.connectPlayer(player);
+                }
+                else {
+                    match.addPlayer(player);
+                }
+
+                if (match.readyToStart()) {
+                    match.start();
+                }
                 return match;
             }
         }
@@ -123,15 +142,5 @@ public class Server {
             }
         }
         return creators;
-    }
-
-    public synchronized Controller rejoinToGame(String creator, ClientHandler player){
-        for (Controller match : matches){
-            if (match.getCreator().equals(creator)){
-                match.connectPlayer(player);
-                return match;
-            }
-        }
-        return null;
     }
 }
