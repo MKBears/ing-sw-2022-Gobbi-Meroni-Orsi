@@ -129,6 +129,23 @@ class ActionTest {
     }
 
     @Test
+    void uniteLands2() throws Exception {
+        Player pl1=new Player("franco", Colors.BLACK,8, Wizards.WIZARD1,FALSE);
+        Player pl2=new Player("alberto", Colors.WHITE,8, Wizards.WIZARD2,FALSE);
+        Match match=new Match(pl1,pl2);
+        Action a=new Action(match);
+        match.getLands().get(10).changeTower(match.getPlayer()[0].getBoard().removeTower());
+        match.getLands().get(11).changeTower(match.getPlayer()[1].getBoard().removeTower());
+        match.getLands().get(0).changeTower(match.getPlayer()[0].getBoard().removeTower());
+        match.getMotherNature().setPosition(match.getLands().get(11));
+        a.uniteLands();
+        assertTrue(match.getLands().size()==12);
+        assertTrue(match.getLands().get(0).getTower().getColor()==Colors.BLACK);
+        assertTrue(match.getMotherNature().getPosition()==match.getLands().get(11));
+    }
+
+
+    @Test
     void moveFromIngressToLand() {
         Player pl1=new Player("franco", Colors.BLACK,8, Wizards.WIZARD1,FALSE);
         Player pl2=new Player("alberto", Colors.WHITE,8, Wizards.WIZARD2,FALSE);

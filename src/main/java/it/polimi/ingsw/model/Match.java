@@ -217,10 +217,50 @@ public class Match implements Serializable {
         for (i = 0; i < player.length; i++)
             if(player[i].getBoard().getStudentsOfType(e)>player[a].getBoard().getStudentsOfType(e))
                 a=i;
-        if(professors.containsKey(e))
-            professors.replace(e,player[a]);
-        else
-            professors.put(e,player[a]);
+        if(player[a].getBoard().getStudentsOfType(e)>0)
+            if(professors.containsKey(e)){
+                professors.replace(e,player[a]);
+                return player[a];
+            }
+            else {
+                professors.put(e, player[a]);
+                return player[a];
+            }
         return player[a];
+    }
+
+
+    @Override
+    public String toString() {
+        String a="player= " + Arrays.toString(player) +'\n'+
+                "nuvole= " + Arrays.toString(cloud) +"\n"+
+                "professori: \n";
+        for (Type_Student e:professors.keySet()) {
+            a=a+professors.get(e).getUserName()+" ha professore di tipo "+e+'\n';
+        }
+        a=a+"\n"+"isole:";
+        for (Land e:lands) {
+            if(motherNature.getPosition()==e){
+                a=a+" madre natura è su quest'";
+            }
+        a=a+e.toString()+"\n";
+        }
+        return a;
+    }
+
+    /**
+     *
+     * @param lands lands to insert in the match
+     */
+    public void setLands(List<Land> lands) {
+        this.lands = lands;
+    }
+
+    /**
+     *
+     * @param professors to ce insert in the match
+     */
+    public void setProfessors(Map<Type_Student, Player> professors) {
+        this.professors = professors;
     }
 }

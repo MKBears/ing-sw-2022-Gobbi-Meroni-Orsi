@@ -9,7 +9,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server {
-    private final int port = 4096;
+    private final int portUDP = 4096;
+    private final int portTCP = 2836;
     private ServerSocket sSocket;
     private Socket client;
     private InetSocketAddress myIP;
@@ -33,19 +34,19 @@ public class Server {
         try {
             Socket socket;
             sSocket = new ServerSocket();
-            myIP=new InetSocketAddress(InetAddress.getLocalHost(),port);
+            myIP=new InetSocketAddress(InetAddress.getLocalHost(),portTCP); //indirizzo tcp
             sSocket.bind(myIP);
             System.out.println("Server ready");
-            sock=new DatagramSocket(port);
+            sock=new DatagramSocket(portUDP); //socket datagram UDP
             byte[] buf=new byte[1];
             packet=new DatagramPacket(buf, 0, 0);
 
             while (true) {
                 try {
-                    sock.receive(packet);
+                    sock.receive(packet); //ricevo richiesta di connessione dal client
                     packet4client = new DatagramPacket(buf, 0, buf.length, packet.getAddress(), packet.getPort());
-                    sock.send(packet4client);
-                    client = sSocket.accept();
+                    sock.send(packet4client);//gli mando un datagrampacket all'indirizzo al pacchetto che ho ricevuto
+                    client = sSocket.accept(); //accetto connessione tcp dal client
                     players.submit(new ClientHandler(client, this));
                 }catch (IOException e) {
                     System.out.println("Server cannot connect with a client. Trying a new connection.");

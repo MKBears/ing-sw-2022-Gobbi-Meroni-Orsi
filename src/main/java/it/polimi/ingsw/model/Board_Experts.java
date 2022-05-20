@@ -56,5 +56,10 @@ public class Board_Experts extends Board {
             coins++;
         }
     }
-    
+
+    @Override
+    public String toString() {
+        return  super.toString()+
+                "coins= " + coins;
+    }
 }
