@@ -50,7 +50,9 @@ public class IslandTest {
         old.add(t);
         ArrayList<Tower> h=b.getTowers();
         assertNull(island.getTower());
-        island.changeTower(t);
+        ArrayList<Tower> jj=new ArrayList<>();
+        jj.add(t);
+        island.changeTower(jj);
         assertEquals(h,island.getTower().getBoard().getTowers()); //dovrebbe essere uguale perchè null
         assertEquals(t,island.getTower());
         try {
@@ -63,7 +65,9 @@ public class IslandTest {
         Colors colo=Colors.GREY;
         Board boa= new Board(2,colo);
         Tower tow=new Tower(colo,boa);
-        island.changeTower(tow);
+        ArrayList<Tower> rr=new ArrayList<>();
+        rr.add(tow);
+        island.changeTower(rr);
         assertEquals(3,b.getTowers().size());
         assertEquals(tow,island.getTower());
         assertEquals(boa,island.getTower().getBoard());
@@ -137,16 +141,20 @@ public class IslandTest {
         Island isa=new Island(9999);
         Board bruh=new Board(3,Colors.GREY);
         Tower tow=new Tower(Colors.GREY,bruh);
-        isa.changeTower(tow);
+        ArrayList<Tower> bella=new ArrayList<>();
+        bella.add(tow);
+        isa.changeTower(bella);
+        ArrayList<Tower> gg=new ArrayList<>();
+        gg.add(t);
         for(int h=2; h<7; h++) {
             Island i = new Island(h);
-            i.changeTower(t);
+            i.changeTower(gg);
             if(h>3)
             {
                 ArrayList<Island>isles=new ArrayList<>();
                 for(int z=h+3; z<(h+22);z++){
                     Island isl=new Island(z);
-                    isl.changeTower(t);
+                    isl.changeTower(gg);
                     isles.add(isl);
                 }
                 Archipelago arch=new Archipelago(isles);
@@ -156,7 +164,7 @@ public class IslandTest {
         }
 
         ArrayList<Island>is=new ArrayList<>();
-        island.changeTower(t);
+        island.changeTower(gg);
         is.add(island);
         for(Land l: lands){
             is.addAll(l.getIslands());

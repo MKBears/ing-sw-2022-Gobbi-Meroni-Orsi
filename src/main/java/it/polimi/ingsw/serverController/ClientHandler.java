@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.*;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 
 /**
@@ -35,15 +36,22 @@ public class ClientHandler extends Thread{
         try{
             in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
+            this.m4C=new Message4Client(in, out);
+            if((String)in.readObject()!="Prova prova 1 2 3"){
+                throw new Error("Theres something wrong in the connection");
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (ClassNotFoundException e){
+            throw new RuntimeException();
         }
         connected = true;
         ongoingMatch = true;
     }
 
     public void run(){
-
+        m4C.run();
+        //ho già fatto set disconnected
     }
 
     private void changeState(){
@@ -235,4 +243,12 @@ public class ClientHandler extends Thread{
         socket.close();
     }
 
+
+    public void setAck(boolean nack){
+        nack=false;
+    }
+
+    public void setNack(boolean nack){
+        nack=true;
+    }
 }

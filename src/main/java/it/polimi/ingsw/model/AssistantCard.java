@@ -23,4 +23,10 @@ public class AssistantCard implements Serializable{
     public int getMNSteps() {
         return MNSteps;
     }
+
+    @Override
+    public String toString() {
+        return "Carta assistente con valore" + value +
+                " e " + MNSteps + " possibili passi di madre natura";
+    }
 }

@@ -180,4 +180,27 @@ public class Board implements Serializable {
         return towers.isEmpty();
     }
 
+    @Override
+    public String toString() {
+        String a= "Rosso= " + dragons.size() +'\n'+
+                "Blu= " + unicorns.size() +'\n'+
+                "Giallo= " + fairies.size() +'\n'+
+                "Rosa=" + gnomes.size() +'\n'+
+                "Verde= " + frogs.size() +'\n'+
+                "numero torri= "+towers.size();
+        a=a+"\nentrata: ";
+        if (entrance!=null)
+            for (Student s:entrance) {
+                a=a+s.toString()+" ";
+            }
+        return a;
+    }
+
+    /**
+     *
+     * @param towers to insert in the board
+     */
+    public void setTowers(ArrayList<Tower> towers) {
+        this.towers = towers;
+    }
 }

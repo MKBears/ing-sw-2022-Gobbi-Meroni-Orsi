@@ -109,15 +109,20 @@ public class Archipelago implements Land {
      * @param n_tower change the towers on the Archipelago and returns the old towers on their board
      */
     @Override
-    public void changeTower(Tower n_tower) {
-        for(Island i : group){
-            i.changeTower(n_tower);
+    public void changeTower(ArrayList<Tower> n_tower) {
+        if (this.size == n_tower.size()) {
+            ArrayList<Tower> single = new ArrayList<>();
+            for (Island i : group) {
+                single.add(n_tower.remove(0));
+                i.changeTower(single);
+                single.clear();
+            }
+            try {
+                color = head.getTowerColor();
+            } catch (Exception e) {
+            }
+            return;
         }
-        try {
-            color = head.getTowerColor();
-        }
-        catch(Exception e){};
-        return;
     }
 
     /**
@@ -192,4 +197,15 @@ public class Archipelago implements Land {
     //        this.size++;
     //    }
     //}
+
+
+    @Override
+    public String toString() {
+        String a="Arcipelago di "+size+" isole{ \n";
+        for (Island e:group) {
+            a=a+e.toString()+'\n';
+        }
+        a=a+"}\n";
+        return a;
+    }
 }
