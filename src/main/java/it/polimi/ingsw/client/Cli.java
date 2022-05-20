@@ -19,10 +19,14 @@ public class Cli implements View,Runnable{
     private List<Wizards> willy;
     private List<Cloud> clouds;
     private List<AssistantCard> cards;
+    Boolean nack;
+
     public Cli(Message4Server server){
        input=new Scanner(System.in);
        end=false;
        this.server=server;
+       nack=false;
+       state="Start";
     }
 
     public void setMe(Player me) {
@@ -176,68 +180,108 @@ public class Cli implements View,Runnable{
 
     @Override
     public void run() {
-        while (end==false){
-            try {
-                this.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            switch (state){
-                case("Wizard"):
-                    server.sendChoice(this.getWizard(willy));
-                    break;
-                case("ChooseCard"):
-                    AssistantCard a;
-                    a=this.getAssistantCard(cards);
-                    me.draw(a.getValue());
-                    server.sendChosenCard(a);
-                    break;
-                case("MoveMN"):
-                    int step=this.getNumStep(me);
-                    action.cardAndMoveMN(me.getPlayedCard(),step);
-                    server.sendStepsMN(step);
-                    try {
-                        action.controlLand(me);
-                        action.uniteLands();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    this.printMatch(match);
-                    break;
-                case("ChooseCloud"):
-                    Cloud clo=this.getCloud(clouds);
-                    action.chooseCloud(me,clo);
-                    server.sendChoiceCloud(clo);
-                    this.printMatch(match);
-                case("MoveStudents"):
-                    Student st;
-                    String move;
-                    for (int i=0;i<match.getPlayer().length+1;i++) {
-                        st = this.getStudent(me);
-                        move = this.getDestination(match);
-                        if (move.equals("board")) {
-                            try {
-                                action.moveFromIngressToBoard(me, st);
-                                server.sendMovedStudent(st,12);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            Integer temp = parseInt(move);
-                            action.moveFromIngressToLand(me, st, match.getLands().get(temp.intValue()));
-                            server.sendMovedStudent(st,temp.intValue());
-                        }
-                    }
-                    break;
-                case("EndGame"):
-                    end=true;
-                    break;
-            }
-        }
+         try {
+             while (end == false) {
+                 switch (state) {
+                     case ("Start"):
+                         synchronized (this) {
+                             nack=false;
+                             this.wait();
+                         }
+                     case ("Wizard"):
+                         Wizards choose = this.getWizard(willy);
+                         do {
+                             server.sendChoice(choose);
+                             synchronized (this) {
+                                 nack=false;
+                                 this.wait();
+                             }
+                         } while (nack == true);
+                         break;
+                     case ("ChooseCard"):
+                         AssistantCard a;
+                         a = this.getAssistantCard(cards);
+                         me.draw(a.getValue());
+                         do {
+                             server.sendChosenCard(a);
+                             synchronized (this) {
+                                 nack=false;
+                                 this.wait();
+                             }
+                         } while (nack == true);
+                         break;
+                     case ("MoveMN"):
+                         int step = this.getNumStep(me);
+                         action.cardAndMoveMN(me.getPlayedCard(), step);
+                         try {
+                             action.cardAndMoveMN(me.getPlayedCard(), step);
+                             action.controlLand(me);
+                             action.uniteLands();
+                         } catch (Exception e) {
+                         }
+                         this.printMatch(match);
+                         do {
+                             server.sendStepsMN(step);
+
+                             synchronized (this) {
+                                 nack=false;
+                                 this.wait();
+                             }
+                         } while (nack == true);
+                         break;
+                     case ("ChooseCloud"):
+                         Cloud clo = this.getCloud(clouds);
+                         action.chooseCloud(me, clo);
+                         do {
+                             server.sendChoiceCloud(clo);
+                             synchronized (this) {
+                                 nack=false;
+                                 this.wait();
+                             }
+                         } while (nack == true);
+                     case ("MoveStudents"):
+                         Student st;
+                         String move;
+                         for (int i = 0; i < match.getPlayer().length + 1; i++) {
+                             st = this.getStudent(me);
+                             move = this.getDestination(match);
+                             Integer temp;
+                             if (move.equals("board")) {
+                                 try {
+                                     action.moveFromIngressToBoard(me, st);
+                                 } catch (Exception e) {
+                                 }
+                                 temp = 12;
+                             } else {
+                                 temp = parseInt(move);
+                                 action.moveFromIngressToLand(me, st, match.getLands().get(temp.intValue()));
+                             }
+                             do {
+                                 server.sendMovedStudent(st, temp.intValue());
+                                 synchronized (this) {
+                                     nack=false;
+                                     this.wait();
+                                 }
+                             } while (nack == true);
+                         }
+                         break;
+                     case ("EndGame"):
+                         end = true;
+                         break;
+                 }
+             }
+         }catch (InterruptedException e){
+             e.printStackTrace();
+         }
     }
 
     public void wakeUp(String state){
         this.state=state;
+        this.notifyAll();
+    }
+
+    public void setNack(){
+        nack=true;
         this.notifyAll();
     }
 
@@ -251,5 +295,24 @@ public class Cli implements View,Runnable{
 
     public void setClouds(List<Cloud> clouds) {
         this.clouds = clouds;
+    }
+
+    @Override
+    public String chooseMatch(List<String> join, List<String> resume) {
+        String choose;
+        System.out.println("puoi unirti alle partite:\n");
+        for (String e:join) {
+            System.out.println(e+"\n");
+        }
+        System.out.println("puoi riunirti alle partite: \n");
+        for(String e:resume){
+            System.out.println(e+"\n");
+        }
+        System.out.println("scegli la partita(per creare una nuova partita scrivi newgame):\n");
+        choose=input.nextLine();
+        if(choose.toLowerCase()=="newgame"){
+            choose="NewGame";
+        }
+        return choose;
     }
 }

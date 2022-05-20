@@ -163,7 +163,7 @@ public class Match implements Serializable {
             Land unito;
             a=lands.remove(i);
             unito=lands.remove(0);
-            lands.add(0,unito.uniteIslands(a));
+            lands.add(0,a.uniteIslands(unito));
             motherNature.setPosition(lands.get(0));
         }
     }
@@ -180,7 +180,7 @@ public class Match implements Serializable {
         if(i>=1 && i<lands.size()) {
             if(!(lands.get(i).getTower().getColor()==lands.get(i-1).getTower().getColor()))throw new IllegalArgumentException();
             a=lands.remove(i);
-            lands.add(i,lands.get(i-1).uniteIslands(a));
+            lands.add(i,a.uniteIslands(lands.get(i-1)));
             lands.remove(i-1);
             motherNature.setPosition(lands.get(i-1));
         }else{

@@ -93,8 +93,7 @@ public class Client{
                             join=(ArrayList<String>) in.readObject();
                             ArrayList<String> resume=new ArrayList<>();
                             resume=(ArrayList<String>) in.readObject();
-                            String selected="Gioco di Pippo";
-                            //mandare choosingGame con la choice
+                            String selected= view.chooseMatch(join,resume);
                             server.sendGameSelected(selected);
                         }
                         else if(response.equals("NoGames")) {
@@ -124,7 +123,7 @@ public class Client{
                         //decisione
                         break;
                     case  "NACK":
-                        //decisione
+                        view.setNack();
                         break;
                     case "Wizard":
                         List<Wizards> willy;
