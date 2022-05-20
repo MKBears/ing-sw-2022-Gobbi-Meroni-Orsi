@@ -14,30 +14,44 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.serverController.Action;
 
 public class Client{
+    private Socket socket;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
+    private DatagramSocket dSokk;
+    private byte[] addr;
+    private DatagramPacket starting;
+    private DatagramPacket packet;
+    private boolean condition;
+    private String received;
+    private String send;
+    private String response;
+    private Message4Server server;
+    private Match match;
+    private View view;
+    private Action action;
+    private String username;
+    private Player me;
+    private boolean end;
+    private Thread viewth;
+    private int counter;
+    public Client(){
+        match=null;
+        username=null;
+        me=null;
+        end=false;
+        counter=0;
+    }
 
     public void run(){
-        Socket socket;
-        ObjectOutputStream out;
-        ObjectInputStream in;
-        DatagramSocket dSokk;
-        byte[] addr;
-        DatagramPacket starting;
-        DatagramPacket packet;
-        boolean condition;
-        String received;
-        String send;
-        String response;
-        Message4Server server;
-        Match match=null;
-        Cli cli=new Cli();
-        Action action=null;
-        String username=null;
-        Player me=null;
-        Boolean end=false;
-        int counter=0;
-        MessageFromServer mfs;
+        match=null;
+        action=null;
+        username=null;
+        me=null;
+        end=false;
+        counter=0;
 
         try {
+            nack=false;
             condition=false;
             addr= InetAddress.getLocalHost().getAddress();
             addr[3]=(byte)255;
@@ -72,20 +86,25 @@ public class Client{
             in= new ObjectInputStream(socket.getInputStream());
             out.writeObject("Prova prova 1 2 3");
             server=new Message4Server(in,out);
-            mfs=new MessageFromServer(in,this);
-
+            view = new Cli(server);
             received="base1";
+            view.getTitolo();
             while (true){
                 if(received!="base1") {
-                    received= mfs.message;
+                    received = (String) in.readObject();
                 }
                 switch (received){
                     case "base1": //login
-                        username= cli.getUsername();
+                        //selection=cli.getRegistrationorLogin();
+                        username= view.getUsername();
+                        //if(selection=="Registration")
+                        //{sendRegistration(username);
+                        //} else if(selection=="Login"){
                         server.sendLogin(username); //Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
+                        //}
                         response=(String)in.readObject();
                         while(response.equals("LoginFailed")){
-                            username= cli.getUsername();
+                            username= view.getUsername();
                             server.sendLogin(username);
                             response=(String) in.readObject();
                         }
@@ -107,7 +126,7 @@ public class Client{
                             match=(Match) in.readObject();
                             server.sendACK();
                             //nel caso in cui stia creando una nuova partita: da mandare prima di GameSelected
-                            int num=cli.getNumPlayer();
+                            int num=view.getNumPlayer();
                             server.sendNumPlayers(num);
                             response=(String)in.readObject();
                             if(response=="NACK"){
@@ -129,10 +148,10 @@ public class Client{
                         //decisione
                         break;
                     case "Wizard":
-                        //decisione
-                        Wizards willy;
-                        willy=cli.getWizard();
-                        server.sendChoice(willy);
+                        List<Wizards> willy;
+                        willy = (ArrayList<Wizards>)in.readObject();
+                        view.setWilly(willy);
+                        view.wakeUp(received);
                         break;
                     case "Creation":
                         match=(Match) in.readObject();
@@ -141,38 +160,38 @@ public class Client{
                             if(match.getPlayer()[i].getUserName().equals(username))
                                 me=match.getPlayer()[i];
                         }
-                        cli.printMatch(match);
-                        cli.setMe(me);
-                        cli.setMatch(match);
-                        view=new Thread(cli);
-                        view.start();
+                        view.printMatch(match);
+                        view.setMe(me);
+                        view.setMatch(match);
+                        viewth=new Thread(view);
+                        viewth.start();
                         server.sendACK();
                         break;
                     case "RefillClouds": //posso ricevere da 2 a 4 ArrayList<Students>, uno per ogni nuvola
                         for(int i=0;i<match.getCloud().length;i++) {
                             match.getCloud()[i] = (Cloud) in.readObject();
                         }
-                        cli.printMatch(match);
+                        view.printMatch(match);
                         server.sendACK();
                         break;
                     case "ChooseCard":
                         List<AssistantCard> cards;
                         cards = (ArrayList<AssistantCard>) in.readObject();
-                        cli.setCards(cards);
-                        cli.wakeUp(received);
+                        view.setCards(cards);
+                        view.wakeUp(received);
                         break;
                     case "MoveStudents":
-                        cli.wakeUp(received);
+                        view.wakeUp(received);
                         break;
                     case "MoveMN": //DA MODIFICARE IL PROTOCOLLO
-                        cli.wakeUp(received);
+                        view.wakeUp(received);
                         //nella nuova versione non è previsto ACK o NACK
                         break;
                     case "ChooseCloud":
                         List<Cloud> clouds;
                         clouds = (ArrayList<Cloud>) in.readObject();
-                        cli.setClouds(clouds);
-                        cli.wakeUp(received);
+                        view.setClouds(clouds);
+                        view.wakeUp(received);
                         //server.sendChoiceCloud(cl);
                         break;
                     case "NotifyChosenCard":
@@ -194,7 +213,7 @@ public class Client{
                             if(id==e.getID())
                                 e.addStudent(stu);
                         }
-                        cli.printMatch(match);
+                        view.printMatch(match);
                         server.sendACK();
                         break;
                     case "NotifyMoveStudents (board)":
@@ -202,12 +221,12 @@ public class Client{
                         Board b=(Board) in.readObject();
                         String usern=(String) in.readObject();
                         for (int i=0;i<match.getPlayer().length;i++) {
-                            if(match.getPlayer()[i].getUserName().equals(user)) {
-                                action.moveFromIngressToBoard(match.getPlayer()[i],s);
+                            if(match.getPlayer()[i].getUserName().equals(usern)) {
+                                match.getPlayer()[i].setBoard(b);
                             }
                         }
                         action.checkAllProfessors();
-                        cli.printMatch(match);
+                        view.printMatch(match);
                         server.sendACK();
                         //server.sendACK(); o server.sendNACK();
                         break;
@@ -223,14 +242,14 @@ public class Client{
                                 match.getMotherNature().setPosition(e);
                             }
                         }
-                        cli.printMatch(match);
+                        view.printMatch(match);
                         server.sendACK();
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "NotifyProfessors":
                         Map<Type_Student, Player> prof=(Map<Type_Student, Player>) in.readObject();
                         match.setProfessors(prof);
-                        cli.printMatch(match);
+                        view.printMatch(match);
                         server.sendACK();
                         //server.sendACK(); o server.sendNACK();
                         break;
@@ -253,7 +272,7 @@ public class Client{
                             if(e.getID()==land.getID())
                                 e.changeTower(towers.get(0));
                         }
-                        cli.printMatch(match);
+                        view.printMatch(match);
                         server.sendACK();
                         //server.sendACK(); o server.sendNACK();
                         break;
@@ -263,7 +282,7 @@ public class Client{
                         String us=(String) in.readObject();
                         for (int i=0;i<match.getPlayer().length;i++) {
                             if(match.getPlayer()[i].getUserName().equals(us))
-                                match.getPlayer()[i].getBoard().setTowers(towers1);
+                                match.getPlayer()[i].setBoard(board);
                         }
                         server.sendACK();
                         //server.sendACK(); o server.sendNACK();
@@ -272,32 +291,38 @@ public class Client{
                         Player winner=(Player) in.readObject();
                         String ex=(String) in.readObject(); //spiegazione di perchè ha vinto
                         ArrayList<Land> landd=(ArrayList<Land>) in.readObject(); //situa finale lands
-                        ArrayList<Board> boards=(ArrayList<Board>) in.readObject(); //situa di tutte le baoard
-                        cli.getWinner(winner);
-                        cli.wakeUp("EndGame");
+                        ArrayList<Board> boards=(ArrayList<Board>) in.readObject(); //situa di tutte le board
+                        view.getWinner(winner);
+                        match.setLands(landd);
+                        for (int i = 0; i < match.getPlayer().length; i++) {
+                            match.getPlayer()[i].setBoard(boards.get(i));
+                        }
+                        action.checkAllProfessors();
+                        view.printMatch(match);
+                        view.wakeUp("EndGame");
                         end=true;
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "LastTower":
                         Player pl=(Player) in.readObject();
-                        cli.getWinner(pl);
-                        cli.wakeUp("EndGame");
+                        view.getWinner(pl);
+                        view.wakeUp("EndGame");
                         end=true;
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "NoMoreStudents":
-                        cli.lastRound();
+                        view.lastRound();
                         server.sendACK();
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "NextTurn":
                         Player play=(Player) in.readObject();
                         String phase=(String)in.readObject();
-                        cli.printTurn(play,phase);
+                        view.printTurn(play,phase);
                         server.sendACK(); //o server.sendNACK();
                         break;
                     case "Ping":
-                        server.sendPONG();
+                        server.sendACK();
                         break;
                 }
                 if(end==true)
@@ -312,4 +337,5 @@ public class Client{
             e.printStackTrace();
         }
     }
+
 }
