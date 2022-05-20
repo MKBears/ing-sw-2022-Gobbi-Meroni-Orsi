@@ -1,13 +1,7 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.client.Message4Server;
-import it.polimi.ingsw.serverController.Action;
 
-import java.awt.*;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.*;
 import java.util.List;
 
@@ -19,20 +13,16 @@ public class Cli implements View,Runnable{
     private String state;
     private Boolean end;
     private Message4Server server;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
     private Player me;
     private Match match;
     private Action action;
     private List<Wizards> willy;
     private List<Cloud> clouds;
     private List<AssistantCard> cards;
-    public Cli(Message4Server server, ObjectInputStream in, ObjectOutputStream out){
+    public Cli(Message4Server server){
        input=new Scanner(System.in);
        end=false;
        this.server=server;
-       this.in=in;
-       this.out=out;
     }
 
     public void setMe(Player me) {
@@ -145,7 +135,8 @@ public class Cli implements View,Runnable{
             chooseInt=parseInt(choose);
         }
         if(choose.toLowerCase()=="sala"){
-            choose="board";
+            Integer temp=12;
+            choose=temp.toString();
         }else{
             Integer temp=match.getLands().get(chooseInt-1).getID();
             choose=temp.toString();
@@ -224,16 +215,17 @@ public class Cli implements View,Runnable{
                     for (int i=0;i<match.getPlayer().length+1;i++) {
                         st = this.getStudent(me);
                         move = this.getDestination(match);
-                        server.sendMovedStudent("Student"+(i+1), st, move);
                         if (move.equals("board")) {
                             try {
                                 action.moveFromIngressToBoard(me, st);
+                                server.sendMovedStudent(st,12);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         } else {
                             Integer temp = parseInt(move);
                             action.moveFromIngressToLand(me, st, match.getLands().get(temp.intValue()));
+                            server.sendMovedStudent(st,temp.intValue());
                         }
                     }
                     break;

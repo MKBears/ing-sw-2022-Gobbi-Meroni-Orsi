@@ -34,26 +34,30 @@ public class Message4Server {
      * @param username the username
      */
     public void sendLogin(String username) {
-        name = "Login";
-        try {
-            out.writeObject(name);
-            out.writeObject(username);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        synchronized (this) {
+            name = "Login";
+            try {
+                out.writeObject(name);
+                out.writeObject(username);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     /**
      * The client sends which type of game wants to do
-     * @param choice the choice
+     * @param choice the choice: it could be the name of a game to resume or join or a string "NewGame" that means the played decides to start a new game
      */
     public void sendChoosingGame(String choice){
-        try {
-            name = "ChoosingGame";
-            out.writeObject(name);
-            out.writeObject(choice);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        synchronized (this) {
+            try {
+                name = "ChoosingGame";
+                out.writeObject(name);
+                out.writeObject(choice);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -62,12 +66,14 @@ public class Message4Server {
      * @param selected
      */
     public void sendGameSelected(String selected){
-        try {
-            name = "GameSelected";
-            out.writeObject(name);
-            out.writeObject(selected);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        synchronized (this) {
+            try {
+                name = "GameSelected";
+                out.writeObject(name);
+                out.writeObject(selected);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -75,11 +81,23 @@ public class Message4Server {
      * Base positive response for a client request (the message received was correct)
      */
     public void sendACK(){
-        try {
-            name = "ACK";
-            out.writeObject(name);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        synchronized (this) {
+            try {
+                name = "ACK";
+                out.writeObject(name);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+    public void sendPONG(){
+        synchronized (this) {
+            try {
+                name = "Pong";
+                out.writeObject(name);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -87,11 +105,13 @@ public class Message4Server {
      * Base negative response for a client request (the message received was correct)
      */
     public void sendNACK(){
-        try {
-            name = "NACK";
-            out.writeObject(name);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        synchronized (this) {
+            try {
+                name = "NACK";
+                out.writeObject(name);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -100,12 +120,14 @@ public class Message4Server {
      * @param num the number of players
      */
     public void sendNumPlayers(int num){
-        try {
-            name = "NumPlayers";
-            out.writeObject(name);
-            out.writeObject(num);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        synchronized (this) {
+            try {
+                name = "NumPlayers";
+                out.writeObject(name);
+                out.writeObject(num);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -114,12 +136,14 @@ public class Message4Server {
      * @param wizard the chosen wizard
      */
     public void sendChoice(Wizards wizard){
-        try {
-            name = "Choice";
-            out.writeObject(name);
-            out.writeObject(wizard);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        synchronized (this) {
+            try {
+                name = "Choice";
+                out.writeObject(name);
+                out.writeObject(wizard);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -128,29 +152,32 @@ public class Message4Server {
      * @param card the chosen card
      */
     public void sendChosenCard(AssistantCard card){
-        try {
-            name = "ChosenCard";
-            out.writeObject(name);
-            out.writeObject(card);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        synchronized (this) {
+            try {
+                name = "ChosenCard";
+                out.writeObject(name);
+                out.writeObject(card);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     /**
      * The player sends the movement of the student, we have to call it for each student
-     * @param namestudent must be Student1 or Student2 or Student3
      * @param stu the student involved
-     * @param pos must be the id of the land or "board"
+     * @param pos must be the id of the land or the board (board is 12, the lands are 0-11)
      */
-    public void sendMovedStudent(String namestudent, Student stu, String pos ){  //dai la possibilità di mettere null negli ultimi due se non ne muove tre
-        try {
-            name = namestudent;
-            out.writeObject(name);
-            out.writeObject(stu);
-            out.writeObject(pos);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public void sendMovedStudent(Student stu, int pos ){  //dai la possibilità di mettere null negli ultimi due se non ne muove tre
+        synchronized (this) {
+            try {
+                name = "MovedStudent";
+                out.writeObject(name);
+                out.writeObject(stu);
+                out.writeObject(pos);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -159,12 +186,14 @@ public class Message4Server {
      * @param steps the steps
      */
     public void sendStepsMN(int steps){
-        try {
-            name = "StepsMN";
-            out.writeObject(name);
-            out.writeObject(steps);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        synchronized (this) {
+            try {
+                name = "StepsMN";
+                out.writeObject(name);
+                out.writeObject(steps);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -173,12 +202,14 @@ public class Message4Server {
      * @param cloud the chosen cloud
      */
     public void sendChoiceCloud(Cloud cloud){
-        try {
-            name = "ChoiceCloud";
-            out.writeObject(name);
-            out.writeObject(cloud);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        synchronized (this) {
+            try {
+                name = "ChoiceCloud";
+                out.writeObject(name);
+                out.writeObject(cloud);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

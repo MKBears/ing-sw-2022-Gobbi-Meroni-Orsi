@@ -1,18 +1,14 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.model.*;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.serverController.Action;
 
 public class Client{
 
@@ -30,12 +26,15 @@ public class Client{
         String response;
         Message4Server server;
         Match match=null;
-        View cli;
+        View view;
         Action action=null;
         String username=null;
         Player me=null;
         Boolean end=false;
-        Thread view;
+        Thread viewth;
+        int counter=0;
+        MessageFromServer mfs;
+
         try {
             condition=false;
             addr= InetAddress.getLocalHost().getAddress();
@@ -44,68 +43,76 @@ public class Client{
             System.out.println("Client: Inizializzato");
             byte[] buf = new byte[1];
             starting= new DatagramPacket(buf, 0, buf.length, InetAddress.getByAddress(addr), 4898);
-            do { //non do while... va messo un timer che ripete l'operazione dopo un po' e dopo 3 volte lancia eccezione
+            do {
+                dSokk.setSoTimeout(5000); //Ho messo il timeout per la ricezione dei messaggi
                 dSokk.send(starting);
-                System.out.println("Client: Ho mandato riciesta, ora vediamo di ricevere...");
+                System.out.println("Client: Ho mandato richiesta, ora vediamo di ricevere...");
                 buf = new byte[1];
-                buf[1]=-1;
                 packet = new DatagramPacket(buf, buf.length);
-                dSokk.receive(packet);
-                if(packet.getData()==buf){
+                try{
+                    dSokk.receive(packet);
+                }
+                catch (SocketTimeoutException e){
+                    counter ++;
+                    if(counter==3){
+                        System.out.println("Connessione fallita. Far ripartire il client"); //fai eccezione
+                    }
+                }
+                if(packet.getData()[0]==1){ //inizializza a 1 nel server
                     condition=true;
                 }
             }while(!condition);
-            System.out.println("Client: Ricevuto pacchetto da Marco");
+
             InetAddress ip= packet.getAddress();
             int port= 2836;
-            //String connesso="Sono connesso TCP";
-            System.out.println("Client: Ho creato la stringa da mandare: indirizzo di Marco "+ port +" "+ ip);
-            /*try {
-                this.wait(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }*/
             socket= new Socket(ip.getHostAddress(),port);
             out = new ObjectOutputStream(socket.getOutputStream());
             in= new ObjectInputStream(socket.getInputStream());
+            out.writeObject("Prova prova 1 2 3");
             server=new Message4Server(in,out);
-            cli=new Cli(server,in,out);
+            view = new Cli(server);
             received="base1";
+            view.getTitolo();
             while (true){
                 if(received!="base1") {
                     received = (String) in.readObject();
                 }
                 switch (received){
                     case "base1": //login
-                        username= cli.getUsername();
+                        username= view.getUsername();
                         server.sendLogin(username); //Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
                         response=(String)in.readObject();
                         while(response.equals("LoginFailed")){
-                            username= cli.getUsername();
+                            username= view.getUsername();
                             server.sendLogin(username);
                             response=(String) in.readObject();
-                        }//può essere LoginSucceeded o LoginFailed <------
-                        //decisione da prendere: il server sa che se il login non ha successo bisogna mandare un altro username
-                        //choosing game: decido se voglio fare new game, join game o resume game
-                        String decision="JoinGame"; //decision
-                        server.sendChoosingGame(decision); //la mando
-                        response=(String) in.readObject(); //risposta: o NoGames o ListOfGames o ListOfStartedGames
-                        //decisione da prendere
-                        String selected="Gioco di Pippo";
-                        //nel caso in cui stia creando una nuova partita: da mandare prima di GameSelected
-                        int num=cli.getNumPlayer();
-                        server.sendNumPlayers(num); //esempio
-                        response=(String)in.readObject();
-                        if(response=="NACK"){
-                            //decisione
-                        }else if(response=="ACK"){
-                            //si va a avanti
                         }
-                        server.sendGameSelected(selected);
+                        response=(String)in.readObject();
+                        if(response.equals("ListOfGames")){
+                            ArrayList<String> join=new ArrayList<>();
+                            join=(ArrayList<String>) in.readObject();
+                            ArrayList<String> resume=new ArrayList<>();
+                            resume=(ArrayList<String>) in.readObject();
+                            String selected="Gioco di Pippo";
+                            //mandare choosingGame con la choice
+                            server.sendGameSelected(selected);
+                        }
+                        else if(response.equals("NoGames")) {
+                            //che famo? penso che farà new game di default
+                        }
                         response=(String) in.readObject();
                         if(response=="Creation"){
                             match=(Match) in.readObject();
                             server.sendACK();
+                            //nel caso in cui stia creando una nuova partita: da mandare prima di GameSelected
+                            int num=view.getNumPlayer();
+                            server.sendNumPlayers(num);
+                            response=(String)in.readObject();
+                            if(response=="NACK"){
+                                //decisione
+                            }else if(response=="ACK"){
+                                //si va a avanti
+                            }
                         }
                         else{
                             server.sendNACK();
@@ -122,8 +129,8 @@ public class Client{
                     case "Wizard":
                         List<Wizards> willy;
                         willy = (ArrayList<Wizards>)in.readObject();
-                        cli.setWilly(willy);
-                        cli.wakeUp(received);
+                        view.setWilly(willy);
+                        view.wakeUp(received);
                         break;
                     case "Creation":
                         match=(Match) in.readObject();
@@ -132,38 +139,38 @@ public class Client{
                             if(match.getPlayer()[i].getUserName().equals(username))
                                 me=match.getPlayer()[i];
                         }
-                        cli.printMatch(match);
-                        cli.setMe(me);
-                        cli.setMatch(match);
-                        view=new Thread(cli);
-                        view.start();
+                        view.printMatch(match);
+                        view.setMe(me);
+                        view.setMatch(match);
+                        viewth=new Thread(view);
+                        viewth.start();
                         server.sendACK();
                         break;
                     case "RefillClouds": //posso ricevere da 2 a 4 ArrayList<Students>, uno per ogni nuvola
                         for(int i=0;i<match.getCloud().length;i++) {
                             match.getCloud()[i] = (Cloud) in.readObject();
                         }
-                        cli.printMatch(match);
+                        view.printMatch(match);
                         server.sendACK();
                         break;
                     case "ChooseCard":
                         List<AssistantCard> cards;
                         cards = (ArrayList<AssistantCard>) in.readObject();
-                        cli.setCards(cards);
-                        cli.wakeUp(received);
+                        view.setCards(cards);
+                        view.wakeUp(received);
                         break;
                     case "MoveStudents":
-                        cli.wakeUp(received);
+                        view.wakeUp(received);
                         break;
                     case "MoveMN": //DA MODIFICARE IL PROTOCOLLO
-                        cli.wakeUp(received);
+                        view.wakeUp(received);
                         //nella nuova versione non è previsto ACK o NACK
                         break;
                     case "ChooseCloud":
                         List<Cloud> clouds;
                         clouds = (ArrayList<Cloud>) in.readObject();
-                        cli.setClouds(clouds);
-                        cli.wakeUp(received);
+                        view.setClouds(clouds);
+                        view.wakeUp(received);
                         //server.sendChoiceCloud(cl);
                         break;
                     case "NotifyChosenCard":
@@ -178,28 +185,27 @@ public class Client{
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "NotifyMoveStudents (id)":
-                        String name=(String)in.readObject(); //"Student1" o "Student2" o "Student3"
                         Student stu=(Student) in.readObject(); //lo studente stesso
                         int id=(int)in.readObject(); //id della Land
+                        String user=(String) in.readObject();
                         for (Land e:match.getLands()) {
                             if(id==e.getID())
                                 e.addStudent(stu);
                         }
-                        cli.printMatch(match);
+                        view.printMatch(match);
                         server.sendACK();
                         break;
                     case "NotifyMoveStudents (board)":
                         Student s=(Student) in.readObject(); //lo studente stesso
-                        Player pl1=(Player) in.readObject(); //il player
                         Board b=(Board) in.readObject();
-                        String user=(String) in.readObject();
+                        String usern=(String) in.readObject();
                         for (int i=0;i<match.getPlayer().length;i++) {
-                            if(match.getPlayer()[i].getUserName().equals(user)) {
-                                action.moveFromIngressToBoard(match.getPlayer()[i],s);
+                            if(match.getPlayer()[i].getUserName().equals(usern)) {
+                                match.getPlayer()[i].setBoard(b);
                             }
                         }
                         action.checkAllProfessors();
-                        cli.printMatch(match);
+                        view.printMatch(match);
                         server.sendACK();
                         //server.sendACK(); o server.sendNACK();
                         break;
@@ -215,14 +221,14 @@ public class Client{
                                 match.getMotherNature().setPosition(e);
                             }
                         }
-                        cli.printMatch(match);
+                        view.printMatch(match);
                         server.sendACK();
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "NotifyProfessors":
                         Map<Type_Student, Player> prof=(Map<Type_Student, Player>) in.readObject();
                         match.setProfessors(prof);
-                        cli.printMatch(match);
+                        view.printMatch(match);
                         server.sendACK();
                         //server.sendACK(); o server.sendNACK();
                         break;
@@ -245,7 +251,7 @@ public class Client{
                             if(e.getID()==land.getID())
                                 e.changeTower(towers.get(0));
                         }
-                        cli.printMatch(match);
+                        view.printMatch(match);
                         server.sendACK();
                         //server.sendACK(); o server.sendNACK();
                         break;
@@ -255,7 +261,7 @@ public class Client{
                         String us=(String) in.readObject();
                         for (int i=0;i<match.getPlayer().length;i++) {
                             if(match.getPlayer()[i].getUserName().equals(us))
-                                match.getPlayer()[i].getBoard().setTowers(towers1);
+                                match.getPlayer()[i].setBoard(board);
                         }
                         server.sendACK();
                         //server.sendACK(); o server.sendNACK();
@@ -264,28 +270,34 @@ public class Client{
                         Player winner=(Player) in.readObject();
                         String ex=(String) in.readObject(); //spiegazione di perchè ha vinto
                         ArrayList<Land> landd=(ArrayList<Land>) in.readObject(); //situa finale lands
-                        ArrayList<Board> boards=(ArrayList<Board>) in.readObject(); //situa di tutte le baoard
-                        cli.getWinner(winner);
-                        cli.wakeUp("EndGame");
+                        ArrayList<Board> boards=(ArrayList<Board>) in.readObject(); //situa di tutte le board
+                        view.getWinner(winner);
+                        match.setLands(landd);
+                        for (int i = 0; i < match.getPlayer().length; i++) {
+                            match.getPlayer()[i].setBoard(boards.get(i));
+                        }
+                        action.checkAllProfessors();
+                        view.printMatch(match);
+                        view.wakeUp("EndGame");
                         end=true;
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "LastTower":
                         Player pl=(Player) in.readObject();
-                        cli.getWinner(pl);
-                        cli.wakeUp("EndGame");
+                        view.getWinner(pl);
+                        view.wakeUp("EndGame");
                         end=true;
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "NoMoreStudents":
-                        cli.lastRound();
+                        view.lastRound();
                         server.sendACK();
                         //server.sendACK(); o server.sendNACK();
                         break;
                     case "NextTurn":
                         Player play=(Player) in.readObject();
                         String phase=(String)in.readObject();
-                        cli.printTurn(play,phase);
+                        view.printTurn(play,phase);
                         server.sendACK(); //o server.sendNACK();
                         break;
                     case "Ping":

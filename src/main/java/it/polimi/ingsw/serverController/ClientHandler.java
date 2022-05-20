@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.*;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 
 /**
@@ -24,6 +25,8 @@ public class ClientHandler extends Thread{
     private boolean connected;
     private boolean ongoingMatch;
 
+    private Ping ping;
+
     /**
      *
      * @param s the socket associated with this player
@@ -31,20 +34,30 @@ public class ClientHandler extends Thread{
     public ClientHandler (Socket s, Server server){
         socket = s;
         this.server = server;
-
+        try {
+            socket.setSoTimeout(1000);
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
         try{
             in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
-            out.writeObject(4500); //gli mando inirizzo di porta TCP, speriamo funzioni
+            this.m4C=new Message4Client(in, out);
+            if((String)in.readObject()!="Prova prova 1 2 3"){
+                throw new Error("Theres something wrong in the connection");
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (ClassNotFoundException e){
+            throw new RuntimeException();
         }
         connected = true;
         ongoingMatch = true;
     }
 
     public void run(){
-
+        m4C.run();
+        //ho già fatto set disconnected
     }
 
     private void changeState(){
@@ -72,10 +85,10 @@ public class ClientHandler extends Thread{
                                 do {
                                     userName = (String) in.readObject();
 
-                                    //if (controller.getUserNames().contains(userName)){
-                                        //control = false;
-                                        //loginFailed();
-                                    //}
+                                    if (controller.getUserNames().contains(userName)){
+                                        control = false;
+                                        loginFailed();
+                                    }
                                     else {
                                         control = true;
                                     }
@@ -83,12 +96,12 @@ public class ClientHandler extends Thread{
                             }
                         }
                         else {
-                            //out.writeObject(server.getResumeableMatches());
-                            //controller = server.resumeGame((String) in.readObject(), this);
+                            out.writeObject(server.getResumeableMatches());
+                            controller = server.resumeGame((String) in.readObject(), this);
                         }
                     }
                 }catch (ClassNotFoundException | IOException e){
-                    //out.writeChars("Nack");
+                    out.writeChars("Nack");
                 }
 
                 state = 1;
@@ -196,14 +209,14 @@ public class ClientHandler extends Thread{
             }
             i++;
         }
-        System.out.println("Assistant");
+        out.println("Assistant");
 
         if (hasPlayableCard){
             for (i=0; played[i]!=0; i++) {
-                System.out.println(played[i]);
+                out.println(played[i]);
             }
         }
-        System.out.println(0);
+        out.println(0);
         //Quando il controller lato client riceve (eventualmente qualche int e) 0 dopo "Assistant",
         // sa che puo' inviare alla view il comando di fare scegliere al player la carta assistente da giocare
         card = in.nextInt();
