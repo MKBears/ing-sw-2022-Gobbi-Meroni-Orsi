@@ -25,8 +25,6 @@ public class ClientHandler extends Thread{
     private boolean connected;
     private boolean ongoingMatch;
 
-    private Message4Client m4C;
-
     /**
      *
      * @param s the socket associated with this player
@@ -250,4 +248,12 @@ public class ClientHandler extends Thread{
         socket.close();
     }
 
+  
+    public void setAck(boolean nack){
+        nack=false;
+    }
+
+    public void setNack(boolean nack){
+        nack=true;
+    }
 }

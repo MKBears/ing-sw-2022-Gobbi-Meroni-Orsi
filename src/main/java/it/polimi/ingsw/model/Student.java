@@ -23,6 +23,11 @@ public class Student implements Serializable {
     }
 
     @Override
+    public String toString() {
+        return "studente di colore "+ type;
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(type);
     }

@@ -14,6 +14,7 @@ import it.polimi.ingsw.model.*;
 /**
  * This class contains all the possible message to send to the client
  */
+
 public class Message4Client extends Thread{
 
     private ObjectOutputStream out;
@@ -292,6 +293,7 @@ public class Message4Client extends Thread{
      * @param steps the number of steps of Mother Nature
      * @param lands an update of the situation of the lands
      */
+
     public void sendNotifyMovementMN(int steps, ArrayList<Land> lands){
         synchronized (this) {
             name = "NotifyMovementMN";
@@ -500,6 +502,7 @@ public class Message4Client extends Thread{
             }
 
         }
+
     }
 
     /**

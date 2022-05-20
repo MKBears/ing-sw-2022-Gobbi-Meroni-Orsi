@@ -2,6 +2,8 @@ package it.polimi.ingsw.serverController;
 
 import it.polimi.ingsw.model.*;
 
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Action {
@@ -17,8 +19,7 @@ public class Action {
     }
 
     public void checkAllProfessors(){
-        for (Type_Student e: Type_Student.values()
-             ) {
+        for (Type_Student e: Type_Student.values()) {
             match.checkProfessor(e);
         }
     }
@@ -26,14 +27,34 @@ public class Action {
     public void controlLand(Player player) throws Exception {
         Type_Student a=null;
         int max=0;
+        Player owner=null;
+        Player nuovo=null;
+        Map<Player, Integer> influenze=new HashMap<>();
+        for(int i=0;i< match.getPlayer().length;i++){
+            influenze.put(match.getPlayer()[i],0);
+            try {
+                if (match.getPlayer()[i].getColor() == match.getMotherNature().getPosition().getTowerColor()) {
+                    influenze.put(match.getPlayer()[i], 1);
+                    owner = match.getPlayer()[i];
+                }
+            }catch (Exception e){}
+        }
         for (Type_Student e:Type_Student.values()) {
-            if(match.getMotherNature().getPosition().getInfluence(e)>max){
-                a=e;
+            if (match.checkProfessor(e)!=null)
+                influenze.replace(match.checkProfessor(e),influenze.get(match.checkProfessor(e))+match.getMotherNature().getPosition().getInfluence(e));
+            }
+        for(int j=0;j<match.getPlayer().length;j++){
+            if(influenze.get(match.getPlayer()[j])>max) {
+                max = influenze.get(match.getPlayer()[j]);
+                nuovo=match.getPlayer()[j];
             }
         }
-        if(player==match.checkProfessor(a)){
-                match.getMotherNature().getPosition().changeTower(player.getBoard().removeTower());
+        if(owner==null){
+            match.getMotherNature().getPosition().changeTower(nuovo.getBoard().removeTower());
+        }else if(influenze.get(owner)!=influenze.get(nuovo)){
+            match.getMotherNature().getPosition().changeTower(nuovo.getBoard().removeTower());
         }
+
     }
 
     public void uniteLands()  {
@@ -59,7 +80,7 @@ public class Action {
                 match.uniteLandBefore(match.getLands().indexOf(match.getMotherNature().getPosition()));
             }
         }catch(Exception e){
-            System.out.println("isola prima senza torri");
+            System.out.println("isola prima senza torre");
         }
     }
 

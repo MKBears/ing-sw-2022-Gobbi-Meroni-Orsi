@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public enum Colors implements Serializable {
 
-    WHITE ("white"),
-    BLACK ("black"),
-    GREY ("grey");
+    WHITE ("Bianco"),
+    BLACK ("Nero"),
+    GREY ("Grigio");
 
     private final String color;
 
@@ -19,4 +19,8 @@ public enum Colors implements Serializable {
         return color;
     }
 
+    @Override
+    public String toString() {
+        return color;
+    }
 }

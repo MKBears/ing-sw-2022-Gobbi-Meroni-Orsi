@@ -197,4 +197,15 @@ public class Archipelago implements Land {
     //        this.size++;
     //    }
     //}
+
+
+    @Override
+    public String toString() {
+        String a="Arcipelago di "+size+" isole{ \n";
+        for (Island e:group) {
+            a=a+e.toString()+'\n';
+        }
+        a=a+"}\n";
+        return a;
+    }
 }

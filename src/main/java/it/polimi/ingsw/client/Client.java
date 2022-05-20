@@ -1,17 +1,14 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.model.*;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.net.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-
-import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.serverController.Action;
 
 public class Client{
     private Socket socket;
@@ -43,12 +40,6 @@ public class Client{
     }
 
     public void run(){
-        match=null;
-        action=null;
-        username=null;
-        me=null;
-        end=false;
-        counter=0;
 
         try {
             nack=false;
@@ -95,7 +86,8 @@ public class Client{
                 }
                 switch (received){
                     case "base1": //login
-                        //selection=cli.getRegistrationorLogin();
+
+                       //selection=cli.getRegistrationorLogin();
                         username= view.getUsername();
                         //if(selection=="Registration")
                         //{sendRegistration(username);
@@ -109,6 +101,7 @@ public class Client{
                             response=(String) in.readObject();
                         }
                         response=(String)in.readObject();
+                    
                         if(response.equals("ListOfGames")){
                             ArrayList<String> join=new ArrayList<>();
                             join=(ArrayList<String>) in.readObject();

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Player implements Serializable {
     private final String userName;
     private final Colors color;
-    private final Board board;
+    private Board board;
     private final Wizards wizard;
     private ArrayList<AssistantCard> deck;
     private AssistantCard playedCard;
@@ -95,6 +95,18 @@ public class Player implements Serializable {
         return deck.isEmpty();
     }
 
+    @Override
+    public String toString() {
+        return "Giocatore:" + userName +'\n'+
+                "Colore corrispondente: " + color +'\n'+
+                "con Sala:" + board;
+    }
 
-
+    /**
+     *
+     * @param board to insert in the class player
+     */
+    public void setBoard(Board board) {
+        this.board = board;
+    }
 }

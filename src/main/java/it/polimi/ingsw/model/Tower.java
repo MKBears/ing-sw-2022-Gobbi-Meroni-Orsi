@@ -19,4 +19,8 @@ public class Tower implements Serializable {
         return board;
     }
 
+    @Override
+    public String toString() {
+        return "torre di colore "+ color +' ';
+    }
 }
