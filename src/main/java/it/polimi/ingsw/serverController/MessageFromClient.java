@@ -8,117 +8,108 @@ import it.polimi.ingsw.model.Wizards;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
-
 public class MessageFromClient extends Thread{
 
     private final ObjectInputStream in;
     private final ClientHandler ch;
-    Map<Student, Integer> map;
+    private boolean running;
+    private int missedPongs;
 
     public MessageFromClient(Socket socket, ClientHandler ch) throws IOException {
-        in=new ObjectInputStream(socket.getInputStream());
-        this.ch=ch;
-        map = new HashMap<>();
-    private ObjectInputStream in;
-    private Controller controller;
-    private ClientHandler ch;
-    private String message;
-    private boolean nack;
-    Map<Student, Integer> map;
-
-    public MessageFromClient(ObjectInputStream in, Controller controller, ClientHandler ch){
-        this.in=in;
-        this.controller=controller;
-        this.ch=ch;
-        map = new HashMap<>();
-        nack=false;
+        in = new ObjectInputStream(socket.getInputStream());
+        socket.setSoTimeout(5000);
+        this.ch = ch;
+        running = true;
+        missedPongs = 0;
     }
 
     public void run(){
-        while (true) {
+        while (running) {
             try {
                 String message = (String) in.readObject();
                 switch (message) {
                     case "ACK":
+                        ch.setAck(true);
                         break;
                     case "Login":
-                        String username = (String) in.readObject();
-                        ch.setUserName(username);
+                        ch.setUserName((String) in.readObject());
+                        ch.setAck(true);
                         break;
-                    case "ChoosingGame":  ///Da mettere a posto: ricevo direttamente il match che voglio joinare/resumare
-                        String choice = (String) in.readObject();
-                        ch.game(choice);
+                    case "Registration":
+                        ch.register((String) in.readObject());
+                        ch.setAck(true);
                         break;
-                    case "NewGame":
-                        //decisione da prendere: penso che mandi creation
+                    case "ChoosingGame":
+                        message = (String) in.readObject();
+                        if (message.equals("NewGame")) {
+                            ch.createMatch(in.readInt(), in.readBoolean());
+                            ch.setAck(true);
+                        }
+                        else {
+                            ch.joinMatch(message);
+                            ch.setAck(true);
+                        }
                         break;
-                    case "NACK":
-                message = (String) in.readObject();
-                switch (message) {
-                    case "ACK":
-                        ch.setAck(nack);
-                        break;
-                    case "Login":
-                        String username = (String) in.readObject();
-                        ch.setAck();
-                        ch.setUsername();
-                        break;
-                    case "ChoosingGame":  ///Da mettere a posto: ricevo direttamente il match che voglio joinare/resumare
-                        String choice = (String) in.readObject();
-                        ch.setAck(nack);
-                        ch.game(choice);
-                        break;
-                    case "NewGame":
-                        ch.setAck(nack);
-                        //decisione da prendere: penso che mandi creation
-                        break;
-                    case "NACK":
-                        ch.setAck(nack);
-                        ch.sendMessageAgain();
-                        break;
-                    case "NumPlayers":
+                    /*case "NumPlayers":
                         int num = (int) in.readObject();
-                        ch.setAck(nack);
+                        ch.setAck();
                         ch.setPlayersNum(num);
-                        break;
+                        break;*/
                     case "Choice":
-                        Wizards w = (Wizards) in.readObject();
-                        ch.setAck(nack);
-                        ch.setWizard(w);
+                        ch.setWizard((Wizards) in.readObject());
+                        ch.setAck(true);
                         break;
                     case "ChosenCard":
-                        AssistantCard ass = (AssistantCard) in.readObject();
-                        ch.setAck(nack);
-                        ch.setChosenCard(ass);
+                        ch.setPlayedAssistant((AssistantCard) in.readObject());
+                        ch.setAck(true);
                         break;
                     case "MovedStudent":
-                        Student s = (Student) in.readObject();
-                        int position = (int) in.readObject();
-                        ch.setAck(nack);
-                        ch.moveStudent(s, position);
-                        map.clear();
+                        ch.moveStudent((Student) in.readObject(), in.readInt());
+                        ch.setAck(true);
                         break;
                     case "StepsMN":
-                        int i = (int) in.readObject();
-                        ch.setAck(nack);
-                        ch.stepsMN(i);
+                        ch.moveMN(in.readInt());
+                        ch.setAck(true);
                         break;
                     case "ChoiceCloud":
-                        Cloud cloud = (Cloud) in.readObject();
-                        ch.setAck(nack);
-                        ch.chosenCloud(cloud);
+                        ch.chooseCloud((Cloud) in.readObject());
+                        ch.setAck(true);
                         break;
+                    case "Nack":
+                        ch.sendMessageAgain();
+                    case "Pong":
+                        missedPongs = 0;
+
+                        if (!ch.isConnected()) {
+                            ch.setConnected();
+                        }
                     default:
-                        ch.setNack(nack);
-                    }
+                        ch.setAck(false);
+                }
                 ch.notify();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                ch.setAck(false);
+            } catch (IOException i) {
+                missedPongs++;
+
+                if (missedPongs == 3) {
+                    try {
+                        ch.setDisconnected();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
         }
+
+        try {
+            in.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void halt () {
+        running = false;
     }
 }

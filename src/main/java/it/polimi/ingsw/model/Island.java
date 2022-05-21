@@ -12,7 +12,7 @@ public class Island implements Land {
     private boolean noEntry;
 
     /**
-     * Costructor: tower null, noEntry false, students empty
+     * Constructor: tower null, noEntry false, students empty
      * @param id unique index of the island
      */
     public Island (int id){
@@ -64,11 +64,14 @@ public class Island implements Land {
      * @return an integer: the influence
      */
     @Override
-    public int getInfluence(Type_Student input) {
+    public int getInfluence(ArrayList<Type_Student> input) {
         int i=0;
-        for (Student s: this.students)
-            if(input==s.getType()){
-                i++;
+        for (Student s: this.students) {
+            for (Type_Student t : input) {
+                if (s.getType().equals(t)) {
+                    i++;
+                }
+            }
         }
         return i;
     }

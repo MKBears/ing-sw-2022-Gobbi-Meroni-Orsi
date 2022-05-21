@@ -90,11 +90,11 @@ public class Action {
     }
 
 
-    public void moveFromIngressToLand(Player player,Student student,Land land){
+    public void moveFromEntranceToLand(Player player,Student student,Land land){
         land.addStudent(player.getBoard().removeStudent(student));
     }
 
-    public void moveFromIngressToBoard(Player player,Student student) throws Exception{
+    public void moveFromEntranceToBoard(Player player,Student student) throws Exception{
             player.getBoard().placeStudent(player.getBoard().removeStudent(student));
     }
 }

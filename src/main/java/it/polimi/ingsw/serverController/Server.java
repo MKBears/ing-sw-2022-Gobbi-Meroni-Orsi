@@ -1,10 +1,7 @@
 package it.polimi.ingsw.serverController;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,7 +30,6 @@ public class Server {
 
     public void start(){
         try {
-            Socket socket;
             sSocket = new ServerSocket();
             myIP=new InetSocketAddress(InetAddress.getLocalHost(),portTCP); //indirizzo tcp
             sSocket.bind(myIP);
@@ -68,11 +64,10 @@ public class Server {
         players.submit(new ClientHandler(client, this));
     }*/
 
-    public synchronized void addUserName(String userName) throws Exception{
-        if (userNames.contains(userName)){
-            throw new Exception("Username already existing");
+    public synchronized void addUserName(String userName) {
+        if (!userNames.contains(userName)){
+            userNames.add(userName);
         }
-        userNames.add(userName);
     }
 
     public synchronized void removeUserName(String userName){
@@ -83,7 +78,7 @@ public class Server {
         return (ArrayList<String>)userNames.clone();
     }
 
-    public synchronized Controller createMatch(ClientHandler creator, int playersNum, boolean expertMatch) throws Exception{
+    public synchronized Controller createMatch(ClientHandler creator, int playersNum, boolean expertMatch) {
         for (Controller match : matches){
             if (match.getCreator().equals(creator.getUserName())){
                 matches.remove(match);
@@ -98,17 +93,27 @@ public class Server {
 
     public boolean areThereJoinableMatches(String userName){
         for (Controller match : matches){
-            if (match.isNotFull() && match.getPlayers().contains(userName)){
+            if (match.isNotFull() || match.getPlayers().contains(userName)){
                 return true;
             }
         }
         return false;
     }
 
+    public ArrayList<String> getJoinableMatches() {
+        ArrayList<String> creators = new ArrayList<>();
+        for (Controller match : matches){
+            if (match.isNotFull()) {
+                creators.add(match.getCreator());
+            }
+        }
+        return creators;
+    }
+
     public ArrayList<String> getJoinableMatches(String userName) {
         ArrayList<String> creators = new ArrayList<>();
         for (Controller match : matches){
-            if (match.isNotFull() && match.getPlayers().contains(userName)) {
+            if (match.getPlayers().contains(userName)) {
                 creators.add(match.getCreator());
             }
         }
@@ -120,13 +125,17 @@ public class Server {
             if (match.getCreator().equals(creator)){
                 if (match.isPaused()) {
                     match.connectPlayer(player);
+
+                    if (match.readyToStart()) {
+                        match.resumeMatch();
+                    }
                 }
                 else {
                     match.addPlayer(player);
-                }
 
-                if (match.readyToStart()) {
-                    match.start();
+                    if (match.readyToStart()) {
+                        match.start();
+                    }
                 }
                 return match;
             }

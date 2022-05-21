@@ -72,10 +72,10 @@ public class Archipelago implements Land {
      * @return aj integer: the influence
      */
     @Override
-    public int getInfluence(Type_Student input) {
+    public int getInfluence(ArrayList<Type_Student> input) {
         int influence=0;
         for(Island i: group){
-            influence= (int) (influence+i.getInfluence(input));
+            influence += i.getInfluence(input);
         }
         return influence;
     }

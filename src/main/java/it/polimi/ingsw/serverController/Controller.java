@@ -2,37 +2,41 @@ package it.polimi.ingsw.serverController;
 
 import it.polimi.ingsw.model.*;
 
+import javax.management.timer.Timer;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
  * The main class of the server side of the game Eriantys
  */
-public class Controller {
+public class Controller extends Thread{
     private int state;
     private final int playersNum;
     private int connectedPlayers;
     private final ClientHandler[] players;
     private Match match;
-    private boolean expertMatch;
+    private final boolean expertMatch;
+    ArrayList<Wizards> wizards;
     private int firstPlayer;
     private int currentPlayer;
     private boolean playing;
     private boolean paused;
-    private final AssistantCard[] playedAssistants;
-    private int numOfPlayedAssistants;
+    private final ArrayList<AssistantCard> playedAssistants;
+    private final ArrayList<Cloud> chosenClouds;
     private CharacterCard[] characters;
     private ClientHandler winner;
+    private GameRecap gameRecap;
 
     public Controller (ClientHandler creator, int playersNum, boolean expertMatch){
         state = 0;
         this.playersNum = playersNum;
         this.expertMatch = expertMatch;
         players = new ClientHandler[playersNum];
-        playedAssistants = new AssistantCard[playersNum];
         players[0] = creator;
         creator.setColor(Colors.WHITE);
         connectedPlayers = 1;
+        playedAssistants = new ArrayList<>(playersNum);
+        chosenClouds = new ArrayList<>(playersNum);
         playing = true;
         paused = false;
         firstPlayer = 0;
@@ -40,14 +44,19 @@ public class Controller {
         if (expertMatch){
             characters = new CharacterCard[3];
         }
+        wizards.addAll(Arrays.asList(Wizards.values()));
     }
 
-    public void run() throws InterruptedException, IllegalArgumentException {
+    public void run() throws IllegalArgumentException {
 
 
         //Start match
-        while (playing) {
-
+        while (!paused) {
+            try {
+                changeState();
+            } catch (InterruptedException e) {
+                notifyDeletion("Something went wrong waiting for a player to act");
+            }
         }
         //End match
 
@@ -65,6 +74,7 @@ public class Controller {
 
     private void changeState() throws InterruptedException {
         int i;
+        int index;
         switch (state){
             case 0:
                 //MATCH PREPARATION phase
@@ -103,21 +113,33 @@ public class Controller {
                 break;
             case 1:
                 //PLANNING phase: all the clouds are filled with 3 or 4 students
-                numOfPlayedAssistants = 0;
                 currentPlayer = firstPlayer;
+
                 try {
                     fillClouds(match.getCloud());
                 } catch (Exception e) {
-                    //Notifica il player remoto che sono finiti gli studenti
+                    notifyFinishedStudents();
                 }
-                notifyAll();
+
+                for (ClientHandler player : players) {
+                    synchronized (player) {
+                        player.notify();
+                    }
+                }
                 state = 2;
                 break;
             case 2:
                 //PLANNING phase: each player plays an assistant card
-                notifyAll();
-                wait();
-                numOfPlayedAssistants++;
+                synchronized (this) {
+                    for (i=0; i<playersNum; i++) {
+                        index = (i+firstPlayer)%playersNum;
+
+                        synchronized (players[index]) {
+                            players[index].notify();
+                        }
+                        wait();
+                    }
+                }
                 state = 3;
                 break;
             case 3:
@@ -125,7 +147,7 @@ public class Controller {
                 firstPlayer = 0;
 
                 for (i=1; i<playersNum; i++){
-                    if (playedAssistants[i].getValue()<playedAssistants[firstPlayer].getValue()){
+                    if (playedAssistants.get(i).getValue()<playedAssistants.get(firstPlayer).getValue()){
                         firstPlayer = i;
                     }
                 }
@@ -134,22 +156,43 @@ public class Controller {
             case 4:
                 //ACTION phase
                 currentPlayer = firstPlayer;
-                    //foreach player : players ==> play action phase
+
+                synchronized (this) {
+                    for (i = 0; i < playersNum; i++) {
+                        index = (i + firstPlayer) % playersNum;
+
+                        synchronized (players[index]) {
+                            players[index].notify();
+                        }
+                        wait();
+                    }
+                }
+
                 if (playing){
                     state = 1;
                 }
                 else {
                     state = 5;
                 }
+
+                for (i=playersNum-1; i>=0; i--){
+                    playedAssistants.remove(i);
+                }
                 break;
             case 5:
                 //Match END: determine the winner
                 Player winner;
                 winner = match.getWinner();
+
                 for (ClientHandler player : players) {
                     if (player.getAvatar().equals(winner)){
                         this.winner = player;
                     }
+                }
+                gameRecap = new GameRecap(players, match);
+
+                for (ClientHandler player : players) {
+                    notify();
                 }
                 break;
         }
@@ -184,21 +227,24 @@ public class Controller {
         if (connectedPlayers<playersNum) {
             players[connectedPlayers] = player;
 
-            switch (connectedPlayers){
-                case 2:
-                    if (playersNum == 3){
-                        color = Colors.GREY;
-                    }
-                    else {
-                        color = Colors.WHITE;
-                    }
-                    break;
-                default:
-                    color = Colors.BLACK;
-                    break;
+            if  (connectedPlayers == 2) {
+                if (playersNum == 3) {
+                    color = Colors.GREY;
+                } else {
+                    color = Colors.WHITE;
+                }
+            }
+            else {
+                color = Colors.BLACK;
             }
             player.setColor(color);
             connectedPlayers++;
+
+            for (ClientHandler p : players) {
+                if (p != player) {
+                    p.getOutputStream().sendNotifyPlayerConnected(player.getUserName(), true);
+                }
+            }
         }
         else {
             throw new Exception("This match is already full");
@@ -214,21 +260,101 @@ public class Controller {
     }
 
     public synchronized void connectPlayer(ClientHandler player) {
+        int state;
+
         for (int i=0; i<playersNum; i++){
             if (players[i].getUserName().equals(player.getUserName())){
-                player.setState(players[i].seeState());
-                players[i] = player;
+                if (paused) {
+                    state = players[i].seeState();
+                }
+                else {
+                    if (firstPlayer != 0) {
+                        state = players[firstPlayer-1].seeState();
+                    }
+                    else {
+                        state = players[playersNum-1].seeState();
+                    }
+
+                    if (!player.equals(players[firstPlayer])) {
+                        reorderPlayers (player, i);
+                    }
+                }
+                player.setState(state);
                 connectedPlayers++;
                 break;
+            }
+            else {
+                players[i].getOutputStream().sendNotifyPlayerConnected(player.getUserName(), true);
             }
         }
     }
 
-    public synchronized void playerDisconnected() {
-        connectedPlayers--;
+    private void reorderPlayers (ClientHandler player, int endPosition) {
+        int position = firstPlayer;
+        ClientHandler removed = players[firstPlayer];
+        ClientHandler toPlace = player;
+
+        do {
+            players[position] = toPlace;
+            toPlace = removed;
+
+            if (position==playersNum-1 && endPosition!=playersNum-1) {
+                position = 0;
+            }
+            else {
+                position++;
+            }
+            removed = players[position];
+        } while(position <= endPosition);
+
+        if (firstPlayer == playersNum-1) {
+            firstPlayer = 0;
+        }
+        else {
+            firstPlayer++;
+        }
     }
 
-    public boolean isMyTurn (ClientHandler player) {
+    public Match getMatch() {
+        return match;
+    }
+
+    public synchronized void notifyPlayerDisconnected(ClientHandler player) throws InterruptedException {
+        connectedPlayers--;
+
+        for (ClientHandler p : players) {
+            if (p.isConnected()){
+                p.getOutputStream().sendNotifyPlayerConnected(player.getUserName(), false);
+
+                if (connectedPlayers == 1) {
+                    p.getOutputStream().sendNotifyAllPlayersDisconnected();
+                    sleep (Timer.ONE_MINUTE);
+                    switch (connectedPlayers) {
+                        case 0:
+                            paused = true;
+                            //salva la partita in memoria
+                            break;
+                        case 1:
+                            if (p.isConnected()){
+                                p.setState(6);
+
+                                synchronized (p) {
+                                    p.notify();
+                                }
+                            }
+                            break;
+                        default:
+                            synchronized (this) {
+                                notify();
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+    public boolean isMyTurn(ClientHandler player) {
         return players[currentPlayer] == player;
     }
 
@@ -240,42 +366,177 @@ public class Controller {
         }
     }
 
-    public void notifyDeletion() {
+    public void notifyDeletion(String cause) {
         for (ClientHandler player : players){
             if (player.isConnected()){
-                player.matchHasBeenDeleted(getCreator());
+                player.getOutputStream().sendGenericError("Match has been deleted");
             }
         }
     }
 
-    public AssistantCard[] getPlayedAssistants(){
-        return playedAssistants;
+    public ArrayList<Wizards> getWizards() {
+        return wizards;
     }
 
-    public synchronized void playAssistantCard (AssistantCard assistant){
-        playedAssistants[numOfPlayedAssistants] = assistant;
+    public synchronized void chooseWizard (Wizards wizard) {
+        wizards.remove(wizard);
+    }
+
+    public ArrayList<AssistantCard> getPlayedAssistants(){
+        return (ArrayList<AssistantCard>) playedAssistants.clone();
+    }
+
+    public synchronized void playAssistantCard (AssistantCard assistant, ClientHandler player){
+        playedAssistants.add(assistant);
+
+        for (ClientHandler p : players) {
+            if (p != player) {
+                p.getOutputStream().sendNotifyChosenCard(assistant, player.getAvatar());
+            }
+        }
+        notify();
+    }
+
+    public ArrayList<Cloud> getChosenClouds() {
+        return (ArrayList<Cloud>) chosenClouds.clone();
+    }
+
+    public synchronized void chooseCloud (Cloud cloud, ClientHandler player) {
+        chosenClouds.add(cloud);
+
+        for (ClientHandler p : players) {
+            if (p != player) {
+                p.getOutputStream().sendNotifyChosenCloud(player.getAvatar(), cloud);
+            }
+        }
+        notify();
     }
 
     /**
-     * Fills all the clouds with some students
+     * Fills all the clouds with some random students taken from the Bag
+     *  (3 if it's a 2/4-players match, 4 if it's a 3-players match)
      * @param clouds
-     * @throws Exception if there aren't enough students to fill a cloud
      */
-    private static ArrayList<Student> fillClouds (Cloud[] clouds) throws Exception{
-        ArrayList<Student> students = new ArrayList<Student>();
+    private void fillClouds (Cloud[] clouds){
         for (Cloud c : clouds){
-            students.addAll(Arrays.asList(c.importStudents()));
+            try {
+                c.importStudents();
+            } catch (Exception e) {
+                notifyFinishedStudents();
+            }
             //When Bag runs out of students, it throws an Exception which would be propagated to the class Controller
             // through Cloud and this class. Controller will then notify all the remote players that the match would
             // finish at the end of the current Round.
         }
-        return students;
+    }
+
+    public void notifyMovedStudent(ClientHandler player, Student student, int position) {
+        for (ClientHandler p: players){
+            if (p != player){
+                p.getOutputStream().sendNotifyMoveStudents(student, position, player.getUserName());
+            }
+        }
+    }
+
+    public void notifyMovedMN (ClientHandler player, int steps) {
+        ArrayList<Land> lands = match.getLands();
+        for (ClientHandler p: players){
+            if (p != player){
+                p.getOutputStream().sendNotifyMovementMN (steps, lands);
+            }
+        }
+    }
+
+    public void controlLand() throws Exception {
+        Land land;
+        Player owner, player, dominant;
+        ArrayList<Type_Student> myProfessors, dominantProfessors;
+        int myInfluence, dominantInfluence;
+        ArrayList<Tower> towers;
+        owner = null;
+        land = match.getMotherNature().getPosition();
+
+        for (ClientHandler remotePlayer : players) {
+            if (land.getTower().getColor().equals(remotePlayer.getColor())) {
+                owner = remotePlayer.getAvatar();
+            }
+        }
+        dominant = owner;
+        dominantProfessors = getControlledProfessors(owner);
+        dominantInfluence = land.getInfluence(dominantProfessors);
+
+        for (ClientHandler remotePlayer : players) {
+            player = remotePlayer.getAvatar();
+
+            if (dominant != player) {
+                myProfessors = getControlledProfessors(player);
+                myInfluence = land.getInfluence(myProfessors);
+
+                if (myInfluence > dominantInfluence) {
+                    dominant = player;
+                    dominantInfluence = myInfluence;
+                }
+            }
+        }
+
+        if (dominant != owner) {
+            towers = new ArrayList<>();
+
+            for (int i=0; i<land.size(); i++) {
+                towers.add(dominant.getBoard().removeTower());
+            }
+            land.changeTower(towers);
+        }
+    }
+
+    private ArrayList<Type_Student> getControlledProfessors  (Player player) {
+        ArrayList<Type_Student> professors = new ArrayList<>(5);
+
+        for (Type_Student t : Type_Student.values()) {
+            if (match.checkProfessor(t).equals(player)) {
+                professors.add(t);
+            }
+        }
+        return professors;
+    }
+
+    private void notifyFinishedStudents() {
+        for (ClientHandler player: players){
+            player.getOutputStream().sendNoMoreStudents();
+            player.endMatch();
+        }
+        playing = false;
+    }
+
+    public void notifyEndedAssistants (ClientHandler player) {
+        for (ClientHandler p: players){
+            if (p != player){
+                p.getOutputStream().sendFinishedAssistants(player.getAvatar());
+            }
+            p.endMatch();
+        }
+        playing = false;
+    }
+
+    public void notifyBuiltLastTower (ClientHandler player) {
+        for (ClientHandler p: players){
+            if (p != player){
+                p.getOutputStream().sendLastTower(player.getAvatar());
+            }
+            p.setState(6);
+            p.endMatch();
+        }
+        playing = false;
     }
 
     public ClientHandler getWinner() throws Exception {
         if (playing){
-            throw new Exception("The match isn't concluded yet");
+            throw new Exception("The match hasn't finished yet");
         }
         return winner;
+    }
+
+    public void resumeMatch () {
+
     }
 }

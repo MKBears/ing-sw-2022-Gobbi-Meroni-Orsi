@@ -9,7 +9,7 @@ public class Match implements Serializable {
     Bag bag;
     MotherNature motherNature;
     Map<Type_Student,Player> professors;
-    List<Land> lands;
+    ArrayList<Land> lands;
 
     /**
      * create an instance of the match with two players
@@ -75,6 +75,10 @@ public class Match implements Serializable {
         motherNature =new MotherNature(lands.get(0));
     }
 
+    public int getPlayersNum() {
+        return player.length;
+    }
+
     /**
      *
      * @return the cloud of the match
@@ -127,7 +131,7 @@ public class Match implements Serializable {
      *
      * @return the lands of the match
      */
-    public List<Land> getLands() {
+    public ArrayList<Land> getLands() {
         return lands;
     }
 
