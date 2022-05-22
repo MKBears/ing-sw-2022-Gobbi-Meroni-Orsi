@@ -248,7 +248,7 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
      * @param username the username of the player that moves the students
      * @param id       the id of the island or archipelago
      */
-    public void sendNotifyMoveStudents(Student student, int id, String username) {
+    public void sendNotifyMoveStudent(Student student, int id, String username) {
         synchronized (this) {
             name = "NotifyMoveStudents (id)";
             try {
@@ -269,7 +269,7 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
      * @param board    the board of the player
      * @param username the username of the player that moves the students
      */
-    public void sendNotifyMoveStudents(Student student, Board board, String username) {
+    public void sendNotifyMoveStudent(Student student, Board board, String username) {
         synchronized (this) {
             name = "NotifyMoveStudents (board)";
             try {
@@ -383,19 +383,17 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
      *
      * @param winner      the winner player
      * @param explanation the string that contain the explaination of the winning
-     * @param lands       the situation of the lands
-     * @param boards      the situation of the boards
+     * @param gameRecap   the recap of players, colors, wizards, built towers and controlled professors
      */
     public void sendEndGame(Player winner, String
-            explanation, ArrayList<Land> lands, ArrayList<Board> boards) {
+            explanation, GameRecap gameRecap) {
         synchronized (this) {
             name = "EndGame";
             try {
                 out.writeObject(name);
                 out.writeObject(winner);
                 out.writeObject(explanation);
-                out.writeObject(lands);
-                out.writeObject(boards);
+                out.writeObject(gameRecap);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

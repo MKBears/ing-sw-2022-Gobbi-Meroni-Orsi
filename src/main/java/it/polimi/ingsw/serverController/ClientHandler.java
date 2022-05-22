@@ -55,6 +55,7 @@ public class ClientHandler extends Thread{
 
     public void run(){
         in.start();
+        out.start();
 
         while (ongoingMatch) {
             try {
@@ -75,7 +76,7 @@ public class ClientHandler extends Thread{
                     do {
                         wait();
 
-                        if (server.getUserNames().contains(userName)) {
+                        if (server.getUserNames().contains(userName) && server.inactivePlayer(this)) {
                             out.sendLoginSucceeded();
                             nack = false;
                         } else {
@@ -84,34 +85,57 @@ public class ClientHandler extends Thread{
                         }
                     } while (nack);
 
-                    if (server.areThereJoinableMatches(userName)) {
-                        out.sendListOfGames(server.getJoinableMatches(), server.getJoinableMatches(userName));
+                    if (server.canConnectPlayer(userName)) {
+                        try {
+                            server.joinGame(null, this);
+                        } catch (Exception e) {
+                            out.sendGenericError("Unable to connect to the match");
+                        }
                     }
                     else {
-                        out.sendNoGames();
+                        if (server.areThereJoinableMatches(userName)) {
+                            out.sendListOfGames(server.getJoinableMatches(), server.getPausedMatches(userName));
+                        } else {
+                            out.sendNoGames();
+                        }
+
+                        do {
+                            wait();
+                        } while (nack);
+
+                        do {
+                            out.sendWizard(controller.getWizards());
+                            wait();
+                        } while (nack);
+                        controller.chooseWizard(wizard);
+                        createAvatar(color, match.getPlayersNum(), expertMatch);
+                        wait();
                     }
 
                     do {
                         wait();
                     } while (nack);
 
-                    out.sendWizard(controller.getWizards());
-                    wait();
-                    controller.chooseWizard (wizard);
-                    createAvatar(color, match.getPlayersNum(), expertMatch);
-                    wait();
-                    out.sendCreation(controller.getMatch());
+                    do {
+                        out.sendCreation(controller.getMatch());
+                        wait();
+                    } while (nack);
                     state = 1;
                     break;
                 case 1:
                     //PLANNING phase: notify refilled clouds
-                    out.sendRefillClouds(match.getCloud());
+                    do {
+                        out.sendRefillClouds(match.getCloud());
+                        wait();
+                    } while (nack);
                     state = 2;
                     break;
                 case 2:
                     //PLANNING phase: play an assistant card
-                    out.sendChooseCard(playableAssistants(controller.getPlayedAssistants()));
-                    wait();
+                    do {
+                        out.sendChooseCard(playableAssistants(controller.getPlayedAssistants()));
+                        wait();
+                    } while (nack);
                     avatar.draw(playedAssistant);
                     controller.playAssistantCard(playedAssistant, this);
                     state = 3;
@@ -123,42 +147,50 @@ public class ClientHandler extends Thread{
                         out.sendMoveStudents();
                         wait();
                     } while (nack);
+
                     for (int i=0; i<movedStudentsNumber; i++) {
                         wait();
 
-                        synchronized (movedStudent) {
-                            if (movedStudentPosition == 12) {
-                                try {
-                                    avatar.getBoard().placeStudent(avatar.getBoard().removeStudent(movedStudent));
-                                }
-                                catch (Exception e) {
-                                    throw new RuntimeException();
-                                }
-                            } else {
-                                for (Land land : match.getLands()) {
-                                    if (land.getID() == movedStudentPosition) {
-                                        land.addStudent(avatar.getBoard().removeStudent(movedStudent));
-                                    }
+                        if (movedStudentPosition == 12) {
+                            try {
+                                avatar.getBoard().placeStudent(avatar.getBoard().removeStudent(movedStudent));
+                            }
+                            catch (Exception e) {
+                                out.sendGenericError("Desynchronized");
+                                out.sendCreation(match);
+                                i--;
+                            }
+                        } else {
+                            for (Land land : match.getLands()) {
+                                if (land.getID() == movedStudentPosition) {
+                                    land.addStudent(avatar.getBoard().removeStudent(movedStudent));
                                 }
                             }
                         }
                     }
                     checkAllProfessors();
-                    controller.notifyMovedStudent(this, movedStudent, movedStudentPosition);
+
+                    do {
+                        controller.notifyMovedStudent(this, movedStudent, movedStudentPosition);
+                        wait();
+                    } while (nack);
                     state = 4;
                 case 4:
                     ///ACTION phase: moving Mother Nature
                     //calculate the influence in that Land and verify if it joins other lands
-                    out.sendMoveMN();
-                    wait();
+                    do {
+                        out.sendMoveMN();
+                        wait();
+                    } while (nack);
                     match.moveMotherNature(motherNatureSteps);
-                    try {
-                        controller.controlLand();
-                    } catch (Exception e) {
-                        out.sendGenericError(e.getMessage());
-                    }
+                    controller.controlLand();
                     uniteLands();
-                    controller.notifyMovedMN(this, motherNatureSteps);
+
+                    do {
+                        controller.notifyMovedMN(this, motherNatureSteps);
+                        wait();
+                    } while (nack);
+                    controller.notifyProfessors();
 
                     if (ongoingMatch) {
                         state = 5;
@@ -168,14 +200,24 @@ public class ClientHandler extends Thread{
                     }
                 case 5:
                     //ACTION phase: choose a cloud and import students to the entrance
-                    out.sendChooseCloud(controller.getChosenClouds());
-                    wait();
+                    do {
+                        out.sendChooseCloud(controller.getChosenClouds());
+                        wait();
+                    } while (nack);
                     avatar.getBoard().importStudents(chosenCloud.getStudents());
                     controller.chooseCloud(chosenCloud, this);
                     state = 1;
                     break;
                 case 6:
-                    //Fine partita: si invia il vincitore
+                    //END phase: sending winner and GameRecap
+                    try {
+                        do {
+                            out.sendEndGame(controller.getWinner(), controller.getEndExplanation(), controller.getGameRecap());
+                            wait();
+                        } while (nack);
+                    } catch (Exception e) {
+                        out.sendGenericError("Desynchronized");
+                    }
                     break;
                 case 7:
                     //Fase AZIONE: gioca una carta personaggio
@@ -201,6 +243,10 @@ public class ClientHandler extends Thread{
                 //chiude la connessione
             }
         }
+    }
+
+    public boolean getNack() {
+        return nack;
     }
 
     public synchronized void sendMessageAgain () {
@@ -253,7 +299,7 @@ public class ClientHandler extends Thread{
         }
     }
 
-    public synchronized void setMatch(Match match) {
+    public synchronized void setMatch(Match match){
         this.match = match;
 
         if (controller.getPlayersNum() == 3) {

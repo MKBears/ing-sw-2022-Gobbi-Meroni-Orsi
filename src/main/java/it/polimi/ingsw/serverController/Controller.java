@@ -26,6 +26,7 @@ public class Controller extends Thread{
     private CharacterCard[] characters;
     private ClientHandler winner;
     private GameRecap gameRecap;
+    String endExplanation;
 
     public Controller (ClientHandler creator, int playersNum, boolean expertMatch){
         state = 0;
@@ -165,6 +166,10 @@ public class Controller extends Thread{
                             players[index].notify();
                         }
                         wait();
+
+                        if (endExplanation.equals("Built all their towers")) {
+                            break;
+                        }
                     }
                 }
 
@@ -204,6 +209,15 @@ public class Controller extends Thread{
 
     public String getCreator(){
         return players[0].getUserName();
+    }
+
+    public ClientHandler getPlayer (String username) {
+        for (ClientHandler player : players) {
+            if (player.getUserName().equals(username)) {
+                return player;
+            }
+        }
+        return null;
     }
 
     public boolean isNotFull(){
@@ -251,10 +265,6 @@ public class Controller extends Thread{
         }
     }
 
-    public int getConnectedPlayers() {
-        return connectedPlayers;
-    }
-
     public boolean readyToStart() {
         return connectedPlayers == playersNum;
     }
@@ -278,8 +288,13 @@ public class Controller extends Thread{
                     if (!player.equals(players[firstPlayer])) {
                         reorderPlayers (player, i);
                     }
+
+                    if (player != players[i]) {
+                        players[i] = player;
+                    }
                 }
                 player.setState(state);
+                player.setMatch(match);
                 connectedPlayers++;
                 break;
             }
@@ -354,18 +369,6 @@ public class Controller extends Thread{
         }
     }
 
-    public boolean isMyTurn(ClientHandler player) {
-        return players[currentPlayer] == player;
-    }
-
-    public void moveCurrentPlayer() {
-        if (currentPlayer < playersNum - 1) {
-            currentPlayer++;
-        } else {
-            currentPlayer = 0;
-        }
-    }
-
     public void notifyDeletion(String cause) {
         for (ClientHandler player : players){
             if (player.isConnected()){
@@ -433,7 +436,10 @@ public class Controller extends Thread{
     public void notifyMovedStudent(ClientHandler player, Student student, int position) {
         for (ClientHandler p: players){
             if (p != player){
-                p.getOutputStream().sendNotifyMoveStudents(student, position, player.getUserName());
+                if (position == 12) {
+                    p.getOutputStream().sendNotifyMoveStudent(student, p.getAvatar().getBoard(), player.getUserName());
+                }
+                p.getOutputStream().sendNotifyMoveStudent(student, position, player.getUserName());
             }
         }
     }
@@ -447,7 +453,7 @@ public class Controller extends Thread{
         }
     }
 
-    public void controlLand() throws Exception {
+    public void controlLand(){
         Land land;
         Player owner, player, dominant;
         ArrayList<Type_Student> myProfessors, dominantProfessors;
@@ -459,6 +465,7 @@ public class Controller extends Thread{
         for (ClientHandler remotePlayer : players) {
             if (land.getTower().getColor().equals(remotePlayer.getColor())) {
                 owner = remotePlayer.getAvatar();
+                break;
             }
         }
         dominant = owner;
@@ -483,7 +490,25 @@ public class Controller extends Thread{
             towers = new ArrayList<>();
 
             for (int i=0; i<land.size(); i++) {
-                towers.add(dominant.getBoard().removeTower());
+                try {
+                    towers.add(dominant.getBoard().removeTower());
+                } catch (Exception e) {
+                    for (ClientHandler p : players) {
+                        if (p.getAvatar().equals(dominant)) {
+                            synchronized (this) {
+                                try {
+                                    wait();
+                                } catch (InterruptedException ex) {
+                                    for (ClientHandler pl : players) {
+                                        pl.getOutputStream().sendGenericError("Internal server error");
+                                    }
+                                    throw new RuntimeException(ex);
+                                }
+                            }
+                            notifyBuiltLastTower(p);
+                        }
+                    }
+                }
             }
             land.changeTower(towers);
         }
@@ -500,11 +525,21 @@ public class Controller extends Thread{
         return professors;
     }
 
+    public void notifyProfessors () {
+        for (ClientHandler player : players) {
+            do {
+                player.getOutputStream().sendNotifyProfessors(match.getProfessors());
+                // synchronized (player) da fare non solo qui
+            } while (player.getNack());
+        }
+    }
+
     private void notifyFinishedStudents() {
         for (ClientHandler player: players){
             player.getOutputStream().sendNoMoreStudents();
             player.endMatch();
         }
+        endExplanation = "There are no more students in the bag";
         playing = false;
     }
 
@@ -515,6 +550,7 @@ public class Controller extends Thread{
             }
             p.endMatch();
         }
+        endExplanation = player.getUserName()+" ended their assistants";
         playing = false;
     }
 
@@ -526,14 +562,23 @@ public class Controller extends Thread{
             p.setState(6);
             p.endMatch();
         }
+        endExplanation = "Built all their towers";
         playing = false;
     }
 
-    public ClientHandler getWinner() throws Exception {
+    public Player getWinner() throws Exception {
         if (playing){
             throw new Exception("The match hasn't finished yet");
         }
-        return winner;
+        return winner.getAvatar();
+    }
+
+    public String getEndExplanation() {
+        return endExplanation;
+    }
+
+    public GameRecap getGameRecap() {
+        return gameRecap;
     }
 
     public void resumeMatch () {

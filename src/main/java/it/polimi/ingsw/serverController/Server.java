@@ -7,20 +7,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server {
-    private final int portUDP = 4096;
-    private final int portTCP = 2836;
-    private ServerSocket sSocket;
-    private Socket client;
-    private InetSocketAddress myIP;
-    private DatagramPacket packet;
-    private DatagramPacket packet4client;
-    private DatagramSocket sock;
     private final ExecutorService players;
     private final ArrayList<String> userNames;
 
     private final ArrayList<Controller> matches;
-
-    private String message;
 
     public Server(){
         players = Executors.newCachedThreadPool();
@@ -28,7 +18,16 @@ public class Server {
         matches = new ArrayList<>(1);
     }
 
-    public void start(){
+    public void run(){
+        final int portUDP = 4096;
+        final int portTCP = 2836;
+        ServerSocket sSocket;
+        Socket client;
+        InetSocketAddress myIP;
+        DatagramPacket packet;
+        DatagramPacket packet4client;
+        DatagramSocket sock;
+
         try {
             sSocket = new ServerSocket();
             myIP=new InetSocketAddress(InetAddress.getLocalHost(),portTCP); //indirizzo tcp
@@ -56,22 +55,10 @@ public class Server {
         }
     }
 
-    /*private void connectionEstablishment(DatagramSocket sock, DatagramPacket packet4client, ServerSocket sSocket, Socket client, ExecutorService players, byte[] buf){
-        sock.receive(packet); //ricevo richiesta di connessione dal client
-        packet4client = new DatagramPacket(buf, 0, buf.length, packet.getAddress(), packet.getPort());
-        sock.send(packet4client);//gli mando un datagrampacket all'indirizzo al pacchetto che ho ricevuto
-        client = sSocket.accept(); //accetto connessione tcp dal client
-        players.submit(new ClientHandler(client, this));
-    }*/
-
     public synchronized void addUserName(String userName) {
         if (!userNames.contains(userName)){
             userNames.add(userName);
         }
-    }
-
-    public synchronized void removeUserName(String userName){
-        userNames.remove(userName);
     }
 
     public ArrayList<String> getUserNames() {
@@ -110,34 +97,32 @@ public class Server {
         return creators;
     }
 
-    public ArrayList<String> getJoinableMatches(String userName) {
-        ArrayList<String> creators = new ArrayList<>();
+    public synchronized Controller joinGame (String creator, ClientHandler player)throws Exception  {
         for (Controller match : matches){
-            if (match.getPlayers().contains(userName)) {
-                creators.add(match.getCreator());
+            if (creator != null) {
+                if (match.getCreator().equals(creator)) {
+                    if (match.isPaused()) {
+                        match.connectPlayer(player);
+
+                        if (match.readyToStart()) {
+                            match.resumeMatch();
+                        }
+                    } else {
+                        match.addPlayer(player);
+
+                        if (match.readyToStart()) {
+                            match.start();
+                        }
+                    }
+                    return match;
+                }
             }
-        }
-        return creators;
-    }
-
-    public synchronized Controller joinGame (String creator, ClientHandler player) throws Exception {
-        for (Controller match : matches){
-            if (match.getCreator().equals(creator)){
-                if (match.isPaused()) {
-                    match.connectPlayer(player);
-
-                    if (match.readyToStart()) {
-                        match.resumeMatch();
+            else {
+                if (match.getPlayers().contains(player.getUserName())) {
+                    if (!match.isPaused()) {
+                        match.connectPlayer(player);
                     }
                 }
-                else {
-                    match.addPlayer(player);
-
-                    if (match.readyToStart()) {
-                        match.start();
-                    }
-                }
-                return match;
             }
         }
         return null;
@@ -152,4 +137,29 @@ public class Server {
         }
         return creators;
     }
+
+    public boolean inactivePlayer (ClientHandler player) {
+        for (Controller match : matches) {
+            if (match.getPlayers().contains(player.getUserName())) {
+                if (!match.isPaused()) {
+                    if (match.getPlayer(player.getUserName()).isConnected()) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean canConnectPlayer (String player) {
+        for (Controller match : matches) {
+            if (match.getPlayers().contains(player)) {
+                if (!match.isPaused()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }

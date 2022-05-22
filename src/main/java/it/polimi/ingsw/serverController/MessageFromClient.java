@@ -50,11 +50,6 @@ public class MessageFromClient extends Thread{
                             ch.setAck(true);
                         }
                         break;
-                    /*case "NumPlayers":
-                        int num = (int) in.readObject();
-                        ch.setAck();
-                        ch.setPlayersNum(num);
-                        break;*/
                     case "Choice":
                         ch.setWizard((Wizards) in.readObject());
                         ch.setAck(true);
