@@ -71,39 +71,6 @@ class ActionTest {
         assertTrue(match.getProfessors().get(Type_Student.UNICORN)==match.getPlayer()[1]);
     }
 
-    @Test
-    void controlLand() throws Exception {
-        Player pl1=new Player("franco", Colors.BLACK,8, Wizards.WIZARD1,FALSE);
-        Player pl2=new Player("alberto", Colors.WHITE,8, Wizards.WIZARD2,FALSE);
-        Match match=new Match(pl1,pl2);
-        Action a=new Action(match);
-        ArrayList<Student> array=new ArrayList<>();
-        Student student= new Student(Type_Student.DRAGON);
-        array.add(student);
-        match.getPlayer()[0].getBoard().setEntrance(array);
-        match.getPlayer()[0].getBoard().placeStudent(student);
-        Student s1=new Student(Type_Student.DRAGON);
-        match.getMotherNature().getPosition().addStudent(s1);
-        a.controlLand(pl1);
-        assertTrue(match.getLands().get(0).getTower().getColor()==Colors.BLACK);
-        assertTrue(pl1.getBoard().getTowersNum()==7);
-        System.out.println(match);
-        student= new Student(Type_Student.DRAGON);
-        s1=new Student(Type_Student.GNOME);
-        array.add(student);
-        array.add(s1);
-        match.getPlayer()[1].getBoard().setEntrance(array);
-        match.getPlayer()[1].getBoard().placeStudent(s1);
-        match.getMotherNature().getPosition().addStudent(s1);
-        match.getMotherNature().getPosition().addStudent(s1);
-        match.getMotherNature().getPosition().addStudent(s1);
-        a.controlLand(pl2);
-        assertTrue(match.getLands().get(0).getTower().getColor()==Colors.WHITE);
-        assertTrue(pl2.getBoard().getTowersNum()==7);
-        assertTrue(pl1.getBoard().getTowersNum()==8);
-        System.out.println(match);
-
-    }
 
     @Test
     void uniteLands() throws Exception {
@@ -111,9 +78,11 @@ class ActionTest {
         Player pl2=new Player("alberto", Colors.WHITE,8, Wizards.WIZARD2,FALSE);
         Match match=new Match(pl1,pl2);
         Action a=new Action(match);
-        match.getLands().get(11).changeTower(match.getPlayer()[0].getBoard().removeTower());
-        match.getLands().get(0).changeTower(match.getPlayer()[0].getBoard().removeTower());
-        match.getLands().get(1).changeTower(match.getPlayer()[0].getBoard().removeTower());
+        ArrayList<Tower> t=new ArrayList<>();
+        t.add(match.getPlayer()[0].getBoard().removeTower());
+        match.getLands().get(11).changeTower(t);
+        match.getLands().get(0).changeTower(t);
+        match.getLands().get(1).changeTower(t);
         a.uniteLands();
         assertTrue(match.getLands().size()==10);
         assertTrue(match.getLands().get(0).getTower().getColor()==Colors.BLACK);
@@ -126,9 +95,11 @@ class ActionTest {
         Player pl2=new Player("alberto", Colors.WHITE,8, Wizards.WIZARD2,FALSE);
         Match match=new Match(pl1,pl2);
         Action a=new Action(match);
-        match.getLands().get(10).changeTower(match.getPlayer()[0].getBoard().removeTower());
-        match.getLands().get(11).changeTower(match.getPlayer()[0].getBoard().removeTower());
-        match.getLands().get(0).changeTower(match.getPlayer()[0].getBoard().removeTower());
+        ArrayList<Tower> t=new ArrayList<>();
+        t.add(match.getPlayer()[0].getBoard().removeTower());
+        match.getLands().get(10).changeTower(t);
+        match.getLands().get(11).changeTower(t);
+        match.getLands().get(0).changeTower(t);
         match.getMotherNature().setPosition(match.getLands().get(11));
         a.uniteLands();
         assertTrue(match.getLands().size()==10);
@@ -142,9 +113,11 @@ class ActionTest {
         Player pl2=new Player("alberto", Colors.WHITE,8, Wizards.WIZARD2,FALSE);
         Match match=new Match(pl1,pl2);
         Action a=new Action(match);
-        match.getLands().get(10).changeTower(match.getPlayer()[0].getBoard().removeTower());
-        match.getLands().get(11).changeTower(match.getPlayer()[1].getBoard().removeTower());
-        match.getLands().get(0).changeTower(match.getPlayer()[0].getBoard().removeTower());
+        ArrayList<Tower> t=new ArrayList<>();
+        t.add(match.getPlayer()[0].getBoard().removeTower());
+        match.getLands().get(10).changeTower(t);
+        match.getLands().get(11).changeTower(t);
+        match.getLands().get(0).changeTower(t);
         match.getMotherNature().setPosition(match.getLands().get(11));
         a.uniteLands();
         assertTrue(match.getLands().size()==12);

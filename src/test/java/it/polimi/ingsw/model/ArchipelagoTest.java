@@ -48,6 +48,8 @@ public class ArchipelagoTest {
 
     @Test
     public void initializationTest() {
+        ArrayList<Type_Student> t=new ArrayList<>();
+        t.add(Type_Student.DRAGON);
         if (e == 1) {
             is.add(i);
             assertEquals(is, pelago.getIslands());
@@ -56,9 +58,9 @@ public class ArchipelagoTest {
             assertEquals(is.get(0).getTower().getColor(), pelago.getTowerColor());
             int h = 0;
             for (Island i : is) {
-                h = h + i.getInfluence(Type_Student.DRAGON);
+                h = h + i.getInfluence(t);
             }
-            assertEquals(h, pelago.getInfluence(Type_Student.DRAGON));
+            assertEquals(h, pelago.getInfluence(t));
             assertEquals(is.get(0).getID(), pelago.getID());
         } else {
             assertEquals(is, pelago.getIslands());
@@ -67,15 +69,15 @@ public class ArchipelagoTest {
             assertEquals(is.get(0).getTower().getColor(), pelago.getTowerColor());
             int h = 0;
             for (Island i : is) {
-                h = h + i.getInfluence(Type_Student.DRAGON);
+                h = h + i.getInfluence(t);
             }
-            assertEquals(h, pelago.getInfluence(Type_Student.DRAGON));
+            assertEquals(h, pelago.getInfluence(t));
             assertEquals(is.get(0).getID(), pelago.getID());
         }
     }
 
     @Test
-    public void towersTest(){
+    public void towersTest() throws Exception {
         int x=20;
         if(e==1){
             c_torri=c_torri+22;
@@ -110,11 +112,13 @@ public class ArchipelagoTest {
         Student s=new Student(Type_Student.FROG);
         pelago.addStudent(s);
         assertTrue(pelago.getStudents().contains(s));
+        ArrayList<Type_Student> t=new ArrayList<>();
+        t.add(Type_Student.DRAGON);
         int in=0;
         for(Island i: is){
-            in=in+i.getInfluence(Type_Student.DRAGON);
+            in=in+i.getInfluence(t);
         }
-        assertEquals(in,pelago.getInfluence(Type_Student.DRAGON));
+        assertEquals(in,pelago.getInfluence(t));
     }
 
     @Test
@@ -135,7 +139,7 @@ public class ArchipelagoTest {
     }
 
     @Test
-    public void unionTest(){
+    public void unionTest() throws Exception {
         e=1;
         i.changeTower(tow);
         pelago.changeTower(tow);

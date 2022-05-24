@@ -107,11 +107,21 @@ public class IslandTest {
                     break;
             }
         }
-        assertEquals(fr,island.getInfluence(Type_Student.FROG));
-        assertEquals(g,island.getInfluence(Type_Student.GNOME));
-        assertEquals(d,island.getInfluence(Type_Student.DRAGON));
-        assertEquals(fa,island.getInfluence(Type_Student.FAIRIE));
-        assertEquals(u,island.getInfluence(Type_Student.UNICORN));
+        ArrayList<Type_Student> a=new ArrayList<>();
+        a.add(Type_Student.FROG);
+        assertEquals(fr,island.getInfluence(a));
+        a.remove(0);
+        a.add(Type_Student.GNOME);
+        assertEquals(g,island.getInfluence(a));
+        a.remove(0);
+        a.add(Type_Student.DRAGON);
+        assertEquals(d,island.getInfluence(a));
+        a.remove(0);
+        a.add(Type_Student.FAIRIE);
+        assertEquals(fa,island.getInfluence(a));
+        a.remove(0);
+        a.add(Type_Student.UNICORN);
+        assertEquals(u,island.getInfluence(a));
     }
 
     @Test

@@ -268,4 +268,22 @@ public class Match implements Serializable {
     public void setLands(ArrayList<Land> lands) {
         this.lands = lands;
     }
+
+    @Override
+    public String toString() {
+        String a="player= " + Arrays.toString(player) +'\n'+
+                "nuvole= " + Arrays.toString(cloud) +"\n"+
+                "professori: \n";
+        for (Type_Student e:professors.keySet()) {
+            a=a+professors.get(e).getUserName()+" ha professore di tipo "+e+'\n';
+        }
+        a=a+"\n"+"isole:";
+        for (Land e:lands) {
+            if(motherNature.getPosition()==e){
+                a=a+" madre natura è su quest'";
+            }
+            a=a+e.toString()+"\n";
+        }
+        return a;
+    }
 }
