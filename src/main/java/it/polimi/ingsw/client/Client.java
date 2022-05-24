@@ -79,8 +79,13 @@ public class Client{
                 }
                 switch (received){
                     case "base1": //login
-                        username= view.getUsername();
-                        server.sendLogin(username); //Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
+                        if(view.chooseLogin()=="si"){
+                            username = view.getUsername();
+                            server.sendRegistration(username);
+                        }else {
+                            username = view.getUsername();
+                            server.sendLogin(username);
+                        }//Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
                         response=(String)in.readObject();
                         while(response.equals("LoginFailed")){
                             username= view.getUsername();
@@ -248,7 +253,7 @@ public class Client{
                         Land land=(Land) in.readObject();
                         for (Land e: match.getLands()) {
                             if(e.getID()==land.getID())
-                                e.changeTower(towers.get(0));
+                                e.changeTower(towers);
                         }
                         view.printMatch(match);
                         server.sendACK();

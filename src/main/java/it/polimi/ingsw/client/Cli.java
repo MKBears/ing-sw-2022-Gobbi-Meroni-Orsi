@@ -315,4 +315,10 @@ public class Cli implements View,Runnable{
         }
         return choose;
     }
+
+    public  String chooseLogin(){
+        System.out.println("vuoi registrarti?");
+        String choose=input.nextLine();
+        return choose;
+    }
 }
