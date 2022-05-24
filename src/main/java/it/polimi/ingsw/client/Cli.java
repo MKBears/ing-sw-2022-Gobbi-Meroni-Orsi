@@ -201,7 +201,7 @@ public class Cli implements View,Runnable{
                      case ("ChooseCard"):
                          AssistantCard a;
                          a = this.getAssistantCard(cards);
-                         me.draw(a.getValue());
+                         me.draw(a);
                          do {
                              server.sendChosenCard(a);
                              synchronized (this) {
@@ -212,14 +212,6 @@ public class Cli implements View,Runnable{
                          break;
                      case ("MoveMN"):
                          int step = this.getNumStep(me);
-                         action.cardAndMoveMN(me.getPlayedCard(), step);
-                         try {
-                             action.cardAndMoveMN(me.getPlayedCard(), step);
-                             action.controlLand(me);
-                             action.uniteLands();
-                         } catch (Exception e) {
-                         }
-                         this.printMatch(match);
                          do {
                              server.sendStepsMN(step);
 

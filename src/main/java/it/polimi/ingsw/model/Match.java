@@ -260,4 +260,12 @@ public class Match implements Serializable {
         return player[minIndex];
     }
 
+
+    public void setProfessors(Map<Type_Student, Player> professors) {
+        this.professors = professors;
+    }
+
+    public void setLands(ArrayList<Land> lands) {
+        this.lands = lands;
+    }
 }

@@ -12,7 +12,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="prova" target="17" />
-      <module name="PSP30" target="11" />
+      <module name="PSP30" target="18" />
     </bytecodeTargetLevel>
   </component>
 </project>

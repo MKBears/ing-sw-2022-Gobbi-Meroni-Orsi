@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Client{
+public class Client  implements Runnable{
     private Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
@@ -31,6 +31,8 @@ public class Client{
     private boolean end;
     private Thread viewth;
     private int counter;
+    private Boolean nack;
+
     public Client(){
         match=null;
         username=null;
@@ -192,7 +194,7 @@ public class Client{
                         Player pl2=(Player) in.readObject();
                         for (int i = 0; i < match.getPlayer().length; i++) {
                             if(match.getPlayer()[i].getUserName().equals(pl2.getUserName())){
-                                match.getPlayer()[i].draw(card.getValue());
+                                match.getPlayer()[i].draw(card);
                             }
                         }
                         server.sendACK();
@@ -263,7 +265,7 @@ public class Client{
                         Land land=(Land) in.readObject();
                         for (Land e: match.getLands()) {
                             if(e.getID()==land.getID())
-                                e.changeTower(towers.get(0));
+                                e.changeTower(towers);
                         }
                         view.printMatch(match);
                         server.sendACK();
