@@ -279,6 +279,7 @@ public class ClientHandler extends Thread{
 
     public synchronized void setUserName(String userName) {
         this.userName = userName;
+        notify();
     }
 
     public synchronized void register (String userName) {
