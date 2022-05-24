@@ -10,6 +10,8 @@ public class Island implements Land {
     private final int islandID;
     private Tower tower;
     private boolean noEntry;
+    private boolean hasChanged;
+    private Tower previousTower;
 
     /**
      * Constructor: tower null, noEntry false, students empty
@@ -18,6 +20,7 @@ public class Island implements Land {
     public Island (int id){
         islandID = id;
         tower = null;
+        previousTower = null;
         noEntry = false;
         students=new ArrayList<>();
     }
@@ -93,7 +96,9 @@ public class Island implements Land {
     public void changeTower(ArrayList<Tower> n_tower) {
         if(this.tower!=null){
             this.tower.getBoard().returnTower(this.tower);
+            previousTower = tower;
             this.tower=n_tower.get(0);
+            hasChanged = true;
         }
         else{
             this.tower=n_tower.get(0);
@@ -167,7 +172,7 @@ public class Island implements Land {
             return tower.getColor(); //
         }
         else
-            throw new Exception("There is currently no Towers here");
+            throw new Exception("There are currently no Towers here");
     }
 
     /**
@@ -194,5 +199,26 @@ public class Island implements Land {
         }
         else
             return a+" entrata chiusa";
+    }
+
+    @Override
+    public boolean hasChanged() {
+        if (hasChanged) {
+            hasChanged = false;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public ArrayList<Tower> getPreviousTowers() throws Exception {
+        ArrayList<Tower> previousTowers;
+
+        if (previousTower == null || !hasChanged) {
+            throw new Exception ("There haven't been changes");
+        }
+        previousTowers = new ArrayList<>();
+        previousTowers.add(previousTower);
+        return previousTowers;
     }
 }

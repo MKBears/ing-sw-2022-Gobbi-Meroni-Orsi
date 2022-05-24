@@ -28,8 +28,8 @@ public class Match implements Serializable {
         }catch(Exception e){
             e.printStackTrace();
         }
-        professors=new HashMap<Type_Student,Player>();
-        lands=new ArrayList<Land>();
+        professors=new HashMap<>();
+        lands=new ArrayList<>();
         for(short i=0;i<12;i++)
             lands.add(new Island(i));
         List<Student> a=new ArrayList<>();
@@ -68,8 +68,8 @@ public class Match implements Serializable {
         }catch (Exception e){
             e.printStackTrace();
         }
-        professors=new HashMap<Type_Student,Player>();
-        lands=new ArrayList<Land>();
+        professors=new HashMap<>();
+        lands=new ArrayList<>();
         for(short i=0;i<12;i++)
             lands.add(new Island(i));
         motherNature =new MotherNature(lands.get(0));
@@ -150,10 +150,10 @@ public class Match implements Serializable {
      * @param i index of the first to unite with after
      * @throws IllegalArgumentException  if i is i<0 or i>lands.size() or the colors of the towers are different
      */
-    public void uniteLandAfter(int i) throws Exception,IllegalArgumentException
+    public void uniteLandAfter(int i) throws Exception
     {
         if(i<0 || i>=lands.size()) throw new IllegalArgumentException();
-        if (i>=0 && i<lands.size()-1){
+        if (i<lands.size()-1){
             if(!(lands.get(i).getTower().getColor()==lands.get(i+1).getTower().getColor()))throw new IllegalArgumentException();
             Land a;
             Land unito;
@@ -177,11 +177,11 @@ public class Match implements Serializable {
      * @param i is the index of the land to unite to the one before
      * @throws IllegalArgumentException if the islands have different colors of tower or i<0 or i>lands.size()-1
      */
-    public void uniteLandBefore(int i) throws Exception,IllegalArgumentException
+    public void uniteLandBefore(int i) throws Exception
     {
         if(i<0 || i>lands.size()-1) throw new IllegalArgumentException();
         Land a;
-        if(i>=1 && i<lands.size()) {
+        if(i>=1) {
             if(!(lands.get(i).getTower().getColor()==lands.get(i-1).getTower().getColor()))throw new IllegalArgumentException();
             a=lands.remove(i);
             lands.add(i,lands.get(i-1).uniteIslands(a));
@@ -201,7 +201,7 @@ public class Match implements Serializable {
      * @param i is the position of the island that is in the center
      * @throws Exception if the position of the land is i<1 or i>lands.size()-1 or if the towers of the island have different colors
      */
-    public void uniteLandBeforeAndAfter(int i) throws Exception,IllegalArgumentException
+    public void uniteLandBeforeAndAfter(int i) throws Exception
     {
         if(i<1 || i>=lands.size()-1) throw new IllegalArgumentException();
         if(!(lands.get(i).getTower().getColor()==lands.get(i-1).getTower().getColor() &&

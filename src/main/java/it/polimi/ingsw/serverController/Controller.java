@@ -26,7 +26,7 @@ public class Controller extends Thread{
     private CharacterCard[] characters;
     private ClientHandler winner;
     private GameRecap gameRecap;
-    String endExplanation;
+    private String endExplanation;
 
     public Controller (ClientHandler creator, int playersNum, boolean expertMatch){
         state = 0;
@@ -74,132 +74,112 @@ public class Controller extends Thread{
     }
 
     private void changeState() throws InterruptedException {
-        int i;
-        int index;
-        switch (state){
-            case 0:
+        switch (state) {
+            case 0 -> {
                 //MATCH PREPARATION phase
                 switch (playersNum) {
                     case 2:
-                        if (expertMatch){
+                        if (expertMatch) {
                             match = new Expert_Match(players[0].getAvatar(), players[1].getAvatar());
-                        }
-                        else {
+                        } else {
                             match = new Match(players[0].getAvatar(), players[1].getAvatar());
                         }
                         break;
                     case 3:
-                        if (expertMatch){
+                        if (expertMatch) {
                             match = new Expert_Match(players[0].getAvatar(), players[1].getAvatar(), players[2].getAvatar());
-                        }
-                        else {
+                        } else {
                             match = new Match(players[0].getAvatar(), players[1].getAvatar(), players[2].getAvatar());
                         }
                         break;
-            /*case 4:
-                if (expertMatch){
-                    match = new Expert_Match(players[0].getAvatar(), players[1].getAvatar(), players[2].getAvatar(), players[3].getAvatar());
-                }
-                else {
-                    match = new Match(players[0].getAvatar(), players[1].getAvatar(), players[2].getAvatar(), players[3].getAvatar());
-                }
-                break;*/
                     default:
                         throw new IllegalArgumentException("Suspicious number of players");
                 }
-                for (ClientHandler player : players){
+                for (ClientHandler player : players) {
                     player.setMatch(match);
                 }
                 state = 1;
-                break;
-            case 1:
+            }
+            case 1 -> {
                 //PLANNING phase: all the clouds are filled with 3 or 4 students
                 currentPlayer = firstPlayer;
-
                 try {
                     fillClouds(match.getCloud());
                 } catch (Exception e) {
                     notifyFinishedStudents();
                 }
-
-                for (ClientHandler player : players) {
-                    synchronized (player) {
-                        player.notify();
+                do {
+                    synchronized (players[currentPlayer]) {
+                        players[currentPlayer].notify();
                     }
-                }
+                    moveCurrentPlayer();
+                } while (currentPlayer != firstPlayer);
                 state = 2;
-                break;
-            case 2:
+            }
+            case 2 -> {
                 //PLANNING phase: each player plays an assistant card
+                currentPlayer = firstPlayer;
                 synchronized (this) {
-                    for (i=0; i<playersNum; i++) {
-                        index = (i+firstPlayer)%playersNum;
-
-                        synchronized (players[index]) {
-                            players[index].notify();
+                    do {
+                        notifyTurn("Planning phase");
+                        synchronized (players[currentPlayer]) {
+                            players[currentPlayer].notify();
                         }
+                        moveCurrentPlayer();
                         wait();
-                    }
+                    } while (currentPlayer != firstPlayer);
                 }
                 state = 3;
-                break;
-            case 3:
+            }
+            case 3 -> {
                 //PLANNING phase: deciding the first player of the following action phase
                 firstPlayer = 0;
-
-                for (i=1; i<playersNum; i++){
-                    if (playedAssistants.get(i).getValue()<playedAssistants.get(firstPlayer).getValue()){
-                        firstPlayer = i;
+                for (currentPlayer = 1; currentPlayer < playersNum; currentPlayer++) {
+                    if (playedAssistants.get(currentPlayer).getValue() < playedAssistants.get(firstPlayer).getValue()) {
+                        firstPlayer = currentPlayer;
                     }
                 }
                 state = 4;
-                break;
-            case 4:
+            }
+            case 4 -> {
                 //ACTION phase
                 currentPlayer = firstPlayer;
-
                 synchronized (this) {
-                    for (i = 0; i < playersNum; i++) {
-                        index = (i + firstPlayer) % playersNum;
-
-                        synchronized (players[index]) {
-                            players[index].notify();
+                    do {
+                        notifyTurn("Action phase");
+                        synchronized (players[currentPlayer]) {
+                            players[currentPlayer].notify();
                         }
                         wait();
 
                         if (endExplanation.equals("Built all their towers")) {
                             break;
                         }
-                    }
+                    } while (currentPlayer != firstPlayer);
                 }
-
-                if (playing){
+                if (playing) {
                     state = 1;
-                }
-                else {
+                } else {
                     state = 5;
                 }
-
-                for (i=playersNum-1; i>=0; i--){
-                    playedAssistants.remove(i);
+                while (!playedAssistants.isEmpty()) {
+                    playedAssistants.remove(0);
                 }
-                break;
-            case 5:
+            }
+            case 5 -> {
                 //Match END: determine the winner
                 Player winner;
                 winner = match.getWinner();
-
                 for (ClientHandler player : players) {
-                    if (player.getAvatar().equals(winner)){
+                    if (player.getAvatar().equals(winner)) {
                         this.winner = player;
                     }
                 }
                 gameRecap = new GameRecap(players, match);
-
                 for (ClientHandler player : players) {
-                    notify();
+                    player.notify();
                 }
-                break;
+            }
         }
     }
 
@@ -369,10 +349,36 @@ public class Controller extends Thread{
         }
     }
 
+    private void moveCurrentPlayer() {
+        if (currentPlayer <= playersNum-1) {
+            currentPlayer++;
+        }
+        else {
+            currentPlayer = 0;
+        }
+    }
+
+    public boolean isMyTurn(ClientHandler player) {
+        return players[currentPlayer] == player;
+    }
+
+    private void notifyTurn (String phase) throws InterruptedException {
+        for (ClientHandler player : players) {
+            if (player != players[currentPlayer]) {
+                synchronized (player) {
+                    do {
+                        player.getOutputStream().sendNextTurn(players[currentPlayer].getAvatar(), phase);
+                        wait();
+                    } while (player.getNack());
+                }
+            }
+        }
+    }
+
     public void notifyDeletion(String cause) {
         for (ClientHandler player : players){
             if (player.isConnected()){
-                player.getOutputStream().sendGenericError("Match has been deleted");
+                player.getOutputStream().sendGenericError("Match has been deleted: \n"+cause);
             }
         }
     }
@@ -389,12 +395,15 @@ public class Controller extends Thread{
         return (ArrayList<AssistantCard>) playedAssistants.clone();
     }
 
-    public synchronized void playAssistantCard (AssistantCard assistant, ClientHandler player){
+    public synchronized void playAssistantCard (AssistantCard assistant, ClientHandler player) throws InterruptedException {
         playedAssistants.add(assistant);
 
         for (ClientHandler p : players) {
             if (p != player) {
-                p.getOutputStream().sendNotifyChosenCard(assistant, player.getAvatar());
+                do {
+                    p.getOutputStream().sendNotifyChosenCard(assistant, player.getAvatar());
+                    wait();
+                } while (p.getNack());
             }
         }
         notify();
@@ -404,12 +413,17 @@ public class Controller extends Thread{
         return (ArrayList<Cloud>) chosenClouds.clone();
     }
 
-    public synchronized void chooseCloud (Cloud cloud, ClientHandler player) {
+    public void chooseCloud (Cloud cloud, ClientHandler player) throws InterruptedException {
         chosenClouds.add(cloud);
 
         for (ClientHandler p : players) {
             if (p != player) {
-                p.getOutputStream().sendNotifyChosenCloud(player.getAvatar(), cloud);
+                synchronized (p) {
+                    do {
+                        p.getOutputStream().sendNotifyChosenCloud(player.getAvatar(), cloud);
+                        wait();
+                    } while (p.getNack());
+                }
             }
         }
         notify();
@@ -433,27 +447,41 @@ public class Controller extends Thread{
         }
     }
 
-    public void notifyMovedStudent(ClientHandler player, Student student, int position) {
+    public void notifyMovedStudent(ClientHandler player, Student student, int position) throws InterruptedException {
         for (ClientHandler p: players){
             if (p != player){
-                if (position == 12) {
-                    p.getOutputStream().sendNotifyMoveStudent(student, p.getAvatar().getBoard(), player.getUserName());
+                synchronized (p) {
+                    if (position == 12) {
+                        do {
+                            p.getOutputStream().sendNotifyMoveStudent(student, p.getAvatar().getBoard(), player.getUserName());
+                            wait();
+                        } while (player.getNack());
+                    } else {
+                        do {
+                            p.getOutputStream().sendNotifyMoveStudent(student, position, player.getUserName());
+                            wait();
+                        } while (player.getNack());
+                    }
                 }
-                p.getOutputStream().sendNotifyMoveStudent(student, position, player.getUserName());
             }
         }
     }
 
-    public void notifyMovedMN (ClientHandler player, int steps) {
+    public void notifyMovedMN (ClientHandler player, int steps) throws InterruptedException {
         ArrayList<Land> lands = match.getLands();
         for (ClientHandler p: players){
             if (p != player){
-                p.getOutputStream().sendNotifyMovementMN (steps, lands);
+                synchronized (p) {
+                    do {
+                        p.getOutputStream().sendNotifyMovementMN(steps, lands);
+                        wait();
+                    } while (p.getNack());
+                }
             }
         }
     }
 
-    public void controlLand(){
+    public void controlLand() throws Exception {
         Land land;
         Player owner, player, dominant;
         ArrayList<Type_Student> myProfessors, dominantProfessors;
@@ -505,7 +533,12 @@ public class Controller extends Thread{
                                     throw new RuntimeException(ex);
                                 }
                             }
-                            notifyBuiltLastTower(p);
+                            synchronized (p) {
+                                do {
+                                    notifyBuiltLastTower(p);
+                                    wait();
+                                } while (p.getNack());
+                            }
                         }
                     }
                 }
@@ -525,12 +558,46 @@ public class Controller extends Thread{
         return professors;
     }
 
-    public void notifyProfessors () {
+    public void notifyProfessors () throws InterruptedException {
         for (ClientHandler player : players) {
             do {
                 player.getOutputStream().sendNotifyProfessors(match.getProfessors());
-                // synchronized (player) da fare non solo qui
+                synchronized (player) {
+                    wait();
+                }
             } while (player.getNack());
+        }
+    }
+
+    public void notifyChanges () throws Exception {
+        Land position = match.getMotherNature().getPosition();
+        ArrayList<Tower> previousTowers = position.getPreviousTowers();
+        String player1 = null;
+        ClientHandler player2 = null;
+
+        for (ClientHandler p : players) {
+            if (position.getTower().getBoard() == p.getAvatar().getBoard()) {
+                player1 = p.getUserName();
+                break;
+            }
+
+            if (previousTowers.get(0).getBoard() == p.getAvatar().getBoard()) {
+                player2 = p;
+            }
+        }
+
+        for (ClientHandler p : players) {
+            synchronized (p) {
+                do {
+                    p.getOutputStream().sendNotifyTowers(position.getAllTowers(), position, player1);
+                    wait();
+                } while (p.getNack());
+
+                do {
+                    p.getOutputStream().sendNotifyTowers(position.getAllTowers(), player2.getAvatar().getBoard(), player2.getUserName());
+                    wait();
+                } while (p.getNack());
+            }
         }
     }
 

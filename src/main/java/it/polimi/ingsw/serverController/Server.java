@@ -18,22 +18,18 @@ public class Server {
         matches = new ArrayList<>(1);
     }
 
-    public void run(){
+    public void run() {
         final int portUDP = 4096;
         final int portTCP = 2836;
-        ServerSocket sSocket;
         Socket client;
         InetSocketAddress myIP;
         DatagramPacket packet;
         DatagramPacket packet4client;
-        DatagramSocket sock;
 
-        try {
-            sSocket = new ServerSocket();
+        try (ServerSocket sSocket = new ServerSocket(); DatagramSocket sock=new DatagramSocket(portUDP)){
             myIP=new InetSocketAddress(InetAddress.getLocalHost(),portTCP); //indirizzo tcp
             sSocket.bind(myIP);
             System.out.println("Server ready");
-            sock=new DatagramSocket(portUDP); //socket datagram UDP
             byte[] buf=new byte[1];
             packet=new DatagramPacket(buf, 0, 0);
 

@@ -48,7 +48,7 @@ public interface Land extends Serializable {
      *
      * @param n_tower changes the tower on the land and puts them in their owner's board
      */
-    void changeTower(ArrayList<Tower> n_tower);
+    void changeTower(ArrayList<Tower> n_tower) throws Exception;
     /**
      *
      * @param other Land that will be united with this land
@@ -82,4 +82,16 @@ public interface Land extends Serializable {
      * @throws Exception
      */
     Colors getTowerColor() throws Exception;
+
+    /**
+     *
+     * @return true if the towers built on it have changed since the last check
+     */
+    boolean hasChanged();
+
+    /**
+     *
+     * @return the towers built on this land before it has been conquered
+     */
+    ArrayList<Tower> getPreviousTowers() throws Exception;
 }

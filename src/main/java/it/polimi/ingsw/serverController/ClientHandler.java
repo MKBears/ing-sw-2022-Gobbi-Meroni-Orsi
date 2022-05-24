@@ -60,7 +60,10 @@ public class ClientHandler extends Thread{
         while (ongoingMatch) {
             try {
                 changeState();
-                wait();
+
+                do {
+                    wait();
+                } while (!controller.isMyTurn(this));
             } catch (InterruptedException e) {
                 out.sendGenericError("Internal server error");
                 state = 8;
@@ -138,6 +141,10 @@ public class ClientHandler extends Thread{
                     } while (nack);
                     avatar.draw(playedAssistant);
                     controller.playAssistantCard(playedAssistant, this);
+
+                    if (avatar.hasNoCardsLeft()) {
+                        controller.notifyEndedAssistants(this);
+                    }
                     state = 3;
                     break;
                 case 3:
@@ -149,8 +156,6 @@ public class ClientHandler extends Thread{
                     } while (nack);
 
                     for (int i=0; i<movedStudentsNumber; i++) {
-                        wait();
-
                         if (movedStudentPosition == 12) {
                             try {
                                 avatar.getBoard().placeStudent(avatar.getBoard().removeStudent(movedStudent));
@@ -167,13 +172,10 @@ public class ClientHandler extends Thread{
                                 }
                             }
                         }
-                    }
-                    checkAllProfessors();
-
-                    do {
                         controller.notifyMovedStudent(this, movedStudent, movedStudentPosition);
                         wait();
-                    } while (nack);
+                    }
+                    checkAllProfessors();
                     state = 4;
                 case 4:
                     ///ACTION phase: moving Mother Nature
@@ -183,13 +185,22 @@ public class ClientHandler extends Thread{
                         wait();
                     } while (nack);
                     match.moveMotherNature(motherNatureSteps);
-                    controller.controlLand();
+                    try {
+                        controller.controlLand();
+                    } catch (Exception e) {
+                        out.sendGenericError("Desynchronized");
+                        out.sendCreation(match);
+                    }
                     uniteLands();
-
-                    do {
-                        controller.notifyMovedMN(this, motherNatureSteps);
-                        wait();
-                    } while (nack);
+                    controller.notifyMovedMN(this, motherNatureSteps);
+                    if (match.getMotherNature().getPosition().hasChanged()) {
+                        try {
+                            controller.notifyChanges();
+                        } catch (Exception e) {
+                            out.sendGenericError("Desynchronized");
+                            out.sendCreation(match);
+                        }
+                    }
                     controller.notifyProfessors();
 
                     if (ongoingMatch) {
@@ -204,7 +215,12 @@ public class ClientHandler extends Thread{
                         out.sendChooseCloud(controller.getChosenClouds());
                         wait();
                     } while (nack);
-                    avatar.getBoard().importStudents(chosenCloud.getStudents());
+
+                    for (Cloud cloud : match. getCloud()) {
+                        if (chosenCloud.equals(cloud)) {
+                            avatar.getBoard().importStudents(cloud.getStudents());
+                        }
+                    }
                     controller.chooseCloud(chosenCloud, this);
                     state = 1;
                     break;
@@ -230,7 +246,7 @@ public class ClientHandler extends Thread{
         if (ack) {
             out.sendACK();
             nackCounter = 0;
-            notify();
+            notifyAll();
         }
         else {
             if (nackCounter < 3) {
@@ -258,7 +274,7 @@ public class ClientHandler extends Thread{
         } else if (nackCounter > 3) {
             //chiude la connessione
         }
-        notify();
+        notifyAll();
     }
 
     public synchronized void setUserName(String userName) {
@@ -399,7 +415,7 @@ public class ClientHandler extends Thread{
                 match.uniteLandBefore(match.getLands().indexOf(match.getMotherNature().getPosition()));
             }
         }catch(Exception e){
-            System.out.println("isola prima senza torri");
+            //System.out.println("isola prima senza torri");
         }
     }
 

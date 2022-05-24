@@ -15,6 +15,7 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
 
     private final ObjectOutputStream out;
     private String name;
+    private boolean condition;
 
     public Message4Client(Socket socket) throws IOException {
         out = new ObjectOutputStream(socket.getOutputStream());
@@ -466,7 +467,7 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
     }
 
     public void run() {
-        boolean condition = true;
+        condition = true;
         while (condition) {
             try {
                 sleep(5000);
@@ -495,6 +496,7 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
             name = "NotifyPayerConnected";
             try {
                 out.writeObject(name);
+                out.writeObject(username);
                 out.writeObject(connected);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -545,6 +547,7 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
 
     public void close() {
         try {
+            condition = false;
             out.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
