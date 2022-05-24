@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Server {
+public class Server extends Thread{
     private final ExecutorService players;
     private final ArrayList<String> userNames;
 
@@ -16,6 +16,11 @@ public class Server {
         players = Executors.newCachedThreadPool();
         userNames = new ArrayList<>();
         matches = new ArrayList<>(1);
+    }
+
+    public static void main() {
+        Server server = new Server();
+        server.start();
     }
 
     public void run() {
