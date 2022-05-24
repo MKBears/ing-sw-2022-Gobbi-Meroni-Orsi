@@ -69,14 +69,8 @@ public class Player implements Serializable {
      * Plays the card with the specified value and removes it from the deck, but saves it as the played card
      * @return Mother Nature's steps of the played card
      */
-    public void draw (int value){
-        int position = 0;
-        for (int i=0; i<deck.size(); i++){
-            if (value==deck.get(i).getValue()){
-                position = i;
-            }
-        }
-        playedCard = deck.remove(position);
+    public void draw (AssistantCard assistantCard){
+        playedCard = deck.remove(deck.indexOf(assistantCard));
     }
 
     /**

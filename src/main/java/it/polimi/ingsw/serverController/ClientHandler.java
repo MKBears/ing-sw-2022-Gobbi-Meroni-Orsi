@@ -4,7 +4,6 @@ import it.polimi.ingsw.model.*;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
 
 /**
@@ -13,19 +12,26 @@ import java.util.ArrayList;
 public class ClientHandler extends Thread{
     private final Socket socket;
     private final Server server;
-    ObjectInputStream in;
-    ObjectOutputStream out;
+    MessageFromClient in;
+    Message4Client out;
     private Controller controller;
     private String userName;
     private Colors color;
-    private int wizard;
+    private Wizards wizard;
     private Player avatar;
+    private int movedStudentsNumber;
     private int state;
     private Match match;
+    private boolean expertMatch;
     private boolean connected;
     private boolean ongoingMatch;
-
-    private Message4Client m4C;
+    private AssistantCard playedAssistant;
+    private Student movedStudent;
+    private int movedStudentPosition;
+    private int motherNatureSteps;
+    private Cloud chosenCloud;
+    private boolean nack;
+    private int nackCounter;
 
     /**
      *
@@ -34,127 +40,296 @@ public class ClientHandler extends Thread{
     public ClientHandler (Socket s, Server server){
         socket = s;
         this.server = server;
+        connected = true;
+        ongoingMatch = false;
+
         try {
-            socket.setSoTimeout(1000);
-        } catch (SocketException e) {
-            throw new RuntimeException(e);
-        }
-        try{
-            in = new ObjectInputStream(socket.getInputStream());
-            out = new ObjectOutputStream(socket.getOutputStream());
-            this.m4C=new Message4Client(in, out);
-            if((String)in.readObject()!="Prova prova 1 2 3"){
-                throw new Error("Theres something wrong in the connection");
-            }
+            out = new Message4Client(socket);
+            in = new MessageFromClient(socket, this);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } catch (ClassNotFoundException e){
-            throw new RuntimeException();
         }
         connected = true;
-        ongoingMatch = true;
+        nackCounter = 0;
     }
 
     public void run(){
-        m4C.run();
-        //ho già fatto set disconnected
+        in.start();
+        out.start();
+
+        while (ongoingMatch) {
+            try {
+                changeState();
+
+                do {
+                    wait();
+                } while (!controller.isMyTurn(this));
+            } catch (InterruptedException e) {
+                out.sendGenericError("Internal server error");
+                state = 8;
+            }
+        }
     }
 
-    private void changeState(){
-        boolean control;
+    private void changeState() throws InterruptedException {
+        synchronized (this) {
+            switch (state) {
+                case 0:
+                    //LogIn/Registration, match preparation (create/join match, choose the wizard)
+                    do {
+                        wait();
 
-        switch(state){
-            case 0:
-                String game;
-                try {
-                    game = (String) in.readObject();
+                        if (server.getUserNames().contains(userName) && server.inactivePlayer(this)) {
+                            out.sendLoginSucceeded();
+                            nack = false;
+                        } else {
+                            out.sendLoginFailed();
+                            nack = true;
+                        }
+                    } while (nack);
 
-                    if (game.equals("NewGame")) {
-                        userName = (String) in.readObject();
-                        controller = server.createMatch(this, choosePlayersNum());
+                    if (server.canConnectPlayer(userName)) {
+                        try {
+                            server.joinGame(null, this);
+                        } catch (Exception e) {
+                            out.sendGenericError("Unable to connect to the match");
+                        }
                     }
                     else {
-                        if (game.equals("JoinGame")){
-                            if (server.areThereJoinableMatches(userName)){
-                                out.writeObject(server.getJoinableMatches(userName));
-                                try {
-                                    controller = server.joinGame((String) in.readObject(), this);
-                                } catch (Exception e) {
-                                    //Dice al client che quel match é gia' pieno
-                                }
-                                do {
-                                    userName = (String) in.readObject();
+                        if (server.areThereJoinableMatches(userName)) {
+                            out.sendListOfGames(server.getJoinableMatches(), server.getPausedMatches(userName));
+                        } else {
+                            out.sendNoGames();
+                        }
 
-                                    if (controller.getUserNames().contains(userName)){
-                                        control = false;
-                                        loginFailed();
-                                    }
-                                    else {
-                                        control = true;
-                                    }
-                                }while (!control);
+                        do {
+                            wait();
+                        } while (nack);
+
+                        do {
+                            out.sendWizard(controller.getWizards());
+                            wait();
+                        } while (nack);
+                        controller.chooseWizard(wizard);
+                        createAvatar(color, match.getPlayersNum(), expertMatch);
+                        wait();
+                    }
+
+                    do {
+                        wait();
+                    } while (nack);
+
+                    do {
+                        out.sendCreation(controller.getMatch());
+                        wait();
+                    } while (nack);
+                    state = 1;
+                    break;
+                case 1:
+                    //PLANNING phase: notify refilled clouds
+                    do {
+                        out.sendRefillClouds(match.getCloud());
+                        wait();
+                    } while (nack);
+                    state = 2;
+                    break;
+                case 2:
+                    //PLANNING phase: play an assistant card
+                    do {
+                        out.sendChooseCard(playableAssistants(controller.getPlayedAssistants()));
+                        wait();
+                    } while (nack);
+                    avatar.draw(playedAssistant);
+                    controller.playAssistantCard(playedAssistant, this);
+
+                    if (avatar.hasNoCardsLeft()) {
+                        controller.notifyEndedAssistants(this);
+                    }
+                    state = 3;
+                    break;
+                case 3:
+                    //ACTION phase: moving students from the entrance
+                    //check if they can control any professor
+                    do {
+                        out.sendMoveStudents();
+                        wait();
+                    } while (nack);
+
+                    for (int i=0; i<movedStudentsNumber; i++) {
+                        if (movedStudentPosition == 12) {
+                            try {
+                                avatar.getBoard().placeStudent(avatar.getBoard().removeStudent(movedStudent));
+                            }
+                            catch (Exception e) {
+                                out.sendGenericError("Desynchronized");
+                                out.sendCreation(match);
+                                i--;
+                            }
+                        } else {
+                            for (Land land : match.getLands()) {
+                                if (land.getID() == movedStudentPosition) {
+                                    land.addStudent(avatar.getBoard().removeStudent(movedStudent));
+                                }
                             }
                         }
-                        else {
-                            out.writeObject(server.getResumeableMatches());
-                            controller = server.resumeGame((String) in.readObject(), this);
+                        controller.notifyMovedStudent(this, movedStudent, movedStudentPosition);
+                        wait();
+                    }
+                    checkAllProfessors();
+                    state = 4;
+                case 4:
+                    ///ACTION phase: moving Mother Nature
+                    //calculate the influence in that Land and verify if it joins other lands
+                    do {
+                        out.sendMoveMN();
+                        wait();
+                    } while (nack);
+                    match.moveMotherNature(motherNatureSteps);
+                    try {
+                        controller.controlLand();
+                    } catch (Exception e) {
+                        out.sendGenericError("Desynchronized");
+                        out.sendCreation(match);
+                    }
+                    uniteLands();
+                    controller.notifyMovedMN(this, motherNatureSteps);
+                    if (match.getMotherNature().getPosition().hasChanged()) {
+                        try {
+                            controller.notifyChanges();
+                        } catch (Exception e) {
+                            out.sendGenericError("Desynchronized");
+                            out.sendCreation(match);
                         }
                     }
-                }catch (ClassNotFoundException | IOException e){
-                    out.writeChars("Nack");
-                }
+                    controller.notifyProfessors();
 
-                state = 1;
-                break;
-            case 1:
-                //Fase PIANIFICAZIONE: si notificano gli studenti spostati nelle nuvole
-                state = 2;
-                break;
-            case 2:
-                //Fase PIANIFICAZIONE: gioca una carta assistente
-                state = 3;
-                break;
-            case 3:
-                //Fase AZIONE: si muovono i 3/4 studenti dall'ingresso
-                //Verifica se puo controllare qualche professore
-                state = 4;
-            case 4:
-                //Fase AZIONE: muove MN
-                //Verifica se l'isola diventa controllata o viene conquistata
-                //Unisce le isole
-                if (ongoingMatch){
-                    state = 5;
-                }
-                else{
-                    state = 6;
+                    if (ongoingMatch) {
+                        state = 5;
+                    } else {
+                        state = 6;
+                        break;
+                    }
+                case 5:
+                    //ACTION phase: choose a cloud and import students to the entrance
+                    do {
+                        out.sendChooseCloud(controller.getChosenClouds());
+                        wait();
+                    } while (nack);
+
+                    for (Cloud cloud : match. getCloud()) {
+                        if (chosenCloud.equals(cloud)) {
+                            avatar.getBoard().importStudents(cloud.getStudents());
+                        }
+                    }
+                    controller.chooseCloud(chosenCloud, this);
+                    state = 1;
                     break;
-                }
-            case 5:
-                //Fase AZIONE: sceglie una nuova nuvola e importa gli studenti
-                state = 1;
-                break;
-            case 6:
-                //Fine partita: si invia il vincitore
-                break;
-            case 7:
-                //Fase AZIONE: gioca una carta personaggio
+                case 6:
+                    //END phase: sending winner and GameRecap
+                    try {
+                        do {
+                            out.sendEndGame(controller.getWinner(), controller.getEndExplanation(), controller.getGameRecap());
+                            wait();
+                        } while (nack);
+                    } catch (Exception e) {
+                        out.sendGenericError("Desynchronized");
+                    }
+                    break;
+                case 7:
+                    //Fase AZIONE: gioca una carta personaggio
+            }
         }
+    }
+
+    public synchronized void setAck (boolean ack) {
+        nack = !ack;
+        if (ack) {
+            out.sendACK();
+            nackCounter = 0;
+            notifyAll();
+        }
+        else {
+            if (nackCounter < 3) {
+                out.sendNACK();
+                nackCounter++;
+            } else if (nackCounter == 3) {
+                out.sendCreation(match);
+            }
+            else {
+                //chiude la connessione
+            }
+        }
+    }
+
+    public boolean getNack() {
+        return nack;
+    }
+
+    public synchronized void sendMessageAgain () {
+        nack = true;
+        nackCounter++;
+
+        if (nackCounter == 3) {
+            out.sendCreation(match);
+        } else if (nackCounter > 3) {
+            //chiude la connessione
+        }
+        notifyAll();
+    }
+
+    public synchronized void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public synchronized void register (String userName) {
+        server.addUserName(userName);
+        setUserName(userName);
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public void setColor(Colors color) {
+    public synchronized void setColor(Colors color) {
         this.color = color;
     }
 
     public Colors getColor() {
         return color;
     }
+    public synchronized void setWizard(Wizards wizard) {
+        this.wizard = wizard;
+    }
 
-    public void setMatch(Match match) {
+    public synchronized void createMatch (int playersNum, boolean expert) {
+        expertMatch = expert;
+        controller = server.createMatch(this, playersNum, expertMatch);
+    }
+
+    public synchronized void joinMatch (String creator) {
+        try {
+            controller = server.joinGame(creator, this);
+        } catch (Exception e) {
+            out.sendGenericError("Couldn't join match");
+            state = 8;
+        }
+    }
+
+    public synchronized void setMatch(Match match){
         this.match = match;
+
+        if (controller.getPlayersNum() == 3) {
+            movedStudentsNumber = 4;
+        }
+        else {
+            movedStudentsNumber = 3;
+        }
+        ongoingMatch = true;
+        notify();
+    }
+
+    public Message4Client getOutputStream() {
+        return out;
     }
 
     /**
@@ -163,7 +338,7 @@ public class ClientHandler extends Thread{
      * @param playersNum to decide how many towers instantiate in the board
      * @param expert true if it's an expert match
      */
-    public void createAvatar(Colors color, int playersNum, boolean expert){
+    private synchronized void createAvatar(Colors color, int playersNum, boolean expert){
         int towersNum;
 
         if (playersNum==2 || playersNum==4){
@@ -183,69 +358,108 @@ public class ClientHandler extends Thread{
         return avatar;
     }
 
-    /**
-     * Asks the remote controller to play an Assistant Card, verifies it hasn't already been played by another player
-     * (if the player has only played cards in his deck, he can play any of them) and sets it as the plyed card in the model
-     * @param played are the values of the cards which have already been played
-     * @return the value of the played card
-     */
-    public int playAssistant(int[] played){
-        //Played sono le carte giocate dagli altri giocatori
-        // played[i]==0 significa che il player i non ha ancora giocato una carta
-        boolean hasPlayableCard = false;
-        ArrayList<AssistantCard> deck = avatar.getDeck();
-        int i = 0;
-        int c;
-        int card;
+    private ArrayList<AssistantCard> playableAssistants (ArrayList<AssistantCard> playedAssistants){
+        ArrayList<AssistantCard> playable;
+        ArrayList<AssistantCard> deck;
+        deck = avatar.getDeck();
+        playable = new ArrayList<>(deck.size());
 
-        //Si controlla se il player ha almeno una carta che non è ancora stata giocata nella mano corrente
-        while(!hasPlayableCard && played[i]!=0 && i<played.length){
-            c = 0;
-            while(c<deck.size() && !hasPlayableCard){
-                if (deck.get(c).getValue() != played[i]) {
-                    hasPlayableCard = true;
+        for (AssistantCard card : deck) {
+            if (!playedAssistants.contains(card)) {
+                playable.add(card);
+            }
+        }
+
+        if (playable.isEmpty()) {
+            return playedAssistants;
+        }
+        else {
+            return playable;
+        }
+    }
+
+    public synchronized void setPlayedAssistant(AssistantCard playedAssistant) {
+        this.playedAssistant = playedAssistant;
+    }
+
+    public synchronized void moveMN (int steps) {
+        motherNatureSteps = steps;
+    }
+
+    private void checkAllProfessors(){
+        for (Type_Student e: Type_Student.values()) {
+            match.checkProfessor(e);//togliere return
+        }
+    }
+
+    private void uniteLands()  {
+        try{
+            if(match.getLands().indexOf(match.getMotherNature().getPosition())!=match.getLands().size()-1) {
+                if (match.getMotherNature().getPosition().getTowerColor() ==
+                        match.getLands().get((match.getLands().indexOf(match.getMotherNature().getPosition()) + 1) % match.getLands().size()).getTowerColor()) {
+                    match.uniteLandAfter(match.getLands().indexOf(match.getMotherNature().getPosition()));
                 }
-                c++;
+            }else if (match.getLands().get(0).getTowerColor()==match.getLands().get(match.getLands().size()-1).getTowerColor()){
+                match.uniteLandAfter(match.getLands().indexOf(match.getMotherNature().getPosition()));
             }
-            i++;
+        }catch (Exception e){
+            System.out.println("isola dopo senza torre");
         }
-        out.println("Assistant");
+        try{
+            if(match.getLands().indexOf(match.getMotherNature().getPosition())!=0){
+                if(match.getMotherNature().getPosition().getTowerColor()==
+                        match.getLands().get(match.getLands().indexOf(match.getMotherNature().getPosition())-1).getTowerColor()){
+                    match.uniteLandBefore(match.getLands().indexOf(match.getMotherNature().getPosition()));
+                }
+            }else if(match.getLands().get(0).getTowerColor()==match.getLands().get(match.getLands().size()-1).getTowerColor()){
+                match.uniteLandBefore(match.getLands().indexOf(match.getMotherNature().getPosition()));
+            }
+        }catch(Exception e){
+            //System.out.println("isola prima senza torri");
+        }
+    }
 
-        if (hasPlayableCard){
-            for (i=0; played[i]!=0; i++) {
-                out.println(played[i]);
-            }
-        }
-        out.println(0);
-        //Quando il controller lato client riceve (eventualmente qualche int e) 0 dopo "Assistant",
-        // sa che puo' inviare alla view il comando di fare scegliere al player la carta assistente da giocare
-        card = in.nextInt();
-        avatar.draw(card);
-        return card;
+    public synchronized void moveStudent (Student student, Integer position) {
+        movedStudent = student;
+        movedStudentPosition = position;
+    }
+
+    public synchronized void chooseCloud (Cloud cloud) {
+        chosenCloud = cloud;
+    }
+
+    public synchronized void endMatch() {
+        ongoingMatch = false;
     }
 
     public boolean isConnected() {
         return connected;
     }
 
+    public synchronized void setDisconnected() throws InterruptedException {
+        connected = false;
+        controller.notifyPlayerDisconnected(this);
+    }
+
+    public synchronized void setConnected() {
+        connected = true;
+        controller.connectPlayer(this);
+    }
+
     public int seeState() {
         return state;
     }
 
-    public void setState(int state) {
+    public synchronized void setState(int state) {
         this.state = state;
-    }
-
-    public void matchHasBeenDeleted (String creator){
-        //Nei messaggi ne va aggiunto uno per notificare che il match è stato eliminato
     }
 
     /**
      * Closes inward and outward stream and the socket
      * @throws Exception fails to close the socket
      */
-    public void closeConnection() throws Exception{
-        in.close();
+    public synchronized void closeConnection() throws Exception{
+        in.halt();
         out.close();
         socket.close();
     }

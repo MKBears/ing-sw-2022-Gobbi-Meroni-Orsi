@@ -1,14 +1,7 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.serverController.Action;
-import it.polimi.ingsw.serverController.ClientHandler;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Map;
 
 public class MessageFromServer extends Thread{
     private ObjectInputStream in;

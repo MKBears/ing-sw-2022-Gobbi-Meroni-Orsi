@@ -10,7 +10,6 @@ public class CloudTest { //
 
 
     Bag bag=new Bag();
-    int l=3;
     Cloud cloud;
     Cloud cloudd;
     Bag bagg=new Bag();
@@ -57,9 +56,9 @@ public class CloudTest { //
         assertTrue(arr.containsAll(cloud.getStudents()));
         for (int j=0; j<500; j++) {
             try {
-                cloudd.importStudents();
+                assertSame(4, cloudd.importStudents().size());
             }catch (Exception e){
-                fail();//Qui fallisce per forza perché in Bag non ci sono 500 studenti
+                fail();
             }
         }
     }

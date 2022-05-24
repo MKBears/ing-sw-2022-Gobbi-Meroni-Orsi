@@ -42,6 +42,23 @@ public class Message4Server {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+
+  }
+    }
+
+    /**
+     * The client sends the username for a new avatar
+     * @param username
+     */
+    public void sendRegistration(String username) {
+        synchronized (this) {
+            name = "Registration";
+            try {
+                out.writeObject(name);
+                out.writeObject(username);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
