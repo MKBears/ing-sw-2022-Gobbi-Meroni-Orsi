@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -11,6 +10,8 @@ public class Archipelago implements Land {
     private int size;
     private final Island head;
     private Colors color;
+    private boolean hasChanged;
+    private final ArrayList<Tower> previousTowers;
 
     //Sarebbe meglio non scrivere nello specifico tutte le istruzioni del metodo, basta solo descrivere
     // il funzionamento molto ad altro livello
@@ -20,9 +21,10 @@ public class Archipelago implements Land {
      */
     public Archipelago(ArrayList<Island> group){  //non so se manca qualcosa
         this.group.addAll(group);
-        size = (int) this.group.size();
+        size = this.group.size();
         head = this.group.get(0);
         color=this.group.get(0).getTower().getColor();
+        previousTowers = new ArrayList<>();
     }
 
     /**
@@ -72,10 +74,10 @@ public class Archipelago implements Land {
      * @return aj integer: the influence
      */
     @Override
-    public int getInfluence(Type_Student input) {
+    public int getInfluence(ArrayList<Type_Student> input) {
         int influence=0;
         for(Island i: group){
-            influence= (int) (influence+i.getInfluence(input));
+            influence += i.getInfluence(input);
         }
         return influence;
     }
@@ -92,7 +94,7 @@ public class Archipelago implements Land {
     /**
      *
      * @param noEntry changes the state if "noEntry"
-     * @throws Exception
+     * @throws Exception if an entry tile has already been set on this archipelago
      */
     @Override
     public void setNoEntry(boolean noEntry) throws Exception {
@@ -109,19 +111,19 @@ public class Archipelago implements Land {
      * @param n_tower change the towers on the Archipelago and returns the old towers on their board
      */
     @Override
-    public void changeTower(ArrayList<Tower> n_tower) {
+    public void changeTower(ArrayList<Tower> n_tower) throws Exception {
         if (this.size == n_tower.size()) {
             ArrayList<Tower> single = new ArrayList<>();
+            previousTowers.clear();
+
             for (Island i : group) {
                 single.add(n_tower.remove(0));
+                previousTowers.add(i.getTower());
                 i.changeTower(single);
                 single.clear();
             }
-            try {
-                color = head.getTowerColor();
-            } catch (Exception e) {
-            }
-            return;
+            color = head.getTowerColor();
+            hasChanged = true;
         }
     }
 
@@ -207,5 +209,21 @@ public class Archipelago implements Land {
         }
         a=a+"}\n";
         return a;
+    }
+
+    @Override
+    public boolean hasChanged() {
+        if (hasChanged) {
+            hasChanged = false;
+            return true;
+        }
+        return false;
+    }
+
+    public ArrayList<Tower> getPreviousTowers() throws Exception {
+        if (previousTowers == null || !hasChanged) {
+            throw new Exception ("There haven't been changes");
+        }
+        return previousTowers;
     }
 }

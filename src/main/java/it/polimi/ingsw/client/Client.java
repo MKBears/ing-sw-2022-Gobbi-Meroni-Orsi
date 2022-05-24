@@ -11,31 +11,38 @@ import java.util.List;
 import java.util.Map;
 
 public class Client{
+    private Socket socket;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
+    private DatagramSocket dSokk;
+    private byte[] addr;
+    private DatagramPacket starting;
+    private DatagramPacket packet;
+    private boolean condition;
+    private String received;
+    private String send;
+    private String response;
+    private Message4Server server;
+    private Match match;
+    private View view;
+    private Action action;
+    private String username;
+    private Player me;
+    private boolean end;
+    private Thread viewth;
+    private int counter;
+    public Client(){
+        match=null;
+        username=null;
+        me=null;
+        end=false;
+        counter=0;
+    }
 
     public void run(){
-        Socket socket;
-        ObjectOutputStream out;
-        ObjectInputStream in;
-        DatagramSocket dSokk;
-        byte[] addr;
-        DatagramPacket starting;
-        DatagramPacket packet;
-        boolean condition;
-        String received;
-        String send;
-        String response;
-        Message4Server server;
-        Match match=null;
-        View view;
-        Action action=null;
-        String username=null;
-        Player me=null;
-        Boolean end=false;
-        Thread viewth;
-        int counter=0;
-        MessageFromServer mfs;
 
         try {
+            nack=false;
             condition=false;
             addr= InetAddress.getLocalHost().getAddress();
             addr[3]=(byte)255;
@@ -79,13 +86,14 @@ public class Client{
                 }
                 switch (received){
                     case "base1": //login
-                        if(view.chooseLogin()=="si"){
-                            username = view.getUsername();
-                            server.sendRegistration(username);
-                        }else {
-                            username = view.getUsername();
-                            server.sendLogin(username);
-                        }//Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
+
+                       //selection=cli.getRegistrationorLogin();
+                        username= view.getUsername();
+                        //if(selection=="Registration")
+                        //{sendRegistration(username);
+                        //} else if(selection=="Login"){
+                        server.sendLogin(username); //Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
+                        //}
                         response=(String)in.readObject();
                         while(response.equals("LoginFailed")){
                             username= view.getUsername();
@@ -93,12 +101,14 @@ public class Client{
                             response=(String) in.readObject();
                         }
                         response=(String)in.readObject();
+                    
                         if(response.equals("ListOfGames")){
                             ArrayList<String> join=new ArrayList<>();
                             join=(ArrayList<String>) in.readObject();
                             ArrayList<String> resume=new ArrayList<>();
                             resume=(ArrayList<String>) in.readObject();
-                            String selected= view.chooseMatch(join,resume);
+                            String selected="Gioco di Pippo";
+                            //mandare choosingGame con la choice
                             server.sendGameSelected(selected);
                         }
                         else if(response.equals("NoGames")) {
@@ -128,7 +138,7 @@ public class Client{
                         //decisione
                         break;
                     case  "NACK":
-                        view.setNack();
+                        //decisione
                         break;
                     case "Wizard":
                         List<Wizards> willy;
@@ -253,7 +263,7 @@ public class Client{
                         Land land=(Land) in.readObject();
                         for (Land e: match.getLands()) {
                             if(e.getID()==land.getID())
-                                e.changeTower(towers);
+                                e.changeTower(towers.get(0));
                         }
                         view.printMatch(match);
                         server.sendACK();
@@ -320,4 +330,5 @@ public class Client{
             e.printStackTrace();
         }
     }
+
 }

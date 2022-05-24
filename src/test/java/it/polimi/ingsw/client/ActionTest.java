@@ -1,4 +1,4 @@
-package it.polimi.ingsw.serverController;
+package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.*;
 import org.junit.jupiter.api.Test;

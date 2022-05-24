@@ -9,7 +9,7 @@ public class Match implements Serializable {
     Bag bag;
     MotherNature motherNature;
     Map<Type_Student,Player> professors;
-    List<Land> lands;
+    ArrayList<Land> lands;
 
     /**
      * create an instance of the match with two players
@@ -28,8 +28,8 @@ public class Match implements Serializable {
         }catch(Exception e){
             e.printStackTrace();
         }
-        professors=new HashMap<Type_Student,Player>();
-        lands=new ArrayList<Land>();
+        professors=new HashMap<>();
+        lands=new ArrayList<>();
         for(short i=0;i<12;i++)
             lands.add(new Island(i));
         List<Student> a=new ArrayList<>();
@@ -68,11 +68,15 @@ public class Match implements Serializable {
         }catch (Exception e){
             e.printStackTrace();
         }
-        professors=new HashMap<Type_Student,Player>();
-        lands=new ArrayList<Land>();
+        professors=new HashMap<>();
+        lands=new ArrayList<>();
         for(short i=0;i<12;i++)
             lands.add(new Island(i));
         motherNature =new MotherNature(lands.get(0));
+    }
+
+    public int getPlayersNum() {
+        return player.length;
     }
 
     /**
@@ -127,7 +131,7 @@ public class Match implements Serializable {
      *
      * @return the lands of the match
      */
-    public List<Land> getLands() {
+    public ArrayList<Land> getLands() {
         return lands;
     }
 
@@ -146,10 +150,10 @@ public class Match implements Serializable {
      * @param i index of the first to unite with after
      * @throws IllegalArgumentException  if i is i<0 or i>lands.size() or the colors of the towers are different
      */
-    public void uniteLandAfter(int i) throws Exception,IllegalArgumentException
+    public void uniteLandAfter(int i) throws Exception
     {
         if(i<0 || i>=lands.size()) throw new IllegalArgumentException();
-        if (i>=0 && i<lands.size()-1){
+        if (i<lands.size()-1){
             if(!(lands.get(i).getTower().getColor()==lands.get(i+1).getTower().getColor()))throw new IllegalArgumentException();
             Land a;
             Land unito;
@@ -173,11 +177,11 @@ public class Match implements Serializable {
      * @param i is the index of the land to unite to the one before
      * @throws IllegalArgumentException if the islands have different colors of tower or i<0 or i>lands.size()-1
      */
-    public void uniteLandBefore(int i) throws Exception,IllegalArgumentException
+    public void uniteLandBefore(int i) throws Exception
     {
         if(i<0 || i>lands.size()-1) throw new IllegalArgumentException();
         Land a;
-        if(i>=1 && i<lands.size()) {
+        if(i>=1) {
             if(!(lands.get(i).getTower().getColor()==lands.get(i-1).getTower().getColor()))throw new IllegalArgumentException();
             a=lands.remove(i);
             lands.add(i,a.uniteIslands(lands.get(i-1)));
@@ -197,7 +201,7 @@ public class Match implements Serializable {
      * @param i is the position of the island that is in the center
      * @throws Exception if the position of the land is i<1 or i>lands.size()-1 or if the towers of the island have different colors
      */
-    public void uniteLandBeforeAndAfter(int i) throws Exception,IllegalArgumentException
+    public void uniteLandBeforeAndAfter(int i) throws Exception
     {
         if(i<1 || i>=lands.size()-1) throw new IllegalArgumentException();
         if(!(lands.get(i).getTower().getColor()==lands.get(i-1).getTower().getColor() &&
@@ -217,50 +221,43 @@ public class Match implements Serializable {
         for (i = 0; i < player.length; i++)
             if(player[i].getBoard().getStudentsOfType(e)>player[a].getBoard().getStudentsOfType(e))
                 a=i;
-        if(player[a].getBoard().getStudentsOfType(e)>0)
-            if(professors.containsKey(e)){
-                professors.replace(e,player[a]);
-                return player[a];
-            }
-            else {
-                professors.put(e, player[a]);
-                return player[a];
-            }
+        if(professors.containsKey(e))
+            professors.replace(e,player[a]);
+        else
+            professors.put(e,player[a]);
         return player[a];
     }
 
+    public Player getWinner() {
+        int minIndex, min, temp, countProf1, countProf2;
+        minIndex = 0;
+        min = player[0].getBoard().getTowersNum();
+        countProf1 = 0;
 
-    @Override
-    public String toString() {
-        String a="player= " + Arrays.toString(player) +'\n'+
-                "nuvole= " + Arrays.toString(cloud) +"\n"+
-                "professori: \n";
-        for (Type_Student e:professors.keySet()) {
-            a=a+professors.get(e).getUserName()+" ha professore di tipo "+e+'\n';
-        }
-        a=a+"\n"+"isole:";
-        for (Land e:lands) {
-            if(motherNature.getPosition()==e){
-                a=a+" madre natura è su quest'";
+        for (int i=1; i<player.length; i++){
+            temp = player[i].getBoard().getTowersNum();
+
+            if (temp < min) {
+                minIndex = i;
+                min = temp;
+                countProf1 = 0;
+            } else if (temp == min) {
+                countProf2 = 0;
+                for (Type_Student professor : Type_Student.values()) {
+                    if (professors.get(professor).equals(player[min]) && countProf1==0) {
+                        countProf1++;
+                    } else if (professors.get(professor).equals(player[i])) {
+                        countProf2++;
+                    }
+                }
+                if (countProf2 > countProf1) {
+                    minIndex = i;
+                    countProf1 = countProf2;
+                }
             }
-        a=a+e.toString()+"\n";
         }
-        return a;
+
+        return player[minIndex];
     }
 
-    /**
-     *
-     * @param lands lands to insert in the match
-     */
-    public void setLands(List<Land> lands) {
-        this.lands = lands;
-    }
-
-    /**
-     *
-     * @param professors to ce insert in the match
-     */
-    public void setProfessors(Map<Type_Student, Player> professors) {
-        this.professors = professors;
-    }
 }
