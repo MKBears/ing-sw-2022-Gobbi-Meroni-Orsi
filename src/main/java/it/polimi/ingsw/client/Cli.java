@@ -29,6 +29,11 @@ public class Cli implements View,Runnable{
        state="Start";
     }
 
+    public static void main(String[] args) {
+        Client client = new Client();
+        client.start();
+    }
+
     public void setMe(Player me) {
         this.me = me;
     }

@@ -63,22 +63,6 @@ public class Message4Server {
     }
 
     /**
-     * The client sends the username for a new avatar
-     * @param username
-     */
-    public void sendRegistration(String username) {
-        synchronized (this) {
-            name = "Registration";
-            try {
-                out.writeObject(name);
-                out.writeObject(username);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    /**
      * The client sends which type of game wants to do
      * @param choice the choice: it could be the name of a game to resume or join or a string "NewGame" that means the played decides to start a new game
      */

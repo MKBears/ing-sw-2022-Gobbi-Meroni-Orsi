@@ -470,13 +470,11 @@ public class Controller extends Thread{
     public void notifyMovedMN (ClientHandler player, int steps) throws InterruptedException {
         ArrayList<Land> lands = match.getLands();
         for (ClientHandler p: players){
-            if (p != player){
-                synchronized (p) {
-                    do {
-                        p.getOutputStream().sendNotifyMovementMN(steps, lands);
-                        wait();
-                    } while (p.getNack());
-                }
+            synchronized (p) {
+                do {
+                    p.getOutputStream().sendNotifyMovementMN(steps, lands);
+                    wait();
+                } while (p.getNack());
             }
         }
     }

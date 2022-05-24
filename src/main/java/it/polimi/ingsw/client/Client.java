@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Client  implements Runnable{
+public class Client  extends Thread{
     private Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
@@ -33,7 +33,7 @@ public class Client  implements Runnable{
     private int counter;
     private Boolean nack;
 
-    public Client(){
+    public Client() {
         match=null;
         username=null;
         me=null;
@@ -49,11 +49,11 @@ public class Client  implements Runnable{
             addr= InetAddress.getLocalHost().getAddress();
             addr[3]=(byte)255;
             dSokk=new DatagramSocket();
+            dSokk.setSoTimeout(5000);
             System.out.println("Client: Inizializzato");
             byte[] buf = new byte[1];
             starting= new DatagramPacket(buf, 0, buf.length, InetAddress.getByAddress(addr), 4898);
-            do {
-                dSokk.setSoTimeout(5000); //Ho messo il timeout per la ricezione dei messaggi
+            do { //Ho messo il timeout per la ricezione dei messaggi
                 dSokk.send(starting);
                 System.out.println("Client: Ho mandato richiesta, ora vediamo di ricevere...");
                 buf = new byte[1];
@@ -89,13 +89,14 @@ public class Client  implements Runnable{
                 switch (received){
                     case "base1": //login
 
-                       //selection=cli.getRegistrationorLogin();
-                        username= view.getUsername();
-                        //if(selection=="Registration")
-                        //{sendRegistration(username);
-                        //} else if(selection=="Login"){
-                        server.sendLogin(username); //Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
-                        //}
+                       if(view.chooseLogin()=="si"){
+                            username = view.getUsername();
+                            server.sendRegistration(username);
+                        }else {
+                            username = view.getUsername();
+                            server.sendLogin(username);
+                        }//Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
+
                         response=(String)in.readObject();
                         while(response.equals("LoginFailed")){
                             username= view.getUsername();
@@ -109,8 +110,7 @@ public class Client  implements Runnable{
                             join=(ArrayList<String>) in.readObject();
                             ArrayList<String> resume=new ArrayList<>();
                             resume=(ArrayList<String>) in.readObject();
-                            String selected="Gioco di Pippo";
-                            //mandare choosingGame con la choice
+                            String selected= view.chooseMatch(join,resume);
                             server.sendGameSelected(selected);
                         }
                         else if(response.equals("NoGames")) {
@@ -140,7 +140,7 @@ public class Client  implements Runnable{
                         //decisione
                         break;
                     case  "NACK":
-                        //decisione
+                        view.setNack();
                         break;
                     case "Wizard":
                         List<Wizards> willy;

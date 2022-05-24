@@ -18,13 +18,13 @@ public class Server extends Thread{
         matches = new ArrayList<>(1);
     }
 
-    public static void main() {
+    public static void main(String[] args) {
         Server server = new Server();
         server.start();
     }
 
     public void run() {
-        final int portUDP = 4096;
+        final int portUDP = 4898;
         final int portTCP = 2836;
         Socket client;
         InetSocketAddress myIP;
@@ -36,6 +36,7 @@ public class Server extends Thread{
             sSocket.bind(myIP);
             System.out.println("Server ready");
             byte[] buf=new byte[1];
+            buf[0]=1;
             packet=new DatagramPacket(buf, 0, 0);
 
             while (true) {
