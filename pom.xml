@@ -9,7 +9,7 @@
   <artifactId>PSP30</artifactId>
 
   <version>1.0-SNAPSHOT</version>
-  <name>Eryantis</name>
+  <name>Eriantys</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -52,9 +52,9 @@
         <version>3.10.1</version>
         <configuration>
           <!-- Version of the Java language to use -->
-          <source>11</source>
+          <source>18</source>
           <!-- Minimum JRE version the JAR will be compatible with -->
-          <target>11</target>
+          <target>18</target>
         </configuration>
       </plugin>
       <!-- Surefire plugin, responsible for running tests -->

@@ -1,21 +1,15 @@
 package it.polimi.ingsw.model;
 
-import java.io.Serializable;
-import java.util.Arrays;
-
-public class Expert_Match extends Match {
-    CharacterCard card[];
+public class Expert_Match extends Match{
+    CharacterCard[] card;
 
     /**
      * create an instance of an expert match
      * @param pl1 first player of the match
      * @param pl2 second player of the match
-     * @param card the character cards of the match
      */
-    Expert_Match(Player pl1,Player pl2,CharacterCard[] card){
+    public Expert_Match(Player pl1,Player pl2){
        super(pl1,pl2);
-       this.card=new CharacterCard[3];
-       this.card=card;
     }
 
     /**
@@ -23,12 +17,9 @@ public class Expert_Match extends Match {
      * @param pl1 first player of the match
      * @param pl2 second player of the match
      * @param pl3 third player of the match
-     * @param card the character cards of the match
      */
-    Expert_Match(Player pl1,Player pl2,Player pl3,CharacterCard[] card){
+    public Expert_Match(Player pl1,Player pl2,Player pl3){
         super(pl1,pl2,pl3);
-        this.card=new CharacterCard[3];
-        this.card=card;
     }
 
     /**
@@ -37,11 +28,5 @@ public class Expert_Match extends Match {
      */
     public CharacterCard[] getCard() {
         return card;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() +
-                "carte personaggio= " + Arrays.toString(card);
     }
 }

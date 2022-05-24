@@ -108,7 +108,7 @@ public class Board implements Serializable {
     /**
      * Checks if the specified student is waiting in the entrance and transfers it to the correct table
      * @param student
-     * @throws Exception if the specified student is not present in the entrance
+     * @throws Exception if the table you want to put the student in is already full
      */
     public void placeStudent(Student student) throws Exception{
         if (getStudentsOfType(student.getType()) == 10){
@@ -145,11 +145,19 @@ public class Board implements Serializable {
 
     /**
      * Removes the specified student from the entrance
-     * @param s
+     * @param student
      * @return the student removed
      */
-    public Student removeStudent(Student s){
-        return entrance.remove(entrance.indexOf(s));
+    public Student removeStudent(Student student){
+        int found = 8;
+
+        for (int i=0; i< entrance.size(); i++) {
+            if (entrance.get(i).getType().equals(student.getType())) {
+                found = i;
+                break;
+            }
+        }
+        return entrance.remove(found);
     }
 
     /**
