@@ -17,7 +17,6 @@ public class MessageFromClient extends Thread{
 
     public MessageFromClient(Socket socket, ClientHandler ch) throws IOException {
         in = new ObjectInputStream(socket.getInputStream());
-        socket.setSoTimeout(5000);
         this.ch = ch;
         running = true;
         missedPongs = 0;
@@ -27,6 +26,7 @@ public class MessageFromClient extends Thread{
         while (running) {
             try {
                 String message = (String) in.readObject();
+                System.out.println(message);
                 switch (message) {
                     case "ACK":
                         ch.setAck(true);
@@ -79,12 +79,14 @@ public class MessageFromClient extends Thread{
                             ch.setConnected();
                         }
                     default:
+                        System.out.println("Ricevo stringhe strane: "+message);
                         ch.setAck(false);
                 }
                 synchronized (ch) {
                     ch.notify();
                 }
             } catch (ClassNotFoundException e) {
+                System.out.println("Ricevo oggetti sconosciuti");
                 ch.setAck(false);
             } catch (IOException i) {
                 missedPongs++;

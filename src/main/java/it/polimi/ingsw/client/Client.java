@@ -77,7 +77,6 @@ public class Client  extends Thread{
             socket= new Socket(ip.getHostAddress(),port);
             out = new ObjectOutputStream(socket.getOutputStream());
             in= new ObjectInputStream(socket.getInputStream());
-            out.writeObject("Prova prova 1 2 3");
             server=new Message4Server(in,out);
             view = new Cli(server);
             received="base1";
@@ -89,7 +88,7 @@ public class Client  extends Thread{
                 switch (received){
                     case "base1": //login
 
-                       if(view.chooseLogin()=="si"){
+                       if(view.chooseLogin().equals("si")){
                             username = view.getUsername();
                             server.sendRegistration(username);
                         }else {
@@ -98,6 +97,7 @@ public class Client  extends Thread{
                         }//Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
 
                         response=(String)in.readObject();
+                       System.out.println(response);
                         while(response.equals("LoginFailed")){
                             username= view.getUsername();
                             server.sendLogin(username);
@@ -317,7 +317,7 @@ public class Client  extends Thread{
                         server.sendACK(); //o server.sendNACK();
                         break;
                     case "Ping":
-                        server.sendACK();
+                        server.sendPONG();
                         break;
                 }
                 if(end==true)

@@ -317,6 +317,6 @@ public class Cli implements View,Runnable{
     public  String chooseLogin(){
         System.out.println("vuoi registrarti?");
         String choose=input.nextLine();
-        return choose;
+        return choose.toLowerCase();
     }
 }

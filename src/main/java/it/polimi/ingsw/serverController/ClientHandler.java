@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.*;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 
 /**
@@ -55,7 +56,6 @@ public class ClientHandler extends Thread{
 
     public void run(){
         in.start();
-        out.start();
 
         while (ongoingMatch) {
             try {
@@ -64,14 +64,14 @@ public class ClientHandler extends Thread{
                 do {
                     wait();
                 } while (!controller.isMyTurn(this));
-            } catch (InterruptedException e) {
+            } catch (InterruptedException | SocketException e) {
                 out.sendGenericError("Internal server error");
                 state = 8;
             }
         }
     }
 
-    private void changeState() throws InterruptedException {
+    private void changeState() throws InterruptedException, SocketException {
         synchronized (this) {
             switch (state) {
                 case 0:
@@ -81,6 +81,7 @@ public class ClientHandler extends Thread{
 
                         if (server.getUserNames().contains(userName) && server.inactivePlayer(this)) {
                             out.sendLoginSucceeded();
+                            System.out.println("Login avvenuto con successo: "+userName);
                             nack = false;
                         } else {
                             out.sendLoginFailed();
@@ -123,6 +124,8 @@ public class ClientHandler extends Thread{
                         out.sendCreation(controller.getMatch());
                         wait();
                     } while (nack);
+                    out.start();
+                    socket.setSoTimeout(5000);
                     state = 1;
                     break;
                 case 1:
@@ -250,6 +253,7 @@ public class ClientHandler extends Thread{
         }
         else {
             if (nackCounter < 3) {
+                System.out.println("Mando nack");
                 out.sendNACK();
                 nackCounter++;
             } else if (nackCounter == 3) {
@@ -279,12 +283,14 @@ public class ClientHandler extends Thread{
 
     public synchronized void setUserName(String userName) {
         this.userName = userName;
+        System.out.println("Username impostato");
         notify();
     }
 
     public synchronized void register (String userName) {
         server.addUserName(userName);
         setUserName(userName);
+        System.out.println("Registrato");
     }
 
     public String getUserName() {
