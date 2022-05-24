@@ -87,13 +87,14 @@ public class Client{
                 switch (received){
                     case "base1": //login
 
-                       //selection=cli.getRegistrationorLogin();
-                        username= view.getUsername();
-                        //if(selection=="Registration")
-                        //{sendRegistration(username);
-                        //} else if(selection=="Login"){
-                        server.sendLogin(username); //Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
-                        //}
+                       if(view.chooseLogin()=="si"){
+                            username = view.getUsername();
+                            server.sendRegistration(username);
+                        }else {
+                            username = view.getUsername();
+                            server.sendLogin(username);
+                        }//Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
+
                         response=(String)in.readObject();
                         while(response.equals("LoginFailed")){
                             username= view.getUsername();
@@ -107,8 +108,7 @@ public class Client{
                             join=(ArrayList<String>) in.readObject();
                             ArrayList<String> resume=new ArrayList<>();
                             resume=(ArrayList<String>) in.readObject();
-                            String selected="Gioco di Pippo";
-                            //mandare choosingGame con la choice
+                            String selected= view.chooseMatch(join,resume);
                             server.sendGameSelected(selected);
                         }
                         else if(response.equals("NoGames")) {
@@ -138,7 +138,7 @@ public class Client{
                         //decisione
                         break;
                     case  "NACK":
-                        //decisione
+                        view.setNack();
                         break;
                     case "Wizard":
                         List<Wizards> willy;
@@ -263,7 +263,7 @@ public class Client{
                         Land land=(Land) in.readObject();
                         for (Land e: match.getLands()) {
                             if(e.getID()==land.getID())
-                                e.changeTower(towers.get(0));
+                                e.changeTower(towers);
                         }
                         view.printMatch(match);
                         server.sendACK();

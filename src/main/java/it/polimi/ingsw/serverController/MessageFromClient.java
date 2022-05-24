@@ -33,7 +33,7 @@ public class MessageFromClient extends Thread{
                 message = (String) in.readObject();
                 switch (message) {
                     case "ACK":
-                        ch.setAck(nack);
+                        ch.setAck();
                         break;
                     case "Login":
                         String username = (String) in.readObject();
@@ -42,51 +42,52 @@ public class MessageFromClient extends Thread{
                         break;
                     case "ChoosingGame":  ///Da mettere a posto: ricevo direttamente il match che voglio joinare/resumare
                         String choice = (String) in.readObject();
-                        ch.setAck(nack);
+                        ch.setAck();
                         ch.game(choice);
                         break;
                     case "NewGame":
-                        ch.setAck(nack);
+                        ch.setAck();
                         //decisione da prendere: penso che mandi creation
                         break;
                     case "NACK":
-                        ch.setAck(nack);
+                        ch.setAck();
                         ch.sendMessageAgain();
                         break;
                     case "NumPlayers":
                         int num = (int) in.readObject();
-                        ch.setAck(nack);
+                        ch.setAck();
                         ch.setPlayersNum(num);
                         break;
                     case "Choice":
                         Wizards w = (Wizards) in.readObject();
-                        ch.setAck(nack);
+                        ch.setAck();
                         ch.setWizard(w);
                         break;
                     case "ChosenCard":
                         AssistantCard ass = (AssistantCard) in.readObject();
-                        ch.setAck(nack);
+                        ch.setAck();
                         ch.setChosenCard(ass);
                         break;
                     case "MovedStudent":
                         Student s = (Student) in.readObject();
                         int position = (int) in.readObject();
-                        ch.setAck(nack);
+                        ch.setAck();
                         ch.moveStudent(s, position);
                         map.clear();
                         break;
                     case "StepsMN":
                         int i = (int) in.readObject();
-                        ch.setAck(nack);
+                        ch.setAck();
                         ch.stepsMN(i);
                         break;
                     case "ChoiceCloud":
                         Cloud cloud = (Cloud) in.readObject();
-                        ch.setAck(nack);
+
+                        ch.setAck();
                         ch.chosenCloud(cloud);
                         break;
                     default:
-                        ch.setNack(nack);
+                        ch.setNack();
                     }
                 ch.notify();
             } catch (IOException e) {
@@ -95,5 +96,13 @@ public class MessageFromClient extends Thread{
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public void setAck(){
+        nack=false;
+    }
+
+    public void setNack(){
+        nack=true;
     }
 }

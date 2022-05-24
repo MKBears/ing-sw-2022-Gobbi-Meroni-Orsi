@@ -14,7 +14,6 @@ import it.polimi.ingsw.model.*;
 /**
  * This class contains all the possible message to send to the client
  */
-
 public class Message4Client extends Thread{
 
     private ObjectOutputStream out;
@@ -293,7 +292,6 @@ public class Message4Client extends Thread{
      * @param steps the number of steps of Mother Nature
      * @param lands an update of the situation of the lands
      */
-
     public void sendNotifyMovementMN(int steps, ArrayList<Land> lands){
         synchronized (this) {
             name = "NotifyMovementMN";
@@ -502,7 +500,53 @@ public class Message4Client extends Thread{
             }
 
         }
+    }
 
+    /**
+     * The server notifies all the clients if another player is connected or is disconnected
+     * @param username the username of the player
+     * @param connected true if connected, false if disconnected
+     */
+    public void sendNotifyPayerConnected(String username, boolean connected){
+        synchronized (this) {
+            name = "NotifyPayerConnected";
+            try {
+                out.writeObject(name);
+                out.writeObject(connected);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    /**
+     * The server notifies to the client that all the other players are disconnected
+     */
+    public void sendNotifyAllPlayersDisconnected(){
+        synchronized (this) {
+            name = "NotifyAllPlayersDisconnected";
+            try {
+                out.writeObject(name);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    /**
+     * The server notifies to all the client that a player finished his assistant card
+     * @param player the player that finished the assistant cards
+     */
+    public void sendFinishedAssistants(Player player){
+        synchronized (this) {
+            name = "FinishedAssistants";
+            try {
+                out.writeObject(name);
+                out.writeObject(player);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /**

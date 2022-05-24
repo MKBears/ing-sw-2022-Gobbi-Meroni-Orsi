@@ -25,4 +25,7 @@ public interface View extends Runnable {
     void setCards(List<AssistantCard> cards);
     void setWilly(List<Wizards> willy);
     void setClouds(List<Cloud> clouds);
+    String chooseMatch(List<String> join,List<String> resume);
+    void setNack();
+    String chooseLogin();
 }
