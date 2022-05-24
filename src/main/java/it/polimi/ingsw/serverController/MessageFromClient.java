@@ -18,11 +18,11 @@ public class MessageFromClient extends Thread{
     public MessageFromClient(Socket socket, ClientHandler ch) throws IOException {
         in = new ObjectInputStream(socket.getInputStream());
         this.ch = ch;
-        running = true;
         missedPongs = 0;
     }
 
     public void run(){
+        running = true;
         while (running) {
             try {
                 String message = (String) in.readObject();

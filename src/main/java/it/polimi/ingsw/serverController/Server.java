@@ -31,6 +31,7 @@ public class Server extends Thread{
         DatagramPacket packet4client;
 
         try (ServerSocket sSocket = new ServerSocket(); DatagramSocket sock=new DatagramSocket(portUDP)){
+            ClientHandler newPlayer;
             myIP=new InetSocketAddress(InetAddress.getLocalHost(),portTCP); //indirizzo tcp
             sSocket.bind(myIP);
             System.out.println("Server ready");
@@ -40,14 +41,16 @@ public class Server extends Thread{
 
             while (true) {
                 try {
-                    System.out.println("Aspetto datagram packet");
+                    //System.out.println("Aspetto datagram packet");
                     sock.receive(packet); //ricevo richiesta di connessione dal client
                     packet4client = new DatagramPacket(buf, 0, buf.length, packet.getAddress(), packet.getPort());
                     sock.send(packet4client);//gli mando un datagrampacket all'indirizzo al pacchetto che ho ricevuto
-                    System.out.println("Info mandate");
+                    //System.out.println("Info mandate");
                     Socket client = sSocket.accept(); //accetto connessione tcp dal client
-                    players.submit(new ClientHandler(client, this));
-                    System.out.println("Client accettato");
+                    newPlayer = new ClientHandler(client, this);
+                    players.submit(newPlayer);
+                    //newPlayer.start();
+                    //System.out.println("Client accettato");
                 }catch (IOException e) {
                     System.out.println("Server cannot connect with a client. Trying a new connection.");
                     throw new RuntimeException(e);

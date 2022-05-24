@@ -56,9 +56,11 @@ public class ClientHandler extends Thread{
 
     public void run(){
         in.start();
+        System.out.println("Stream in ingresso partito");
 
-        while (ongoingMatch) {
+        do {
             try {
+                System.out.println("Si va in scena");
                 changeState();
 
                 do {
@@ -68,7 +70,7 @@ public class ClientHandler extends Thread{
                 out.sendGenericError("Internal server error");
                 state = 8;
             }
-        }
+        } while (ongoingMatch);
     }
 
     private void changeState() throws InterruptedException, SocketException {
@@ -77,6 +79,7 @@ public class ClientHandler extends Thread{
                 case 0:
                     //LogIn/Registration, match preparation (create/join match, choose the wizard)
                     do {
+                        System.out.println("Aspetto il client");
                         wait();
 
                         if (server.getUserNames().contains(userName) && server.inactivePlayer(this)) {
@@ -247,7 +250,7 @@ public class ClientHandler extends Thread{
     public synchronized void setAck (boolean ack) {
         nack = !ack;
         if (ack) {
-            out.sendACK();
+            //out.sendACK();
             nackCounter = 0;
             notifyAll();
         }
@@ -283,14 +286,14 @@ public class ClientHandler extends Thread{
 
     public synchronized void setUserName(String userName) {
         this.userName = userName;
-        System.out.println("Username impostato");
+        //System.out.println("Username impostato");
         notify();
     }
 
     public synchronized void register (String userName) {
         server.addUserName(userName);
         setUserName(userName);
-        System.out.println("Registrato");
+        //System.out.println("Registrato");
     }
 
     public String getUserName() {
