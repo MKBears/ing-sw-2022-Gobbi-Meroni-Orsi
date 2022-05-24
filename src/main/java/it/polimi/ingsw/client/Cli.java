@@ -272,14 +272,15 @@ public class Cli implements View,Runnable{
          }
     }
 
-    public void wakeUp(String state){
+    public synchronized void wakeUp(String state){
         this.state=state;
         this.notifyAll();
     }
 
-    public void setNack(){
+    public synchronized void setNack(){
         nack=true;
-        this.notifyAll();
+            this.notifyAll();
+
     }
 
     public void setWilly(List<Wizards> willy) {

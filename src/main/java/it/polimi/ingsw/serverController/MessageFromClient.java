@@ -81,7 +81,9 @@ public class MessageFromClient extends Thread{
                     default:
                         ch.setAck(false);
                 }
-                ch.notify();
+                synchronized (ch) {
+                    ch.notify();
+                }
             } catch (ClassNotFoundException e) {
                 ch.setAck(false);
             } catch (IOException i) {

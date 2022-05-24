@@ -438,7 +438,9 @@ public class ClientHandler extends Thread{
 
     public synchronized void setDisconnected() throws InterruptedException {
         connected = false;
-        controller.notifyPlayerDisconnected(this);
+        if (controller != null) {
+            controller.notifyPlayerDisconnected(this);
+        }
     }
 
     public synchronized void setConnected() {
