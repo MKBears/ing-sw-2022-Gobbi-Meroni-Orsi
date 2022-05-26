@@ -41,8 +41,17 @@ public class MessageFromClient extends Thread{
                         break;
                     case "ChoosingGame":
                         message = (String) in.readObject();
+
                         if (message.equals("NewGame")) {
-                            ch.createMatch(in.readInt(), in.readBoolean());
+                            System.out.println("Ricevuto: "+message);
+                            Integer playersNum = (Integer) in.readObject();
+                            System.out.println("Ricevuto: "+playersNum);
+                            System.out.flush();
+                            Boolean expert = (Boolean) in.readObject();
+                            System.out.println("Ricevuto: "+expert);
+                            System.out.flush();
+                            ch.createMatch(playersNum, expert);
+                            System.out.println("Ricevuto num giocatori e expert");
                             ch.setAck(true);
                         }
                         else {

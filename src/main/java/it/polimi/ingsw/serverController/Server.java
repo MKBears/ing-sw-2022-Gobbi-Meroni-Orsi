@@ -73,15 +73,19 @@ public class Server extends Thread{
     }
 
     public synchronized Controller createMatch(ClientHandler creator, int playersNum, boolean expertMatch) {
-        for (Controller match : matches){
-            if (match.getCreator().equals(creator.getUserName())){
-                matches.remove(match);
-                match.notifyDeletion("Creator started a new match");
-                break;
+        if (!matches.isEmpty()) {
+            System.out.println("Controllo se questo giocatore ha gia' creato una partita");
+            for (Controller match : matches) {
+                if (match.getCreator().equals(creator.getUserName())) {
+                    matches.remove(match);
+                    match.notifyDeletion("Creator started a new match");
+                    break;
+                }
             }
         }
         Controller match = new Controller(creator, playersNum, expertMatch);
         matches.add(match);
+        System.out.println("Match creato");
         return match;
     }
 

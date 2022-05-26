@@ -100,15 +100,13 @@ public class ClientHandler extends Thread{
                         }
                     }
                     else {
-                        if (server.areThereJoinableMatches(userName)) {
-                            out.sendListOfGames(server.getJoinableMatches(), server.getPausedMatches(userName));
-                        } else {
-                            out.sendNoGames();
-                        }
+                        out.sendListOfGames(server.getJoinableMatches(), server.getPausedMatches(userName));
+                        System.out.println("Dopo listOfGames");
 
                         do {
                             wait();
                         } while (nack);
+                        System.out.println("Mando maghi");
 
                         do {
                             out.sendWizard(controller.getWizards());
@@ -312,6 +310,7 @@ public class ClientHandler extends Thread{
     }
 
     public synchronized void createMatch (int playersNum, boolean expert) {
+        System.out.println("Inizio a creare la partita");
         expertMatch = expert;
         controller = server.createMatch(this, playersNum, expertMatch);
     }

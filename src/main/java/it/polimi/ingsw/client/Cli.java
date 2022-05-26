@@ -8,8 +8,8 @@ import java.util.List;
 
 import static java.lang.Integer.parseInt;
 
-public class Cli implements View,Runnable{
-    private Scanner input;
+public class Cli extends Thread implements View{
+    private final Scanner input;
     private String state;
     private Boolean end;
     private Message4Server server;
@@ -21,17 +21,22 @@ public class Cli implements View,Runnable{
     private List<AssistantCard> cards;
     Boolean nack;
 
-    public Cli(Message4Server server){
+    public Cli(){
        input=new Scanner(System.in);
        end=false;
-       this.server=server;
        nack=false;
        state="Start";
     }
 
     public static void main(String[] args) {
-        Client client = new Client();
+        Cli view = new Cli();
+        Client client = new Client(view);
         client.start();
+        view.start();
+    }
+
+    public void setServer(Message4Server server) {
+        this.server = server;
     }
 
     public void setMe(Player me) {
@@ -58,7 +63,7 @@ public class Cli implements View,Runnable{
         int choose=input.nextInt();
         while(choose<1 || choose>4){
             System.out.println("scegli il mago:");
-            input.nextInt();
+            choose = input.nextInt();
         }
         return wizards.get(choose-1);
     }
@@ -75,7 +80,7 @@ public class Cli implements View,Runnable{
         int choose= input.nextInt();
         while (choose<1 || choose>=i){
             System.out.println("scegli un numero tra 1 e "+(i-1)+":");
-            input.nextInt();
+             choose = input.nextInt();
         }
         return clouds.get(choose-1);
     }
@@ -296,22 +301,48 @@ public class Cli implements View,Runnable{
     }
 
     @Override
-    public String chooseMatch(List<String> join, List<String> resume) {
+    public void chooseMatch(List<String> join, List<String> resume) {
         String choose;
-        System.out.println("puoi unirti alle partite:\n");
-        for (String e:join) {
-            System.out.println(e+"\n");
+        if (join.isEmpty()) {
+            System.out.println("Non ci sono partite a cui unirsi");
         }
-        System.out.println("puoi riunirti alle partite: \n");
-        for(String e:resume){
-            System.out.println(e+"\n");
+        else {
+            System.out.println("puoi unirti alle partite:\n");
+            for (String e : join) {
+                System.out.println(e);
+            }
         }
-        System.out.println("scegli la partita(per creare una nuova partita scrivi newgame):\n");
+
+        if (resume.isEmpty()) {
+            System.out.println("Non ci sono partite da riprendere");
+        }
+        else {
+            System.out.println("puoi riunirti alle partite: \n");
+            for (String e : resume) {
+                System.out.println(e);
+            }
+        }
+        System.out.println("scegli la partita(per creare una nuova partita scrivi NewGame):\n");
         choose=input.nextLine();
-        if(choose.toLowerCase()=="newgame"){
-            choose="NewGame";
+        server.sendChoosingGame(choose);
+
+        if(choose.toLowerCase().equals("newgame")){
+            createMatch();
         }
-        return choose;
+    }
+
+    public void createMatch () {
+        int playersNum;
+        boolean expert;
+
+        do {
+            System.out.println("Da quanti giocatori sara' formata la partita? [2/3]");
+            playersNum = input.nextInt();
+        } while (playersNum<2 || playersNum>3);
+        System.out.println("Creare una partita per esperti? [true/false]");
+        expert = input.nextBoolean();
+        server.sendNumPlayers(playersNum);
+        server.sendExpertMatch(expert);
     }
 
     public  String chooseLogin(){

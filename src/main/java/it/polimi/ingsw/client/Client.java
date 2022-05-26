@@ -33,12 +33,13 @@ public class Client  extends Thread{
     private int counter;
     private Boolean nack;
 
-    public Client() {
+    public Client(View view) {
         match=null;
         username=null;
         me=null;
         end=false;
         counter=0;
+        this.view = view;
     }
 
     public void run(){
@@ -78,13 +79,13 @@ public class Client  extends Thread{
             out = new ObjectOutputStream(socket.getOutputStream());
             in= new ObjectInputStream(socket.getInputStream());
             server=new Message4Server(in,out);
-            view = new Cli(server);
             received="base1";
             view.getTitolo();
             while (true){
                 if(received!="base1") {
                     received = (String) in.readObject();
                 }
+                System.out.println("Ricevuto: "+received);
                 switch (received){
                     case "base1": //login
 
@@ -104,35 +105,30 @@ public class Client  extends Thread{
                             response=(String) in.readObject();
                         }
                         response=(String)in.readObject();
-                    
-                        if(response.equals("ListOfGames")){
-                            ArrayList<String> join=new ArrayList<>();
-                            join=(ArrayList<String>) in.readObject();
-                            ArrayList<String> resume=new ArrayList<>();
-                            resume=(ArrayList<String>) in.readObject();
-                            String selected= view.chooseMatch(join,resume);
-                            server.sendGameSelected(selected);
-                        }
-                        else if(response.equals("NoGames")) {
-                            //che famo? penso che farà new game di default
-                        }
-                        response=(String) in.readObject();
-                        if(response=="Creation"){
+                        ArrayList<String> join=new ArrayList<>();
+                        join=(ArrayList<String>) in.readObject();
+                        ArrayList<String> resume=new ArrayList<>();
+                        resume=(ArrayList<String>) in.readObject();
+                        view.chooseMatch(join,resume);
+                        //response=(String) in.readObject();
+                        /*if(response=="Creation"){
+                            System.out.println("Ricevuto: Creation");
                             match=(Match) in.readObject();
+                            System.out.println("Match creato");
                             server.sendACK();
                             //nel caso in cui stia creando una nuova partita: da mandare prima di GameSelected
-                            int num=view.getNumPlayer();
-                            server.sendNumPlayers(num);
-                            response=(String)in.readObject();
-                            if(response=="NACK"){
+                            //int num=view.getNumPlayer();
+                            //server.sendNumPlayers(num);
+                            //response=(String)in.readObject();
+                            //if(response=="NACK"){
                                 //decisione
-                            }else if(response=="ACK"){
+                            //}else if(response=="ACK"){
                                 //si va a avanti
-                            }
+                            //}
                         }
                         else{
                             server.sendNACK();
-                        }
+                        }*/
                         //decision
                         received="ok";
                         break; //adesso mi metto in ascolto
@@ -158,7 +154,6 @@ public class Client  extends Thread{
                         view.printMatch(match);
                         view.setMe(me);
                         view.setMatch(match);
-                        viewth=new Thread(view);
                         viewth.start();
                         server.sendACK();
                         break;

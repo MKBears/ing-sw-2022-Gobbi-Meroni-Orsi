@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.Wizards;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintStream;
 
 import it.polimi.ingsw.model.*;
 
@@ -79,22 +80,6 @@ public class Message4Server {
     }
 
     /**
-     * The player's choice about the game to join/resume
-     * @param selected
-     */
-    public void sendGameSelected(String selected){
-        synchronized (this) {
-            try {
-                name = "GameSelected";
-                out.writeObject(name);
-                out.writeObject(selected);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    /**
      * Base positive response for a client request (the message received was correct)
      */
     public void sendACK(){
@@ -139,13 +124,23 @@ public class Message4Server {
     public void sendNumPlayers(int num){
         synchronized (this) {
             try {
-                name = "NumPlayers";
-                out.writeObject(name);
                 out.writeObject(num);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
+        System.out.println("Inviato: "+num);
+    }
+
+    public void sendExpertMatch (boolean expert) {
+        synchronized (this) {
+            try {
+                out.writeObject(expert);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        System.out.println("Inviato: "+expert);
     }
 
     /**

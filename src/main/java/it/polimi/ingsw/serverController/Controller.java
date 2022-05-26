@@ -45,7 +45,7 @@ public class Controller extends Thread{
         if (expertMatch){
             characters = new CharacterCard[3];
         }
-        wizards.addAll(Arrays.asList(Wizards.values()));
+        wizards = new ArrayList<>(Arrays.asList(Wizards.values()));
     }
 
     public void run() throws IllegalArgumentException {

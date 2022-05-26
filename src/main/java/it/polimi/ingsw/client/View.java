@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface View extends Runnable {
+public interface View {
     String getUsername();
     Wizards getWizard(List<Wizards> wizards);
     Cloud getCloud(List<Cloud> clouds);
@@ -25,7 +25,7 @@ public interface View extends Runnable {
     void setCards(List<AssistantCard> cards);
     void setWilly(List<Wizards> willy);
     void setClouds(List<Cloud> clouds);
-    String chooseMatch(List<String> join,List<String> resume);
+    void chooseMatch(List<String> join,List<String> resume);
     void setNack();
     String chooseLogin();
 }
