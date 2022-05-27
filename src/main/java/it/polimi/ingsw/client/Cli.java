@@ -350,4 +350,41 @@ public class Cli extends Thread implements View{
         String choose=input.nextLine();
         return choose.toLowerCase();
     }
+
+    public Student chooseStudent(List<Student> student){
+        int i=1;
+        for (Student e:student) {
+            System.out.println("scegli "+i+" per lo studente "+e+"\n");
+        }
+        input.nextInt();
+        return student.get(i-1);
+    }
+
+    public Land chooseLand(List<Land> lands){
+        int i=1;
+        for (Land e:lands) {
+            System.out.println("scegli "+i+" per l'isola "+e+"\n");
+        }
+        input.nextInt();
+        return lands.get(i-1);
+    }
+
+    public Type_Student chooseColorStudent(){
+        System.out.println("scegli un colore di cui non verrà calcolata l'influenza");
+        while (true) {
+            String choose=input.nextLine();
+            switch (choose.toLowerCase()) {
+                case ("rosso"):
+                    return Type_Student.DRAGON;
+                case ("verde"):
+                    return Type_Student.FROG;
+                case ("blu"):
+                    return Type_Student.UNICORN;
+                case ("giallo"):
+                    return Type_Student.FAIRIE;
+                case ("rosa"):
+                    return Type_Student.GNOME;
+            }
+        }
+    }
 }

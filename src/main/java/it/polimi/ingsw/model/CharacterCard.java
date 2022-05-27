@@ -11,4 +11,6 @@ public interface CharacterCard extends Serializable {
     boolean hasBeenActivated();
 
     String getPowerUp();
+
+    void setPlayer(Player player);
 }

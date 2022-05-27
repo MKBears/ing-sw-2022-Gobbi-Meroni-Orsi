@@ -221,11 +221,13 @@ public class Match implements Serializable {
         for (i = 0; i < player.length; i++)
             if(player[i].getBoard().getStudentsOfType(e)>player[a].getBoard().getStudentsOfType(e))
                 a=i;
-        if(professors.containsKey(e))
-            professors.replace(e,player[a]);
-        else
-            professors.put(e,player[a]);
-        return player[a];
+        if(professors.containsKey(e) && player[a].getBoard().getStudentsOfType(e)>professors.get(e).getBoard().getStudentsOfType(e)) {
+            professors.replace(e, player[a]);
+            return player[a];
+        } else if(!professors.containsKey(e)) {
+            professors.put(e, player[a]);
+            return player[a];
+        }else return professors.get(e);
     }
 
     public Player getWinner() {

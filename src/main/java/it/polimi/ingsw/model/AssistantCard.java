@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class AssistantCard implements Serializable{
     private final int value;
-    private final int MNSteps;
+    private int MNSteps;
 
     /**
      *
@@ -23,6 +23,8 @@ public class AssistantCard implements Serializable{
     public int getMNSteps() {
         return MNSteps;
     }
+
+    public void ch_4_effect(){MNSteps=MNSteps+2;}
 
     @Override
     public String toString() {

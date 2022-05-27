@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.characterCards;
 
 import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.Island;
+import it.polimi.ingsw.model.Player;
 
 public class Ch_6 implements CharacterCard {
 
@@ -9,6 +10,13 @@ public class Ch_6 implements CharacterCard {
     private boolean activated;
     private final String powerUp;
     private it.polimi.ingsw.model.Island Island;
+    private Player player;
+
+
+    @Override
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 
     public Ch_6(){
         price=3;

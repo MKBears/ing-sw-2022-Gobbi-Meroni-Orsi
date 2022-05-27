@@ -28,4 +28,7 @@ public interface View {
     void chooseMatch(List<String> join,List<String> resume);
     void setNack();
     String chooseLogin();
+    Land chooseLand(List<Land> lands);
+    Student chooseStudent(List<Student> student);
+    Type_Student chooseColorStudent();
 }

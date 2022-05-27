@@ -38,4 +38,7 @@ public class Bag implements Serializable {  //fare che in input mi dicono anche 
             throw new Exception("No more students");
     }
 
+    public void ch12effect(List<Student> students){
+        this.students.addAll(students);
+    }
 }
