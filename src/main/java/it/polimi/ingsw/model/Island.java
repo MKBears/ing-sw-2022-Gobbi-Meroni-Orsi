@@ -204,11 +204,7 @@ public class Island implements Land {
 
     @Override
     public boolean hasChanged() {
-        if (hasChanged) {
-            hasChanged = false;
-            return true;
-        }
-        return false;
+        return hasChanged;
     }
 
     @Override
@@ -220,6 +216,7 @@ public class Island implements Land {
         }
         previousTowers = new ArrayList<>();
         previousTowers.add(previousTower);
+        hasChanged = false;
         return previousTowers;
     }
 }

@@ -97,7 +97,7 @@ public class ArchipelagoTest {
         assertEquals(tt.size(),pelago.size());
         pelago.changeTower(tt);
         assertEquals(pelago.getPreviousTowers().size(),pelago.size());
-        c_torri=c_torri+pelago.getPreviousTowers().size(); //////////////////////////////////
+        //c_torri=c_torri+pelago.getPreviousTowers().size(); //////////////////////////////////
         assertFalse(board.hasNoTowersLeft());
         assertEquals(c_torri,board.getTowersNum());
         assertEquals(to,pelago.getTower());

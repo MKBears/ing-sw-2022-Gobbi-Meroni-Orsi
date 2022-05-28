@@ -116,6 +116,7 @@ public class Archipelago implements Land {
         if (this.size == n_tower.size()) {
             ArrayList<Tower> single = new ArrayList<>();
             previousTowers.clear();
+
             for (Island i : group) {
                 single.add(n_tower.remove(0));
                 previousTowers.add(i.getTower());
@@ -216,17 +217,14 @@ public class Archipelago implements Land {
 
     @Override
     public boolean hasChanged() {
-        if (hasChanged) {
-            hasChanged = false;
-            return true;
-        }
-        return false;
+        return hasChanged;
     }
 
     public ArrayList<Tower> getPreviousTowers() throws Exception {
         if (previousTowers == null || !hasChanged) {
             throw new Exception ("There haven't been changes");
         }
+        hasChanged = false;
         return previousTowers;
     }
 }
