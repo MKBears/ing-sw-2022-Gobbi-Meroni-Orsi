@@ -44,6 +44,8 @@ public class ArchipelagoTest {
             is.add(island);
         }
         pelago=new Archipelago(is);
+        assertEquals(pelago.size(),20);
+        assertEquals(pelago.getIslands(),is);
     }
 
     @Test
@@ -79,8 +81,8 @@ public class ArchipelagoTest {
     @Test
     public void towersTest() throws Exception {
         int x=20;
+        c_torri=0;
         if(e==1){
-            c_torri=c_torri+22;
             x++;
         }
         assertEquals(t,pelago.getTower());
@@ -88,13 +90,16 @@ public class ArchipelagoTest {
         Board b=new Board(20,c);
         Tower to=new Tower(c,b);
         ArrayList<Tower> tt=new ArrayList<>();
-        for(int i=0; i<pelago.size();i++) {
+        for(Island i: pelago.getIslands()) {
             tt.add(to);
         }
+        c_torri=board.getTowersNum();
+        assertEquals(tt.size(),pelago.size());
         pelago.changeTower(tt);
-        c_torri=c_torri+20; ////////
+        assertEquals(pelago.getPreviousTowers().size(),pelago.size());
+        c_torri=c_torri+pelago.getPreviousTowers().size(); //////////////////////////////////
         assertFalse(board.hasNoTowersLeft());
-        assertEquals(c_torri,board.getTowers().size());
+        assertEquals(c_torri,board.getTowersNum());
         assertEquals(to,pelago.getTower());
         assertEquals(x,pelago.getAllTowers().size());
     }
@@ -167,7 +172,7 @@ public class ArchipelagoTest {
         ll.add(y);
         i.changeTower(ll);
         assertThrows(Exception.class,()->pelago.uniteIslands(i));
-        i.changeTower(tow);
+        i.changeTower(ttt);
         ArrayList<Island> arr = new ArrayList<>(pelago.getIslands());
         //arr.add(i);
         for (Island isl:a.getIslands()){
@@ -175,5 +180,46 @@ public class ArchipelagoTest {
         }
         assertEquals(arr.size(),a.size());
         assertEquals(pelago.getID(),a.getID());
+    }
+@Test
+    public void toStringTest(){
+        ArrayList<Island>isles=new ArrayList<>();
+        Tower tw=new Tower(Colors.BLACK,board);
+        Island isa= new Island(9999);
+        ArrayList<Tower>hehe=new ArrayList<>();
+        hehe.add(tw);
+        isa.changeTower(hehe);
+        Student gobbi=new Student(Type_Student.DRAGON);
+        isa.addStudent(gobbi);
+        isles.add(isa);
+        pelago=new Archipelago(isles);
+        String s="Arcipelago di 1 isole{ \nisola 9999 con studenti: ["+gobbi+"] e torre di colore Nero \n}\n";
+        assertEquals(pelago.toString(),s);
+    }
+@Test
+    public void hasChangedTest() throws Exception {
+        pelago=new Archipelago(is);
+        assertEquals(pelago.size(),is.size());
+        assertFalse(pelago.hasChanged());
+        ArrayList<Tower> k=new ArrayList<>();
+        ArrayList<Tower> l=new ArrayList<>();
+        Tower cami=tow.get(0);
+        while(tow.size()<pelago.size()){
+            tow.add(cami);
+        }
+        for (int i = 0; i < pelago.size(); i++) {
+            k.add(tow.get(i));
+        }
+        l=(ArrayList<Tower>) k.clone();
+        pelago.changeTower(k);
+        assertTrue(pelago.hasChanged());
+        ArrayList<Tower> tt=new ArrayList<>();
+        Tower h=new Tower(Colors.BLACK, board);
+        for(int i=0; i<pelago.size(); i++){
+            tt.add(h);
+        }
+        pelago.changeTower(tt);
+        String s=l.toString();
+        assertEquals(pelago.getPreviousTowers(),s);
     }
 }

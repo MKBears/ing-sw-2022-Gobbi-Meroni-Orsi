@@ -23,6 +23,7 @@ public class Island implements Land {
         previousTower = null;
         noEntry = false;
         students=new ArrayList<>();
+        hasChanged=false;
     }
 
     /**
@@ -96,7 +97,7 @@ public class Island implements Land {
     public void changeTower(ArrayList<Tower> n_tower) {
         if(this.tower!=null){
             this.tower.getBoard().returnTower(this.tower);
-            previousTower = tower;
+            previousTower = this.tower;
             this.tower=n_tower.get(0);
             hasChanged = true;
         }

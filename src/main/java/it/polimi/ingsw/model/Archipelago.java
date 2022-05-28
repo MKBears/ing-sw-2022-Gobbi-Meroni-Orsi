@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Archipelago implements Land {
     private final ArrayList<Island> group=new ArrayList<>();
     private int size;
-    private final Island head;
+    private final Island head;   ////////////////
     private Colors color;
     private boolean hasChanged;
     private final ArrayList<Tower> previousTowers;
@@ -25,6 +25,7 @@ public class Archipelago implements Land {
         head = this.group.get(0);
         color=this.group.get(0).getTower().getColor();
         previousTowers = new ArrayList<>();
+        hasChanged=false;
     }
 
     /**
@@ -115,7 +116,6 @@ public class Archipelago implements Land {
         if (this.size == n_tower.size()) {
             ArrayList<Tower> single = new ArrayList<>();
             previousTowers.clear();
-
             for (Island i : group) {
                 single.add(n_tower.remove(0));
                 previousTowers.add(i.getTower());
@@ -124,6 +124,9 @@ public class Archipelago implements Land {
             }
             color = head.getTowerColor();
             hasChanged = true;
+        }
+        else{
+            throw new Exception("Error in towers");
         }
     }
 

@@ -20,6 +20,7 @@ public class IslandTest {
         assertTrue(island.getStudents().isEmpty());
         assertEquals(1,island.size());
         assertEquals(island,island.getHead());
+        assertFalse(island.hasChanged());
     }
 
     @Test //
@@ -193,6 +194,33 @@ public class IslandTest {
             }
         }
         assertThrows(Exception.class,()->island.uniteIslands(isa));
+    }
+
+    @Test
+    public void toStringTest(){
+        assertThrows(Exception.class,()->island.getPreviousTowers());
+        String s="isola "+island.getID()+" con studenti: "+island.getStudents()+" non ha torri";
+        assertEquals(s,island.toString());
+        assertFalse(island.hasChanged());
+        Board bo=new Board(55, Colors.BLACK);
+        Tower j=new Tower(Colors.BLACK, bo);
+        ArrayList<Tower> ho=new ArrayList<>();
+        ho.add(j);
+        island.changeTower(ho);
+        Board fa=new Board(55, Colors.GREY);
+        Tower me=new Tower(Colors.GREY, fa);
+        ho.clear();
+        ho.add(me);
+        island.changeTower(ho);
+        assertTrue(island.hasChanged());
+        assertEquals(56,bo.getTowersNum()); //QUI FUNZIONA MALEDETTO
+        ho.clear();
+        ho.add(j);
+        try {  //LANCIA L'ECCEZIONE
+            assertEquals(ho, island.getPreviousTowers());
+        }catch (Exception e){
+            fail();
+        }
     }
 }
 
