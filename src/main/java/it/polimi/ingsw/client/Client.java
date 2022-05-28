@@ -90,7 +90,7 @@ public class Client  extends Thread{
                 switch (received){
                     case "base1": //login
 
-                       if(view.chooseLogin().equals("si")){
+                        if(view.chooseLogin().equals("si")){
                             username = view.getUsername();
                             server.sendRegistration(username);
                         }else {
@@ -99,18 +99,12 @@ public class Client  extends Thread{
                         }//Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
 
                         response=(String)in.readObject();
-                       System.out.println(response);
+                        System.out.println(response);
                         while(response.equals("LoginFailed")){
                             username= view.getUsername();
                             server.sendLogin(username);
                             response=(String) in.readObject();
                         }
-                        response=(String)in.readObject();
-                        ArrayList<String> join=new ArrayList<>();
-                        join=(ArrayList<String>) in.readObject();
-                        ArrayList<String> resume=new ArrayList<>();
-                        resume=(ArrayList<String>) in.readObject();
-                        view.chooseMatch(join,resume);
                         //response=(String) in.readObject();
                         /*if(response=="Creation"){
                             System.out.println("Ricevuto: Creation");
@@ -133,6 +127,12 @@ public class Client  extends Thread{
                         //decision
                         received="ok";
                         break; //adesso mi metto in ascolto
+                    case "ListOfGames":
+                        ArrayList<String> join=new ArrayList<>();
+                        join=(ArrayList<String>) in.readObject();
+                        ArrayList<String> resume=new ArrayList<>();
+                        resume=(ArrayList<String>) in.readObject();
+                        view.chooseMatch(join,resume);
                     case "ACK":
                         //decisione
                         break;

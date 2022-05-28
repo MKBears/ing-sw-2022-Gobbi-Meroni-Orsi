@@ -112,7 +112,7 @@ public class Server extends Thread{
         for (Controller match : matches){
             if (creator != null) {
                 if (match.getCreator().equals(creator)) {
-                    if (match.isPaused()) {
+                    if (match.isPaused() || match.getPlayers().contains(player.getUserName())) {
                         match.connectPlayer(player);
 
                         if (match.readyToStart()) {
@@ -151,7 +151,9 @@ public class Server extends Thread{
 
     public boolean inactivePlayer (ClientHandler player) {
         for (Controller match : matches) {
+            System.out.println("Match creato da: "+match.getCreator());
             if (match.getPlayers().contains(player.getUserName())) {
+                System.out.println("Ho trovato "+player.getUserName());
                 if (!match.isPaused()) {
                     if (match.getPlayer(player.getUserName()).isConnected()) {
                         return false;
@@ -159,6 +161,7 @@ public class Server extends Thread{
                 }
             }
         }
+        System.out.println("Player non attivo");
         return true;
     }
 

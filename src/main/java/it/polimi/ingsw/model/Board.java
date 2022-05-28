@@ -83,7 +83,7 @@ public class Board implements Serializable {
     }
 
     /**
-     * @deprecated
+     *
      * @return a copy of the list of the towers on the board
      */
     public ArrayList<Tower> getTowers() {

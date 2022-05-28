@@ -211,7 +211,9 @@ public class Controller extends Thread{
     public ArrayList<String> getPlayers(){
         ArrayList<String> userNames = new ArrayList<>();
         for (ClientHandler player : players){
-            userNames.add(player.getUserName());
+            if (player != null) {
+                userNames.add(player.getUserName());
+            }
         }
         return userNames;
     }
@@ -250,30 +252,44 @@ public class Controller extends Thread{
     }
 
     public synchronized void connectPlayer(ClientHandler player) {
-        int state;
+        int state, index;
+        state = 0;
 
         for (int i=0; i<playersNum; i++){
             if (players[i].getUserName().equals(player.getUserName())){
-                if (paused) {
-                    state = players[i].seeState();
+
+                if (firstPlayer == 0) {
+                    index = playersNum-1;
                 }
                 else {
-                    if (firstPlayer != 0) {
-                        state = players[firstPlayer-1].seeState();
+                    index = firstPlayer-1;
+                }
+
+                do {
+                    if (players[index] != null) {
+                        if (players[index].isConnected()) {
+                            player.setState(players[index].seeState());
+                            break;
+                        }
+
+                        if (index == 0 && firstPlayer != 0) {
+                            index = playersNum - 1;
+                        } else {
+                            index--;
+                        }
                     }
                     else {
-                        state = players[playersNum-1].seeState();
+                        return;
                     }
+                } while (index != firstPlayer-1);
 
-                    if (!player.equals(players[firstPlayer])) {
-                        reorderPlayers (player, i);
-                    }
-
-                    if (player != players[i]) {
-                        players[i] = player;
-                    }
+                if (!player.equals(players[firstPlayer])) {
+                    reorderPlayers(player, i);
                 }
-                player.setState(state);
+
+                if (player != players[i]) {
+                    players[i] = player;
+                }
                 player.setMatch(match);
                 connectedPlayers++;
                 break;
