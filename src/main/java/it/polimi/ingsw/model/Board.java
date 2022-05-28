@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The class representing the board each player controls in an ordinary match.
@@ -82,7 +83,7 @@ public class Board implements Serializable {
     }
 
     /**
-     * @deprecated
+     *
      * @return a copy of the list of the towers on the board
      */
     public ArrayList<Tower> getTowers() {
@@ -210,5 +211,90 @@ public class Board implements Serializable {
      */
     public void setTowers(ArrayList<Tower> towers) {
         this.towers = towers;
+    }
+
+    public void ch_11_effect(Student s){
+        switch (s.getType()){
+            case DRAGON:
+                dragons.add(s);
+                break;
+            case GNOME:
+                gnomes.add(s);
+                break;
+            case FAIRIE:
+                fairies.add(s);
+                break;
+            case UNICORN:
+                unicorns.add(s);
+                break;
+            case FROG:
+                frogs.add(s);
+                break;
+        }
+    }
+
+    public List<Student> ch_12_effect(Type_Student type){
+        List<Student> stu=new ArrayList<>();
+        switch (type){
+            case DRAGON:
+                for (int i = 0; i < 3; i++)
+                    if(!dragons.isEmpty())
+                        stu.add(dragons.remove(0));
+                break;
+            case GNOME:
+                for (int i = 0; i < 3; i++)
+                    if(!gnomes.isEmpty())
+                        stu.add(gnomes.remove(0));
+                break;
+            case FAIRIE:
+                for (int i = 0; i < 3; i++)
+                    if(!fairies.isEmpty())
+                        stu.add(fairies.remove(0));
+                break;
+            case UNICORN:
+                for (int i = 0; i < 3; i++)
+                    if(!unicorns.isEmpty())
+                        stu.add(unicorns.remove(0));
+                break;
+            case FROG:
+                for (int i = 0; i < 3; i++)
+                    if(!frogs.isEmpty())
+                        stu.add(frogs.remove(0));
+                break;
+        }
+        return stu;
+    }
+
+    public void ch_10_effect(Student st,Type_Student type){
+        try {
+            this.placeStudent(st);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        entrance.remove(st);
+        switch (type){
+            case DRAGON:
+                entrance.add(dragons.remove(0));
+                break;
+            case GNOME:
+                entrance.add(gnomes.remove(0));
+                break;
+            case FAIRIE:
+                entrance.add(fairies.remove(0));
+                break;
+            case UNICORN:
+                entrance.add(unicorns.remove(0));
+                break;
+            case FROG:
+                entrance.add(frogs.remove(0));
+                break;
+        }
+    }
+
+    public void ch_7_effect(Student st1, Student st2, Student st3, List<Student> stu){
+        entrance.remove(st1);
+        entrance.remove(st2);
+        entrance.remove(st3);
+        entrance.addAll(stu);
     }
 }

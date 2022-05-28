@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.characterCards.Ch_2;
-import it.polimi.ingsw.model.characterCards.Ch_3;
+import it.polimi.ingsw.client.Cli;
+import it.polimi.ingsw.model.characterCards.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -84,7 +84,10 @@ class BoardExpertsTest {
         ArrayList<Student> students = new ArrayList<>();
         Student student;
         final int dragons = 10;
-        CharacterCard c = new Ch_2();
+        Player pl1=new Player("ale",Colors.GREY,8,Wizards.WIZARD1,true);
+        Player pl2=new Player("ale",Colors.BLACK,8,Wizards.WIZARD2,true);
+        Match match=new Expert_Match(pl1,pl2);
+        CharacterCard c = new Ch_2(match);
 
         try {
             board.setEntrance(new ArrayList<>());
@@ -118,7 +121,7 @@ class BoardExpertsTest {
             fail();
         }
         assertSame(2, board.getCoinsNumber());
-        assertThrows(Exception.class, ()->board.playCharacter(new Ch_3()));
+        assertThrows(Exception.class, ()->board.playCharacter(new Ch_9()));
     }
 
     @Test

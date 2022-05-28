@@ -1,16 +1,23 @@
 package it.polimi.ingsw.model.characterCards;
 
+import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.Archipelago;
+import it.polimi.ingsw.model.Match;
+import it.polimi.ingsw.model.Player;
 
 public class Ch_3 implements CharacterCard {
 
     private final short price;
     private boolean activated;
     private final String powerUp;
-    private Archipelago Islands;
+    private Player player;
+    private Match match;
+    private View view;
 
-    public Ch_3(){
+    public Ch_3(Match match,View view){
+        this.match=match;
+        this.view=view;
         price=3;
         activated=false;
         powerUp="Choose an Island and resolve the Island as if "+
@@ -21,7 +28,7 @@ public class Ch_3 implements CharacterCard {
 
     @Override
     public void activatePowerUp() {
-        //...
+
         if(!activated){
             activated=true;
         }
@@ -49,4 +56,9 @@ public class Ch_3 implements CharacterCard {
     //public GroupOfIslands getIslands() {
     //    return Islands;
     //}
+
+    @Override
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 }

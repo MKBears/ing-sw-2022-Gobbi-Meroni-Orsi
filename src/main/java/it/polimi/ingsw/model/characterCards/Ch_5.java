@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.characterCards;
 
-import it.polimi.ingsw.model.CharacterCard;
-import it.polimi.ingsw.model.Island;
+import it.polimi.ingsw.client.View;
+import it.polimi.ingsw.model.*;
 
 public class Ch_5 implements CharacterCard {
 
@@ -9,8 +9,12 @@ public class Ch_5 implements CharacterCard {
     private boolean activated;
     private final String powerUp;
     private Island[] Islands= new Island[4];
-
-    public Ch_5(){
+    private Player player;
+    private Match match;
+    private View view;
+    public Ch_5(Match match, View view){
+        this.view=view;
+        this.match=match;
         price=2;
         activated=false;
         for(int i=0; i<4; i++){
@@ -24,7 +28,12 @@ public class Ch_5 implements CharacterCard {
 
     @Override
     public void activatePowerUp() {
-        //...
+        Land land=view.chooseLand(match.getLands());
+        try {
+            land.setNoEntry(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if(!activated){
             activated=true;
         }
@@ -52,5 +61,10 @@ public class Ch_5 implements CharacterCard {
 
     public Island[] getIslands() {
         return Islands;
+    }
+
+    @Override
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }

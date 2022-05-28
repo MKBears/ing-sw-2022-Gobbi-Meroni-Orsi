@@ -1,12 +1,22 @@
 package it.polimi.ingsw.model.characterCards;
 
 import it.polimi.ingsw.model.CharacterCard;
+import it.polimi.ingsw.model.Player;
 
 public class Ch_4 implements CharacterCard {
 
     private final short price;
     private boolean activated;
     private final String powerUp;
+    private Player player;
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 
     public Ch_4(){
         price=1;
@@ -17,8 +27,7 @@ public class Ch_4 implements CharacterCard {
 
     @Override
     public void activatePowerUp() {
-        //...
-
+        player.getPlayedCard().ch_4_effect();
         if (!activated){
             activated=true;
         }
@@ -43,4 +52,6 @@ public class Ch_4 implements CharacterCard {
     public String getPowerUp() {
         return powerUp;
     }
+
+
 }

@@ -73,15 +73,19 @@ public class Server extends Thread{
     }
 
     public synchronized Controller createMatch(ClientHandler creator, int playersNum, boolean expertMatch) {
-        for (Controller match : matches){
-            if (match.getCreator().equals(creator.getUserName())){
-                matches.remove(match);
-                match.notifyDeletion("Creator started a new match");
-                break;
+        if (!matches.isEmpty()) {
+            System.out.println("Controllo se questo giocatore ha gia' creato una partita");
+            for (Controller match : matches) {
+                if (match.getCreator().equals(creator.getUserName())) {
+                    matches.remove(match);
+                    match.notifyDeletion("Creator started a new match");
+                    break;
+                }
             }
         }
         Controller match = new Controller(creator, playersNum, expertMatch);
         matches.add(match);
+        System.out.println("Match creato");
         return match;
     }
 
@@ -108,7 +112,7 @@ public class Server extends Thread{
         for (Controller match : matches){
             if (creator != null) {
                 if (match.getCreator().equals(creator)) {
-                    if (match.isPaused()) {
+                    if (match.isPaused() || match.getPlayers().contains(player.getUserName())) {
                         match.connectPlayer(player);
 
                         if (match.readyToStart()) {
@@ -147,7 +151,9 @@ public class Server extends Thread{
 
     public boolean inactivePlayer (ClientHandler player) {
         for (Controller match : matches) {
+            System.out.println("Match creato da: "+match.getCreator());
             if (match.getPlayers().contains(player.getUserName())) {
+                System.out.println("Ho trovato "+player.getUserName());
                 if (!match.isPaused()) {
                     if (match.getPlayer(player.getUserName()).isConnected()) {
                         return false;
@@ -155,6 +161,7 @@ public class Server extends Thread{
                 }
             }
         }
+        System.out.println("Player non attivo");
         return true;
     }
 

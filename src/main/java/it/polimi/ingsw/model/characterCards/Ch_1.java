@@ -1,28 +1,38 @@
 package it.polimi.ingsw.model.characterCards;
 
-import it.polimi.ingsw.model.Bag;
-import it.polimi.ingsw.model.CharacterCard;
-import it.polimi.ingsw.model.Island;
-import it.polimi.ingsw.model.Student;
+import it.polimi.ingsw.client.Action;
+import it.polimi.ingsw.client.View;
+import it.polimi.ingsw.model.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Ch_1 implements CharacterCard {
     private final short price;
     private boolean activated;
     private final String powerUp;
-    private final Bag bag;
-    private Student[] students;
+    private final Match match;
 
-    public Ch_1(Bag bag){
-        students = new Student[4];
+    @Override
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    private Player player;
+    private List<Student> students;
+    View view;
+
+    public Ch_1(Match match,View view){
+        students = new ArrayList<>();
         price = 1;
         activated = false;
         powerUp = "Choose between the four Students on this card and place it on an " +
                 "Island of your choice.";
-        this. bag = bag;
-
+        this.match = match;
+        this.view=view;
         for (int i=0; i<4; i++){
             try {
-                students[i] = bag.getRandomStudent();
+                students.add(match.getBag().getRandomStudent());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -31,16 +41,14 @@ public class Ch_1 implements CharacterCard {
 
     @Override
     public void activatePowerUp() {
-        Island island;
-        int student=0;
-
-        //fa scegliere al player lo studente e l'isola su cui mandarlo
-
-        //island.setStudents(students[student]);
-        //in match bisogna fare in modo di mandare sempre riferimenti alla prima isola di un gruppo
-        //students[student] = bag.getRandomStudent();
-        if (!activated){
-            activated = true;
+        Student student=view.chooseStudent(students);
+        Land land= view.chooseLand(match.getLands());
+        land.addStudent(student);
+        students.remove(student);
+        try {
+            students.add(match.getBag().getRandomStudent());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -64,7 +72,7 @@ public class Ch_1 implements CharacterCard {
         return powerUp;
     }
 
-    public Student[] getStudents() {
+    public List<Student> getStudents() {
         return students;
     }
 }

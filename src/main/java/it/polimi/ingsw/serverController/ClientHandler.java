@@ -81,8 +81,10 @@ public class ClientHandler extends Thread{
                     do {
                         System.out.println("Aspetto il client");
                         wait();
+                        System.out.println("Let's-a goooo!");
 
                         if (server.getUserNames().contains(userName) && server.inactivePlayer(this)) {
+                            System.out.println("Okie-dokie!");
                             out.sendLoginSucceeded();
                             System.out.println("Login avvenuto con successo: "+userName);
                             nack = false;
@@ -100,20 +102,19 @@ public class ClientHandler extends Thread{
                         }
                     }
                     else {
-                        if (server.areThereJoinableMatches(userName)) {
-                            out.sendListOfGames(server.getJoinableMatches(), server.getPausedMatches(userName));
-                        } else {
-                            out.sendNoGames();
-                        }
+                        out.sendListOfGames(server.getJoinableMatches(), server.getPausedMatches(userName));
+                        System.out.println("Dopo listOfGames");
 
                         do {
                             wait();
                         } while (nack);
+                        System.out.println("Mando maghi");
 
                         do {
                             out.sendWizard(controller.getWizards());
                             wait();
                         } while (nack);
+                        out.sendACK();
                         controller.chooseWizard(wizard);
                         createAvatar(color, match.getPlayersNum(), expertMatch);
                         wait();
@@ -286,14 +287,14 @@ public class ClientHandler extends Thread{
 
     public synchronized void setUserName(String userName) {
         this.userName = userName;
-        //System.out.println("Username impostato");
+        System.out.println("Username impostato");
         notify();
     }
 
     public synchronized void register (String userName) {
         server.addUserName(userName);
         setUserName(userName);
-        //System.out.println("Registrato");
+        System.out.println("Registrato");
     }
 
     public String getUserName() {
@@ -312,6 +313,7 @@ public class ClientHandler extends Thread{
     }
 
     public synchronized void createMatch (int playersNum, boolean expert) {
+        System.out.println("Inizio a creare la partita");
         expertMatch = expert;
         controller = server.createMatch(this, playersNum, expertMatch);
     }
