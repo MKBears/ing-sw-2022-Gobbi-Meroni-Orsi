@@ -79,6 +79,7 @@ public class Client  extends Thread{
             out = new ObjectOutputStream(socket.getOutputStream());
             in= new ObjectInputStream(socket.getInputStream());
             server=new Message4Server(in,out);
+            view.setServer(server);
             received="base1";
             view.getTitolo();
             while (true){

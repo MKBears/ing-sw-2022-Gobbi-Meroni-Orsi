@@ -307,7 +307,7 @@ public class Cli extends Thread implements View{
             System.out.println("Non ci sono partite a cui unirsi");
         }
         else {
-            System.out.println("puoi unirti alle partite:\n");
+            System.out.println("puoi unirti alle partite:");
             for (String e : join) {
                 System.out.println(e);
             }
@@ -317,17 +317,20 @@ public class Cli extends Thread implements View{
             System.out.println("Non ci sono partite da riprendere");
         }
         else {
-            System.out.println("puoi riunirti alle partite: \n");
+            System.out.println("puoi riunirti alle partite:");
             for (String e : resume) {
                 System.out.println(e);
             }
         }
-        System.out.println("scegli la partita(per creare una nuova partita scrivi NewGame):\n");
+        System.out.println("scegli la partita(per creare una nuova partita scrivi NewGame):");
         choose=input.nextLine();
-        server.sendChoosingGame(choose);
 
         if(choose.toLowerCase().equals("newgame")){
+            server.sendChoosingGame("NewGame");
             createMatch();
+        }
+        else {
+            server.sendChoosingGame(choose);
         }
     }
 

@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface View {
     String getUsername();
+    void setServer(Message4Server server);
     Wizards getWizard(List<Wizards> wizards);
     Cloud getCloud(List<Cloud> clouds);
     AssistantCard getAssistantCard(List<AssistantCard> cards);

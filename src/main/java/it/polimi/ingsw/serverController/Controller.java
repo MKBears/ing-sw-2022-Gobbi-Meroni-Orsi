@@ -389,6 +389,7 @@ public class Controller extends Thread{
 
     public synchronized void chooseWizard (Wizards wizard) {
         wizards.remove(wizard);
+        System.out.println("Rimosso "+wizard.toString());
     }
 
     public ArrayList<AssistantCard> getPlayedAssistants(){

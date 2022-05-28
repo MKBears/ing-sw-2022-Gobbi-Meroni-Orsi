@@ -112,6 +112,7 @@ public class ClientHandler extends Thread{
                             out.sendWizard(controller.getWizards());
                             wait();
                         } while (nack);
+                        out.sendACK();
                         controller.chooseWizard(wizard);
                         createAvatar(color, match.getPlayersNum(), expertMatch);
                         wait();
