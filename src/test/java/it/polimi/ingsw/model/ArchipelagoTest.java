@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
 
 import java.util.ArrayList;
 
