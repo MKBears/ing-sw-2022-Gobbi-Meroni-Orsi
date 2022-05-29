@@ -21,7 +21,7 @@ public class ArchipelagoTest {
     public static int e;
     public static Island i;
 
-    @BeforeAll
+    @BeforeEach
     public static void setUp() {
         i=new Island(8888);
         e=0;
