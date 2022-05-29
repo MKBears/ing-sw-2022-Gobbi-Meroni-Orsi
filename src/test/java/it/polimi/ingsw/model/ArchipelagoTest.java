@@ -100,6 +100,7 @@ public class ArchipelagoTest {
         assertEquals(c_torri,board.getTowersNum());
         assertEquals(to,pelago.getTower());
         assertEquals(x,pelago.getAllTowers().size());
+        assertThrows(Exception.class, ()->pelago.changeTower(new ArrayList<>()));
     }
 
     @Test
@@ -222,5 +223,6 @@ public class ArchipelagoTest {
         pelago.changeTower(tt);
         String s=l.toString();
         assertEquals(pelago.getPreviousTowers().toString(),s);
+        assertThrows(Exception.class, ()->pelago.getPreviousTowers());
     }
 }
