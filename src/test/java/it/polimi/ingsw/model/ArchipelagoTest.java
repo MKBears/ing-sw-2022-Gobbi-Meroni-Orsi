@@ -22,7 +22,7 @@ public class ArchipelagoTest {
     public static Island i;
 
     @BeforeEach
-    public static void setUp() {
+    public void setUp() {
         i=new Island(8888);
         e=0;
         c_torri=0;
