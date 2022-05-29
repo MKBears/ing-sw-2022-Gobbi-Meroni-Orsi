@@ -46,10 +46,8 @@ public class MessageFromClient extends Thread{
                             System.out.println("Ricevuto: "+message);
                             Integer playersNum = (Integer) in.readObject();
                             System.out.println("Ricevuto: "+playersNum);
-                            System.out.flush();
                             Boolean expert = (Boolean) in.readObject();
                             System.out.println("Ricevuto: "+expert);
-                            System.out.flush();
                             ch.createMatch(playersNum, expert);
                             System.out.println("Ricevuto num giocatori e expert");
                             ch.setAck(true);

@@ -103,12 +103,12 @@ public class ClientHandler extends Thread{
                     }
                     else {
                         out.sendListOfGames(server.getJoinableMatches(), server.getPausedMatches(userName));
-                        System.out.println("Dopo listOfGames");
+                        //System.out.println("Dopo listOfGames");
 
                         do {
                             wait();
                         } while (nack);
-                        System.out.println("Mando maghi");
+                        //System.out.println("Mando maghi");
 
                         do {
                             out.sendWizard(controller.getWizards());
@@ -116,9 +116,11 @@ public class ClientHandler extends Thread{
                         } while (nack);
                         out.sendACK();
                         controller.chooseWizard(wizard);
-                        createAvatar(color, match.getPlayersNum(), expertMatch);
+                        System.out.println("helooo");
+                        createAvatar(color, controller.getPlayersNum(), expertMatch);
 
                         if (controller.readyToStart()) {
+                            System.out.println("Faccio partire la partita");
                             controller.start();
                         }
                         //wait();
@@ -126,7 +128,7 @@ public class ClientHandler extends Thread{
 
                     do {
                         wait();
-                    } while (nack);
+                    } while (nack && !controller.readyToStart());
 
                     do {
                         out.sendCreation(controller.getMatch());
@@ -317,7 +319,7 @@ public class ClientHandler extends Thread{
     }
 
     public synchronized void createMatch (int playersNum, boolean expert) {
-        System.out.println("Inizio a creare la partita");
+        //System.out.println("Inizio a creare la partita");
         expertMatch = expert;
         controller = server.createMatch(this, playersNum, expertMatch);
     }
@@ -354,8 +356,9 @@ public class ClientHandler extends Thread{
      * @param playersNum to decide how many towers instantiate in the board
      * @param expert true if it's an expert match
      */
-    private synchronized void createAvatar(Colors color, int playersNum, boolean expert){
+    private void createAvatar(Colors color, int playersNum, boolean expert){
         int towersNum;
+        System.out.println("Creo avatar");
 
         if (playersNum==2 || playersNum==4){
             towersNum = 8;

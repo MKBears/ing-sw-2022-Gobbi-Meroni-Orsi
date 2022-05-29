@@ -49,8 +49,7 @@ public class Controller extends Thread{
     }
 
     public void run() throws IllegalArgumentException {
-
-
+        System.out.println("Controller partito");
         //Start match
         while (!paused) {
             try {
@@ -95,9 +94,15 @@ public class Controller extends Thread{
                     default:
                         throw new IllegalArgumentException("Suspicious number of players");
                 }
+                System.out.println("Controller: match creato");
+
                 for (ClientHandler player : players) {
                     player.setMatch(match);
+                    synchronized (player) {
+                        player.notify();
+                    }
                 }
+                System.out.println("Match impostato a tutti i player");
                 state = 1;
             }
             case 1 -> {
@@ -220,7 +225,7 @@ public class Controller extends Thread{
 
     public synchronized void addPlayer (ClientHandler player) throws Exception{
         Colors color;
-        if (connectedPlayers<playersNum) {
+        if (connectedPlayers < playersNum) {
             players[connectedPlayers] = player;
 
             if  (connectedPlayers == 2) {

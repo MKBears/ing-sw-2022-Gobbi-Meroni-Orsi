@@ -29,7 +29,6 @@ public class Client  extends Thread{
     private String username;
     private Player me;
     private boolean end;
-    private Thread viewth;
     private int counter;
     private Boolean nack;
 
@@ -131,9 +130,10 @@ public class Client  extends Thread{
                         view.printMatch(match);
                         view.setMe(me);
                         view.setMatch(match);
-                        viewth.start();
                         server.sendACK();
                         break;
+                    case "NotifyPayerConnected":
+                        //notifica la view che il player *stringa in ingresso* si e' connesso/disconnesso (a seconda del boolean in ingresso)
                     case "RefillClouds": //posso ricevere da 2 a 4 ArrayList<Students>, uno per ogni nuvola
                         for(int i=0;i<match.getCloud().length;i++) {
                             match.getCloud()[i] = (Cloud) in.readObject();
