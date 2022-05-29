@@ -93,13 +93,13 @@ public class ArchipelagoTest {
         for(Island i: pelago.getIslands()) {
             tt.add(to);
         }
-        c_torri=board.getTowersNum();
+        c_torri=b.getTowersNum();
         assertEquals(tt.size(),pelago.size());
         pelago.changeTower(tt);
         assertEquals(pelago.getPreviousTowers().size(),pelago.size());
         //c_torri=c_torri+pelago.getPreviousTowers().size(); //////////////////////////////////
         assertFalse(board.hasNoTowersLeft());
-        assertEquals(c_torri,board.getTowersNum());
+        assertEquals(c_torri,b.getTowersNum());
         assertEquals(to,pelago.getTower());
         assertEquals(x,pelago.getAllTowers().size());
     }
@@ -147,6 +147,9 @@ public class ArchipelagoTest {
     public void unionTest() throws Exception {
         e=1;
         i.changeTower(tow);
+        for (int j = 0; j < 19; j++) {
+            tow.add(t);
+        }
         pelago.changeTower(tow);
         Board bb=new Board(3,Colors.WHITE);
         Board h=new Board(3,Colors.WHITE);
