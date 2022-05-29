@@ -36,11 +36,9 @@ public class ArchipelagoTest {
         s=new Student(type);
         for (int i = 0; i < 20; i++) {
             Island island = new Island(i);
-            for(int j=0; j<20; j++){
-                island.changeTower(tow);
-                c_torri++;
-                island.addStudent(s);
-            }
+            island.changeTower(tow);
+            c_torri++;
+            island.addStudent(s);
             is.add(island);
         }
         pelago=new Archipelago(is);
@@ -93,13 +91,13 @@ public class ArchipelagoTest {
         for(Island i: pelago.getIslands()) {
             tt.add(to);
         }
-        c_torri=b.getTowersNum();
+        c_torri=board.getTowersNum();
         assertEquals(tt.size(),pelago.size());
         pelago.changeTower(tt);
-        assertEquals(pelago.getPreviousTowers().size(),pelago.size());
-        //c_torri=c_torri+pelago.getPreviousTowers().size(); //////////////////////////////////
+        //assertEquals(pelago.getPreviousTowers().size(),pelago.size());
+        c_torri=c_torri+pelago.getPreviousTowers().size();
         assertFalse(board.hasNoTowersLeft());
-        assertEquals(c_torri,b.getTowersNum());
+        assertEquals(c_torri,board.getTowersNum());
         assertEquals(to,pelago.getTower());
         assertEquals(x,pelago.getAllTowers().size());
     }
@@ -223,6 +221,6 @@ public class ArchipelagoTest {
         }
         pelago.changeTower(tt);
         String s=l.toString();
-        assertEquals(pelago.getPreviousTowers(),s);
+        assertEquals(pelago.getPreviousTowers().toString(),s);
     }
 }
