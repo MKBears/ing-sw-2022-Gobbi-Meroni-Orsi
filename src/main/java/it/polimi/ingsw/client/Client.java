@@ -87,24 +87,20 @@ public class Client  extends Thread{
                     received = (String) in.readObject();
                 }
                 System.out.println("Ricevuto: "+received);
-                switch (received){
+                switch (received) {
                     case "base1": //login
+                        do {
+                            if (view.chooseLogin().equals("si")) {
+                                username = view.getUsername();
+                                server.sendRegistration(username);
+                            } else {
+                                username = view.getUsername();
+                                server.sendLogin(username);
+                            }//Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
 
-                        if(view.chooseLogin().equals("si")){
-                            username = view.getUsername();
-                            server.sendRegistration(username);
-                        }else {
-                            username = view.getUsername();
-                            server.sendLogin(username);
-                        }//Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
-
-                        response=(String)in.readObject();
-                        System.out.println(response);
-                        while(response.equals("LoginFailed")){
-                            username= view.getUsername();
-                            server.sendLogin(username);
-                            response=(String) in.readObject();
-                        }
+                            response = (String) in.readObject();
+                            System.out.println(response);
+                        } while(response.equals("LoginFailed"));
                         received="ok";
                         break;
                     case "ListOfGames":

@@ -366,7 +366,7 @@ public class Controller extends Thread{
     }
 
     private void moveCurrentPlayer() {
-        if (currentPlayer <= playersNum-1) {
+        if (currentPlayer < playersNum-1) {
             currentPlayer++;
         }
         else {
