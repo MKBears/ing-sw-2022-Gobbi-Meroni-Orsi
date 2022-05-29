@@ -105,28 +105,8 @@ public class Client  extends Thread{
                             server.sendLogin(username);
                             response=(String) in.readObject();
                         }
-                        //response=(String) in.readObject();
-                        /*if(response=="Creation"){
-                            System.out.println("Ricevuto: Creation");
-                            match=(Match) in.readObject();
-                            System.out.println("Match creato");
-                            server.sendACK();
-                            //nel caso in cui stia creando una nuova partita: da mandare prima di GameSelected
-                            //int num=view.getNumPlayer();
-                            //server.sendNumPlayers(num);
-                            //response=(String)in.readObject();
-                            //if(response=="NACK"){
-                                //decisione
-                            //}else if(response=="ACK"){
-                                //si va a avanti
-                            //}
-                        }
-                        else{
-                            server.sendNACK();
-                        }*/
-                        //decision
                         received="ok";
-                        break; //adesso mi metto in ascolto
+                        break;
                     case "ListOfGames":
                         ArrayList<String> join=new ArrayList<>();
                         join=(ArrayList<String>) in.readObject();

@@ -114,12 +114,8 @@ class BoardExpertsTest {
         student = new Student(Type_Student.DRAGON);
         assertThrows(Exception.class, ()->board.placeStudent(student));
 
-        try {
-            board.playCharacter(c);
-            assertTrue(c.hasBeenActivated());
-        }catch (Exception e){
-            fail();
-        }
+        assertThrows(NullPointerException.class, ()->board.playCharacter(c));
+        assertTrue(c.hasBeenActivated());
         assertSame(2, board.getCoinsNumber());
         assertThrows(Exception.class, ()->board.playCharacter(new Ch_9()));
     }

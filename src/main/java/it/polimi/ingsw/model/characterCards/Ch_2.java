@@ -31,6 +31,7 @@ public class Ch_2 implements CharacterCard {
         for (Type_Student e:Type_Student.values()) {
             int a=0;
             int i;
+            activated = true;
             for (i = 0; i < match.getPlayersNum(); i++)
                 if(match.getPlayer()[i].getBoard().getStudentsOfType(e)>match.getPlayer()[a].getBoard().getStudentsOfType(e))
                     a=i;
