@@ -193,13 +193,13 @@ public class Island implements Land {
         String a= "isola " + islandID +
                 " con studenti: " + students;
         if(tower!=null)
-            a=a+" e " + tower;
+            a=a+" e " + tower; ///
         else a=a+" non ha torri";
         if (noEntry==false){
             return a;
         }
         else
-            return a+" entrata chiusa";
+            return a+" entrata chiusa"; //
     }
 
     @Override

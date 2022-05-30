@@ -127,7 +127,7 @@ public class Archipelago implements Land {
             hasChanged = true;
         }
         else{
-            throw new Exception("Error in towers");
+            throw new Exception("Error in towers");  ////
         }
     }
 
@@ -140,7 +140,7 @@ public class Archipelago implements Land {
     @Override
     public Archipelago uniteIslands(Land other) throws Exception {
         if (other.getTower().getColor() != this.color) {
-            throw new Exception("Wrong Color of Towers"); //
+            throw new Exception("Wrong Color of Towers");
         }
         group.addAll(other.getIslands());
         this.size= (int) group.size();
@@ -222,7 +222,7 @@ public class Archipelago implements Land {
 
     public ArrayList<Tower> getPreviousTowers() throws Exception {
         if (previousTowers == null || !hasChanged) {
-            throw new Exception ("There haven't been changes");
+            throw new Exception ("There haven't been changes");  ///
         }
         hasChanged = false;
         return previousTowers;

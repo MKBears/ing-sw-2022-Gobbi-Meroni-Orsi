@@ -79,10 +79,10 @@ public class Client  extends Thread{
             in= new ObjectInputStream(socket.getInputStream());
             server=new Message4Server(in,out);
             view.setServer(server);
-            received="base1";
+            received="base";
             view.getTitolo();
             while (true){
-                if(received!="base1") {
+                if(received!="base") {
                     received = (String) in.readObject();
                 }
                 System.out.println("Ricevuto: "+received);
@@ -170,7 +170,6 @@ public class Client  extends Thread{
                             }
                         }
                         server.sendACK();
-                        //server.sendACK(); o server.sendNACK();
                         break;
                     case "NotifyMoveStudents (id)":
                         Student stu=(Student) in.readObject(); //lo studente stesso
@@ -195,7 +194,6 @@ public class Client  extends Thread{
                         action.checkAllProfessors();
                         view.printMatch(match);
                         server.sendACK();
-                        //server.sendACK(); o server.sendNACK();
                         break;
                     case "NotifyMovementMN":
                         int movement=(int)in.readObject();
@@ -211,14 +209,12 @@ public class Client  extends Thread{
                         }
                         view.printMatch(match);
                         server.sendACK();
-                        //server.sendACK(); o server.sendNACK();
                         break;
                     case "NotifyProfessors":
                         Map<Type_Student, Player> prof=(Map<Type_Student, Player>) in.readObject();
                         match.setProfessors(prof);
                         view.printMatch(match);
                         server.sendACK();
-                        //server.sendACK(); o server.sendNACK();
                         break;
                     case "NotifyChosenCloud":
                         Player p=(Player) in.readObject();
@@ -230,7 +226,6 @@ public class Client  extends Thread{
                             }
                         }
                         server.sendACK();
-                        //server.sendACK(); o server.sendNACK();
                         break;
                     case "NotifyTowers (land)":
                         ArrayList<Tower> towers=(ArrayList<Tower>) in.readObject();
@@ -241,7 +236,6 @@ public class Client  extends Thread{
                         }
                         view.printMatch(match);
                         server.sendACK();
-                        //server.sendACK(); o server.sendNACK();
                         break;
                     case "NotifyTowers (board)":
                         ArrayList<Tower> towers1=(ArrayList<Tower>) in.readObject();
@@ -252,7 +246,6 @@ public class Client  extends Thread{
                                 match.getPlayer()[i].setBoard(board);
                         }
                         server.sendACK();
-                        //server.sendACK(); o server.sendNACK();
                         break;
                     case "EndGame":
                         Player winner=(Player) in.readObject();
@@ -268,29 +261,49 @@ public class Client  extends Thread{
                         view.printMatch(match);
                         view.wakeUp("EndGame");
                         end=true;
-                        //server.sendACK(); o server.sendNACK();
+                        server.sendACK();
                         break;
                     case "LastTower":
                         Player pl=(Player) in.readObject();
                         view.getWinner(pl);
                         view.wakeUp("EndGame");
                         end=true;
-                        //server.sendACK(); o server.sendNACK();
+                        server.sendACK();
                         break;
                     case "NoMoreStudents":
                         view.lastRound();
                         server.sendACK();
-                        //server.sendACK(); o server.sendNACK();
                         break;
                     case "NextTurn":
                         Player play=(Player) in.readObject();
                         String phase=(String)in.readObject();
                         view.printTurn(play,phase);
-                        server.sendACK(); //o server.sendNACK();
+                        server.sendACK();
                         break;
                     case "Ping":
                         server.sendPONG();
                         break;
+                    case "NotifyPlayerConnected":
+                        String u=(String) in.readObject();
+                        boolean connected=(boolean) in.readObject();
+                        //DECISIONE
+                        server.sendACK();
+                        break;
+                    case "NotifyAllPlayersDisconnected":
+                        //DECISIONE
+                        server.sendACK();
+                        break;
+                    case "FinishedAssistants":
+                        Player who=(Player) in.readObject();
+                        //DECISIONE
+                        server.sendACK();
+                        break;
+                    case "GenericError":
+                        String error= (String) in.readObject();
+                        //DECISIONE
+                        server.sendACK();
+                        break;
+                    default: server.sendNACK();
                 }
                 if(end==true)
                     break;

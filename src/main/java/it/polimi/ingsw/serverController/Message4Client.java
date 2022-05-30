@@ -78,20 +78,6 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
     }
 
     /**
-     * When there is no game started with the selection of the player
-     */
-    public void sendNoGames() { //serve?
-        synchronized (this) {
-            name = "NoGames";
-            try {
-                out.writeObject(name);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    /**
      * When the login is successful
      *
      * @param joinGames   a list of games that is possible to join

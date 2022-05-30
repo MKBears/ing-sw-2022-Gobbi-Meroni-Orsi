@@ -200,6 +200,19 @@ public class IslandTest {
     public void toStringTest(){
         assertThrows(Exception.class,()->island.getPreviousTowers());
         String s="isola "+island.getID()+" con studenti: "+island.getStudents()+" non ha torri";
+        Island f=new Island(88);
+        Board on=new Board(6,Colors.WHITE);
+        Tower bu= new Tower(Colors.WHITE, on);
+        ArrayList<Tower> gio=new ArrayList<>();
+        gio.add(bu);
+        f.changeTower(gio);
+        try {
+            f.setNoEntry(true);
+        } catch (Exception e) {
+            fail();
+        }
+        String rno="isola "+f.getID()+" con studenti: [] e torre di colore Bianco  entrata chiusa";
+        assertEquals(rno, f.toString());
         assertEquals(s,island.toString());
         assertFalse(island.hasChanged());
         Board bo=new Board(55, Colors.BLACK);
@@ -213,9 +226,12 @@ public class IslandTest {
         ho.add(me);
         island.changeTower(ho);
         assertTrue(island.hasChanged());
-        assertEquals(56,bo.getTowersNum()); //QUI FUNZIONA MALEDETTO
         ho.clear();
         ho.add(j);
+        island.changeTower(ho);
+        assertEquals(56,bo.getTowersNum()); //QUI FUNZIONA MALEDETTO
+        ho.clear();
+        ho.add(me);
         try {  //LANCIA L'ECCEZIONE
             assertEquals(ho, island.getPreviousTowers());
         }catch (Exception e){
