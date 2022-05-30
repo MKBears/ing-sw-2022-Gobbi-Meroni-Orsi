@@ -87,7 +87,7 @@ public class Client  extends Thread{
                 }
                 System.out.println("Ricevuto: "+received);
                 switch (received) {
-                    case "base1": //login
+                    case "base": //login
                         do {
                             if (view.chooseLogin().equals("si")) {
                                 username = view.getUsername();
@@ -300,6 +300,7 @@ public class Client  extends Thread{
                         break;
                     case "GenericError":
                         String error= (String) in.readObject();
+                        System.out.println(error);
                         //DECISIONE
                         server.sendACK();
                         break;

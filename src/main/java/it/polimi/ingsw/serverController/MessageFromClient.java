@@ -97,6 +97,7 @@ public class MessageFromClient extends Thread{
                 ch.setAck(false);
             } catch (IOException i) {
                 missedPongs++;
+                System.out.println(i.getMessage());
 
                 if (missedPongs == 3) {
                     try {

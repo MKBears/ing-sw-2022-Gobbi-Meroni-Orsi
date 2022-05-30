@@ -128,6 +128,7 @@ public class Server extends Thread{
                 if (match.getPlayers().contains(player.getUserName())) {
                     if (!match.isPaused()) {
                         match.connectPlayer(player);
+                        return match;
                     }
                 }
             }

@@ -242,8 +242,10 @@ public class Controller extends Thread{
             connectedPlayers++;
 
             for (ClientHandler p : players) {
-                if (p != player) {
-                    p.getOutputStream().sendNotifyPlayerConnected(player.getUserName(), true);
+                if (p != null) {
+                    if (p != player) {
+                        p.getOutputStream().sendNotifyPlayerConnected(player.getUserName(), true);
+                    }
                 }
             }
         }
@@ -380,6 +382,11 @@ public class Controller extends Thread{
     }
 
     public boolean isMyTurn(ClientHandler player) {
+        for (int i=0; i<playersNum; i++) {
+            if (players[i] == null) {
+                return false;
+            }
+        }
         return players[currentPlayer] == player;
     }
 

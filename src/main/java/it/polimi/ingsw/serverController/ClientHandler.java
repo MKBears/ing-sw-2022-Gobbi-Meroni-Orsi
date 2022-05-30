@@ -328,7 +328,7 @@ public class ClientHandler extends Thread{
         try {
             controller = server.joinGame(creator, this);
         } catch (Exception e) {
-            out.sendGenericError("Couldn't join match");
+            out.sendGenericError(e.getMessage());
             state = 8;
         }
     }

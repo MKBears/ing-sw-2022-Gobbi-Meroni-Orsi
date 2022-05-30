@@ -479,7 +479,7 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
      */
     public void sendNotifyPlayerConnected(String username, boolean connected) {
         synchronized (this) {
-            name = "NotifyPayerConnected";
+            name = "NotifyPlayerConnected";
             try {
                 out.writeObject(name);
                 out.writeObject(username);
