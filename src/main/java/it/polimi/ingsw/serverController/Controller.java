@@ -76,26 +76,6 @@ public class Controller extends Thread{
         switch (state) {
             case 0 -> {
                 //MATCH PREPARATION phase
-                switch (playersNum) {
-                    case 2:
-                        if (expertMatch) {
-                            match = new Expert_Match(players[0].getAvatar(), players[1].getAvatar());
-                        } else {
-                            match = new Match(players[0].getAvatar(), players[1].getAvatar());
-                        }
-                        break;
-                    case 3:
-                        if (expertMatch) {
-                            match = new Expert_Match(players[0].getAvatar(), players[1].getAvatar(), players[2].getAvatar());
-                        } else {
-                            match = new Match(players[0].getAvatar(), players[1].getAvatar(), players[2].getAvatar());
-                        }
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Suspicious number of players");
-                }
-                System.out.println("Controller: match creato");
-
                 for (ClientHandler player : players) {
                     player.setMatch(match);
                     synchronized (player) {
@@ -255,7 +235,7 @@ public class Controller extends Thread{
     }
 
     public boolean readyToStart() {
-        return connectedPlayers == playersNum;
+        return connectedPlayers==playersNum && match!=null;
     }
 
     public synchronized void connectPlayer(ClientHandler player) {
@@ -331,6 +311,36 @@ public class Controller extends Thread{
         else {
             firstPlayer++;
         }
+    }
+
+    public void createMatch() {
+        for (int i=0; i<playersNum; i++) {
+            if (players[i] == null) {
+                return;
+            }
+        }
+
+        switch (playersNum) {
+            case 2:
+                if (expertMatch) {
+                    match = new Expert_Match(players[0].getAvatar(), players[1].getAvatar());
+                } else {
+                    match = new Match(players[0].getAvatar(), players[1].getAvatar());
+                }
+                break;
+            case 3:
+                if (expertMatch) {
+                    match = new Expert_Match(players[0].getAvatar(), players[1].getAvatar(), players[2].getAvatar());
+                } else {
+                    match = new Match(players[0].getAvatar(), players[1].getAvatar(), players[2].getAvatar());
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Suspicious number of players");
+        }
+        System.out.println("Controller: match creato");
+        System.out.println("Faccio partire la partita");
+        start();
     }
 
     public Match getMatch() {

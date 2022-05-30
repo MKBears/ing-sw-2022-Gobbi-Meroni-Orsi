@@ -279,6 +279,7 @@ public class Client  extends Thread{
                         String phase=(String)in.readObject();
                         view.printTurn(play,phase);
                         server.sendACK();
+                        System.out.println("Mandato ack");
                         break;
                     case "Ping":
                         server.sendPONG();

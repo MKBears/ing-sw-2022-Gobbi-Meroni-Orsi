@@ -119,16 +119,13 @@ public class ClientHandler extends Thread{
                         System.out.println("helooo");
                         createAvatar(color, controller.getPlayersNum(), expertMatch);
 
-                        if (controller.readyToStart()) {
-                            System.out.println("Faccio partire la partita");
-                            controller.start();
-                        }
+                        controller.createMatch();
                         //wait();
                     }
 
                     do {
                         wait();
-                    } while (nack && !controller.readyToStart());
+                    } while (nack || !controller.readyToStart());
 
                     do {
                         out.sendCreation(controller.getMatch());

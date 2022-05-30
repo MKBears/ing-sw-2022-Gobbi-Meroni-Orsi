@@ -79,12 +79,14 @@ public class MessageFromClient extends Thread{
                         break;
                     case "Nack":
                         ch.sendMessageAgain();
+                        break;
                     case "Pong":
                         missedPongs = 0;
 
                         if (!ch.isConnected()) {
                             ch.setConnected();
                         }
+                        break;
                     default:
                         System.out.println("Ricevo stringhe strane: "+message);
                         ch.setAck(false);
@@ -102,6 +104,7 @@ public class MessageFromClient extends Thread{
                 if (missedPongs == 3) {
                     try {
                         ch.setDisconnected();
+                        running = false;
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
