@@ -1,10 +1,12 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.characterCards.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -132,8 +134,6 @@ public class Client  extends Thread{
                         view.setMatch(match);
                         server.sendACK();
                         break;
-                    case "NotifyPayerConnected":
-                        //notifica la view che il player *stringa in ingresso* si e' connesso/disconnesso (a seconda del boolean in ingresso)
                     case "RefillClouds": //posso ricevere da 2 a 4 ArrayList<Students>, uno per ogni nuvola
                         for(int i=0;i<match.getCloud().length;i++) {
                             match.getCloud()[i] = (Cloud) in.readObject();
@@ -287,23 +287,56 @@ public class Client  extends Thread{
                     case "NotifyPlayerConnected":
                         String u=(String) in.readObject();
                         boolean connected=(boolean) in.readObject();
-                        //DECISIONE
+                        if(connected){
+                            view.playerConnected(u);
+                        }else
+                        {
+                            view.playerDisconnected(u);
+                        }
                         server.sendACK();
                         break;
                     case "NotifyAllPlayersDisconnected":
-                        //DECISIONE
+                        view.playerDisconnectedAll();
                         server.sendACK();
                         break;
                     case "FinishedAssistants":
                         Player who=(Player) in.readObject();
-                        //DECISIONE
+                        view.finishedAC(who);
                         server.sendACK();
                         break;
                     case "GenericError":
                         String error= (String) in.readObject();
                         System.out.println(error);
-                        //DECISIONE
                         server.sendACK();
+                        break;
+                    case "Ch":
+                        CharacterCard ch[]=(CharacterCard[])in.readObject();
+                        /*switch (n){
+                            case 1:
+                                Ch_1 c=(Ch_1) in.readObject();
+                                break;
+                            case 2:
+                                Ch_2 ca=(Ch_2)in.readObject();
+                                break;
+                            case 4:
+                                Ch_4 car=(Ch_4)in.readObject();
+                                break;
+                            case 5:
+                                Ch_5 cara=(Ch_5)in.readObject();
+                                break;
+                            case 7:
+                                Ch_7 carac=(Ch_7)in.readObject();
+                                break;
+                            case 10:
+                                Ch_10 caract=(Ch_10)in.readObject();
+                                break;
+                            case 11:
+                                Ch_11 caracte=(Ch_11)in.readObject();
+                                break;
+                            case 12:
+                                Ch_12 caracter=(Ch_12)in.readObject();
+                                break;
+                        }*/
                         break;
                     default: server.sendNACK();
                 }

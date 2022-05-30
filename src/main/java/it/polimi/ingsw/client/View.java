@@ -32,4 +32,9 @@ public interface View {
     Land chooseLand(List<Land> lands);
     Student chooseStudent(List<Student> student);
     Type_Student chooseColorStudent();
+    void playerConnected(String username);
+    void playerDisconnected(String username);
+    void playerDisconnectedAll();
+    void finishedAC(Player p);
+    void chooseChCard(CharacterCard[] cards);
 }

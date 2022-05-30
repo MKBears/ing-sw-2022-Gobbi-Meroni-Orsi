@@ -392,4 +392,22 @@ public class Cli extends Thread implements View{
             }
         }
     }
+    public void playerConnected(String username){
+        System.out.println("Si e' connesso "+ username);
+    }
+    public void playerDisconnected(String username){
+        System.out.println("Si e' disconnesso "+ username);
+    }
+
+    public void playerDisconnectedAll(){
+        System.out.println("Tutti gli altri giocatori si sono disconnessi");
+    }
+
+    public void finishedAC(Player p){
+        System.out.println(p+" ha finito le carte assistente: ultimo turno");
+    }
+
+    public void chooseChCard(CharacterCard[] cards){
+
+    }
 }

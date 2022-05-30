@@ -1,9 +1,6 @@
 package it.polimi.ingsw.serverController;
 
-import it.polimi.ingsw.model.AssistantCard;
-import it.polimi.ingsw.model.Cloud;
-import it.polimi.ingsw.model.Student;
-import it.polimi.ingsw.model.Wizards;
+import it.polimi.ingsw.model.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -86,6 +83,14 @@ public class MessageFromClient extends Thread{
                         if (!ch.isConnected()) {
                             ch.setConnected();
                         }
+                        break;
+                    case "Ch_1":
+                        Student s=(Student) in.readObject();
+                        Land l=(Land)in.readObject();
+                        //decisione
+                        break;
+                    case "Ch_2":
+                        //decisione
                         break;
                     default:
                         System.out.println("Ricevo stringhe strane: "+message);

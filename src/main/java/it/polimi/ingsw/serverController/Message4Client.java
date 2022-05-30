@@ -522,6 +522,10 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
 
     }
 
+    /**
+     * It sends an error message to the client
+     * @param error specifies the type of error
+     */
     public void sendGenericError(String error) {
         try {
             out.writeObject("GenericError");
@@ -531,6 +535,25 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
         }
     }
 
+    /**
+     * Sends the CharacterCard to the client in order to make him choose which one he wants to use
+     * @param n the number of CharacterCard which is
+     * @param ch the card
+     */
+    public void sendCh(int n, CharacterCard ch){
+        try {
+            out.writeObject("Ch");
+            out.writeObject(n);
+            out.writeObject(ch);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    /**
+     * Closes the connection with the client
+     */
     public void close() {
         try {
             condition = false;
