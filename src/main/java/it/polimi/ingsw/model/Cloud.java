@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * it contains 3 or 4 students (it depends by the number of players)
+ * it contains 3 or 4 students (it depends on the number of players)
  */
 public class Cloud implements Serializable {
 
@@ -18,7 +18,7 @@ public class Cloud implements Serializable {
      *
      * @param bag link of the bag of the game
      * @param number_of_players necessary in order to know the number of Students to get
-     * @throws Exception
+     * @throws Exception if the number of players is none between 2 and 3
      */
     public Cloud (Bag bag, int number_of_players) throws Exception{
         if(number_of_players==2 || number_of_players==4){

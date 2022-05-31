@@ -135,8 +135,11 @@ public class Client  extends Thread{
                         server.sendACK();
                         break;
                     case "RefillClouds": //posso ricevere da 2 a 4 ArrayList<Students>, uno per ogni nuvola
-                        for(int i=0;i<match.getCloud().length;i++) {
-                            match.getCloud()[i] = (Cloud) in.readObject();
+                        Cloud[] receivedClouds;
+                        receivedClouds = (Cloud[]) in.readObject();
+
+                        for (int i=0; i<match.getCloud().length; i++) {
+                            match.getCloud()[i] = receivedClouds[i];
                         }
                         view.printMatch(match);
                         server.sendACK();

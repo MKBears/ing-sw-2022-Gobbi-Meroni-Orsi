@@ -23,7 +23,6 @@ public class Controller extends Thread{
     private boolean paused;
     private final ArrayList<AssistantCard> playedAssistants;
     private final ArrayList<Cloud> chosenClouds;
-    private CharacterCard[] characters;
     private ClientHandler winner;
     private GameRecap gameRecap;
     private String endExplanation;
@@ -41,10 +40,6 @@ public class Controller extends Thread{
         playing = true;
         paused = false;
         firstPlayer = 0;
-
-        if (expertMatch){
-            characters = new CharacterCard[3];
-        }
         wizards = new ArrayList<>(Arrays.asList(Wizards.values()));
     }
 
@@ -54,8 +49,11 @@ public class Controller extends Thread{
         while (!paused) {
             try {
                 changeState();
+                System.out.println("State = "+state);
             } catch (InterruptedException e) {
                 notifyDeletion("Something went wrong waiting for a player to act");
+            } catch (Exception e) {
+                notifyDeletion("Something went wrong initializing the entrances");
             }
         }
         //End match
@@ -72,29 +70,42 @@ public class Controller extends Thread{
         //End connection closure
     }
 
-    private void changeState() throws InterruptedException {
+    private void changeState() throws Exception {
         switch (state) {
             case 0 -> {
                 //MATCH PREPARATION phase
+                ArrayList<Student> entrance = new ArrayList<>(7);
+
                 for (ClientHandler player : players) {
+                    for (int i=0; i<7; i++) {
+                        entrance.add(match.getBag().getRandomStudent());
+                    }
+                    player.getAvatar().getBoard().setEntrance(entrance);
                     player.setMatch(match);
+
                     synchronized (player) {
                         player.notify();
                     }
+                    entrance.clear();
                 }
                 System.out.println("Match impostato a tutti i player");
+                sleep(500);
                 state = 1;
             }
             case 1 -> {
                 //PLANNING phase: all the clouds are filled with 3 or 4 students
                 currentPlayer = firstPlayer;
+
                 try {
                     fillClouds(match.getCloud());
                 } catch (Exception e) {
                     notifyFinishedStudents();
                 }
+                System.out.println("Nuvole riempite");
+
                 do {
                     synchronized (players[currentPlayer]) {
+                        System.out.println("Controller: sveglio player "+players[currentPlayer].getUserName());
                         players[currentPlayer].notify();
                     }
                     moveCurrentPlayer();

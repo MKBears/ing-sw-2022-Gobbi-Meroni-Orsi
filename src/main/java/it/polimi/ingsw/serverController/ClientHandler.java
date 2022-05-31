@@ -60,11 +60,15 @@ public class ClientHandler extends Thread{
 
         do {
             try {
-                //System.out.println("Si va in scena");
                 changeState();
 
                 do {
-                    wait();
+                    System.out.println("Player "+userName+": dormo");
+
+                    synchronized (this) {
+                        wait();
+                    }
+                    System.out.println("Player "+userName+": sveglio");
                 } while (!controller.isMyTurn(this));
             } catch (InterruptedException | SocketException e) {
                 out.sendGenericError("Internal server error");
@@ -116,19 +120,20 @@ public class ClientHandler extends Thread{
                         } while (nack);
                         out.sendACK();
                         controller.chooseWizard(wizard);
-                        System.out.println("helooo");
+                        //System.out.println("helooo");
                         createAvatar(color, controller.getPlayersNum(), expertMatch);
 
                         controller.createMatch();
                         //wait();
                     }
 
-                    do {
+                    while (nack || !controller.readyToStart()) {
                         wait();
-                    } while (nack || !controller.readyToStart());
+                    }
 
                     do {
                         out.sendCreation(controller.getMatch());
+                        System.out.println("Mandata creation");
                         wait();
                     } while (nack);
                     out.start();
@@ -251,7 +256,7 @@ public class ClientHandler extends Thread{
         }
     }
 
-    public synchronized void setAck (boolean ack) {
+    public synchronized void setAck (boolean ack) throws Exception {
         nack = !ack;
         if (ack) {
             //out.sendACK();
@@ -267,7 +272,8 @@ public class ClientHandler extends Thread{
                 out.sendCreation(match);
             }
             else {
-                //chiude la connessione
+                connected = false;
+                closeConnection();
             }
         }
     }
@@ -276,14 +282,15 @@ public class ClientHandler extends Thread{
         return nack;
     }
 
-    public synchronized void sendMessageAgain () {
+    public synchronized void sendMessageAgain () throws Exception {
         nack = true;
         nackCounter++;
 
         if (nackCounter == 3) {
             out.sendCreation(match);
         } else if (nackCounter > 3) {
-            //chiude la connessione
+            connected = false;
+            closeConnection();
         }
         notifyAll();
     }
@@ -452,8 +459,10 @@ public class ClientHandler extends Thread{
         return connected;
     }
 
-    public synchronized void setDisconnected() throws InterruptedException {
+    public synchronized void setDisconnected() throws Exception {
         connected = false;
+        closeConnection();
+
         if (controller != null) {
             controller.notifyPlayerDisconnected(this);
         }

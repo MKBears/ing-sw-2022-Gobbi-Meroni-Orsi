@@ -456,7 +456,7 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
         condition = true;
         while (condition) {
             try {
-                sleep(5000);
+                sleep(4000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

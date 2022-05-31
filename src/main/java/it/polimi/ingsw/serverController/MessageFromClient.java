@@ -40,13 +40,13 @@ public class MessageFromClient extends Thread{
                         message = (String) in.readObject();
 
                         if (message.equals("NewGame")) {
-                            System.out.println("Ricevuto: "+message);
+                            //System.out.println("Ricevuto: "+message);
                             Integer playersNum = (Integer) in.readObject();
-                            System.out.println("Ricevuto: "+playersNum);
+                            //System.out.println("Ricevuto: "+playersNum);
                             Boolean expert = (Boolean) in.readObject();
-                            System.out.println("Ricevuto: "+expert);
+                            //System.out.println("Ricevuto: "+expert);
                             ch.createMatch(playersNum, expert);
-                            System.out.println("Ricevuto num giocatori e expert");
+                            //System.out.println("Ricevuto num giocatori e expert");
                             ch.setAck(true);
                         }
                         else {
@@ -93,24 +93,30 @@ public class MessageFromClient extends Thread{
                         //decisione
                         break;
                     default:
-                        System.out.println("Ricevo stringhe strane: "+message);
+                        System.out.println("Player "+ch.getUserName()+": "+"Ricevo stringhe strane: "+message);
                         ch.setAck(false);
+                        break;
                 }
+
                 synchronized (ch) {
                     ch.notify();
                 }
             } catch (ClassNotFoundException e) {
-                System.out.println("Ricevo oggetti sconosciuti");
-                ch.setAck(false);
-            } catch (IOException i) {
+                System.out.println("Player "+ch.getUserName()+": "+"Ricevo oggetti sconosciuti");
+                try {
+                    ch.setAck(false);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            } catch (Exception i) {
                 missedPongs++;
-                System.out.println(i.getMessage());
+                System.out.println("Player "+ch.getUserName()+": "+i.getMessage());
 
                 if (missedPongs == 3) {
                     try {
                         ch.setDisconnected();
                         running = false;
-                    } catch (InterruptedException e) {
+                    } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 }
