@@ -167,6 +167,8 @@ public class Client  extends Thread{
                     case "NotifyChosenCard":
                         AssistantCard card=(AssistantCard) in.readObject();
                         Player pl2=(Player) in.readObject();
+                        System.out.println(pl2.getUserName()+" ha giocato "+card.toString());
+
                         for (int i = 0; i < match.getPlayer().length; i++) {
                             if(match.getPlayer()[i].getUserName().equals(pl2.getUserName())){
                                 match.getPlayer()[i].draw(card);

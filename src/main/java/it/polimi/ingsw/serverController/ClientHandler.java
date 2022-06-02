@@ -127,7 +127,7 @@ public class ClientHandler extends Thread{
                         //wait();
                     }
 
-                    while (nack || !controller.readyToStart()) {
+                    while (!controller.readyToStart()) {
                         wait();
                     }
 
@@ -354,7 +354,7 @@ public class ClientHandler extends Thread{
         notify();
     }
 
-    public Message4Client getOutputStream() {
+    public synchronized Message4Client getOutputStream() {
         return out;
     }
 

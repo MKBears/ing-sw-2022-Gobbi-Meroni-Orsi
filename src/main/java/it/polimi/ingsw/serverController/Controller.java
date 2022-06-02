@@ -76,20 +76,20 @@ public class Controller extends Thread{
                 //MATCH PREPARATION phase
                 ArrayList<Student> entrance = new ArrayList<>(7);
 
-                for (ClientHandler player : players) {
-                    for (int i=0; i<7; i++) {
+                for (int i=0; i<playersNum; i++) {
+                    for (int j=0; j<7+2*(playersNum-2); j++) {
                         entrance.add(match.getBag().getRandomStudent());
                     }
-                    player.getAvatar().getBoard().setEntrance(entrance);
-                    player.setMatch(match);
+                    players[i].getAvatar().getBoard().setEntrance(entrance);
+                    players[i].setMatch(match);
 
-                    synchronized (player) {
-                        player.notify();
+                    synchronized (players[i]) {
+                        players[i].notifyAll();
                     }
                     entrance.clear();
                 }
                 System.out.println("Match impostato a tutti i player");
-                sleep(500);
+                //sleep(500);
                 state = 1;
             }
             case 1 -> {
@@ -106,7 +106,7 @@ public class Controller extends Thread{
                 do {
                     synchronized (players[currentPlayer]) {
                         System.out.println("Controller: sveglio player "+players[currentPlayer].getUserName());
-                        players[currentPlayer].notify();
+                        players[currentPlayer].notifyAll();
                     }
                     moveCurrentPlayer();
                 } while (currentPlayer != firstPlayer);
@@ -118,12 +118,15 @@ public class Controller extends Thread{
 
                 do {
                     notifyTurn("Planning phase");
+                    System.out.println("Player "+players[currentPlayer].getUserName()+" in pianificazione");
                     synchronized (players[currentPlayer]) {
                         players[currentPlayer].notify();
+                        System.out.println("Player "+players[currentPlayer].getUserName()+" svegliato");
                     }
 
                     synchronized (this) {
                         wait();
+                        System.out.println("So sveglio");
                     }
                     moveCurrentPlayer();
                 } while (currentPlayer != firstPlayer);
@@ -453,17 +456,18 @@ public class Controller extends Thread{
         for (ClientHandler p : players) {
             if (p != player) {
                 do {
-                    p.getOutputStream().sendNotifyChosenCard(assistant, player.getAvatar());
-
                     synchronized (p) {
+                        p.getOutputStream().sendNotifyChosenCard(assistant, player.getAvatar());
                         System.out.println("Aspetto "+p.getUserName());
                         p.wait();
+                        System.out.println("Bellaaaaa");
                     }
                 } while (p.getNack());
             }
         }
 
         synchronized (this) {
+            System.out.println("Mi sveglio");
             notify();
         }
     }
