@@ -153,8 +153,11 @@ public class ClientHandler extends Thread{
                     do {
                         out.sendChooseCard(playableAssistants(controller.getPlayedAssistants()));
                         wait();
+                        System.out.println("Player "+userName+": ricevuto assistente");
                     } while (nack);
+                    System.out.println("Player "+userName+" dopo wile");
                     avatar.draw(playedAssistant);
+                    System.out.println("Player "+userName+": gioco assistente");
                     controller.playAssistantCard(playedAssistant, this);
 
                     if (avatar.hasNoCardsLeft()) {
@@ -262,6 +265,7 @@ public class ClientHandler extends Thread{
             //out.sendACK();
             nackCounter = 0;
             notifyAll();
+            System.out.println("Player "+userName+": ack");
         }
         else {
             if (nackCounter < 3) {

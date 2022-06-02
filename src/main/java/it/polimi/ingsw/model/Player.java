@@ -70,7 +70,12 @@ public class Player implements Serializable {
      * @param assistantCard the played assistant card
      */
     public void draw (AssistantCard assistantCard){
-        playedCard = deck.remove(deck.indexOf(assistantCard));
+        for (AssistantCard card : deck) {
+            if (assistantCard.getValue() == card.getValue()) {
+                playedCard = deck.remove(deck.indexOf(card));
+                break;
+            }
+        }
     }
 
     /**

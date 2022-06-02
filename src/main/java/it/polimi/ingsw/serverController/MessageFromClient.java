@@ -97,10 +97,6 @@ public class MessageFromClient extends Thread{
                         ch.setAck(false);
                         break;
                 }
-
-                synchronized (ch) {
-                    ch.notify();
-                }
             } catch (ClassNotFoundException e) {
                 System.out.println("Player "+ch.getUserName()+": "+"Ricevo oggetti sconosciuti");
                 try {

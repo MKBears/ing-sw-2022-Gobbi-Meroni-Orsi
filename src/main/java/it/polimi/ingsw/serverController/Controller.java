@@ -115,16 +115,18 @@ public class Controller extends Thread{
             case 2 -> {
                 //PLANNING phase: each player plays an assistant card
                 currentPlayer = firstPlayer;
-                synchronized (this) {
-                    do {
-                        notifyTurn("Planning phase");
-                        synchronized (players[currentPlayer]) {
-                            players[currentPlayer].notify();
-                        }
-                        moveCurrentPlayer();
+
+                do {
+                    notifyTurn("Planning phase");
+                    synchronized (players[currentPlayer]) {
+                        players[currentPlayer].notify();
+                    }
+
+                    synchronized (this) {
                         wait();
-                    } while (currentPlayer != firstPlayer);
-                }
+                    }
+                    moveCurrentPlayer();
+                } while (currentPlayer != firstPlayer);
                 state = 3;
             }
             case 3 -> {
@@ -417,7 +419,7 @@ public class Controller extends Thread{
                 synchronized (player) {
                     do {
                         player.getOutputStream().sendNextTurn(players[currentPlayer].getAvatar(), phase);
-                        wait();
+                        player.wait();
                     } while (player.getNack());
                 }
             }
@@ -445,18 +447,25 @@ public class Controller extends Thread{
         return (ArrayList<AssistantCard>) playedAssistants.clone();
     }
 
-    public synchronized void playAssistantCard (AssistantCard assistant, ClientHandler player) throws InterruptedException {
+    public void playAssistantCard (AssistantCard assistant, ClientHandler player) throws InterruptedException {
         playedAssistants.add(assistant);
 
         for (ClientHandler p : players) {
             if (p != player) {
                 do {
                     p.getOutputStream().sendNotifyChosenCard(assistant, player.getAvatar());
-                    wait();
+
+                    synchronized (p) {
+                        System.out.println("Aspetto "+p.getUserName());
+                        p.wait();
+                    }
                 } while (p.getNack());
             }
         }
-        notify();
+
+        synchronized (this) {
+            notify();
+        }
     }
 
     public ArrayList<Cloud> getChosenClouds() {
@@ -471,7 +480,7 @@ public class Controller extends Thread{
                 synchronized (p) {
                     do {
                         p.getOutputStream().sendNotifyChosenCloud(player.getAvatar(), cloud);
-                        wait();
+                        p.wait();
                     } while (p.getNack());
                 }
             }
@@ -504,12 +513,12 @@ public class Controller extends Thread{
                     if (position == 12) {
                         do {
                             p.getOutputStream().sendNotifyMoveStudent(student, p.getAvatar().getBoard(), player.getUserName());
-                            wait();
+                            p.wait();
                         } while (player.getNack());
                     } else {
                         do {
                             p.getOutputStream().sendNotifyMoveStudent(student, position, player.getUserName());
-                            wait();
+                            p.wait();
                         } while (player.getNack());
                     }
                 }
@@ -523,7 +532,7 @@ public class Controller extends Thread{
             synchronized (p) {
                 do {
                     p.getOutputStream().sendNotifyMovementMN(steps, lands);
-                    wait();
+                    p.wait();
                 } while (p.getNack());
             }
         }
@@ -584,7 +593,7 @@ public class Controller extends Thread{
                             synchronized (p) {
                                 do {
                                     notifyBuiltLastTower(p);
-                                    wait();
+                                    p.wait();
                                 } while (p.getNack());
                             }
                         }
@@ -611,7 +620,7 @@ public class Controller extends Thread{
             do {
                 player.getOutputStream().sendNotifyProfessors(match.getProfessors());
                 synchronized (player) {
-                    wait();
+                    player.wait();
                 }
             } while (player.getNack());
         }
@@ -638,12 +647,12 @@ public class Controller extends Thread{
             synchronized (p) {
                 do {
                     p.getOutputStream().sendNotifyTowers(position.getAllTowers(), position, player1);
-                    wait();
+                    p.wait();
                 } while (p.getNack());
 
                 do {
                     p.getOutputStream().sendNotifyTowers(position.getAllTowers(), player2.getAvatar().getBoard(), player2.getUserName());
-                    wait();
+                    p.wait();
                 } while (p.getNack());
             }
         }
