@@ -24,7 +24,7 @@ public class Student implements Serializable {
 
     @Override
     public String toString() {
-        return "studente di colore "+ type;
+        return type.toString();
     }
 
     @Override

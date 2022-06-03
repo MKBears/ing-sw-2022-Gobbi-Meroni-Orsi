@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * it contains 3 or 4 students (it depends on the number of players)
@@ -87,6 +86,20 @@ public class Cloud implements Serializable {
 
     @Override
     public String toString() {
-        return "Studenti della nuvola: " + Arrays.toString(students);
+        String cloud = "   ####    #######    ####    \n"+
+                       "  #    ####       ####     #   \n"+
+                       " #                          #  \n"+
+                       "#          "+students[0].toString()+"\u001B[0m"+"          #\n"+
+                       "  #                         # \n"+
+                       "#   "+students[1].toString()+"      "+students[2].toString()+"\u001B[0m"+"   #\n";
+
+        if (students.length == 4) {
+            cloud = cloud+" #                         #  \n"+
+                          "#          "+students[3].toString()+"\u001B[0m"+"          #\n";
+        }
+
+        return cloud+" #                          # \n"+
+                     "  #     #####    #####     #  \n"+
+                     "    ####     ####     ###     ";
     }
 }
