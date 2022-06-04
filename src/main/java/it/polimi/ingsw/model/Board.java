@@ -150,7 +150,7 @@ public class Board implements Serializable {
      * @return the student removed
      */
     public Student removeStudent(Student student){
-        int found = 8;
+        int found = 9;
 
         for (int i=0; i< entrance.size(); i++) {
             if (entrance.get(i).getType().equals(student.getType())) {
@@ -158,7 +158,9 @@ public class Board implements Serializable {
                 break;
             }
         }
-        return entrance.remove(found);
+        if (found!=9)
+            return entrance.remove(found);
+        else return null;
     }
 
     /**

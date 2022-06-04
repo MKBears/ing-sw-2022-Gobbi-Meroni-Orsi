@@ -80,7 +80,7 @@ public class Cloud implements Serializable {
     public String toString() {
         String cloud;
 
-        if (students.isEmpty()) {
+        if (!students.isEmpty()) {
             cloud = "  # ## # ## #\n" +
                     " #    " + students.get(0).toString() + "    #\n" +
                     "  # " + students.get(1).toString() + " " + students.get(2).toString() + " #\n";

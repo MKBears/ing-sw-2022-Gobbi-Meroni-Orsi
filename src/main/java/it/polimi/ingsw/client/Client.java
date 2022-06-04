@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Boolean.FALSE;
+
 public class Client  extends Thread{
     private Socket socket;
     private ObjectOutputStream out;

@@ -252,10 +252,6 @@ public class Cli extends Thread implements View{
                              }
                              do {
                                  server.sendMovedStudent(st, move);
-                                 synchronized (this) {
-                                     nack=false;
-                                     this.wait();
-                                 }
                              } while (nack == true);
                              printMatch(match);
                          }
@@ -272,6 +268,7 @@ public class Cli extends Thread implements View{
 
     public synchronized void wakeUp(String state){
         this.state=state;
+        this.nack=false;
         this.notifyAll();
     }
 
