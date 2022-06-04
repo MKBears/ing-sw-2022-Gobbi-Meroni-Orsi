@@ -132,7 +132,7 @@ public class Cli extends Thread implements View{
     }
 
     public int getDestination(Match match) {
-        int i = 1;
+        int i = 0;
         int choose;
         System.out.println("dove vuoi che vada lo studente?\n");
         System.out.println("se si vuole aggiungere alla sala scrivi sala oppure scegli tra le seguenti isole\n");
@@ -242,7 +242,6 @@ public class Cli extends Thread implements View{
                          for (int i = 0; i < match.getPlayer().length + 1; i++) {
                              st = this.getStudent(me);
                              move = this.getDestination(match);
-                             Integer temp;
                              if (move==12) {
                                  try {
                                      action.moveFromIngressToBoard(me, st);
@@ -258,6 +257,7 @@ public class Cli extends Thread implements View{
                                      this.wait();
                                  }
                              } while (nack == true);
+                             printMatch(match);
                          }
                          break;
                      case ("EndGame"):
