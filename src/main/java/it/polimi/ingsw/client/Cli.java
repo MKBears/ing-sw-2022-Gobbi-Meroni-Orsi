@@ -141,6 +141,7 @@ public class Cli extends Thread implements View{
             i++;
         }
         System.out.println("inserire scelta: ");
+        input.next();
         choose=input.nextLine();
         int chooseInt=parseInt(choose);
         while (choose.toLowerCase()!="sala" && (chooseInt<1 || chooseInt>i)){

@@ -101,7 +101,7 @@ public class GameRecap {
 
         for (int i = 0; i< playersNum; i++) {
             string.append(i).append(".\t").append(players[i]).
-                    append("\t").append(colors[i].toString()).
+                    append("\t").append(colors[i].toString()).append(colors[i].getName()).append("\u001B[0m").
                     append("\t").append(wizards[i].toString()).
                     append("\t").append(builtTowers[i]).
                     append("\t").append(controlledProfessors[i]);

@@ -143,8 +143,10 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
                 cloudss.add(i);
             }
             try {
-                out.writeObject(name);
-                out.writeObject(cloudss);
+                if(!cloudss.isEmpty()) {
+                    out.writeObject(name);
+                    out.writeObject(cloudss);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
