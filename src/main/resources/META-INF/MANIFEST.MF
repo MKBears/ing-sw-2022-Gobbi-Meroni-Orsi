@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: out/artifacts/PSP30_jar/PSP30.jar
+Main-Class: it.polimi.ingsw.serverController.Server
+Main-Class: it.polimi.ingsw.client.Cli
+

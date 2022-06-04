@@ -73,6 +73,20 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.1</version>
       </plugin>
+      <!-- jar plugin, responsible for building jar files -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.2</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <mainClass>it.polimi.ingsw.serverController.Server</mainClass>
+                <mainClass>it.polimi.ingsw.client.Cli</mainClass>
+              </manifest>
+            </archive>
+          </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>

@@ -12,7 +12,7 @@ public class Player implements Serializable {
     private AssistantCard playedCard;
 
     /**
-     * @param userName
+     * @param userName the userName of the player
      * @param color the color of the towers this player has in their board
      * @param towersNum 8 if there are 2 or 4 players, 6 if the number of players is 3
      * @param wizard associated with the rear of the cards
@@ -97,7 +97,7 @@ public class Player implements Serializable {
     @Override
     public String toString() {
         return "Giocatore:" + userName +'\n'+
-                "Colore corrispondente: " + color +'\n'+
+                "Colore corrispondente: " + color.toString()+color.getName()+"\u001B[0m" +'\n'+
                 "con Sala:" + board;
     }
 
