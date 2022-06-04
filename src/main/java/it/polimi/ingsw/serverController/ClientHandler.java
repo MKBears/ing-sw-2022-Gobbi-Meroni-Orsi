@@ -66,7 +66,7 @@ public class ClientHandler extends Thread{
                     System.out.println("Player "+userName+": dormo");
 
                     synchronized (this) {
-                        wait();
+                        this.wait();
                     }
                     System.out.println("Player "+userName+": sveglio");
                 } while (!controller.isMyTurn(this));
@@ -128,7 +128,8 @@ public class ClientHandler extends Thread{
                     }
 
                     while (!controller.readyToStart()) {
-                        wait();
+                        System.out.println("Player "+userName+": aspetto la creazione del match");
+                        this.wait();
                     }
 
                     do {
@@ -144,6 +145,7 @@ public class ClientHandler extends Thread{
                     //PLANNING phase: notify refilled clouds
                     do {
                         out.sendRefillClouds(match.getCloud());
+                        System.out.println("Player "+userName+": mando le nuvole riempite");
                         wait();
                     } while (nack);
                     state = 2;

@@ -73,7 +73,7 @@ public class Board implements Serializable {
                 return dragons.size();
             case GNOME:
                 return gnomes.size();
-            case FAIRIE:
+            case FAIRY:
                 return fairies.size();
             case UNICORN:
                 return unicorns.size();
@@ -123,7 +123,7 @@ public class Board implements Serializable {
             case GNOME:
                 gnomes.add(student);
                 break;
-            case FAIRIE:
+            case FAIRY:
                 fairies.add(student);
                 break;
             case UNICORN:
@@ -221,7 +221,7 @@ public class Board implements Serializable {
             case GNOME:
                 gnomes.add(s);
                 break;
-            case FAIRIE:
+            case FAIRY:
                 fairies.add(s);
                 break;
             case UNICORN:
@@ -246,7 +246,7 @@ public class Board implements Serializable {
                     if(!gnomes.isEmpty())
                         stu.add(gnomes.remove(0));
                 break;
-            case FAIRIE:
+            case FAIRY:
                 for (int i = 0; i < 3; i++)
                     if(!fairies.isEmpty())
                         stu.add(fairies.remove(0));
@@ -279,7 +279,7 @@ public class Board implements Serializable {
             case GNOME:
                 entrance.add(gnomes.remove(0));
                 break;
-            case FAIRIE:
+            case FAIRY:
                 entrance.add(fairies.remove(0));
                 break;
             case UNICORN:

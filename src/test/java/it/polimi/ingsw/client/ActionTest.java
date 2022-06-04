@@ -43,7 +43,7 @@ class ActionTest {
         array.add(student);
         match.getPlayer()[0].getBoard().setEntrance(array);
         match.getPlayer()[0].getBoard().placeStudent(student);
-        student=new Student(Type_Student.FAIRIE);
+        student=new Student(Type_Student.FAIRY);
         array.remove(0);
         array.add(student);
         match.getPlayer()[1].getBoard().setEntrance(array);
@@ -65,7 +65,7 @@ class ActionTest {
         match.getPlayer()[1].getBoard().placeStudent(student);
         a.checkAllProfessors();
         assertTrue(match.getProfessors().get(Type_Student.DRAGON)==match.getPlayer()[0]);
-        assertTrue(match.getProfessors().get(Type_Student.FAIRIE)==match.getPlayer()[1]);
+        assertTrue(match.getProfessors().get(Type_Student.FAIRY)==match.getPlayer()[1]);
         assertTrue(match.getProfessors().get(Type_Student.FROG)==match.getPlayer()[0]);
         assertTrue(match.getProfessors().get(Type_Student.GNOME)==match.getPlayer()[1]);
         assertTrue(match.getProfessors().get(Type_Student.UNICORN)==match.getPlayer()[1]);

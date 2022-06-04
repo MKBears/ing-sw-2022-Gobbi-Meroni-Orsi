@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public enum Colors implements Serializable {
 
-    WHITE ("Bianco"),
-    BLACK ("Nero"),
-    GREY ("Grigio");
+    WHITE ("\u001b[36m"),
+    BLACK ("\u001b[30m"),
+    GREY ("\u001b[37;1m");
 
     private final String color;
 

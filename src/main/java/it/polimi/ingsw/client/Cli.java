@@ -386,7 +386,7 @@ public class Cli extends Thread implements View{
                 case ("blu"):
                     return Type_Student.UNICORN;
                 case ("giallo"):
-                    return Type_Student.FAIRIE;
+                    return Type_Student.FAIRY;
                 case ("rosa"):
                     return Type_Student.GNOME;
             }

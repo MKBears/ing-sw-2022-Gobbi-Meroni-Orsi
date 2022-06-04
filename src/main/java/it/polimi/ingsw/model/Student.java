@@ -24,7 +24,7 @@ public class Student implements Serializable {
 
     @Override
     public String toString() {
-        return type.toString();
+        return type.toString()+"(X)"+"\u001B[0m";
     }
 
     @Override

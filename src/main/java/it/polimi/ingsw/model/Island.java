@@ -190,16 +190,79 @@ public class Island implements Land {
 
     @Override
     public String toString() {
-        String a= "isola " + islandID +
-                " con studenti: " + students;
-        if(tower!=null)
-            a=a+" e " + tower; ///
-        else a=a+" non ha torri";
-        if (noEntry==false){
-            return a;
-        }
+        String island;
+        int[] counter = countStudents();
+        island =    "   ___________\n"+
+                    "  /  ";
+
+        if (noEntry)
+            island +=   "\u001B[31;1m"+"DIVIETO"+"\u001B[0m";
         else
-            return a+" entrata chiusa"; //
+            island +=   "       ";
+
+        island +=   "  \\\n"+
+                    " /    "+new Student(Type_Student.DRAGON).toString()+"x"+counter[0];
+
+        if (counter[0] < 10)
+            island += " ";
+
+        island +=   "   \\\n"+
+                    "/"+new Student(Type_Student.FAIRY).toString()+"x"+counter[1];
+
+        if (counter[1] < 10)
+            island += " ";
+
+        if (tower != null)
+            island +=   tower.getColor().toString()+"|_|"+new Student(Type_Student.GNOME)+"x"+counter[2];
+        else
+            island +=   "   "+new Student(Type_Student.GNOME)+"x"+counter[2];
+
+        if (counter[2] < 10)
+            island += " ";
+
+        island +=   "\\\n"+
+                    "\\      ";
+
+        if (tower != null)
+            island += tower.getColor().toString()+"/_\\"+"\u001B[0m";
+        else
+            island += "   ";
+
+        island +=   "      /\n"+
+                    " \\ "+new Student(Type_Student.UNICORN)+"x"+counter[3];
+
+        if (counter[3] < 10)
+            island += " ";
+
+        island +=   ""+new Student(Type_Student.FROG)+"x"+counter[4];
+
+        if (counter[4] < 10)
+            island += " ";
+
+        island +=   "/\n"+
+                    "  \\___________/";
+
+        return island;
+    }
+
+    private int[] countStudents() {
+        int[] counter = new int[5];
+
+        for (int i=0; i<5; i++) {
+            counter[i] = 0;
+        }
+
+        for (Student student : students) {
+            switch (student.getType()) {
+                case DRAGON -> counter[0]++;
+                case FAIRY -> counter[1]++;
+                case GNOME -> counter[2]++;
+                case UNICORN -> counter[3]++;
+                case FROG -> counter[4]++;
+            }
+        }
+
+        return counter;
     }
 
     @Override

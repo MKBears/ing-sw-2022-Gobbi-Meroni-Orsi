@@ -38,7 +38,7 @@ public class BagTest {
                 case DRAGON:
                     d++;
                     break;
-                case FAIRIE:
+                case FAIRY:
                     fa++;
                     break;
                 case UNICORN:

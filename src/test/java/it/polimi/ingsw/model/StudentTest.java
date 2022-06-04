@@ -13,8 +13,8 @@ class StudentTest {
         assertEquals(a.getType(),FROG);
         a=new Student(DRAGON);
         assertEquals(a.getType(),DRAGON);
-        a=new Student(FAIRIE);
-        assertEquals(a.getType(),FAIRIE);
+        a=new Student(FAIRY);
+        assertEquals(a.getType(),FAIRY);
         a=new Student(GNOME);
         assertEquals(a.getType(),GNOME);
         a=new Student(UNICORN);

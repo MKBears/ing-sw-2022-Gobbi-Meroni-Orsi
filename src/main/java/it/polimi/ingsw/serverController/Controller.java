@@ -84,6 +84,7 @@ public class Controller extends Thread{
                     players[i].setMatch(match);
 
                     synchronized (players[i]) {
+                        System.out.println("Contoller: faccio mandare il match al player "+players[i].getUserName());
                         players[i].notifyAll();
                     }
                     entrance.clear();

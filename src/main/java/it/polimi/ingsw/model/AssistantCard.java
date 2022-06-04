@@ -24,11 +24,22 @@ public class AssistantCard implements Serializable{
         return MNSteps;
     }
 
-    public void ch_4_effect(){MNSteps=MNSteps+2;}
+    public void ch_4_effect(){MNSteps += 2;}
 
     @Override
     public String toString() {
-        return "Carta assistente con valore" + value +
-                " e " + MNSteps + " possibili passi di madre natura";
+        String assistant =  " _______ \n"+
+                            "| "+value;
+
+        if (value < 10)
+            assistant += " ";
+
+        assistant +=    "  "+MNSteps+" |\n"+
+                        "|  /\\\\  |\n"+
+                        "| //_\\\\ |\n"+
+                        "|//   \\\\|\n"+
+                        "|_______|";
+
+        return assistant;
     }
 }

@@ -86,20 +86,21 @@ public class Cloud implements Serializable {
 
     @Override
     public String toString() {
-        String cloud = "   ####    #######    ####    \n"+
-                       "  #    ####       ####     #   \n"+
-                       " #                          #  \n"+
-                       "#          "+students[0].toString()+"\u001B[0m"+"          #\n"+
-                       "  #                         # \n"+
-                       "#   "+students[1].toString()+"      "+students[2].toString()+"\u001B[0m"+"   #\n";
+        String cloud;
 
-        if (students.length == 4) {
-            cloud = cloud+" #                         #  \n"+
-                          "#          "+students[3].toString()+"\u001B[0m"+"          #\n";
+        if (students[students.length-1] != null) {
+            cloud = "  # ## # ## #\n" +
+                    " #    " + students[0].toString() + "    #\n" +
+                    "  # " + students[1].toString() + " " + students[2].toString() + " #\n";
+
+            if (students.length == 4) {
+                cloud = cloud + " #    " + students[3].toString() + "    #\n";
+            }
+        }
+        else {
+            cloud = "Nuvola vuota";
         }
 
-        return cloud+" #                          # \n"+
-                     "  #     #####    #####     #  \n"+
-                     "    ####     ####     ###     ";
+        return cloud+"   ## # ## #";
     }
 }
