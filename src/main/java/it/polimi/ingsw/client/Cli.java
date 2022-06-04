@@ -131,32 +131,24 @@ public class Cli extends Thread implements View{
         return pl.getBoard().removeStudent(pl.getBoard().getEntrance().get(choose-1));
     }
 
-    public String getDestination(Match match){
-        int i=1;
-        String choose;
+    public int getDestination(Match match) {
+        int i = 1;
+        int choose;
         System.out.println("dove vuoi che vada lo studente?\n");
         System.out.println("se si vuole aggiungere alla sala scrivi sala oppure scegli tra le seguenti isole\n");
-        for (Land e:match.getLands()) {
-            System.out.println("scrivi "+i+" per scegliere"+e+"\n");
+        for (Land e : match.getLands()) {
+            System.out.println("scrivi " + i + " per scegliere" + e + "\n");
             i++;
         }
-        System.out.println("inserire scelta: ");
-        input.next();
-        choose=input.nextLine();
-        int chooseInt=parseInt(choose);
-        while (choose.toLowerCase()!="sala" && (chooseInt<1 || chooseInt>i)){
-            System.out.println("inserire scelta: ");
-            choose=input.nextLine();
-            chooseInt=parseInt(choose);
+        try {
+            do {
+                System.out.println("inserire scelta: ");
+                choose = input.nextInt();
+            }while (choose<0 ||choose>12);
+            return choose;
+        } catch (Exception e) {
+            return 12;
         }
-        if(choose.toLowerCase()=="sala"){
-            Integer temp=12;
-            choose=temp.toString();
-        }else{
-            Integer temp=match.getLands().get(chooseInt-1).getID();
-            choose=temp.toString();
-        }
-        return choose;
     }
 
     public void printMatch(Match match){
@@ -246,23 +238,21 @@ public class Cli extends Thread implements View{
                          } while (nack == true);
                      case ("MoveStudents"):
                          Student st;
-                         String move;
+                         int move;
                          for (int i = 0; i < match.getPlayer().length + 1; i++) {
                              st = this.getStudent(me);
                              move = this.getDestination(match);
                              Integer temp;
-                             if (move.equals("board")) {
+                             if (move==12) {
                                  try {
                                      action.moveFromIngressToBoard(me, st);
                                  } catch (Exception e) {
                                  }
-                                 temp = 12;
                              } else {
-                                 temp = parseInt(move);
-                                 action.moveFromIngressToLand(me, st, match.getLands().get(temp.intValue()));
+                                 action.moveFromIngressToLand(me, st, match.getLands().get(move));
                              }
                              do {
-                                 server.sendMovedStudent(st, temp.intValue());
+                                 server.sendMovedStudent(st, move);
                                  synchronized (this) {
                                      nack=false;
                                      this.wait();

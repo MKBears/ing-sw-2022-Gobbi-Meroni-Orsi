@@ -90,7 +90,6 @@ public class Client  extends Thread{
                 if(received!="base") {
                     received = (String) in.readObject();
                 }
-                System.out.println("Ricevuto: "+received);
                 switch (received) {
                     case "base": //login
                         do {

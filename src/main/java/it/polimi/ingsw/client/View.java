@@ -2,7 +2,6 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface View {
@@ -13,7 +12,7 @@ public interface View {
     AssistantCard getAssistantCard(List<AssistantCard> cards);
     int getNumStep(Player pl);
     void getWinner(Player pl);
-    String getDestination(Match match);
+    int getDestination(Match match);
     void printMatch(Match match);
     void printTurn(Player pl,String phase);
     void lastRound();
