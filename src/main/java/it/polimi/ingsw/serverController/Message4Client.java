@@ -141,6 +141,7 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
             ArrayList<Cloud> cloudss=new ArrayList<>();
             for(Cloud i:newClouds){
                 cloudss.add(i);
+                System.out.println(i.toString());
             }
             try {
                 if(!cloudss.isEmpty()) {

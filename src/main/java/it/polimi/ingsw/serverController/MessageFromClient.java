@@ -63,11 +63,11 @@ public class MessageFromClient extends Thread{
                         ch.setAck(true);
                         break;
                     case "MovedStudent":
-                        ch.moveStudent((Student) in.readObject(), in.readInt());
+                        ch.moveStudent((Student) in.readObject(), (int) in.readObject());
                         ch.setAck(true);
                         break;
                     case "StepsMN":
-                        ch.moveMN(in.readInt());
+                        ch.moveMN((int) in.readObject());
                         ch.setAck(true);
                         break;
                     case "ChoiceCloud":

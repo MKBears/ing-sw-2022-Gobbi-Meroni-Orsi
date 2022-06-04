@@ -127,10 +127,10 @@ public class ClientHandler extends Thread{
                         //wait();
                     }
 
-                    while (!controller.readyToStart()) {
+                    do {
                         System.out.println("Player "+userName+": aspetto la creazione del match");
                         this.wait();
-                    }
+                    } while (!controller.readyToStart());
 
                     do {
                         out.sendCreation(controller.getMatch());
@@ -148,6 +148,10 @@ public class ClientHandler extends Thread{
                         System.out.println("Player "+userName+": mando le nuvole riempite");
                         wait();
                     } while (nack);
+
+                    synchronized (controller) {
+                        controller.notify();
+                    }
                     state = 2;
                     break;
                 case 2:

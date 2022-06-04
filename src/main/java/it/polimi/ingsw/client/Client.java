@@ -49,15 +49,12 @@ public class Client  extends Thread{
             nack=false;
             condition=false;
             addr= InetAddress.getLocalHost().getAddress();
-            //addr[2]=(byte)126;
             addr[3]=(byte)255;
             dSokk=new DatagramSocket();
             dSokk.setSoTimeout(5000);
             System.out.println("Client: Inizializzato");
             byte[] buf = new byte[1];
             starting= new DatagramPacket(buf, 0, buf.length, InetAddress.getByAddress(addr), 4898);
-
-            System.out.println(starting.getAddress().toString());
             do { //Ho messo il timeout per la ricezione dei messaggi
                 dSokk.send(starting);
                 System.out.println("Client: Ho mandato richiesta, ora vediamo di ricevere...");

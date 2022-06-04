@@ -90,7 +90,7 @@ public class Controller extends Thread{
                     entrance.clear();
                 }
                 System.out.println("Match impostato a tutti i player");
-                //sleep(500);
+                sleep(1000);
                 state = 1;
             }
             case 1 -> {
@@ -106,8 +106,12 @@ public class Controller extends Thread{
 
                 do {
                     synchronized (players[currentPlayer]) {
+                        players[currentPlayer].notify();
                         System.out.println("Controller: sveglio player "+players[currentPlayer].getUserName());
-                        players[currentPlayer].notifyAll();
+                    }
+
+                    synchronized (this) {
+                        wait();
                     }
                     moveCurrentPlayer();
                 } while (currentPlayer != firstPlayer);
@@ -414,7 +418,7 @@ public class Controller extends Thread{
                 return false;
             }
         }
-        return players[currentPlayer] == player;
+        return players[currentPlayer].equals(player);
     }
 
     private void notifyTurn (String phase) throws InterruptedException {
