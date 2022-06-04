@@ -157,7 +157,7 @@ public class ClientHandler extends Thread{
                         wait();
                         System.out.println("Player "+userName+": ricevuto assistente");
                     } while (nack);
-                    System.out.println("Player "+userName+" dopo wile");
+                    System.out.println("Player "+userName+" dopo while");
                     avatar.draw(playedAssistant);
                     System.out.println("Player "+userName+": gioco assistente");
                     controller.playAssistantCard(playedAssistant, this);

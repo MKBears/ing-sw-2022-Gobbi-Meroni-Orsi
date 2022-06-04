@@ -138,9 +138,13 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
     public void sendRefillClouds(Cloud[] newClouds) {
         synchronized (this) {
             name = "RefillClouds";
+            ArrayList<Cloud> cloudss=new ArrayList<>();
+            for(Cloud i:newClouds){
+                cloudss.add(i);
+            }
             try {
                 out.writeObject(name);
-                out.writeObject(newClouds);
+                out.writeObject(cloudss);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

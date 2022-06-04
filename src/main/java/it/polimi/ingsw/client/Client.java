@@ -49,12 +49,15 @@ public class Client  extends Thread{
             nack=false;
             condition=false;
             addr= InetAddress.getLocalHost().getAddress();
+            //addr[2]=(byte)126;
             addr[3]=(byte)255;
             dSokk=new DatagramSocket();
             dSokk.setSoTimeout(5000);
             System.out.println("Client: Inizializzato");
             byte[] buf = new byte[1];
             starting= new DatagramPacket(buf, 0, buf.length, InetAddress.getByAddress(addr), 4898);
+
+            System.out.println(starting.getAddress().toString());
             do { //Ho messo il timeout per la ricezione dei messaggi
                 dSokk.send(starting);
                 System.out.println("Client: Ho mandato richiesta, ora vediamo di ricevere...");
@@ -134,13 +137,16 @@ public class Client  extends Thread{
                         view.setMatch(match);
                         server.sendACK();
                         break;
-                    case "RefillClouds": //posso ricevere da 2 a 4 ArrayList<Students>, uno per ogni nuvola
-                        Cloud[] receivedClouds;
-                        receivedClouds = (Cloud[]) in.readObject();
-
-                        for (int i=0; i<match.getCloud().length; i++) {
-                            match.getCloud()[i] = receivedClouds[i];
+                    case "RefillClouds":
+                        ArrayList<Cloud> receivedClouds;
+                        receivedClouds = (ArrayList<Cloud>) in.readObject();
+                        Cloud[] clo=new Cloud[receivedClouds.size()];
+                        int o=0;
+                        for(Cloud i: receivedClouds){
+                            clo[o]=i;
+                            o++;
                         }
+                        match.setCloud(clo);
                         view.printMatch(match);
                         server.sendACK();
                         break;
