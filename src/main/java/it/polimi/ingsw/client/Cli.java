@@ -48,6 +48,10 @@ public class Cli extends Thread implements View{
         action=new Action(match);
     }
 
+    /**
+     * request for the username
+     * @return username of the player
+     */
     public String getUsername(){
         String user;
         System.out.println("inserire username:");
@@ -55,6 +59,11 @@ public class Cli extends Thread implements View{
         return user;
     }
 
+    /**
+     * request of the wizard
+     * @param wizards wizard that can be chosen
+     * @return the wizard chosen
+     */
     public Wizards getWizard(List<Wizards> wizards){
         System.out.println("scegli il mago:");
         for (Wizards e:wizards) {
@@ -68,6 +77,11 @@ public class Cli extends Thread implements View{
         return wizards.get(choose-1);
     }
 
+    /**
+     * request to choose the cloud
+     * @param clouds that can be chosen
+     * @return the cloud chosen
+     */
     public Cloud getCloud(List<Cloud> clouds){
         int i =1;
         System.out.println("Scegli la nuvola tra: \n");
@@ -85,6 +99,11 @@ public class Cli extends Thread implements View{
         return clouds.get(choose-1);
     }
 
+    /**
+     * request to choose the assistant card
+     * @param cards that can be chosen
+     * @return the card chosen
+     */
     public AssistantCard getAssistantCard(List<AssistantCard> cards){
         System.out.println("scegli la carta assistente tra: \n");
         for(int i=0;i<cards.size();i++){
@@ -98,7 +117,11 @@ public class Cli extends Thread implements View{
         return cards.get(choose-1);
     }
 
-
+    /**
+     * request for the number of steps
+     * @param pl the player who want to move mother nature
+     * @return the number of step
+     */
     public int getNumStep(Player pl){
         System.out.println("scegli di spostare Madre Natura di? (deve " +
                 "essere un numero compreso tra 0 e "+pl.getPlayedCard().getMNSteps());
@@ -111,12 +134,21 @@ public class Cli extends Thread implements View{
         return step;
     }
 
+    /**
+     * comunicate the player who win the match
+     * @param pl player who win
+     */
     public void getWinner(Player pl){
         System.out.println("il vincitore della partita è: "+pl.getUserName());
     }
 
+    /**
+     * choose of a student in the entrance to be moved
+     * @param pl player who have to move the student
+     * @return the student chosen
+     */
     public Student getStudent(Player pl){
-        int i=0,choose;
+        int i=1,choose;
         System.out.println("scegli uno studente tra: \n");
         for (Student e:pl.getBoard().getEntrance()) {
             System.out.println(e.toString()+'\n');
@@ -128,9 +160,14 @@ public class Cli extends Thread implements View{
             System.out.println("scegli un numero tra 1 e "+i+" :");
             choose=input.nextInt();
         }
-        return pl.getBoard().removeStudent(pl.getBoard().getEntrance().get(choose-1));
+        return pl.getBoard().getEntrance().get(i-1);
     }
 
+    /**
+     * request of where move the student
+     * @param match match of the player
+     * @return int that express where move the student (12 for the board if less than 12 is the id of the land)
+     */
     public int getDestination(Match match) {
         int i = 0;
         int choose;
@@ -144,25 +181,44 @@ public class Cli extends Thread implements View{
             do {
                 System.out.println("inserire scelta: ");
                 choose = input.nextInt();
-            }while (choose<0 ||choose>12);
-            return choose;
+            }while ((choose<0 || choose>=match.getLands().size()) && choose!=12);
+            if(choose!=12)
+                return match.getLands().get(i).getID();
+            else
+                return 12;
         } catch (Exception e) {
             return 12;
         }
     }
 
+    /**
+     * show the match
+     * @param match match of the player
+     */
     public void printMatch(Match match){
         System.out.println(match.toString()+'\n');
     }
 
+    /**
+     * show the turn
+     * @param pl player of the turn
+     * @param phase phase of the match
+     */
     public void printTurn(Player pl,String phase){
         System.out.println("tocca a: "+pl.getUserName()+"in fase di"+phase+"\n");
     }
 
+    /**
+     * show that it is the last round
+     */
     public void lastRound(){
         System.out.println("sono finiti gli studenti nel sacchetto questo sarà l'ultimo round\n");
     }
 
+    /**
+     * request of the number of the players of the match
+     * @return the number of the players
+     */
     public int getNumPlayer(){
         System.out.println("inserire il numero di giocatori: ");
         int num=input.nextInt();
@@ -173,6 +229,9 @@ public class Cli extends Thread implements View{
         return num;
     }
 
+    /**
+     * show the title
+     */
     public void getTitolo(){
         System.out.println( "\u001B[34m"+"\t\t  ___________ ________  ___ __________ ______    _________________    ___ ___________ \n"+
                             "\t\t /__________//_______/\\/__//_________//_____/\\  /________________/|  /__//__________/|\n"+
@@ -183,6 +242,9 @@ public class Cli extends Thread implements View{
                             "\t\t\t|___________/  \\__________/   |______/   \\_____/   |__/   |__________________/ \n"+"\u001B[0m");
     }
 
+    /**
+     * thread that allows the player to choose his plays
+     */
     @Override
     public void run() {
          try {
@@ -270,12 +332,19 @@ public class Cli extends Thread implements View{
          }
     }
 
+    /**
+     * wake up the thread from a wait to do a new request
+     * @param state request that the thread has to do to the player
+     */
     public synchronized void wakeUp(String state){
         this.state=state;
         this.nack=false;
         this.notifyAll();
     }
 
+    /**
+     * set nack tru to resend the parameters to the sever
+     */
     public synchronized void setNack(){
         nack=true;
         this.notifyAll();

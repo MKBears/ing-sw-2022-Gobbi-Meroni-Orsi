@@ -158,9 +158,11 @@ class ActionTest {
         student=new Student(Type_Student.DRAGON);
         array.add(student);
         match.getPlayer()[0].getBoard().setEntrance(array);
+        System.out.println(match.getPlayer()[0].getBoard());
         a.moveFromIngressToBoard(match.getPlayer()[0],match.getPlayer()[0].getBoard().getEntrance().get(0));
         assertTrue(pl1.getBoard().getEntrance().isEmpty()==FALSE);
         assertEquals(1,pl1.getBoard().getEntrance().size());
         assertTrue(pl1.getBoard().getStudentsOfType(Type_Student.DRAGON)==1);
+        System.out.println(match.getPlayer()[0].getBoard());
     }
 }
