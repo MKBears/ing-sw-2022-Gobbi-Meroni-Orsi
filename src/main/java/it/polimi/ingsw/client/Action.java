@@ -64,6 +64,5 @@ public class Action {
 
     public void moveFromIngressToBoard(Player player,Student student) throws Exception{
             player.getBoard().placeStudent(student);
-            player.getBoard().removeStudent(student);
     }
 }

@@ -255,6 +255,10 @@ public class Cli extends Thread implements View{
                              } while (nack == true);
                              printMatch(match);
                          }
+                         synchronized (this) {
+                             nack=false;
+                             this.wait();
+                         }
                          break;
                      case ("EndGame"):
                          end = true;
@@ -274,8 +278,7 @@ public class Cli extends Thread implements View{
 
     public synchronized void setNack(){
         nack=true;
-            this.notifyAll();
-
+        this.notifyAll();
     }
 
     public void setWilly(List<Wizards> willy) {
