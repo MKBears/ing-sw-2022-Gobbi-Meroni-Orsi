@@ -192,7 +192,7 @@ public class Client  extends Thread{
                         String usern=(String) in.readObject();
                         for (int i=0;i<match.getPlayer().length;i++) {
                             if(match.getPlayer()[i].getUserName().equals(usern)) {
-                                match.getPlayer()[i].setBoard(b);
+                                match.getPlayer()[i].getBoard().placeStudent(s);
                             }
                         }
                         action.checkAllProfessors();
