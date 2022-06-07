@@ -86,6 +86,9 @@ public class Client  extends Thread{
                 if(received!="base") {
                     received = (String) in.readObject();
                 }
+                if(!received.equals("Ping")) {
+                    System.out.println("Ricevuto: " + received);
+                }
                 switch (received) {
                     case "base": //login
                         do {
@@ -109,7 +112,7 @@ public class Client  extends Thread{
                         resume=(ArrayList<String>) in.readObject();
                         view.chooseMatch(join,resume);
                     case "ACK":
-                        //decisione
+                        //view.wakeUp("MoveStudents");
                         break;
                     case  "NACK":
                         view.setNack();
@@ -133,8 +136,18 @@ public class Client  extends Thread{
                         server.sendACK();
                         break;
                     case "RefillClouds":
-                        ArrayList<Cloud> receivedClouds;
-                        receivedClouds = (ArrayList<Cloud>) in.readObject();
+                        ArrayList<Cloud> receivedClouds=new ArrayList<>();
+                        Cloud c;
+                        //receivedClouds = (ArrayList<Cloud>) in.readObject();
+                        for(int i=0; i<match.getPlayersNum(); i++) {
+                            c = (Cloud) in.readObject();
+                            System.out.println("Ecco la nuvola n "+i+":");
+                            System.out.println(c.toString());
+                            System.out.println(c.getStudents().size());
+                            receivedClouds.add(c);
+                        }
+                        Cloud[] clo=new Cloud[receivedClouds.size()];
+
                         for(Cloud i: receivedClouds){
                             System.out.println(i.toString());
                         }
