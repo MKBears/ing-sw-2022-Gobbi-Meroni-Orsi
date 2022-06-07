@@ -450,7 +450,7 @@ public class Controller extends Thread{
         wizards.remove(wizard);
 
         if (System.getProperty("os.name").contains("Windows"))
-            System.out.println("cls");
+            System.out.println("Clear");
         else {
             System.out.println("\033[H\033[2J");
             System.out.flush();

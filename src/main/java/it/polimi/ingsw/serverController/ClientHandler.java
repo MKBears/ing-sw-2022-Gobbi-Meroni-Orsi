@@ -197,7 +197,10 @@ public class ClientHandler extends Thread{
                             }
                         }
                         controller.notifyMovedStudent(this, movedStudent, movedStudentPosition);
-                        wait();
+
+                        if (i != movedStudentsNumber-1) {
+                            wait();
+                        }
                     }
                     checkAllProfessors();
                     state = 4;
@@ -209,6 +212,7 @@ public class ClientHandler extends Thread{
                         wait();
                     } while (nack);
                     match.moveMotherNature(motherNatureSteps);
+
                     try {
                         controller.controlLand();
                     } catch (Exception e) {
@@ -217,6 +221,7 @@ public class ClientHandler extends Thread{
                     }
                     uniteLands();
                     controller.notifyMovedMN(this, motherNatureSteps);
+
                     if (match.getMotherNature().getPosition().hasChanged()) {
                         try {
                             controller.notifyChanges();
@@ -448,7 +453,7 @@ public class ClientHandler extends Thread{
                 match.uniteLandBefore(match.getLands().indexOf(match.getMotherNature().getPosition()));
             }
         }catch(Exception e){
-            //System.out.println("isola prima senza torri");
+            System.out.println("isola prima senza torri");
         }
     }
 
