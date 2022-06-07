@@ -180,6 +180,11 @@ public class Client  extends Thread{
                             if(id==e.getID())
                                 e.addStudent(stu);
                         }
+                        for (int i=0;i<match.getPlayer().length;i++) {
+                            if(match.getPlayer()[i].getUserName().equals(user)) {
+                                match.getPlayer()[i].getBoard().removeStudent(stu);
+                            }
+                        }
                         view.printMatch(match);
                         server.sendACK();
                         break;
