@@ -183,9 +183,9 @@ public class Cli extends Thread implements View{
             do {
                 System.out.println("inserire scelta: ");
                 choose = input.nextInt();
-            }while ((choose<0 || choose>=match.getLands().size()) && choose!=12);
+            }while (choose<0 || choose>match.getLands().size());
             if(choose!=12)
-                return match.getLands().get(i).getID();
+                return match.getLands().get(choose).getID();
             else
                 return 12;
         } catch (Exception e) {
