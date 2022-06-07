@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-
 /**
  * The class representing the board each player controls in an experts match.
  * Contains the same things as Board (non-experts) does and has the same methods.
