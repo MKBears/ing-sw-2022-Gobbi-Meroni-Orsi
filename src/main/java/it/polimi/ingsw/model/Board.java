@@ -195,8 +195,8 @@ public class Board implements Serializable {
     public String toString() {
         String a= "Rosso= " + dragons.size() +'\n'+
                 "Blu= " + unicorns.size() +'\n'+
-                "Giallo= " + fairies.size() +'\n'+
-                "Rosa=" + gnomes.size() +'\n'+
+                "Giallo= " + gnomes.size() +'\n'+
+                "Rosa=" + fairies.size() +'\n'+
                 "Verde= " + frogs.size() +'\n'+
                 "numero torri= "+towers.size();
         a=a+"\nentrata: ";

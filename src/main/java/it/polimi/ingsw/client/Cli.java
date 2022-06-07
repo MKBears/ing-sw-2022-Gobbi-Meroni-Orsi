@@ -312,7 +312,6 @@ public class Cli extends Thread implements View{
                              move = this.getDestination(match);
                              if (move==12) {
                                  try {
-                                     input.nextLine();
                                      action.moveFromIngressToBoard(me, st);
                                  } catch (Exception e) {
                                  }
