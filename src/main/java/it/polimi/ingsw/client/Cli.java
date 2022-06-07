@@ -312,16 +312,14 @@ public class Cli extends Thread implements View{
                              move = this.getDestination(match);
                              if (move==12) {
                                  try {
-                                     input.next();
+                                     input.nextLine();
                                      action.moveFromIngressToBoard(me, st);
                                  } catch (Exception e) {
                                  }
                              } else {
                                  action.moveFromIngressToLand(me, st, match.getLands().get(move));
                              }
-                             do {
-                                 server.sendMovedStudent(st, move);
-                             } while (nack == true);
+                             server.sendMovedStudent(st, move);
                              printMatch(match);
                          }
                          synchronized (this) {
