@@ -28,7 +28,7 @@ public class BagTest {
         }
         int fr=0;int g=0; int d=0; int fa=0; int u=0;
         for(int i=0; i<120; i++){
-            switch (out.get(i).getType()) {
+            switch (out.get(i).type()) {
                 case FROG:
                     fr++;
                     break;

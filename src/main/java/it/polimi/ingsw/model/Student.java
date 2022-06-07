@@ -1,18 +1,8 @@
 package it.polimi.ingsw.model;
 
 import java.io.Serializable;
-import java.util.Objects;
 
-public class Student implements Serializable {
-    private final Type_Student type;
-
-    public Student(Type_Student type) {
-        this.type = type;
-    }
-
-    public Type_Student getType() {
-        return type;
-    }
+public record Student(Type_Student type) implements Serializable {
 
     @Override
     public boolean equals(Object o) {
@@ -24,11 +14,7 @@ public class Student implements Serializable {
 
     @Override
     public String toString() {
-        return type.toString()+"(X)"+"\u001B[0m";
+        return type.toString() + "(X)" + "\u001B[0m";
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(type);
-    }
 }

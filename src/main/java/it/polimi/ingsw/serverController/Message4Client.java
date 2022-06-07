@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 import it.polimi.ingsw.model.*;
@@ -139,10 +140,12 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
         synchronized (this) {
             name = "RefillClouds";
             ArrayList<Cloud> cloudss=new ArrayList<>();
-            for(Cloud i:newClouds){
-                cloudss.add(i);
-                System.out.println(i.toString());
+            cloudss.addAll(Arrays.asList(newClouds));
+
+            for (Cloud c : cloudss) {
+                System.out.println(c.toString());
             }
+
             try {
                 if(!cloudss.isEmpty()) {
                     out.writeObject(name);
@@ -468,7 +471,9 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
                 throw new RuntimeException(e);
             }
             try {
-                out.writeObject("Ping");
+                synchronized (this) {
+                    out.writeObject("Ping");
+                }
             } catch (IOException e) {
                     sendGenericError("Internal server error");
             }

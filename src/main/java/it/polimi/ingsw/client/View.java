@@ -35,5 +35,6 @@ public interface View {
     void playerDisconnected(String username);
     void playerDisconnectedAll();
     void finishedAC(Player p);
-    void chooseChCard(CharacterCard[] cards);
+    CharacterCard chooseChCard(CharacterCard[] cards);
+    void setCharacters(CharacterCard[] characters);
 }

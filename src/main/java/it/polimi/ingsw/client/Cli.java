@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.characterCards.*;
 
 import java.util.*;
 import java.util.List;
@@ -19,6 +20,7 @@ public class Cli extends Thread implements View{
     private List<Wizards> willy;
     private List<Cloud> clouds;
     private List<AssistantCard> cards;
+    private CharacterCard[] characters;
     Boolean nack;
 
     public Cli(){
@@ -154,13 +156,13 @@ public class Cli extends Thread implements View{
             System.out.println(e.toString()+'\n');
             i++;
         }
-        System.out.println("scegli un numero tra 1 e "+i+" :");
+        System.out.println("scegli un numero tra 1 e "+(i-1)+" :");
         choose=input.nextInt();
         while (choose<1 || choose>i){
-            System.out.println("scegli un numero tra 1 e "+i+" :");
+            System.out.println("scegli un numero tra 1 e "+(i-1)+" :");
             choose=input.nextInt();
         }
-        return pl.getBoard().getEntrance().get(i-1);
+        return pl.getBoard().getEntrance().get(choose-1);
     }
 
     /**
@@ -325,6 +327,53 @@ public class Cli extends Thread implements View{
                      case ("EndGame"):
                          end = true;
                          break;
+                     case("Ch"):
+                         CharacterCard character=chooseChCard(characters);
+                         Board_Experts me_ex=(Board_Experts) me.getBoard();
+                         if(character==null){
+                             //no carta personaggio
+                         }else{
+                             if(character.getPrice()>me_ex.getCoinsNumber()){
+                                 System.out.println("non hai abbastanza monete");
+                                 //no carta personaggio
+                             }else{
+                                 if(character instanceof Ch_1){
+                                     Student student=chooseStudent(((Ch_1) character).getStudents());
+                                     Land land= chooseLand(match.getLands());
+                                     //messaggio
+                                 }else if(character instanceof Ch_2){
+                                     //messaggio
+                                 }else if(character instanceof Ch_4){
+                                     //messaggio
+                                 }else if(character instanceof Ch_5){
+                                     Land land=chooseLand(match.getLands());
+                                     //messaggio
+                                 }else if(character instanceof Ch_7){
+                                     Student st1=chooseStudent(me.getBoard().getEntrance());
+                                     Student st2=chooseStudent(me.getBoard().getEntrance());
+                                     Student st3=chooseStudent(me.getBoard().getEntrance());
+                                     //messaggio
+                                 }else if(character instanceof Ch_10){
+                                     for (int i = 0; i < 2; i++) {
+                                         Student entrance_student=chooseStudent(me.getBoard().getEntrance());
+                                         Type_Student room_student=chooseColorStudent();
+                                     }
+                                     //messaggio
+                                 }else if(character instanceof Ch_11){
+                                     Student student=chooseStudent(((Ch_11) character).getStudents());
+                                     //messaggio
+                                 }else if(character instanceof Ch_12){
+                                     Type_Student type=chooseColorStudent();
+                                     //messaggio
+                                 }
+                                 // invio carta personaggio con quello che serve
+                             }
+                         }
+                         synchronized (this) {
+                             nack=false;
+                             this.wait();
+                         }
+                         break;
                  }
              }
          }catch (InterruptedException e){
@@ -422,7 +471,7 @@ public class Cli extends Thread implements View{
             System.out.println("scegli "+i+" per lo studente "+e+"\n");
         }
         input.nextInt();
-        return student.get(i-1);
+        return student.remove(i-1);
     }
 
     public Land chooseLand(List<Land> lands){
@@ -467,7 +516,25 @@ public class Cli extends Thread implements View{
         System.out.println(p+" ha finito le carte assistente: ultimo turno");
     }
 
-    public void chooseChCard(CharacterCard[] cards){
+    public CharacterCard chooseChCard(CharacterCard[] cards){
+        for (int i = 0; i < 2; i++) {
+            System.out.println(i+')'+characters[i].toString()+'\n');
+        }
+        System.out.println("vuoi giocare una carta personaggio?");
+        String choose=input.next();
+        int chosen;
+        if(choose.equals("si")){
+            do {
+                System.out.println("quale delle tre?");
+                chosen = input.nextInt();
+            }while(chosen<0 || chosen>2);
+            return cards[chosen];
+        }else{
+            return null;
+        }
+    }
 
+    public void setCharacters(CharacterCard[] characters) {
+        this.characters = characters;
     }
 }
