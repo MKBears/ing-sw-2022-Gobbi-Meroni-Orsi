@@ -528,7 +528,7 @@ public class Controller extends Thread{
                 synchronized (p) {
                     if (position == 12) {
                         do {
-                            p.getOutputStream().sendNotifyMoveStudent(student, p.getAvatar().getBoard(), player.getUserName());
+                            p.getOutputStream().sendNotifyMoveStudent(student, player.getAvatar().getBoard(), player.getUserName());
                             p.wait();
                         } while (player.getNack());
                     } else {
