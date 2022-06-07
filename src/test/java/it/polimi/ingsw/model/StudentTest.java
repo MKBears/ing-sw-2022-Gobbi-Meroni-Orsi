@@ -10,14 +10,14 @@ class StudentTest {
     @Test
     void getType() {
         Student a=new Student(FROG);
-        assertEquals(a.getType(),FROG);
+        assertEquals(a.type(),FROG);
         a=new Student(DRAGON);
-        assertEquals(a.getType(),DRAGON);
+        assertEquals(a.type(),DRAGON);
         a=new Student(FAIRY);
-        assertEquals(a.getType(),FAIRY);
+        assertEquals(a.type(),FAIRY);
         a=new Student(GNOME);
-        assertEquals(a.getType(),GNOME);
+        assertEquals(a.type(),GNOME);
         a=new Student(UNICORN);
-        assertEquals(a.getType(),UNICORN);
+        assertEquals(a.type(),UNICORN);
     }
 }

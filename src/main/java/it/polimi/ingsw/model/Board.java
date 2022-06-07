@@ -112,11 +112,11 @@ public class Board implements Serializable {
      * @throws Exception if the table you want to put the student in is already full
      */
     public void placeStudent(Student student) throws Exception{
-        if (getStudentsOfType(student.getType()) == 10){
+        if (getStudentsOfType(student.type()) == 10){
             throw new Exception("This table is already full. Please place that student on a cloud.");
         }
 
-        switch (student.getType()){
+        switch (student.type()){
             case DRAGON:
                 dragons.add(student);
                 break;
@@ -153,7 +153,7 @@ public class Board implements Serializable {
         int found = 9;
 
         for (int i=0; i< entrance.size(); i++) {
-            if (entrance.get(i).getType().equals(student.getType())) {
+            if (entrance.get(i).type().equals(student.type())) {
                 found = i;
                 break;
             }
@@ -216,7 +216,7 @@ public class Board implements Serializable {
     }
 
     public void ch_11_effect(Student s){
-        switch (s.getType()){
+        switch (s.type()){
             case DRAGON:
                 dragons.add(s);
                 break;

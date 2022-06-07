@@ -90,7 +90,7 @@ public class IslandTest {
                 fail();
             }
             island.addStudent(s);
-            switch (s.getType()){
+            switch (s.type()){
                 case FROG:
                     fr++;
                     break;

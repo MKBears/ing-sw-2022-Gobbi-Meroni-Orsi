@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-
 /**
  * The class representing the board each player controls in an experts match.
  * Contains the same things as Board (non-experts) does and has the same methods.
@@ -50,9 +47,9 @@ public class Board_Experts extends Board {
         final int c1 = 2, c2 = 5, c3 = 8;
         super.placeStudent(student);
 
-        if (getStudentsOfType(student.getType()) == c1 ||
-                getStudentsOfType(student.getType()) == c2 ||
-                getStudentsOfType(student.getType()) == c3){
+        if (getStudentsOfType(student.type()) == c1 ||
+                getStudentsOfType(student.type()) == c2 ||
+                getStudentsOfType(student.type()) == c3){
             coins++;
         }
     }

@@ -138,13 +138,10 @@ public class Client  extends Thread{
                     case "RefillClouds":
                         ArrayList<Cloud> receivedClouds;
                         receivedClouds = (ArrayList<Cloud>) in.readObject();
-                        Cloud[] clo=new Cloud[receivedClouds.size()];
-                        int o=0;
                         for(Cloud i: receivedClouds){
-                            clo[o]=i;
-                            o++;
+                            System.out.println(i.toString());
                         }
-                        match.setCloud(clo);
+                        match.setCloud(receivedClouds.toArray(new Cloud[0]));
                         view.printMatch(match);
                         server.sendACK();
                         break;
@@ -155,12 +152,10 @@ public class Client  extends Thread{
                         view.wakeUp(received);
                         break;
                     case "MoveStudents":
-                        view.wakeUp(received);
-                        break;
                     case "MoveMN": //DA MODIFICARE IL PROTOCOLLO
                         view.wakeUp(received);
-                        //nella nuova versione non è previsto ACK o NACK
                         break;
+                    //nella nuova versione non è previsto ACK o NACK
                     case "ChooseCloud":
                         List<Cloud> clouds;
                         clouds = (ArrayList<Cloud>) in.readObject();
@@ -349,7 +344,7 @@ public class Client  extends Thread{
                         break;
                     default: server.sendNACK();
                 }
-                if(end==true)
+                if(end)
                     break;
             }
         } catch (IOException e) {

@@ -72,7 +72,7 @@ public class Island implements Land {
         int i=0;
         for (Student s: this.students) {
             for (Type_Student t : input) {
-                if (s.getType().equals(t)) {
+                if (s.type().equals(t)) {
                     i++;
                 }
             }
@@ -253,7 +253,7 @@ public class Island implements Land {
         }
 
         for (Student student : students) {
-            switch (student.getType()) {
+            switch (student.type()) {
                 case DRAGON -> counter[0]++;
                 case FAIRY -> counter[1]++;
                 case GNOME -> counter[2]++;

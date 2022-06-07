@@ -448,6 +448,13 @@ public class Controller extends Thread{
 
     public synchronized void chooseWizard (Wizards wizard) {
         wizards.remove(wizard);
+
+        if (System.getProperty("os.name").contains("Windows"))
+            System.out.println("cls");
+        else {
+            System.out.println("\033[H\033[2J");
+            System.out.flush();
+        }
         System.out.println("Rimosso "+wizard.toString());
     }
 

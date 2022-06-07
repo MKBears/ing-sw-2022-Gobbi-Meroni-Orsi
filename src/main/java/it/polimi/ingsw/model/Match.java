@@ -84,7 +84,7 @@ public class Match implements Serializable {
      * @return the cloud of the match
      */
     public Cloud[] getCloud() {
-        return cloud;
+        return cloud.clone();
     }
 
     /**
