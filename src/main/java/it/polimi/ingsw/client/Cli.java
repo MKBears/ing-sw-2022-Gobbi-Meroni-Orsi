@@ -302,6 +302,7 @@ public class Cli extends Thread implements View{
                      case ("ChooseCloud"):
                          Cloud clo = this.getCloud(clouds);
                          action.chooseCloud(me, clo);
+                         printMatch(match);
                          do {
                              server.sendChoiceCloud(clo);
                              synchronized (this) {

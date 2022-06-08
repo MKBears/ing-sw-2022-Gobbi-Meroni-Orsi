@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Manages all the interactions between Controller (server) and the remote player (client)
@@ -240,14 +241,16 @@ public class ClientHandler extends Thread{
                     }
                 case 5:
                     //ACTION phase: choose a cloud and import students to the entrance
-                    do {
-                        out.sendChooseCloud(controller.getChosenClouds());
-                        wait();
-                    } while (nack);
+                    ArrayList<Cloud> cloud=new ArrayList<>();
+                    for (int i = 0; i < match.getCloud().length; i++) {
+                        cloud.add(match.getCloud()[i]);
+                    }
+                    cloud.removeAll(controller.getChosenClouds());
+                    out.sendChooseCloud(cloud);
 
-                    for (Cloud cloud : match. getCloud()) {
-                        if (chosenCloud.equals(cloud)) {
-                            avatar.getBoard().importStudents(cloud.getStudents());
+                    for (Cloud clou : match. getCloud()) {
+                        if (chosenCloud.equals(clou)) {
+                            avatar.getBoard().importStudents(clou.getStudents());
                         }
                     }
                     controller.chooseCloud(chosenCloud, this);
