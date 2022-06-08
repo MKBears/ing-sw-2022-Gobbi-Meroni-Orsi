@@ -62,13 +62,16 @@ public class Server extends Thread{
         }
     }
 
+    //@SuppressWarnings("unchecked")
     public synchronized void addUserName(String userName) {
         if (!userNames.contains(userName)){
             userNames.add(userName);
         }
     }
 
+    @SuppressWarnings("unchecked")
     public ArrayList<String> getUserNames() {
+
         return (ArrayList<String>)userNames.clone();
     }
 

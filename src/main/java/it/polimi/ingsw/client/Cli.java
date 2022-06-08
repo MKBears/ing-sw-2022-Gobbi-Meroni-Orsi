@@ -56,7 +56,7 @@ public class Cli extends Thread implements View{
      */
     public String getUsername(){
         String user;
-        System.out.println("inserire username:");
+        System.out.println("Inserire username:");
         user=input.nextLine();
         return user;
     }
@@ -67,13 +67,13 @@ public class Cli extends Thread implements View{
      * @return the wizard chosen
      */
     public Wizards getWizard(List<Wizards> wizards){
-        System.out.println("scegli il mago:");
+        System.out.println("Scegli il mago:");
         for (Wizards e:wizards) {
             System.out.println((wizards.indexOf(e)+1)+" per "+e.toString());
         }
         int choose=input.nextInt();
         while(choose<1 || choose>4){
-            System.out.println("scegli il mago:");
+            System.out.println("Scegli il mago:");
             choose = input.nextInt();
         }
         return wizards.get(choose-1);
@@ -89,13 +89,13 @@ public class Cli extends Thread implements View{
         System.out.println("Scegli la nuvola tra: \n");
         for (Cloud e: clouds) {
             if(!e.hasBeenChosen()){
-                System.out.println("nuvola "+i+" "+e);
+                System.out.println("Nuvola "+i+" "+e);
                 i++;
             }
         }
         int choose= input.nextInt();
         while (choose<1 || choose>=i){
-            System.out.println("scegli un numero tra 1 e "+(i-1)+":");
+            System.out.println("Scegli un numero tra 1 e "+(i-1)+":");
              choose = input.nextInt();
         }
         return clouds.get(choose-1);
@@ -107,13 +107,13 @@ public class Cli extends Thread implements View{
      * @return the card chosen
      */
     public AssistantCard getAssistantCard(List<AssistantCard> cards){
-        System.out.println("scegli la carta assistente tra: \n");
+        System.out.println("Scegli la carta assistente tra: \n");
         for(int i=0;i<cards.size();i++){
-            System.out.println(i+" "+cards.get(i)+"\n");
+            System.out.println((i+1)+" "+cards.get(i)+"\n");
         }
         int choose=input.nextInt();
         while (choose<1 ||choose>cards.size()){
-            System.out.println("scegli la carta assistente tra: \n");
+            System.out.println("Scegli la carta assistente tra: \n");
             choose=input.nextInt();
         }
         return cards.get(choose-1);
@@ -125,11 +125,11 @@ public class Cli extends Thread implements View{
      * @return the number of step
      */
     public int getNumStep(Player pl){
-        System.out.println("scegli di spostare Madre Natura di? (deve " +
+        System.out.println("Scegli di spostare Madre Natura di? (deve " +
                 "essere un numero compreso tra 0 e "+pl.getPlayedCard().getMNSteps());
         int step= input.nextInt();
         while (step<0 || step>pl.getPlayedCard().getMNSteps()){
-            System.out.println("scegli di spostare Madre Natura di? (deve " +
+            System.out.println("Scegli di spostare Madre Natura di? (deve " +
                     "essere un numero compreso tra 0 e "+pl.getPlayedCard().getMNSteps());
             step=input.nextInt();
         }
@@ -141,7 +141,7 @@ public class Cli extends Thread implements View{
      * @param pl player who win
      */
     public void getWinner(Player pl){
-        System.out.println("il vincitore della partita è: "+pl.getUserName());
+        System.out.println("Il vincitore della partita è: "+pl.getUserName());
     }
 
     /**
@@ -151,15 +151,15 @@ public class Cli extends Thread implements View{
      */
     public Student getStudent(Player pl){
         int i=1,choose;
-        System.out.println("scegli uno studente tra: \n");
+        System.out.println("Scegli uno studente tra: \n");
         for (Student e:pl.getBoard().getEntrance()) {
-            System.out.println(e.toString()+'\n');
+            System.out.println(i+") "+e.toString()+'\n');
             i++;
         }
-        System.out.println("scegli un numero tra 1 e "+(i-1)+" :");
+        System.out.println("Scegli un numero tra 1 e "+(i-1)+" :");
         choose=input.nextInt();
         while (choose<1 || choose>i){
-            System.out.println("scegli un numero tra 1 e "+(i-1)+" :");
+            System.out.println("Scegli un numero tra 1 e "+(i-1)+" :");
             choose=input.nextInt();
         }
         return pl.getBoard().getEntrance().get(choose-1);
@@ -173,15 +173,15 @@ public class Cli extends Thread implements View{
     public int getDestination(Match match) {
         int i = 0;
         int choose;
-        System.out.println("dove vuoi che vada lo studente?\n");
-        System.out.println("se si vuole aggiungere alla sala scrivi sala oppure scegli tra le seguenti isole\n");
+        System.out.println("Dove vuoi che vada lo studente?\n");
+        System.out.println("Se si vuole aggiungere alla sala scrivi sala oppure scegli tra le seguenti isole:\n");
         for (Land e : match.getLands()) {
-            System.out.println("scrivi " + i + " per scegliere" + e + "\n");
+            System.out.println("Scrivi " + i + " per scegliere" +"\n"+ e + "\n");
             i++;
         }
         try {
             do {
-                System.out.println("inserire scelta: ");
+                System.out.println("Inserire scelta: ");
                 choose = input.nextInt();
             }while (choose<0 || choose>match.getLands().size());
             if(choose!=12)
@@ -198,12 +198,7 @@ public class Cli extends Thread implements View{
      * @param match match of the player
      */
     public void printMatch(Match match){
-        if (System.getProperty("os.name").contains("Windows"))
-            System.out.println("clear");
-        else {
-            System.out.println("\033[H\033[2J");
-            System.out.flush();
-        }
+        clearConsole();
         getTitolo();
         System.out.println(match.toString()+'\n');
     }
@@ -214,14 +209,14 @@ public class Cli extends Thread implements View{
      * @param phase phase of the match
      */
     public void printTurn(Player pl,String phase){
-        System.out.println("tocca a: "+pl.getUserName()+"in fase di"+phase+"\n");
+        System.out.println("Tocca a: "+pl.getUserName()+" in fase di "+phase+"\n");
     }
 
     /**
      * show that it is the last round
      */
     public void lastRound(){
-        System.out.println("sono finiti gli studenti nel sacchetto questo sarà l'ultimo round\n");
+        System.out.println("Sono finiti gli studenti nel sacchetto! Questo sarà l'ultimo round\n");
     }
 
     /**
@@ -229,10 +224,10 @@ public class Cli extends Thread implements View{
      * @return the number of the players
      */
     public int getNumPlayer(){
-        System.out.println("inserire il numero di giocatori: ");
+        System.out.println("Inserire il numero di giocatori: ");
         int num=input.nextInt();
         while(num<=1 || num>=5){
-            System.out.println("inserire il numero di giocatori: ");
+            System.out.println("Inserire il numero di giocatori: ");
             num=input.nextInt();
         }
         return num;
@@ -425,7 +420,7 @@ public class Cli extends Thread implements View{
             System.out.println("Non ci sono partite a cui unirsi");
         }
         else {
-            System.out.println("puoi unirti alle partite:");
+            System.out.println("Puoi unirti alle seguenti partite: ");
             for (String e : join) {
                 System.out.println(e);
             }
@@ -435,12 +430,12 @@ public class Cli extends Thread implements View{
             System.out.println("Non ci sono partite da riprendere");
         }
         else {
-            System.out.println("puoi riunirti alle partite:");
+            System.out.println("Puoi riunirti alle seguenti partite:");
             for (String e : resume) {
                 System.out.println(e);
             }
         }
-        System.out.println("scegli la partita(per creare una nuova partita scrivi NewGame):");
+        System.out.println("Scegli la partita (oppure per creare una nuova partita scrivi NewGame):");
         choose=input.nextLine();
 
         if(choose.toLowerCase().equals("newgame")){
@@ -455,7 +450,6 @@ public class Cli extends Thread implements View{
     public void createMatch () {
         int playersNum;
         boolean expert;
-
         do {
             System.out.println("Da quanti giocatori sara' formata la partita? [2/3]");
             playersNum = input.nextInt();
@@ -467,7 +461,7 @@ public class Cli extends Thread implements View{
     }
 
     public  String chooseLogin(){
-        System.out.println("vuoi registrarti?");
+        System.out.println("Vuoi registrarti?");
         String choose=input.nextLine();
         return choose.toLowerCase();
     }
@@ -475,7 +469,7 @@ public class Cli extends Thread implements View{
     public Student chooseStudent(List<Student> student){
         int i=1;
         for (Student e:student) {
-            System.out.println("scegli "+i+" per lo studente "+e+"\n");
+            System.out.println("Scegli "+i+" per lo studente "+e+"\n");
         }
         input.nextInt();
         return student.remove(i-1);
@@ -484,14 +478,14 @@ public class Cli extends Thread implements View{
     public Land chooseLand(List<Land> lands){
         int i=1;
         for (Land e:lands) {
-            System.out.println("scegli "+i+" per l'isola "+e+"\n");
+            System.out.println("Scegli "+i+" per l'isola \n"+e+"\n");
         }
         input.nextInt();
         return lands.get(i-1);
     }
 
     public Type_Student chooseColorStudent(){
-        System.out.println("scegli un colore di cui non verrà calcolata l'influenza");
+        System.out.println("Scegli un colore di cui non verrà calcolata l'influenza");
         while (true) {
             String choose=input.nextLine();
             switch (choose.toLowerCase()) {
@@ -520,19 +514,19 @@ public class Cli extends Thread implements View{
     }
 
     public void finishedAC(Player p){
-        System.out.println(p+" ha finito le carte assistente: ultimo turno");
+        System.out.println(p+" ha finito le carte assistente: ultimo turno!");
     }
 
     public CharacterCard chooseChCard(CharacterCard[] cards){
         for (int i = 0; i < 2; i++) {
             System.out.println(i+')'+characters[i].toString()+'\n');
         }
-        System.out.println("vuoi giocare una carta personaggio?");
+        System.out.println("Vuoi giocare una carta personaggio? [si/no]");
         String choose=input.next();
         int chosen;
         if(choose.equals("si")){
             do {
-                System.out.println("quale delle tre?");
+                System.out.println("Quale delle tre?");
                 chosen = input.nextInt();
             }while(chosen<0 || chosen>2);
             return cards[chosen];
@@ -544,4 +538,14 @@ public class Cli extends Thread implements View{
     public void setCharacters(CharacterCard[] characters) {
         this.characters = characters;
     }
+
+    public void clearConsole(){
+        if (System.getProperty("os.name").contains("Windows"))
+            System.out.println("clear");
+        else {
+            System.out.println("\033[H\033[2J");
+            System.out.flush();
+        }
+    }
+
 }

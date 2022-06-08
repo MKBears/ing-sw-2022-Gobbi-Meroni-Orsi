@@ -96,9 +96,9 @@ public class Player implements Serializable {
 
     @Override
     public String toString() {
-        return "Giocatore:" + userName +'\n'+
+        return "\n________\nGiocatore:" + userName +'\n'+
                 "Colore corrispondente: " + color.toString()+color.getName()+"\u001B[0m" +'\n'+
-                "con Sala:" + board;
+                "con Sala:\n" + board;
     }
 
     /**

@@ -132,7 +132,7 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
     }
 
     /**
-     * The server sends the clouds full of new students
+     * The server sends the students to refill the clouds
      *
      * @param newClouds list of the new clouds full of new students
      */
