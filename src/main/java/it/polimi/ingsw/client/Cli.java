@@ -3,6 +3,7 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.characterCards.*;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -541,8 +542,14 @@ public class Cli extends Thread implements View{
     }
 
     public void clearConsole(){
-        if (System.getProperty("os.name").contains("Windows"))
-            System.out.println("clear");
+        if (System.getProperty("os.name").contains("Windows")) {
+            try {
+                Runtime.getRuntime().exec("clear"); //NON VA ANCORA (lancia eccezione): se si fa solo Syste.out.println("clear") semplicemente stampa la scritta clear (stiamo eseguendo un programma, non siamo in terminale veramente)
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         else {
             System.out.println("\033[H\033[2J");
             System.out.flush();
