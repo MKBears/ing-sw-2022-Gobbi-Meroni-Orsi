@@ -96,15 +96,15 @@ public class Match implements Serializable {
      *
      * @return the cloud of the match
      */
-    public Cloud[] getCloud() {
-        return cloud.clone();
+    public synchronized Cloud[] getCloud() {
+        return cloud;
     }
 
     /**
      * set the cloud on the match
      * @param cloud cloud to set in the match
      */
-    public void setCloud(Cloud[] cloud) {
+    public synchronized void setCloud(Cloud[] cloud) {
         this.cloud = cloud;
     }
 

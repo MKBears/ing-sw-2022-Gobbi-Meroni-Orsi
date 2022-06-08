@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class Cloud implements Serializable {
 
-    private final ArrayList<Student> students;
+    private ArrayList<Student> students;
     private final Bag bag;
     private boolean hasBeenChosen;
     private final int nop;
@@ -49,7 +49,6 @@ public class Cloud implements Serializable {
      */
     public ArrayList<Student> getStudents() {
         ArrayList<Student> s = (ArrayList<Student>) students.clone();
-        students.clear();
         return s;
     }
 
@@ -96,4 +95,9 @@ public class Cloud implements Serializable {
 
         return cloud;
     }
+
+    public void setStudents(ArrayList<Student> students) {
+        this.students = students;
+    }
+
 }

@@ -138,20 +138,23 @@ public class Client  extends Thread{
                     case "RefillClouds":
                         ArrayList<Cloud> receivedClouds=new ArrayList<>();
                         Cloud c;
+                        ArrayList<Student> studen;
                         //receivedClouds = (ArrayList<Cloud>) in.readObject();
                         for(int i=0; i<match.getPlayersNum(); i++) {
-                            c = (Cloud) in.readObject();
-                            System.out.println("Ecco la nuvola n "+i+":");
+                            studen = (ArrayList<Student>) in.readObject();
+                            /*System.out.println("Ecco la nuvola n "+i+":");
                             System.out.println(c.toString());
                             System.out.println(c.getStudents().size());
-                            receivedClouds.add(c);
+                            receivedClouds.add(c);*/
+                            match.getCloud()[i].setStudents(studen);
                         }
-                        Cloud[] clo=new Cloud[receivedClouds.size()];
+                        //Cloud[] clo=new Cloud[receivedClouds.size()];
 
-                        for(Cloud i: receivedClouds){
-                            System.out.println(i.toString());
-                        }
-                        match.setCloud(receivedClouds.toArray(new Cloud[0]));
+                        //for(Cloud i: receivedClouds){
+                            //System.out.println(i.toString());
+                        //}
+                        //match.setCloud(receivedClouds.toArray(new Cloud[0]));
+
                         view.printMatch(match);
                         server.sendACK();
                         break;
