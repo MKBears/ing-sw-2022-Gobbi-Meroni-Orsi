@@ -109,7 +109,7 @@ public class Cli extends Thread implements View{
     public AssistantCard getAssistantCard(List<AssistantCard> cards){
         System.out.println("scegli la carta assistente tra: \n");
         for(int i=0;i<cards.size();i++){
-            System.out.println(i+" "+cards.get(i)+"\n");
+            System.out.println((i+1)+" "+cards.get(i)+"\n");
         }
         int choose=input.nextInt();
         while (choose<1 ||choose>cards.size()){
@@ -325,6 +325,7 @@ public class Cli extends Thread implements View{
                                  action.moveFromIngressToLand(me, st, match.getLands().get(move));
                              }
                              server.sendMovedStudent(st, move);
+                             action.checkAllProfessors();
                              printMatch(match);
                          }
                          synchronized (this) {

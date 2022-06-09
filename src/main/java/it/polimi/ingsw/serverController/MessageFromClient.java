@@ -74,7 +74,7 @@ public class MessageFromClient extends Thread{
                         ch.chooseCloud((Cloud) in.readObject());
                         ch.setAck(true);
                         break;
-                    case "Nack":
+                    case "NACK":
                         ch.sendMessageAgain();
                         break;
                     case "Pong":

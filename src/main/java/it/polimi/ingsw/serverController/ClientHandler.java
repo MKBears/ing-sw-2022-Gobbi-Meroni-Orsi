@@ -213,7 +213,7 @@ public class ClientHandler extends Thread{
                         wait();
                     } while (nack);
                     match.moveMotherNature(motherNatureSteps);
-
+                    checkAllProfessors();
                     try {
                         controller.controlLand();
                     } catch (Exception e) {
@@ -221,6 +221,7 @@ public class ClientHandler extends Thread{
                         out.sendCreation(match);
                     }
                     uniteLands();
+                    System.out.println(match);
                     controller.notifyMovedMN(this, motherNatureSteps);
 
                     if (match.getMotherNature().getPosition().hasChanged()) {
@@ -247,12 +248,18 @@ public class ClientHandler extends Thread{
                     }
                     cloud.removeAll(controller.getChosenClouds());
                     out.sendChooseCloud(cloud);
-
-                    for (Cloud clou : match. getCloud()) {
-                        if (chosenCloud.equals(clou)) {
-                            avatar.getBoard().importStudents(clou.getStudents());
+                    System.out.println("sono qui");
+                    do {
+                        this.wait();
+                        if (chosenCloud != null) {
+                            for (Cloud clou : match.getCloud()) {
+                                if (chosenCloud.equals(clou)) {
+                                    System.out.println("sono qua");
+                                    avatar.getBoard().importStudents(clou.getStudents());
+                                }
+                            }
                         }
-                    }
+                    }while (chosenCloud==null);
                     controller.chooseCloud(chosenCloud, this);
                     state = 1;
                     break;

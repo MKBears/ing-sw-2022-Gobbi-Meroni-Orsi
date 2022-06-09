@@ -156,8 +156,10 @@ public class Controller extends Thread{
                         synchronized (players[currentPlayer]) {
                             players[currentPlayer].notify();
                         }
+                        System.out.println("ho bisogno di una pausa");
                         wait();
-
+                        moveCurrentPlayer();
+                        System.out.println("sono vivo");
                         if (endExplanation.equals("Built all their towers")) {
                             break;
                         }
@@ -501,7 +503,9 @@ public class Controller extends Thread{
                 }
             }
         }
-        notify();
+        synchronized (this) {
+            notify();
+        }
     }
 
     /**
@@ -562,69 +566,87 @@ public class Controller extends Thread{
         ArrayList<Tower> towers;
         owner = null;
         land = match.getMotherNature().getPosition();
-
-        for (ClientHandler remotePlayer : players) {
-            if (land.getTower().getColor().equals(remotePlayer.getColor())) {
-                owner = remotePlayer.getAvatar();
-                break;
-            }
-        }
-        dominant = owner;
-        dominantProfessors = getControlledProfessors(owner);
-        dominantInfluence = land.getInfluence(dominantProfessors);
-
-        for (ClientHandler remotePlayer : players) {
-            player = remotePlayer.getAvatar();
-
-            if (dominant != player) {
-                myProfessors = getControlledProfessors(player);
-                myInfluence = land.getInfluence(myProfessors);
-
-                if (myInfluence > dominantInfluence) {
-                    dominant = player;
-                    dominantInfluence = myInfluence;
+        if(land.getTower()!=null){
+            for (ClientHandler remotePlayer : players) {
+                if (land.getTower().getColor().equals(remotePlayer.getColor())) {
+                    owner = remotePlayer.getAvatar();
+                    break;
                 }
             }
-        }
+            dominant = owner;
+            dominantProfessors = getControlledProfessors(owner);
+            dominantInfluence = land.getInfluence(dominantProfessors);
 
-        if (dominant != owner) {
-            towers = new ArrayList<>();
+            for (ClientHandler remotePlayer : players) {
+                player = remotePlayer.getAvatar();
 
-            for (int i=0; i<land.size(); i++) {
-                try {
-                    towers.add(dominant.getBoard().removeTower());
-                } catch (Exception e) {
-                    for (ClientHandler p : players) {
-                        if (p.getAvatar().equals(dominant)) {
-                            synchronized (this) {
-                                try {
-                                    wait();
-                                } catch (InterruptedException ex) {
-                                    for (ClientHandler pl : players) {
-                                        pl.getOutputStream().sendGenericError("Internal server error");
+                if (dominant != player) {
+                    myProfessors = getControlledProfessors(player);
+                    myInfluence = land.getInfluence(myProfessors);
+
+                    if (myInfluence > dominantInfluence) {
+                        dominant = player;
+                        dominantInfluence = myInfluence;
+                    }
+                }
+            }
+
+            if (dominant != owner) {
+                towers = new ArrayList<>();
+
+                for (int i = 0; i < land.size(); i++) {
+                    try {
+                        towers.add(dominant.getBoard().removeTower());
+                    } catch (Exception e) {
+                        for (ClientHandler p : players) {
+                            if (p.getAvatar().equals(dominant)) {
+                                synchronized (this) {
+                                    try {
+                                        wait();
+                                    } catch (InterruptedException ex) {
+                                        for (ClientHandler pl : players) {
+                                            pl.getOutputStream().sendGenericError("Internal server error");
+                                        }
+                                        throw new RuntimeException(ex);
                                     }
-                                    throw new RuntimeException(ex);
                                 }
-                            }
-                            synchronized (p) {
-                                do {
-                                    notifyBuiltLastTower(p);
-                                    p.wait();
-                                } while (p.getNack());
+                                synchronized (p) {
+                                    do {
+                                        notifyBuiltLastTower(p);
+                                        p.wait();
+                                    } while (p.getNack());
+                                }
                             }
                         }
                     }
                 }
+                land.changeTower(towers);
             }
-            land.changeTower(towers);
+        }else{
+            int max=0,influence;
+            Player Pmax=null;
+            for (ClientHandler c:players) {
+
+               ArrayList<Type_Student> professors=getControlledProfessors(c.getAvatar());
+               influence=land.getInfluence(professors);
+               if(influence>max){
+                   max=influence;
+                   Pmax=c.getAvatar();
+               }
+            }
+            if(max>0){
+                ArrayList<Tower> temp=new ArrayList<>();
+                temp.add(Pmax.getBoard().removeTower());
+                land.changeTower(temp);
+            }
         }
     }
 
     private ArrayList<Type_Student> getControlledProfessors  (Player player) {
-        ArrayList<Type_Student> professors = new ArrayList<>(5);
-
-        for (Type_Student t : Type_Student.values()) {
-            if (match.checkProfessor(t).equals(player)) {
+        ArrayList<Type_Student> professors = new ArrayList<>();
+        System.out.println(match.getProfessors());
+        for (Type_Student t : match.getProfessors().keySet()) {
+            if (match.getProfessors().get(t).equals(player)) {
                 professors.add(t);
             }
         }
@@ -644,18 +666,21 @@ public class Controller extends Thread{
 
     public void notifyChanges () throws Exception {
         Land position = match.getMotherNature().getPosition();
-        ArrayList<Tower> previousTowers = position.getPreviousTowers();
+        ArrayList<Tower> previousTowers = null;
         String player1 = null;
         ClientHandler player2 = null;
-
+        if(previousTowers!=null){
+           previousTowers= position.getPreviousTowers();
+        }
         for (ClientHandler p : players) {
             if (position.getTower().getBoard() == p.getAvatar().getBoard()) {
                 player1 = p.getUserName();
                 break;
             }
-
-            if (previousTowers.get(0).getBoard() == p.getAvatar().getBoard()) {
-                player2 = p;
+            if(previousTowers!=null){
+                if (previousTowers.get(0).getBoard() == p.getAvatar().getBoard()) {
+                    player2 = p;
+                }
             }
         }
 
@@ -665,11 +690,12 @@ public class Controller extends Thread{
                     p.getOutputStream().sendNotifyTowers(position.getAllTowers(), position, player1);
                     p.wait();
                 } while (p.getNack());
-
-                do {
-                    p.getOutputStream().sendNotifyTowers(position.getAllTowers(), player2.getAvatar().getBoard(), player2.getUserName());
-                    p.wait();
-                } while (p.getNack());
+                if(previousTowers!=null) {
+                    do {
+                        p.getOutputStream().sendNotifyTowers(position.getAllTowers(), player2.getAvatar().getBoard(), player2.getUserName());
+                        p.wait();
+                    } while (p.getNack());
+                }
             }
         }
     }

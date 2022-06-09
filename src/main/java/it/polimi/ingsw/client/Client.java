@@ -202,6 +202,7 @@ public class Client  extends Thread{
                                 match.getPlayer()[i].getBoard().removeStudent(stu);
                             }
                         }
+                        action.checkAllProfessors();
                         view.printMatch(match);
                         server.sendACK();
                         break;
@@ -242,20 +243,27 @@ public class Client  extends Thread{
                     case "NotifyChosenCloud":
                         Player p=(Player) in.readObject();
                         Cloud cl=(Cloud) in.readObject();
-                        for (int j=0;j<match.getCloud().length;j++) {
-                            if(cl==match.getCloud()[j]){
-                                match.getCloud()[j].choose();
+                        for (int j=0;j< match.getPlayersNum();j++) {
+                            if(match.getPlayer()[j].getUserName().equals(p.getUserName())){
                                 p.getBoard().importStudents(cl.getStudents());
                             }
                         }
+                        view.printMatch(match);
                         server.sendACK();
                         break;
                     case "NotifyTowers (land)":
                         ArrayList<Tower> towers=(ArrayList<Tower>) in.readObject();
                         Land land=(Land) in.readObject();
                         for (Land e: match.getLands()) {
-                            if(e.getID()==land.getID())
-                                e.changeTower(towers);
+                            for (Player pla: match.getPlayer()) {
+                                if(e.getID()==land.getID() && towers.get(0).getColor().equals(pla.getColor())){
+                                    ArrayList<Tower> tower=new ArrayList<>();
+                                    for (int i = 0; i < towers.size(); i++) {
+                                        tower.add(pla.getBoard().removeTower());
+                                    }
+                                    e.changeTower(tower);
+                                }
+                            }
                         }
                         view.printMatch(match);
                         server.sendACK();
@@ -363,7 +371,6 @@ public class Client  extends Thread{
                                 break;
                         }*/
                         break;
-                    default: server.sendNACK();
                 }
                 if(end)
                     break;

@@ -100,9 +100,9 @@ public class Island implements Land {
             previousTower = this.tower;
             this.tower=n_tower.get(0);
             hasChanged = true;
-        }
-        else{
+        } else{
             this.tower=n_tower.get(0);
+            hasChanged=true;
         }
     }
 

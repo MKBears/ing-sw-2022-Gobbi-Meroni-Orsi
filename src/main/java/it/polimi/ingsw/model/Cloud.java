@@ -100,4 +100,14 @@ public class Cloud implements Serializable {
         this.students = students;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Cloud cloud = (Cloud) o;
+
+        return students.equals(cloud.students);
+    }
+
 }
