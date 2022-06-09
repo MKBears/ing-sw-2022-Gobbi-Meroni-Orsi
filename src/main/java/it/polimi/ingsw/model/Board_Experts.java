@@ -57,6 +57,6 @@ public class Board_Experts extends Board {
     @Override
     public String toString() {
         return  super.toString()+
-                "coins= " + coins;
+                "\n"+Colors.BLACK.toString()+"(¤)\u001B[0mx" + coins;
     }
 }

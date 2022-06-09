@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ClientHandler extends Thread{
     private final Socket socket;
-    private final Server server;
+    private final Server serve;
     MessageFromClient in;
     Message4Client out;
     private Controller controller;
@@ -41,7 +41,7 @@ public class ClientHandler extends Thread{
      */
     public ClientHandler (Socket s, Server server){
         socket = s;
-        this.server = server;
+        this.serve = server;
         connected = true;
         ongoingMatch = false;
 
@@ -55,6 +55,10 @@ public class ClientHandler extends Thread{
         nackCounter = 0;
     }
 
+    /**
+     *
+     * The run part of the ClientHandler thread: calls changeState() and wakes up and sleeps
+     */
     public void run(){
         in.start();
         //System.out.println("Stream in ingresso partito");
@@ -78,6 +82,11 @@ public class ClientHandler extends Thread{
         } while (ongoingMatch);
     }
 
+    /**
+     * Is the finite state machine thart controls the single client (therefore the single player). It is made of cases that simulate the states of the ideal machine
+     * @throws InterruptedException
+     * @throws SocketException
+     */
     private void changeState() throws InterruptedException, SocketException {
         synchronized (this) {
             switch (state) {
@@ -88,7 +97,7 @@ public class ClientHandler extends Thread{
                         wait();
                         //System.out.println("Let's-a goooo!");
 
-                        if (server.getUserNames().contains(userName) && server.inactivePlayer(this)) {
+                        if (serve.getUserNames().contains(userName) && serve.inactivePlayer(this)) {
                             //System.out.println("Okie-dokie!");
                             out.sendLoginSucceeded();
                             System.out.println("Login avvenuto con successo: "+userName);
@@ -99,15 +108,15 @@ public class ClientHandler extends Thread{
                         }
                     } while (nack);
 
-                    if (server.canConnectPlayer(userName)) {
+                    if (serve.canConnectPlayer(userName)) {
                         try {
-                            server.joinGame(null, this);
+                            serve.joinGame(null, this);
                         } catch (Exception e) {
                             out.sendGenericError("Unable to connect to the match");
                         }
                     }
                     else {
-                        out.sendListOfGames(server.getJoinableMatches(), server.getPausedMatches(userName));
+                        out.sendListOfGames(serve.getJoinableMatches(), serve.getPausedMatches(userName));
                         //System.out.println("Dopo listOfGames");
 
                         do {
@@ -280,6 +289,12 @@ public class ClientHandler extends Thread{
         }
     }
 
+    /**
+     * If in input is false it sends a nack message to the client, if the counter of NACK is equal to 3 it sends creation.
+     * If the input is true is all ok and it wakes up himself to continue the game
+     * @param ack
+     * @throws Exception
+     */
     public synchronized void setAck (boolean ack) throws Exception {
         nack = !ack;
         if (ack) {
@@ -307,6 +322,10 @@ public class ClientHandler extends Thread{
         return nack;
     }
 
+    /**
+     * Called from MessageFromClient and sends the creation message after receiving three NACK message or sends the last sent message
+     * @throws Exception
+     */
     public synchronized void sendMessageAgain () throws Exception {
         nack = true;
         nackCounter++;
@@ -326,8 +345,13 @@ public class ClientHandler extends Thread{
         notify();
     }
 
+    /**
+     * Sends the server the new player's username and sets it to himself
+     * @param userName
+     */
+    //@SuppressWarnings("unchecked")
     public synchronized void register (String userName) {
-        server.addUserName(userName);
+        this.serve.addUserName(userName);
         setUserName(userName);
         //System.out.println("Registrato");
     }
@@ -347,15 +371,24 @@ public class ClientHandler extends Thread{
         this.wizard = wizard;
     }
 
+    /**
+     * It creates the match
+     * @param playersNum
+     * @param expert
+     */
     public synchronized void createMatch (int playersNum, boolean expert) {
         //System.out.println("Inizio a creare la partita");
         expertMatch = expert;
-        controller = server.createMatch(this, playersNum, expertMatch);
+        controller = serve.createMatch(this, playersNum, expertMatch);
     }
 
+    /**
+     * Sends the server the match chose by the palyer
+     * @param creator
+     */
     public synchronized void joinMatch (String creator) {
         try {
-            controller = server.joinGame(creator, this);
+            controller = serve.joinGame(creator, this);
         } catch (Exception e) {
             out.sendGenericError(e.getMessage());
             state = 8;
@@ -406,6 +439,11 @@ public class ClientHandler extends Thread{
         return avatar;
     }
 
+    /**
+     *
+     * @param playedAssistants the AssistantCards already chosen
+     * @return the AssistantCards that are possible to choose
+     */
     private ArrayList<AssistantCard> playableAssistants (ArrayList<AssistantCard> playedAssistants){
         ArrayList<AssistantCard> playable;
         ArrayList<AssistantCard> deck;
@@ -430,13 +468,20 @@ public class ClientHandler extends Thread{
         this.playedAssistant = playedAssistant;
     }
 
+    /**
+     *
+     * @param steps the steps MotherNature has to do
+     */
     public synchronized void moveMN (int steps) {
         motherNatureSteps = steps;
     }
 
+    /**
+     * For every Type_Student
+     */
     private void checkAllProfessors(){
         for (Type_Student e: Type_Student.values()) {
-            match.checkProfessor(e);//togliere return
+            match.checkProfessor(e);
         }
     }
 

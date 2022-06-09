@@ -28,7 +28,7 @@ public class AssistantCard implements Serializable{
 
     @Override
     public String toString() {
-        String assistant =  " _______ \n"+
+        String assistant =  "\n _______ \n"+
                             "| "+value;
 
         if (value < 10)

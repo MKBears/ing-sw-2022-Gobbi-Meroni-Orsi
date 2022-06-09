@@ -44,12 +44,18 @@ public class Cloud implements Serializable {
     }
 
     /**
+     * deletes all the students on this cloud
+     */
+    public void clearStudents() {
+        students.clear();
+    }
+
+    /**
      *
      * @return ArrayList that contains the students of the cloud
      */
     public ArrayList<Student> getStudents() {
-        ArrayList<Student> s = (ArrayList<Student>) students.clone();
-        return s;
+        return students;
     }
 
     /**
@@ -80,14 +86,14 @@ public class Cloud implements Serializable {
         String cloud;
 
         if (!students.isEmpty()) {
-            cloud = "  # ## # ## #\n" +
-                    " #    " + students.get(0).toString() + "    #\n" +
+            cloud = "\n    ## ## #\n" +
+                    "   #  " + students.get(0).toString() + "  #\n" +
                     "  # " + students.get(1).toString() + " " + students.get(2).toString() + " #\n";
 
             if (nop == 4) {
-                cloud = cloud + " #    " + students.get(3).toString() + "    #\n";
+                cloud = cloud + "   #  " + students.get(3).toString() + "  #\n";
             }
-            cloud += "   ## # ## #";
+            cloud += "    ## # ##";
         }
         else {
             cloud = "Nuvola vuota";

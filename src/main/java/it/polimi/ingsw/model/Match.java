@@ -289,16 +289,16 @@ public class Match implements Serializable {
 
     @Override
     public String toString() {
-        String a="player= " + Arrays.toString(player) +'\n'+
-                "nuvole= " + Arrays.toString(cloud) +"\n"+
+        String a="\nplayer= " + Arrays.toString(player) +'\n'+
+                "nuvole= \n" + Arrays.toString(cloud) +"\n"+
                 "professori: \n";
         for (Type_Student e:professors.keySet()) {
             a=a+professors.get(e).getUserName()+" ha professore di tipo "+e+'\n';
         }
-        a=a+"\n"+"isole:";
+        a=a+"\n"+"isole:\n";
         for (Land e:lands) {
             if(motherNature.getPosition()==e){
-                a=a+" madre natura è su quest'";
+                a=a+" Madre Natura è su questa isola ↓\n";
             }
             a=a+e.toString()+"\n";
         }
