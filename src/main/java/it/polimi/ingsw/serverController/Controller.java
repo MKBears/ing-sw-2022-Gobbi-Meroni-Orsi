@@ -167,10 +167,12 @@ public class Controller extends Thread{
                 if (playing) {
                     state = 1;
                 } else {
-                    state = 5;
+                    state = 6;
                 }
-                while (!playedAssistants.isEmpty()) {
-                    playedAssistants.remove(0);
+                playedAssistants.clear();
+
+                synchronized (players[firstPlayer]) {
+                    wait();
                 }
             }
             case 5 -> {
@@ -261,7 +263,7 @@ public class Controller extends Thread{
     }
 
     public synchronized void connectPlayer(ClientHandler player) {
-        int state, index;
+        int index;
         state = 0;
 
         for (int i=0; i<playersNum; i++){
@@ -493,8 +495,6 @@ public class Controller extends Thread{
         chosenClouds.add(cloud);
 
         for (ClientHandler p : players) {
-            cloud.clearStudents();
-
             if (p != player) {
                 synchronized (p) {
                     do {
@@ -504,6 +504,8 @@ public class Controller extends Thread{
                 }
             }
         }
+        cloud.clearStudents();
+
         synchronized (this) {
             this.notify();
         }
@@ -637,6 +639,7 @@ public class Controller extends Thread{
             }
             if(max>0){
                 ArrayList<Tower> temp=new ArrayList<>();
+
                 temp.add(Pmax.getBoard().removeTower());
                 land.changeTower(temp);
             }
@@ -667,10 +670,12 @@ public class Controller extends Thread{
 
     public void notifyChanges () throws Exception {
         Land position = match.getMotherNature().getPosition();
-        ArrayList<Tower> previousTowers;
+        ArrayList<Tower> previousTowers = null;
         String player1 = null;
         ClientHandler player2 = null;
-        previousTowers = position.getPreviousTowers();
+        if (position.getPreviousTowers() != null)
+            if (!position.getPreviousTowers().isEmpty())
+                previousTowers = position.getPreviousTowers();
         for (ClientHandler p : players) {
             if (position.getTower().getBoard() == p.getAvatar().getBoard()) {
                 player1 = p.getUserName();

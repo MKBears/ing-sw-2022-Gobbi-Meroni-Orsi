@@ -167,7 +167,7 @@ public class Archipelago implements Land {
         {
             t.add(i.getTower());
         }
-        return t;
+        return (ArrayList<Tower>) t.clone();
     }
 
     /**

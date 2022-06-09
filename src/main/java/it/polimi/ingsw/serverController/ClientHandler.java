@@ -209,11 +209,12 @@ public class ClientHandler extends Thread{
                         }
                         controller.notifyMovedStudent(this, movedStudent, movedStudentPosition);
 
-                        if (i != movedStudentsNumber-1) {
+                        if (i < movedStudentsNumber-1) {
                             wait();
                         }
                     }
                     checkAllProfessors();
+                    controller.notifyProfessors();
                     state = 4;
                 case 4:
                     ///ACTION phase: moving Mother Nature
@@ -242,7 +243,6 @@ public class ClientHandler extends Thread{
                             out.sendCreation(match);
                         }
                     }
-                    controller.notifyProfessors();
 
                     if (ongoingMatch) {
                         state = 5;
@@ -447,11 +447,17 @@ public class ClientHandler extends Thread{
         ArrayList<AssistantCard> deck;
         deck = avatar.getDeck();
         playable = new ArrayList<>(deck.size());
+        boolean found;
 
         for (AssistantCard card : deck) {
-            if (!playedAssistants.contains(card)) {
+            found = false;
+            for (AssistantCard assist : playedAssistants)
+                if (card.getValue() == assist.getValue()) {
+                    found = true;
+                    break;
+                }
+            if (!found)
                 playable.add(card);
-            }
         }
 
         if (playable.isEmpty()) {

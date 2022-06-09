@@ -141,7 +141,7 @@ public class Island implements Land {
     public ArrayList<Tower> getAllTowers() {
         ArrayList<Tower>t=new ArrayList<>();
         t.add(tower);
-        return t;
+        return (ArrayList<Tower>) t.clone();
     }
 
     /**
@@ -271,11 +271,11 @@ public class Island implements Land {
     }
 
     @Override
-    public ArrayList<Tower> getPreviousTowers() throws Exception {
+    public ArrayList<Tower> getPreviousTowers() {
         ArrayList<Tower> previousTowers;
 
         if (previousTower == null || !hasChanged) {
-            throw new Exception ("There haven't been changes");
+            return null;
         }
         previousTowers = new ArrayList<>();
         previousTowers.add(previousTower);
