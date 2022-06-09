@@ -159,9 +159,9 @@ public class Controller extends Thread{
                         wait();
                         moveCurrentPlayer();
 
-                        if (endExplanation.equals("Built all their towers")) {
-                            break;
-                        }
+                        if (!playing)
+                            if (endExplanation.equals("Built all their towers"))
+                                break;
                     } while (currentPlayer != firstPlayer);
                 }
                 if (playing) {
@@ -645,7 +645,7 @@ public class Controller extends Thread{
 
     private ArrayList<Type_Student> getControlledProfessors  (Player player) {
         ArrayList<Type_Student> professors = new ArrayList<>();
-        System.out.println(match.getProfessors());
+        //System.out.println(match.getProfessors());
         for (Type_Student t : match.getProfessors().keySet()) {
             if (match.getProfessors().get(t).equals(player)) {
                 professors.add(t);
@@ -667,12 +667,10 @@ public class Controller extends Thread{
 
     public void notifyChanges () throws Exception {
         Land position = match.getMotherNature().getPosition();
-        ArrayList<Tower> previousTowers = null;
+        ArrayList<Tower> previousTowers;
         String player1 = null;
         ClientHandler player2 = null;
-        if(previousTowers!=null){
-           previousTowers= position.getPreviousTowers();
-        }
+        previousTowers = position.getPreviousTowers();
         for (ClientHandler p : players) {
             if (position.getTower().getBoard() == p.getAvatar().getBoard()) {
                 player1 = p.getUserName();

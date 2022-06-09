@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -230,7 +231,7 @@ public class ClientHandler extends Thread{
                         out.sendCreation(match);
                     }
                     uniteLands();
-                    System.out.println(match);
+                    //System.out.println(match);
                     controller.notifyMovedMN(this, motherNatureSteps);
 
                     if (match.getMotherNature().getPosition().hasChanged()) {
@@ -251,10 +252,7 @@ public class ClientHandler extends Thread{
                     }
                 case 5:
                     //ACTION phase: choose a cloud and import students to the entrance
-                    ArrayList<Cloud> cloud=new ArrayList<>();
-                    for (int i = 0; i < match.getCloud().length; i++) {
-                        cloud.add(match.getCloud()[i]);
-                    }
+                    ArrayList<Cloud> cloud = new ArrayList<>(Arrays.asList(match.getCloud()));
                     cloud.removeAll(controller.getChosenClouds());
                     out.sendChooseCloud(cloud);
                     System.out.println("sono qui");

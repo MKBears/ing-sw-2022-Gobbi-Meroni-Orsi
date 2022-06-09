@@ -544,7 +544,7 @@ public class Cli extends Thread implements View{
         this.characters = characters;
     }
 
-    public synchronized void clearConsole(){
+    private void clearConsole(){
         if (System.getProperty("os.name").contains("Windows")) {
             try {
                 svnProcessBuilder.inheritIO().start().waitFor();

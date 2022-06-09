@@ -2,16 +2,7 @@ package it.polimi.ingsw.model;
 
 import java.io.Serializable;
 
-public class Student implements Serializable {
-    final private Type_Student type;
-
-    public Student(Type_Student type){
-        this.type=type;
-    }
-
-    public Type_Student type() {
-        return type;
-    }
+public record Student(Type_Student type) implements Serializable {
 
     @Override
     public boolean equals(Object o) {

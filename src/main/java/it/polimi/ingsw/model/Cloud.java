@@ -55,7 +55,7 @@ public class Cloud implements Serializable {
      * @return ArrayList that contains the students of the cloud
      */
     public ArrayList<Student> getStudents() {
-        return students;
+        return (ArrayList<Student>) students.clone();
     }
 
     /**

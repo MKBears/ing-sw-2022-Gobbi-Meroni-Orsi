@@ -140,13 +140,10 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
         synchronized (this) {
             name = "RefillClouds";
 
-
             try {
-                    out.writeObject(name);
-                    for (Cloud c : newClouds) {
-                        System.out.println(c.toString());
-                        out.writeObject(c.getStudents());
-                    }
+                out.writeObject(name);
+                for (Cloud c : newClouds)
+                    out.writeObject(c.getStudents());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
