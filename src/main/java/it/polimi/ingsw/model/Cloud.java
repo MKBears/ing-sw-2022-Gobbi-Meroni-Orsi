@@ -37,11 +37,17 @@ public class Cloud implements Serializable {
     /**
      * refills the cloud automatically
      */
-    public void importStudents() throws Exception{//Non funge niente, mi sa che dovremo mettere il metodo setStudents
+    public void importStudents() throws Exception{
         for (int i = 0; i < nop; i++) {
-            students.remove(0);
             students.add(bag.getRandomStudent());
         }
+    }
+
+    /**
+     * deletes all the students on this cloud
+     */
+    public void clearStudents() {
+        students.clear();
     }
 
     /**

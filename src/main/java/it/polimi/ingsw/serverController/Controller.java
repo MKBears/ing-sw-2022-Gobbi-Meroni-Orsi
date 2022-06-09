@@ -157,6 +157,7 @@ public class Controller extends Thread{
                             players[currentPlayer].notify();
                         }
                         wait();
+                        moveCurrentPlayer();
 
                         if (endExplanation.equals("Built all their towers")) {
                             break;
@@ -492,6 +493,8 @@ public class Controller extends Thread{
         chosenClouds.add(cloud);
 
         for (ClientHandler p : players) {
+            cloud.clearStudents();
+
             if (p != player) {
                 synchronized (p) {
                     do {
@@ -501,7 +504,9 @@ public class Controller extends Thread{
                 }
             }
         }
-        notify();
+        synchronized (this) {
+            this.notify();
+        }
     }
 
     /**
