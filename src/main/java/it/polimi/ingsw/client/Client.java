@@ -140,9 +140,13 @@ public class Client  extends Thread{
                         ArrayList<Cloud> receivedClouds=new ArrayList<>();
                         Cloud c;
                         ArrayList<Student> studen;
+                        for(Cloud clo: match.getCloud()){
+                            clo.clearStudents();
+                        }
                         //receivedClouds = (ArrayList<Cloud>) in.readObject();
                         for(int i=0; i<match.getPlayersNum(); i++) {
                             studen = (ArrayList<Student>) in.readObject();
+                            System.out.println(studen.toString());
                             /*System.out.println("Ecco la nuvola n "+i+":");
                             System.out.println(c.toString());
                             System.out.println(c.getStudents().size());
@@ -174,7 +178,7 @@ public class Client  extends Thread{
                         List<Cloud> clouds;
                         clouds = (ArrayList<Cloud>) in.readObject();
                         view.setClouds(clouds);
-                        view.wakeUp(received);
+                        view.wakeUp("ChooseCloud");
                         //server.sendChoiceCloud(cl);
                         break;
                     case "NotifyChosenCard":
@@ -248,12 +252,19 @@ public class Client  extends Thread{
                                 p.getBoard().importStudents(cl.getStudents());
                             }
                         }
+                        for(Cloud e: match.getCloud()){
+                            if(cl.equals(e)){
+                                e.clearStudents();
+                                break;
+                            }
+                        }
                         view.printMatch(match);
                         server.sendACK();
                         break;
                     case "NotifyTowers (land)":
                         ArrayList<Tower> towers=(ArrayList<Tower>) in.readObject();
                         Land land=(Land) in.readObject();
+                        String f=(String) in.readObject();
                         for (Land e: match.getLands()) {
                             for (Player pla: match.getPlayer()) {
                                 if(e.getID()==land.getID() && towers.get(0).getColor().equals(pla.getColor())){
@@ -371,6 +382,7 @@ public class Client  extends Thread{
                                 break;
                         }*/
                         break;
+                    default: server.sendNACK();
                 }
                 if(end)
                     break;

@@ -201,7 +201,7 @@ public class Cli extends Thread implements View{
      * @param match match of the player
      */
     public void printMatch(Match match){
-        clearConsole();
+        //clearConsole();
         getTitolo();
         System.out.println(match.toString()+'\n');
     }
@@ -308,6 +308,7 @@ public class Cli extends Thread implements View{
                                  this.wait();
                              }
                          } while (nack == true);
+                         break;
                      case ("MoveStudents"):
                          Student st;
                          int move;
