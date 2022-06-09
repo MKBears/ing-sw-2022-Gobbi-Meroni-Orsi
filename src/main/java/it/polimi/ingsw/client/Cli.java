@@ -23,12 +23,14 @@ public class Cli extends Thread implements View{
     private List<AssistantCard> cards;
     private CharacterCard[] characters;
     Boolean nack;
+    ProcessBuilder svnProcessBuilder;
 
     public Cli(){
        input=new Scanner(System.in);
        end=false;
        nack=false;
        state="Start";
+        svnProcessBuilder = new ProcessBuilder("PowerShell", "/c", "clear");
     }
 
     public static void main(String[] args) {
@@ -239,13 +241,13 @@ public class Cli extends Thread implements View{
      */
     public void getTitolo(){
         System.out.println("""
-                \u001B[34m             ___________ ________  ___ __________ ______    _________________    ___ ___________
-                            /__________//_______/\\/__//_________//_____/\\  /________________/|  /__//__________/|
-                            |__________||   __  \\/|__||   ___   ||     \\ \\ |   ___    ___   ||__|  ||   _______/
-                               /_______/|  |/_|  |/__/|  |/__|  ||  |\\  \\ \\|  ||  |  ||  |  |/__|  ||  |/___/|
-                               |   ____||   _   /\\|  ||   ___   ||  ||\\  \\ |  ||  |  ||  |______   ||____   ||
-                               |  |/____|  ||\\  \\_|  ||  ||  |  ||  || \\  \\|  ||  |  ||  /______|  |/____|  ||
-                               |___________/  \\__________/   |______/   \\_____/   |__/   |__________________/
+                \u001B[36m         ___________ ________  ___ __________ ______    _________________    ___ ___________
+                        /__________//_______/\\/__//_________//_____/\\  /________________/|  /__//__________/|
+                        |__________||   __  \\/|__||   ___   ||     \\ \\ |   ___    ___   ||__|  ||   _______/
+                           /_______/|  |/_|  |/__/|  |/__|  ||  |\\  \\ \\|  ||  |  ||  |  |/__|  ||  |/___/|
+                           |   ____||   _   /\\|  ||   ___   ||  ||\\  \\ |  ||  |  ||  |______   ||____   ||
+                           |  |/____|  ||\\  \\_|  ||  ||  |  ||  || \\  \\|  ||  |  ||  /______|  |/____|  ||
+                           |___________/  \\__________/   |______/   \\_____/   |__/   |__________________/
                 \u001B[0m""");
     }
 
@@ -482,7 +484,7 @@ public class Cli extends Thread implements View{
         for (Land e:lands) {
             System.out.println("Scegli "+i+" per l'isola \n"+e+"\n");
         }
-        input.nextInt();
+        i = input.nextInt();
         return lands.get(i-1);
     }
 
@@ -541,11 +543,11 @@ public class Cli extends Thread implements View{
         this.characters = characters;
     }
 
-    public void clearConsole(){
+    public synchronized void clearConsole(){
         if (System.getProperty("os.name").contains("Windows")) {
             try {
-                Runtime.getRuntime().exec("clear"); //NON VA ANCORA (lancia eccezione): se si fa solo Syste.out.println("clear") semplicemente stampa la scritta clear (stiamo eseguendo un programma, non siamo in terminale veramente)
-            } catch (IOException e) {
+                svnProcessBuilder.inheritIO().start().waitFor();
+            } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
