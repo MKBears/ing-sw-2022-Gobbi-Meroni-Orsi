@@ -51,9 +51,9 @@ public class Controller extends Thread{
                 changeState();
                 System.out.println("State = "+state);
             } catch (InterruptedException e) {
-                notifyDeletion("Something went wrong waiting for a player to act");
+                notifyDeletion("Something went wrong waiting for a player to act ("+e.getMessage()+")");
             } catch (Exception e) {
-                notifyDeletion("Something went wrong initializing the entrances");
+                notifyDeletion("Something went wrong initializing the entrances ("+e.getMessage()+")");
             }
         }
         //End match
@@ -141,7 +141,7 @@ public class Controller extends Thread{
                 //PLANNING phase: deciding the first player of the following action phase
                 firstPlayer = 0;
                 for (currentPlayer = 1; currentPlayer < playersNum; currentPlayer++) {
-                    if (playedAssistants.get(currentPlayer).getValue() < playedAssistants.get(firstPlayer).getValue()) {
+                    if (players[currentPlayer].getAvatar().getPlayedCard().getValue() < players[firstPlayer].getAvatar().getPlayedCard().getValue()) {
                         firstPlayer = currentPlayer;
                     }
                 }
@@ -179,7 +179,7 @@ public class Controller extends Thread{
 
                 synchronized (players[firstPlayer]) {
                     System.out.println("didididididididi");
-                    wait();
+                    players[firstPlayer].wait();
                 }
             }
             case 5 -> {

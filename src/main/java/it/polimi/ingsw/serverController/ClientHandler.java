@@ -83,7 +83,7 @@ public class ClientHandler extends Thread{
                     System.out.println("Player "+userName+": sveglio");
                 } while (!controller.isMyTurn(this));
             } catch (InterruptedException | SocketException e) {
-                out.sendGenericError("Internal server error");
+                out.sendGenericError("Internal server error ("+e.getMessage()+")");
                 state = 8;
             }
         } while (ongoingMatch);
@@ -119,7 +119,7 @@ public class ClientHandler extends Thread{
                         try {
                             serve.joinGame(null, this);
                         } catch (Exception e) {
-                            out.sendGenericError("Unable to connect to the match");
+                            out.sendGenericError("Unable to connect to the match ("+e.getMessage()+")");
                         }
                     }
                     else {
@@ -208,7 +208,7 @@ public class ClientHandler extends Thread{
                                 System.out.println(this.avatar.getUserName()+": situa 1");
                             }
                             catch (Exception e) {
-                                out.sendGenericError("Desynchronized");
+                                out.sendGenericError("Desynchronized ("+e.getMessage()+")");
                                 out.sendCreation(match);
                                 i--;
                             }
@@ -242,7 +242,7 @@ public class ClientHandler extends Thread{
                     try {
                         controller.controlLand();
                     } catch (Exception e) {
-                        out.sendGenericError("Desynchronized");
+                        out.sendGenericError("Desynchronized ("+e.getMessage()+")");
                         out.sendCreation(match);
                     }
                     uniteLands();
@@ -253,7 +253,7 @@ public class ClientHandler extends Thread{
                         try {
                             controller.notifyChanges();
                         } catch (Exception e) {
-                            out.sendGenericError("Desynchronized");
+                            out.sendGenericError("Desynchronized ("+e.getMessage()+")");
                             out.sendCreation(match);
                         }
                     }
@@ -294,7 +294,7 @@ public class ClientHandler extends Thread{
                             wait();
                         } while (nack);
                     } catch (Exception e) {
-                        out.sendGenericError("Desynchronized");
+                        out.sendGenericError("Desynchronized ("+e.getMessage()+")");
                     }
                     break;
                 case 7:

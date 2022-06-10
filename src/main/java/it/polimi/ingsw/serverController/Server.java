@@ -92,15 +92,6 @@ public class Server extends Thread{
         return match;
     }
 
-    public boolean areThereJoinableMatches(String userName){
-        for (Controller match : matches){
-            if (match.isNotFull() || match.getPlayers().contains(userName)){
-                return true;
-            }
-        }
-        return false;
-    }
-
     public ArrayList<String> getJoinableMatches() {
         ArrayList<String> creators = new ArrayList<>();
         for (Controller match : matches){
