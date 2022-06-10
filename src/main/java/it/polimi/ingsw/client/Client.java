@@ -167,7 +167,7 @@ public class Client  extends Thread{
                         List<AssistantCard> cards;
                         cards = (ArrayList<AssistantCard>) in.readObject();
                         view.setCards(cards);
-                        view.wakeUp(received);
+                        view.wakeUp("ChooseCard");
                         break;
                     case "MoveStudents":
                     case "MoveMN": //DA MODIFICARE IL PROTOCOLLO
@@ -252,7 +252,7 @@ public class Client  extends Thread{
                                 p.getBoard().importStudents(cl.getStudents());
                             }
                         }
-                        for(Cloud e: match.getCloud()){
+                        for (Cloud e:match.getCloud()) {
                             if(cl.equals(e)){
                                 e.clearStudents();
                                 break;

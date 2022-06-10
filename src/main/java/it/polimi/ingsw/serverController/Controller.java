@@ -154,7 +154,7 @@ public class Controller extends Thread{
                     do {
                         notifyTurn("Action phase");
                         synchronized (players[currentPlayer]) {
-                            players[currentPlayer].notify();
+                            players[currentPlayer].notifyAll();
                         }
                         wait();
                         moveCurrentPlayer();

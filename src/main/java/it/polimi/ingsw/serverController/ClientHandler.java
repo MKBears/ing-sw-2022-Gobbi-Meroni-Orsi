@@ -193,7 +193,7 @@ public class ClientHandler extends Thread{
                     for (int i=0; i<movedStudentsNumber; i++) {
                         if (movedStudentPosition == 12) {
                             try {
-                                avatar.getBoard().placeStudent(avatar.getBoard().removeStudent(movedStudent));
+                                avatar.getBoard().placeStudent(movedStudent);
                             }
                             catch (Exception e) {
                                 out.sendGenericError("Desynchronized");
@@ -224,7 +224,6 @@ public class ClientHandler extends Thread{
                         wait();
                     } while (nack);
                     match.moveMotherNature(motherNatureSteps);
-                    checkAllProfessors();
                     try {
                         controller.controlLand();
                     } catch (Exception e) {

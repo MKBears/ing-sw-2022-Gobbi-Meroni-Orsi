@@ -300,9 +300,14 @@ public class Cli extends Thread implements View{
                      case ("ChooseCloud"):
                          Cloud clo = this.getCloud(clouds);
                          action.chooseCloud(me, clo);
-                         printMatch(match);
                          do {
                              server.sendChoiceCloud(clo);
+                             for (Cloud e:match.getCloud()) {
+                                 if(e.equals(clo)){
+                                     e.clearStudents();
+                                 }
+                             }
+                             printMatch(match);
                              synchronized (this) {
                                  nack=false;
                                  this.wait();
@@ -560,4 +565,7 @@ public class Cli extends Thread implements View{
         }
     }
 
+    public synchronized String state() {
+        return state;
+    }
 }

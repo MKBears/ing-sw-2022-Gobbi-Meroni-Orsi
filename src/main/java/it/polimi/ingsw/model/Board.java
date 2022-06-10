@@ -118,7 +118,7 @@ public class Board implements Serializable {
             case UNICORN -> unicorns.add(student);
             default -> frogs.add(student);
         }
-            entrance.remove(student);
+        removeStudent(student);
     }
 
     /**
