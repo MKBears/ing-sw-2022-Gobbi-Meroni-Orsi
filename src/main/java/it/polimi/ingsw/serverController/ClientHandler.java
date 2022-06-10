@@ -70,13 +70,7 @@ public class ClientHandler extends Thread{
 
                 do {
                     System.out.println("Player "+userName+": dormo");
-                    if(seeState()==1){
-                        if(controller.getCurrentPlayer()!=controller.getFirstPlayer()){
-                            synchronized (this) {
-                                this.wait();
-                            }
-                        }
-                    }
+
                     synchronized (this) {
                         this.wait();
                     }

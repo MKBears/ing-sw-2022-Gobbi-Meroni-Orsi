@@ -90,7 +90,7 @@ public class Controller extends Thread{
                     entrance.clear();
                 }
                 System.out.println("Match impostato a tutti i player");
-                sleep(1000);
+                //sleep(1000);
                 state = 1;
             }
             case 1 -> {
