@@ -442,7 +442,7 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
      * @param player the palyer that begins the turn
      * @param turn
      */
-    public void sendNextTurn(Player player, String turn) {
+    public void sendNextTurn(Player player, String turn, Controller co) {
         synchronized (this) {
             name = "NextTurn";
             try {
@@ -453,6 +453,15 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
                 throw new RuntimeException(e);
             }
         }
+        /*if(co.getCurrentPlayer()>0) {
+            synchronized (co) {
+                try {
+                    co.wait();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }*/
     }
 
     public void run() {

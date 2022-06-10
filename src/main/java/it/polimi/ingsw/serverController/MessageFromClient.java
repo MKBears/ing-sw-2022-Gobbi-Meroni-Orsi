@@ -23,7 +23,7 @@ public class MessageFromClient extends Thread{
         while (running) {
             try {
                 String message = (String) in.readObject();
-                System.out.println(message);
+                System.out.println("Ricevuto: "+message);
                 switch (message) {
                     case "ACK":
                         ch.setAck(true);

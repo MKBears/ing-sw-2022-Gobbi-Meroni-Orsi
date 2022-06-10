@@ -70,7 +70,13 @@ public class ClientHandler extends Thread{
 
                 do {
                     System.out.println("Player "+userName+": dormo");
-
+                    if(seeState()==1){
+                        if(controller.getCurrentPlayer()!=controller.getFirstPlayer()){
+                            synchronized (this) {
+                                this.wait();
+                            }
+                        }
+                    }
                     synchronized (this) {
                         this.wait();
                     }
@@ -187,13 +193,19 @@ public class ClientHandler extends Thread{
                     //check if they can control any professor
                     do {
                         out.sendMoveStudents();
+                        if(controller.getCurrentPlayer()!=controller.getFirstPlayer()){
+                            wait();
+                        }
+                        System.out.println(this.avatar.getUserName()+": sto aspettando");
                         wait();
                     } while (nack);
-
+                    System.out.println(this.avatar.getUserName()+": uscito dal wait");//////
                     for (int i=0; i<movedStudentsNumber; i++) {
+                        System.out.println(this.avatar.getUserName()+": sono dentro al for");
                         if (movedStudentPosition == 12) {
                             try {
                                 avatar.getBoard().placeStudent(movedStudent);
+                                System.out.println(this.avatar.getUserName()+": situa 1");
                             }
                             catch (Exception e) {
                                 out.sendGenericError("Desynchronized");
@@ -204,12 +216,15 @@ public class ClientHandler extends Thread{
                             for (Land land : match.getLands()) {
                                 if (land.getID() == movedStudentPosition) {
                                     land.addStudent(avatar.getBoard().removeStudent(movedStudent));
+                                    System.out.println(this.avatar.getUserName()+": situa 2");
                                 }
                             }
                         }
+                        System.out.println("sono QUIIIII");
                         controller.notifyMovedStudent(this, movedStudent, movedStudentPosition);
 
                         if (i < movedStudentsNumber-1) {
+                            System.out.println(this.avatar.getUserName()+": altra wait");
                             wait();
                         }
                     }
@@ -256,6 +271,7 @@ public class ClientHandler extends Thread{
                     out.sendChooseCloud(cloud);
                     System.out.println("sono qui");
                     do {
+                        System.out.println(this.avatar.getUserName()+": altra wait");
                         this.wait();
                         if (chosenCloud != null) {
                             for (Cloud clou : match.getCloud()) {
@@ -267,6 +283,7 @@ public class ClientHandler extends Thread{
                         }
                     }while (chosenCloud==null);
                     controller.chooseCloud(chosenCloud, this);
+                    System.out.println(controller.getCurrentPlayer());
                     state = 1;
                     break;
                 case 6:

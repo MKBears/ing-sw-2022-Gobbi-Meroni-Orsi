@@ -150,6 +150,12 @@ public class Controller extends Thread{
             case 4 -> {
                 //ACTION phase
                 currentPlayer = firstPlayer;
+                /*synchronized (players[firstPlayer]){
+                    if(currentPlayer!=firstPlayer) {
+                        wait();
+                        System.out.println(players[currentPlayer].getAvatar().getUserName()+": uscito dalla wait che ho costruito io");
+                    }
+                }*/
                 synchronized (this) {
                     do {
                         notifyTurn("Action phase");
@@ -172,6 +178,7 @@ public class Controller extends Thread{
                 playedAssistants.clear();
 
                 synchronized (players[firstPlayer]) {
+                    System.out.println("didididididididi");
                     wait();
                 }
             }
@@ -225,6 +232,14 @@ public class Controller extends Thread{
             }
         }
         return userNames;
+    }
+
+    public int getCurrentPlayer(){
+        return this.currentPlayer;
+    }
+
+    public int getFirstPlayer(){
+        return this.firstPlayer;
     }
 
     public synchronized void addPlayer (ClientHandler player) throws Exception{
@@ -429,7 +444,7 @@ public class Controller extends Thread{
             if (player != players[currentPlayer]) {
                 synchronized (player) {
                     do {
-                        player.getOutputStream().sendNextTurn(players[currentPlayer].getAvatar(), phase);
+                        player.getOutputStream().sendNextTurn(players[currentPlayer].getAvatar(), phase, this);
                         player.wait();
                     } while (player.getNack());
                 }
@@ -533,6 +548,7 @@ public class Controller extends Thread{
         for (ClientHandler p: players){
             if (p != player){
                 synchronized (p) {
+                    System.out.println("mando notifymovedstudents");
                     if (position == 12) {
                         do {
                             p.getOutputStream().sendNotifyMoveStudent(student, player.getAvatar().getBoard(), player.getUserName());

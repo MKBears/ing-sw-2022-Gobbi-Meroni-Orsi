@@ -187,6 +187,7 @@ public class Message4Server {
                 out.writeObject(name);
                 out.writeObject(stu);
                 out.writeObject(pos);
+                System.out.println("mandato movedstudent");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
