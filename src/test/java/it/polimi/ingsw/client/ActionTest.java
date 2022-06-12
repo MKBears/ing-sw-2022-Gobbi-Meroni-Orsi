@@ -86,6 +86,7 @@ class ActionTest {
         a.uniteLands();
         assertTrue(match.getLands().size()==10);
         assertTrue(match.getLands().get(0).getTower().getColor()==Colors.BLACK);
+        System.out.println(match.getLands().get(0));
         System.out.println(match);
     }
 
@@ -116,13 +117,51 @@ class ActionTest {
         ArrayList<Tower> t=new ArrayList<>();
         t.add(match.getPlayer()[0].getBoard().removeTower());
         match.getLands().get(10).changeTower(t);
-        match.getLands().get(11).changeTower(t);
         match.getLands().get(0).changeTower(t);
+        t.remove(0);
+        t.add(pl2.getBoard().removeTower());
+        match.getLands().get(11).changeTower(t);
         match.getMotherNature().setPosition(match.getLands().get(11));
         a.uniteLands();
         assertTrue(match.getLands().size()==12);
         assertTrue(match.getLands().get(0).getTower().getColor()==Colors.BLACK);
         assertTrue(match.getMotherNature().getPosition()==match.getLands().get(11));
+    }
+
+    @Test
+    void uniteLands3() throws Exception {
+        Player pl1=new Player("franco", Colors.BLACK,8, Wizards.WIZARD1,FALSE);
+        Player pl2=new Player("alberto", Colors.WHITE,8, Wizards.WIZARD2,FALSE);
+        Match match=new Match(pl1,pl2);
+        Action a=new Action(match);
+        ArrayList<Tower> t=new ArrayList<>();
+        t.add(match.getPlayer()[0].getBoard().removeTower());
+        match.getLands().get(5).changeTower(t);
+        match.getLands().get(6).changeTower(t);
+        t.remove(0);
+        match.getMotherNature().setPosition(match.getLands().get(5));
+        a.uniteLands();
+        assertTrue(match.getLands().size()==11);
+        assertTrue(match.getLands().get(5).getTower().getColor()==Colors.BLACK);
+        assertTrue(match.getMotherNature().getPosition()==match.getLands().get(5));
+    }
+
+    @Test
+    void uniteLands4() throws Exception {
+        Player pl1=new Player("franco", Colors.BLACK,8, Wizards.WIZARD1,FALSE);
+        Player pl2=new Player("alberto", Colors.WHITE,8, Wizards.WIZARD2,FALSE);
+        Match match=new Match(pl1,pl2);
+        Action a=new Action(match);
+        ArrayList<Tower> t=new ArrayList<>();
+        t.add(match.getPlayer()[0].getBoard().removeTower());
+        match.getLands().get(5).changeTower(t);
+        match.getLands().get(6).changeTower(t);
+        t.remove(0);
+        match.getMotherNature().setPosition(match.getLands().get(6));
+        a.uniteLands();
+        assertTrue(match.getLands().size()==11);
+        assertTrue(match.getLands().get(5).getTower().getColor()==Colors.BLACK);
+        assertTrue(match.getMotherNature().getPosition()==match.getLands().get(5));
     }
 
 

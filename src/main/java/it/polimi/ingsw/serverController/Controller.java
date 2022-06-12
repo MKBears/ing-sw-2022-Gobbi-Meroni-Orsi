@@ -95,26 +95,25 @@ public class Controller extends Thread{
             }
             case 1 -> {
                 //PLANNING phase: all the clouds are filled with 3 or 4 students
-                currentPlayer = firstPlayer;
-
                 try {
                     fillClouds(match.getCloud());
                 } catch (Exception e) {
                     notifyFinishedStudents();
                 }
                 System.out.println("Nuvole riempite");
-
+                currentPlayer = firstPlayer;
                 do {
                     synchronized (players[currentPlayer]) {
-                        players[currentPlayer].notify();
+                        players[currentPlayer].notifyAll();
                         System.out.println("Controller: sveglio player "+players[currentPlayer].getUserName());
                     }
-
                     synchronized (this) {
                         wait();
                     }
+                    System.out.println("muovo il giocatore");
                     moveCurrentPlayer();
                 } while (currentPlayer != firstPlayer);
+                System.out.println("uscito dal while");
                 state = 2;
             }
             case 2 -> {
@@ -177,10 +176,10 @@ public class Controller extends Thread{
                 }
                 playedAssistants.clear();
 
-                synchronized (players[firstPlayer]) {
+                /*synchronized (players[firstPlayer]) {
                     System.out.println("didididididididi");
                     players[firstPlayer].wait();
-                }
+                }*/
             }
             case 5 -> {
                 //Match END: determine the winner
@@ -534,6 +533,7 @@ public class Controller extends Thread{
     private void fillClouds (Cloud[] clouds){
         for (Cloud c : clouds){
             try {
+                c.clearStudents();
                 c.importStudents();
             } catch (Exception e) {
                 notifyFinishedStudents();

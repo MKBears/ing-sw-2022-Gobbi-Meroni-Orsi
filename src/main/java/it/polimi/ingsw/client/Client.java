@@ -276,6 +276,7 @@ public class Client  extends Thread{
                                 }
                             }
                         }
+                        action.uniteLands();
                         view.printMatch(match);
                         server.sendACK();
                         break;

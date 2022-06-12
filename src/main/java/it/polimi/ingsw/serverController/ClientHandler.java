@@ -161,6 +161,7 @@ public class ClientHandler extends Thread{
                     } while (nack);
 
                     synchronized (controller) {
+                        System.out.println("notificato");
                         controller.notify();
                     }
                     state = 2;
@@ -276,6 +277,7 @@ public class ClientHandler extends Thread{
                             }
                         }
                     }while (chosenCloud==null);
+                    System.out.println(this.avatar.getUserName()+": sono uscito");
                     controller.chooseCloud(chosenCloud, this);
                     System.out.println(controller.getCurrentPlayer());
                     state = 1;
@@ -502,11 +504,11 @@ public class ClientHandler extends Thread{
     private void uniteLands()  {
         try{
             if(match.getLands().indexOf(match.getMotherNature().getPosition())!=match.getLands().size()-1) {
-                if (match.getMotherNature().getPosition().getTowerColor() ==
-                        match.getLands().get((match.getLands().indexOf(match.getMotherNature().getPosition()) + 1) % match.getLands().size()).getTowerColor()) {
+                if (match.getMotherNature().getPosition().getTowerColor().equals(
+                        match.getLands().get((match.getLands().indexOf(match.getMotherNature().getPosition()) + 1) % match.getLands().size()).getTowerColor())) {
                     match.uniteLandAfter(match.getLands().indexOf(match.getMotherNature().getPosition()));
                 }
-            }else if (match.getLands().get(0).getTowerColor()==match.getLands().get(match.getLands().size()-1).getTowerColor()){
+            }else if (match.getLands().get(0).getTowerColor().equals(match.getLands().get(match.getLands().size()-1).getTowerColor())){
                 match.uniteLandAfter(match.getLands().indexOf(match.getMotherNature().getPosition()));
             }
         }catch (Exception e){
@@ -514,11 +516,11 @@ public class ClientHandler extends Thread{
         }
         try{
             if(match.getLands().indexOf(match.getMotherNature().getPosition())!=0){
-                if(match.getMotherNature().getPosition().getTowerColor()==
-                        match.getLands().get(match.getLands().indexOf(match.getMotherNature().getPosition())-1).getTowerColor()){
+                if(match.getMotherNature().getPosition().getTowerColor().equals(
+                        match.getLands().get(match.getLands().indexOf(match.getMotherNature().getPosition())-1).getTowerColor())){
                     match.uniteLandBefore(match.getLands().indexOf(match.getMotherNature().getPosition()));
                 }
-            }else if(match.getLands().get(0).getTowerColor()==match.getLands().get(match.getLands().size()-1).getTowerColor()){
+            }else if(match.getLands().get(0).getTowerColor().equals(match.getLands().get(match.getLands().size()-1).getTowerColor())){
                 match.uniteLandBefore(match.getLands().indexOf(match.getMotherNature().getPosition()));
             }
         }catch(Exception e){
