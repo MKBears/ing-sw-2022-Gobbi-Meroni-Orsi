@@ -91,10 +91,8 @@ public class Cli extends Thread implements View{
         int i =1;
         System.out.println("Scegli la nuvola tra: \n");
         for (Cloud e: clouds) {
-            if(!e.hasBeenChosen()){
-                System.out.println("Nuvola "+i+" "+e);
-                i++;
-            }
+            System.out.println("Nuvola "+i+" "+e);
+            i++;
         }
         int choose= input.nextInt();
         while (choose<1 || choose>=i){
