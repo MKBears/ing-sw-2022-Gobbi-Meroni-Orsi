@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.Array;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -177,7 +178,7 @@ public class Client  extends Thread{
                     case "ChooseCloud":
                         List<Cloud> clouds;
                         clouds = (ArrayList<Cloud>) in.readObject();
-                        view.setClouds(clouds);
+                        view.setClouds(Arrays.asList(match.getCloud()));
                         view.wakeUp("ChooseCloud");
                         //server.sendChoiceCloud(cl);
                         break;
@@ -270,7 +271,7 @@ public class Client  extends Thread{
                             for (Player pla: match.getPlayer()) {
                                 if(e.getID()==land.getID() && towers.get(0).getColor().equals(pla.getColor())){
                                     ArrayList<Tower> tower=new ArrayList<>();
-                                    for (int i = 0; i < e.size(); i++) {
+                                    for (int i = 0; i < towers.size(); i++) {
                                         tower.add(pla.getBoard().removeTower());
                                     }
                                     e.changeTower(tower);
