@@ -16,18 +16,15 @@ import it.polimi.ingsw.model.*;
  */
 public class Message4Server {
     private ObjectOutputStream out;
-    private ObjectInputStream in;
     private String name;
     private String message;
 
     /**
      *
-     * @param in the in parameter for TCP connection
      * @param out the out parameter for TCP connection
      */
-    Message4Server(ObjectInputStream in, ObjectOutputStream out){
+    Message4Server(ObjectOutputStream out){
         this.out=out;
-        this.in=in;
     }
 
     /**

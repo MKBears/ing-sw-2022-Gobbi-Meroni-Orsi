@@ -312,7 +312,7 @@ public class Cli extends Thread implements View{
                                  nack=false;
                                  this.wait();
                              }
-                         } while (nack == true);
+                         } while (nack);
                          break;
                      case ("MoveStudents"):
                          Student st;

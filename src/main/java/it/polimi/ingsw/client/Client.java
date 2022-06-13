@@ -79,7 +79,7 @@ public class Client  extends Thread{
             socket= new Socket(ip.getHostAddress(),port);
             out = new ObjectOutputStream(socket.getOutputStream());
             in= new ObjectInputStream(socket.getInputStream());
-            server=new Message4Server(in,out);
+            server=new Message4Server(out);
             view.setServer(server);
             received="base";
             view.getTitolo();

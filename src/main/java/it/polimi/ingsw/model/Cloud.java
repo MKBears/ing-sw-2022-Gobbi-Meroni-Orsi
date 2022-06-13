@@ -96,7 +96,12 @@ public class Cloud implements Serializable {
             cloud += "    ## # ##";
         }
         else {
-            cloud = "Nuvola vuota";
+            cloud = """
+
+                      ## ## #
+                     #       #
+                    #         #
+                      ## # ##""".indent(2);
         }
 
         return cloud;

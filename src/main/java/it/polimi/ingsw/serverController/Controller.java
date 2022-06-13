@@ -21,8 +21,8 @@ public class Controller extends Thread{
     private int currentPlayer;
     private boolean playing;
     private boolean paused;
+    private boolean go;
     private final ArrayList<AssistantCard> playedAssistants;
-    private final ArrayList<Cloud> chosenClouds;
     private ClientHandler winner;
     private GameRecap gameRecap;
     private String endExplanation;
@@ -36,7 +36,6 @@ public class Controller extends Thread{
         creator.setColor(Colors.WHITE);
         connectedPlayers = 1;
         playedAssistants = new ArrayList<>(playersNum);
-        chosenClouds = new ArrayList<>(playersNum);
         playing = true;
         paused = false;
         firstPlayer = 0;
@@ -46,14 +45,14 @@ public class Controller extends Thread{
     public void run() throws IllegalArgumentException {
         System.out.println("Controller partito");
         //Start match
-        while (!paused) {
+        while (!paused && state!=6) {
             try {
                 changeState();
                 System.out.println("State = "+state);
             } catch (InterruptedException e) {
-                notifyDeletion("Something went wrong waiting for a player to act ("+e.getMessage()+")");
+                notifyDeletion("Qualcosa non ha funzionato aspettando che un giocatore muovesse ("+e.getMessage()+")");
             } catch (Exception e) {
-                notifyDeletion("Something went wrong initializing the entrances ("+e.getMessage()+")");
+                notifyDeletion("Errore nel riempire gli ingressi ("+e.getMessage()+")");
             }
         }
         //End match
@@ -75,6 +74,7 @@ public class Controller extends Thread{
             case 0 -> {
                 //MATCH PREPARATION phase
                 ArrayList<Student> entrance = new ArrayList<>(7);
+                go = true;
 
                 for (int i=0; i<playersNum; i++) {
                     for (int j=0; j<7+2*(playersNum-2); j++) {
@@ -102,6 +102,7 @@ public class Controller extends Thread{
                 }
                 System.out.println("Nuvole riempite");
                 currentPlayer = firstPlayer;
+
                 do {
                     synchronized (players[currentPlayer]) {
                         players[currentPlayer].notifyAll();
@@ -139,11 +140,11 @@ public class Controller extends Thread{
             case 3 -> {
                 //PLANNING phase: deciding the first player of the following action phase
                 firstPlayer = 0;
-                for (currentPlayer = 1; currentPlayer < playersNum; currentPlayer++) {
-                    if (players[currentPlayer].getAvatar().getPlayedCard().getValue() < players[firstPlayer].getAvatar().getPlayedCard().getValue()) {
+
+                for (currentPlayer = 1; currentPlayer < playersNum; currentPlayer++)
+                    if (players[currentPlayer].getAvatar().getPlayedCard().getValue() < players[firstPlayer].getAvatar().getPlayedCard().getValue())
                         firstPlayer = currentPlayer;
-                    }
-                }
+
                 state = 4;
             }
             case 4 -> {
@@ -158,14 +159,19 @@ public class Controller extends Thread{
                 synchronized (this) {
                     do {
                         notifyTurn("Action phase");
+
                         synchronized (players[currentPlayer]) {
                             players[currentPlayer].notifyAll();
+                            System.out.println("Controller: "+players[currentPlayer]+" in fase di azione");
                         }
+                        sleep(100);
+                        go = false;
                         wait();
                         moveCurrentPlayer();
+                        go = true;
 
                         if (!playing)
-                            if (endExplanation.equals("Built all their towers"))
+                            if (endExplanation.equals("Ha costruito tutte le torri"))
                                 break;
                     } while (currentPlayer != firstPlayer);
                 }
@@ -176,6 +182,11 @@ public class Controller extends Thread{
                 }
                 playedAssistants.clear();
 
+                for (Cloud c : match.getCloud()) {
+                    c.clearStudents();
+                    c.reset();
+                }
+
                 /*synchronized (players[firstPlayer]) {
                     System.out.println("didididididididi");
                     players[firstPlayer].wait();
@@ -185,15 +196,19 @@ public class Controller extends Thread{
                 //Match END: determine the winner
                 Player winner;
                 winner = match.getWinner();
+
                 for (ClientHandler player : players) {
                     if (player.getAvatar().equals(winner)) {
                         this.winner = player;
                     }
                 }
                 gameRecap = new GameRecap(players, match);
+
                 for (ClientHandler player : players) {
+                    player.setState(6);
                     player.notify();
                 }
+                state = 6;
             }
         }
     }
@@ -268,8 +283,9 @@ public class Controller extends Thread{
             }
         }
         else {
-            throw new Exception("This match is already full");
+            throw new Exception("Partita gia' al completo");
         }
+        sleep (500);
     }
 
     public boolean readyToStart() {
@@ -374,7 +390,7 @@ public class Controller extends Thread{
                 }
                 break;
             default:
-                throw new IllegalArgumentException("Suspicious number of players");
+                throw new IllegalArgumentException("Numero di giocatori anomalo");
         }
         System.out.println("Controller: match creato");
         System.out.println("Faccio partire la partita");
@@ -435,7 +451,7 @@ public class Controller extends Thread{
                 return false;
             }
         }
-        return players[currentPlayer].equals(player);
+        return players[currentPlayer].equals(player) && go;
     }
 
     private void notifyTurn (String phase) throws InterruptedException {
@@ -454,7 +470,7 @@ public class Controller extends Thread{
     public void notifyDeletion(String cause) {
         for (ClientHandler player : players){
             if (player.isConnected()){
-                player.getOutputStream().sendGenericError("Match has been deleted: \n"+cause);
+                player.getOutputStream().sendGenericError("Partita eliminata: \n"+cause);
             }
         }
     }
@@ -465,13 +481,6 @@ public class Controller extends Thread{
 
     public synchronized void chooseWizard (Wizards wizard) {
         wizards.remove(wizard);
-
-        if (System.getProperty("os.name").contains("Windows"))
-            System.out.println("Clear");
-        else {
-            System.out.println("\033[H\033[2J");
-            System.out.flush();
-        }
         System.out.println("Rimosso "+wizard.toString());
     }
 
@@ -501,12 +510,8 @@ public class Controller extends Thread{
         }
     }
 
-    public ArrayList<Cloud> getChosenClouds() {
-        return (ArrayList<Cloud>) chosenClouds.clone();
-    }
-
     public void chooseCloud (Cloud cloud, ClientHandler player) throws InterruptedException {
-        chosenClouds.add(cloud);
+        cloud.choose();
 
         for (ClientHandler p : players) {
             if (p != player) {
@@ -689,14 +694,17 @@ public class Controller extends Thread{
         ArrayList<Tower> previousTowers = null;
         String player1 = null;
         ClientHandler player2 = null;
+
         if (position.getPreviousTowers() != null)
             if (!position.getPreviousTowers().isEmpty())
                 previousTowers = position.getPreviousTowers();
+
         for (ClientHandler p : players) {
             if (position.getTower().getBoard() == p.getAvatar().getBoard()) {
                 player1 = p.getUserName();
                 break;
             }
+
             if(previousTowers!=null){
                 if (previousTowers.get(0).getBoard() == p.getAvatar().getBoard()) {
                     player2 = p;
@@ -725,7 +733,7 @@ public class Controller extends Thread{
             player.getOutputStream().sendNoMoreStudents();
             player.endMatch();
         }
-        endExplanation = "There are no more students in the bag";
+        endExplanation = "sono finiti gli studenti del sacchetto";
         playing = false;
     }
 
@@ -736,7 +744,7 @@ public class Controller extends Thread{
             }
             p.endMatch();
         }
-        endExplanation = player.getUserName()+" ended their assistants";
+        endExplanation = player.getUserName()+" ha finito le carte assistente";
         playing = false;
     }
 
@@ -745,16 +753,16 @@ public class Controller extends Thread{
             if (p != player){
                 p.getOutputStream().sendLastTower(player.getAvatar());
             }
-            p.setState(6);
             p.endMatch();
         }
-        endExplanation = "Built all their towers";
+        endExplanation = "Ha costruito tutte le torri";
+        state = 5;
         playing = false;
     }
 
     public Player getWinner() throws Exception {
         if (playing){
-            throw new Exception("The match hasn't finished yet");
+            throw new Exception("Partita ancora in corso");
         }
         return winner.getAvatar();
     }

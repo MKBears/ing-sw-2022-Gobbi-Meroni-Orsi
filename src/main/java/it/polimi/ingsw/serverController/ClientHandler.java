@@ -68,14 +68,13 @@ public class ClientHandler extends Thread{
             try {
                 changeState();
 
-                do {
-                    System.out.println("Player "+userName+": dormo");
-
-                    synchronized (this) {
+                synchronized (this) {
+                    do {
+                        System.out.println("Player " + userName + ": dormo");
                         this.wait();
-                    }
-                    System.out.println("Player "+userName+": sveglio");
-                } while (!controller.isMyTurn(this));
+                        System.out.println("Player " + userName + ": sveglio");
+                    } while (!controller.isMyTurn(this));
+                }
             } catch (InterruptedException | SocketException e) {
                 out.sendGenericError("Internal server error ("+e.getMessage()+")");
                 state = 8;
@@ -188,13 +187,14 @@ public class ClientHandler extends Thread{
                     //check if they can control any professor
                     do {
                         out.sendMoveStudents();
-                        if(controller.getCurrentPlayer()!=controller.getFirstPlayer()){
+                        /*if(controller.getCurrentPlayer()!=controller.getFirstPlayer()){
                             wait();
-                        }
+                        }*/
                         System.out.println(this.avatar.getUserName()+": sto aspettando");
                         wait();
                     } while (nack);
                     System.out.println(this.avatar.getUserName()+": uscito dal wait");//////
+
                     for (int i=0; i<movedStudentsNumber; i++) {
                         System.out.println(this.avatar.getUserName()+": sono dentro al for");
                         if (movedStudentPosition == 12) {
@@ -260,16 +260,24 @@ public class ClientHandler extends Thread{
                         break;
                     }
                 case 5:
+                    System.out.println("Dentro alla fase 5");
                     //ACTION phase: choose a cloud and import students to the entrance
-                    ArrayList<Cloud> cloud = new ArrayList<>(Arrays.asList(match.getCloud()));
-                    cloud.removeAll(controller.getChosenClouds());
-                    out.sendChooseCloud(cloud);
+                    ArrayList<Cloud> clouds = new ArrayList<>();
+
+                    do {
+                        clouds.addAll(Arrays.asList(match.getCloud()));
+                        out.sendChooseCloud(clouds);
+                        clouds.clear();
+                        System.out.println("Mandato chooseCloud");
+                        this.wait();
+                    } while (nack);
                     System.out.println("sono qui");
                     do {
-                        System.out.println(this.avatar.getUserName()+": altra wait");
-                        this.wait();
+                        System.out.println(userName+": altra wait");
+
                         if (chosenCloud != null) {
                             for (Cloud clou : match.getCloud()) {
+                                System.out.println("Tra i due fuochi");
                                 if (chosenCloud.equals(clou)) {
                                     System.out.println("sono qua");
                                     avatar.getBoard().importStudents(clou.getStudents());
