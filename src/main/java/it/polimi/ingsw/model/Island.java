@@ -1,11 +1,12 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * One of the two implementation of Land
  */
-public class Island implements Land {
+public class Island implements Land, Serializable {
     private final ArrayList<Student> students;
     private final int islandID;
     private Tower tower;
@@ -118,6 +119,7 @@ public class Island implements Land {
         ArrayList<Island> arr=new ArrayList<>();
         arr.add(this);
         arr.addAll(other.getIslands());
+        hasChanged=true;
         return new Archipelago(arr);
     }
 

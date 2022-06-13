@@ -1,11 +1,12 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * One of the two implementation of Land
  */
-public class Archipelago implements Land {
+public class Archipelago implements Land, Serializable {
     private final ArrayList<Island> group=new ArrayList<>();
     private int size;
     private final Island head;   ////////////////
@@ -25,7 +26,7 @@ public class Archipelago implements Land {
         head = this.group.get(0);
         color=this.group.get(0).getTower().getColor();
         previousTowers = new ArrayList<>();
-        hasChanged=false;
+        hasChanged=true;
     }
 
     /**
@@ -220,11 +221,11 @@ public class Archipelago implements Land {
         return hasChanged;
     }
 
-    public ArrayList<Tower> getPreviousTowers() throws Exception {
-        if (previousTowers == null || !hasChanged) {
-            throw new Exception ("There haven't been changes");  ///
-        }
+    public ArrayList<Tower> getPreviousTowers(){
         hasChanged = false;
+        if (previousTowers == null || !hasChanged) {
+            return null;  ///
+        }
         return previousTowers;
     }
 }

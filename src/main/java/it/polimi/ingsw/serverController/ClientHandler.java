@@ -285,6 +285,7 @@ public class ClientHandler extends Thread{
                             }
                         }
                     }while (chosenCloud==null);
+                    System.out.println(chosenCloud);
                     System.out.println(this.avatar.getUserName()+": sono uscito");
                     controller.chooseCloud(chosenCloud, this);
                     System.out.println(controller.getCurrentPlayer());
