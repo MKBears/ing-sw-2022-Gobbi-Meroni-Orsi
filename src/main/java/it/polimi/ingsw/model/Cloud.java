@@ -121,4 +121,23 @@ public class Cloud implements Serializable {
         return students.equals(cloud.students);
     }
 
+    public Cloud clone () {
+        Cloud cloud;
+        int players;
+
+        if (nop == 3)
+            players = 2;
+        else
+            players = 3;
+
+        try {
+            cloud = new Cloud(bag, players);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        cloud.setStudents((ArrayList<Student>) students.clone());
+        return cloud;
+    }
+
 }

@@ -299,7 +299,7 @@ public class Cli extends Thread implements View{
                          Cloud clo = this.getCloud(clouds);
                          action.chooseCloud(me, clo);
                          do {
-                             server.sendChoiceCloud(clo);
+                             server.sendChoiceCloud(clo.clone());
                              for (Cloud e:match.getCloud()) {
                                  if(e.equals(clo)){
                                      e.clearStudents();
@@ -387,7 +387,7 @@ public class Cli extends Thread implements View{
                          break;
                  }
              }
-         }catch (InterruptedException e){
+         }catch (InterruptedException e) {
              e.printStackTrace();
          }
     }
