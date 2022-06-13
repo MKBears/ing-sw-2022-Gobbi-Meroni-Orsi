@@ -70,13 +70,11 @@ public class Island implements Land {
     @Override
     public int getInfluence(ArrayList<Type_Student> input) {
         int i=0;
-        for (Student s: this.students) {
-            for (Type_Student t : input) {
-                if (s.type().equals(t)) {
-                    i++;
-                }
-            }
-        }
+        if (!students.isEmpty())
+            for (Student s: this.students)
+                for (Type_Student t : input)
+                    if (s.type().equals(t))
+                        i++;
         return i;
     }
 
