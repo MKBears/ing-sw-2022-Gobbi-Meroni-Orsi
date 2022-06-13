@@ -515,9 +515,11 @@ public class ClientHandler extends Thread{
                 if (match.getMotherNature().getPosition().getTowerColor().equals(
                         match.getLands().get((match.getLands().indexOf(match.getMotherNature().getPosition()) + 1) % match.getLands().size()).getTowerColor())) {
                     match.uniteLandAfter(match.getLands().indexOf(match.getMotherNature().getPosition()));
+                    System.out.println(match.getLands());
                 }
             }else if (match.getLands().get(0).getTowerColor().equals(match.getLands().get(match.getLands().size()-1).getTowerColor())){
                 match.uniteLandAfter(match.getLands().indexOf(match.getMotherNature().getPosition()));
+                System.out.println(match.getLands());
             }
         }catch (Exception e){
             System.out.println("isola dopo senza torre");
@@ -527,9 +529,11 @@ public class ClientHandler extends Thread{
                 if(match.getMotherNature().getPosition().getTowerColor().equals(
                         match.getLands().get(match.getLands().indexOf(match.getMotherNature().getPosition())-1).getTowerColor())){
                     match.uniteLandBefore(match.getLands().indexOf(match.getMotherNature().getPosition()));
+                    System.out.println(match.getLands());
                 }
             }else if(match.getLands().get(0).getTowerColor().equals(match.getLands().get(match.getLands().size()-1).getTowerColor())){
                 match.uniteLandBefore(match.getLands().indexOf(match.getMotherNature().getPosition()));
+                System.out.println(match.getLands());
             }
         }catch(Exception e){
             System.out.println("isola prima senza torri");

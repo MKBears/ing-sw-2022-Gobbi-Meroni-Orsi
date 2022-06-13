@@ -572,6 +572,7 @@ public class Controller extends Thread{
 
     public void notifyMovedMN (ClientHandler player, int steps) throws InterruptedException {
         ArrayList<Land> lands = match.getLands();
+        System.out.println("notifico lo spostamento");
         for (ClientHandler p: players){
             synchronized (p) {
                 do {

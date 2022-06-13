@@ -227,6 +227,7 @@ public class Client  extends Thread{
                         int movement=(int)in.readObject();
                         int idLand;
                         ArrayList<Land> lands=(ArrayList<Land>) in.readObject();
+                        System.out.println(lands);
                         match.moveMotherNature(movement);
                         idLand=match.getMotherNature().getPosition().getID();
                         match.setLands(lands);
@@ -269,7 +270,7 @@ public class Client  extends Thread{
                             for (Player pla: match.getPlayer()) {
                                 if(e.getID()==land.getID() && towers.get(0).getColor().equals(pla.getColor())){
                                     ArrayList<Tower> tower=new ArrayList<>();
-                                    for (int i = 0; i < towers.size(); i++) {
+                                    for (int i = 0; i < e.size(); i++) {
                                         tower.add(pla.getBoard().removeTower());
                                     }
                                     e.changeTower(tower);

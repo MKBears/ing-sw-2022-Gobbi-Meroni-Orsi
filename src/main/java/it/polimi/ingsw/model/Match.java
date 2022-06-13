@@ -145,7 +145,7 @@ public class Match implements Serializable {
      * @return the lands of the match
      */
     public ArrayList<Land> getLands() {
-        return lands;
+        return (ArrayList<Land>) this.lands.clone();
     }
 
     /**
