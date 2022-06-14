@@ -322,12 +322,13 @@ public class Cli extends Thread implements View{
                              if (move==12) {
                                  try {
                                      action.moveFromIngressToBoard(me, st);
+                                     server.sendMovedStudent(st, 12);
                                  } catch (Exception e) {
                                  }
                              } else {
                                  action.moveFromIngressToLand(me, st, match.getLands().get(move));
+                                 server.sendMovedStudent(st, match.getLands().get(move).getID());
                              }
-                             server.sendMovedStudent(st, match.getLands().get(move).getID());
                              action.checkAllProfessors();
                              printMatch(match);
                          }
