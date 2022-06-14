@@ -159,7 +159,7 @@ public class Cli extends Thread implements View{
         }
         System.out.println("Scegli un numero tra 1 e "+(i-1)+" :");
         choose=input.nextInt();
-        while (choose<1 || choose>i){
+        while (choose<1 || choose>=i){
             System.out.println("Scegli un numero tra 1 e "+(i-1)+" :");
             choose=input.nextInt();
         }
