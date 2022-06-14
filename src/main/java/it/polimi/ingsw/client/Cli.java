@@ -184,11 +184,11 @@ public class Cli extends Thread implements View{
             do {
                 System.out.println("Inserire scelta: ");
                 choose = input.nextInt();
-            }while (choose<0 || choose>match.getLands().size());
-            if(choose!=12)
-                return match.getLands().get(choose).getID();
-            else
+            }while (choose<0 || choose>12);
+            if(choose>=match.getLands().size())
                 return 12;
+            else
+                return choose;
         } catch (Exception e) {
             return 12;
         }
@@ -327,7 +327,7 @@ public class Cli extends Thread implements View{
                              } else {
                                  action.moveFromIngressToLand(me, st, match.getLands().get(move));
                              }
-                             server.sendMovedStudent(st, move);
+                             server.sendMovedStudent(st, match.getLands().get(move).getID());
                              action.checkAllProfessors();
                              printMatch(match);
                          }
