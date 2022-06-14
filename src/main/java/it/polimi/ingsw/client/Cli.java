@@ -297,6 +297,7 @@ public class Cli extends Thread implements View{
                          break;
                      case ("ChooseCloud"):
                          Cloud clo = this.getCloud(clouds);
+                         System.out.println("Nuvola scelta:\n"+ clo.toString());
                          action.chooseCloud(me, clo);
                          do {
                              server.sendChoiceCloud(clo.clone());

@@ -512,7 +512,7 @@ public class Controller extends Thread{
 
     public void chooseCloud (Cloud cloud, ClientHandler player) throws InterruptedException {
         cloud.choose();
-
+        System.out.println("Mando notifychosenCloud dicendo che "+player.getUserName()+" ha seclto la nuvola: "+cloud.toString());
         for (ClientHandler p : players) {
             if (p != player) {
                 synchronized (p) {
@@ -572,7 +572,7 @@ public class Controller extends Thread{
 
     public void notifyMovedMN (ClientHandler player, int steps) throws InterruptedException {
         ArrayList<Land> lands = match.getLands();
-        System.out.println("notifico lo spostamento");
+        System.out.println("notifico lo spostamento\n"+lands.toString());
         for (ClientHandler p: players){
             synchronized (p) {
                 do {

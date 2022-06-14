@@ -337,6 +337,7 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
     public void sendNotifyTowers(ArrayList<Tower> towers, Land land, String username) {
         synchronized (this) {
             name = "NotifyTowers (land)";
+            System.out.println("mando NOTIFYTOWERS");
             try {
                 out.writeObject(name);
                 out.writeObject(towers);

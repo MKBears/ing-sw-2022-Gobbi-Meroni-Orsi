@@ -135,8 +135,8 @@ public class Cloud implements Serializable {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        cloud.setStudents((ArrayList<Student>) students.clone());
+        ArrayList<Student>s= (ArrayList<Student>) students.clone();
+        cloud.setStudents(s);
         return cloud;
     }
 

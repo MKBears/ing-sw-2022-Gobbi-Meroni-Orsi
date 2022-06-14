@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Archipelago implements Land, Serializable {
     private final ArrayList<Island> group=new ArrayList<>();
     private int size;
-    private final Island head;   ////////////////
+    private final Island head;
     private Colors color;
     private boolean hasChanged;
     private final ArrayList<Tower> previousTowers;
@@ -20,7 +20,7 @@ public class Archipelago implements Land, Serializable {
      * Constructor: group==ArrayList of Islands, size=group.size(), head=group.get(0), color=towercolor
      * @param group ArrayList of Islands
      */
-    public Archipelago(ArrayList<Island> group){  //non so se manca qualcosa
+    public Archipelago(ArrayList<Island> group){
         this.group.addAll(group);
         size = this.group.size();
         head = this.group.get(0);

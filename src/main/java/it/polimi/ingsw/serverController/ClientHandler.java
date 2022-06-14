@@ -547,6 +547,7 @@ public class ClientHandler extends Thread{
     }
 
     public synchronized void chooseCloud (Cloud cloud) {
+        System.out.println("Ho ricevuto la nuvola scelta, che è la seguente: "+ cloud.toString());
         chosenCloud = cloud;
     }
 

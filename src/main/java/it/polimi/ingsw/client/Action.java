@@ -69,7 +69,9 @@ public class Action {
      * @param cloud cloud choosen
      */
     public void chooseCloud(Player player, Cloud cloud){
+        System.out.println("Studenti che sposto sulla mia board (PRIMA): "+ cloud.getStudents().toString());
         player.getBoard().importStudents(cloud.getStudents());
+        System.out.println("Studenti che sposto sulla mia board (DOPO): "+ cloud.getStudents().toString());
         cloud.choose();
     }
 
