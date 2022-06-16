@@ -202,7 +202,7 @@ public class ArchipelagoTest {
     public void hasChangedTest() throws Exception {
         pelago=new Archipelago(is);
         assertEquals(pelago.size(),is.size());
-        assertFalse(pelago.hasChanged());
+        assertTrue(pelago.hasChanged());
         ArrayList<Tower> k=new ArrayList<>();
         ArrayList<Tower> l=new ArrayList<>();
         Tower cami=tow.get(0);

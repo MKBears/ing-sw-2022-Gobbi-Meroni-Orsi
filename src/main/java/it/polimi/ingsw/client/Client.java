@@ -34,6 +34,7 @@ public class Client  extends Thread{
     private boolean end;
     private int counter;
     private Boolean nack;
+    private int tow;
 
     public Client(View view) {
         match=null;
@@ -231,6 +232,7 @@ public class Client  extends Thread{
                         System.out.println(lands);
                         match.moveMotherNature(movement);
                         idLand=match.getMotherNature().getPosition().getID();
+                        tow=match.getMotherNature().getPosition().size();
                         match.setLands(lands);
                         for (Land e:match.getLands()) {
                             if(e.getID()==idLand){
@@ -268,16 +270,25 @@ public class Client  extends Thread{
                         Land land=(Land) in.readObject();
                         String f=(String) in.readObject();
                         for (Land e: match.getLands()) {
-                            for (Player pla: match.getPlayer()) {
-                                if(e.getID()==land.getID() && towers.get(0).getColor().equals(pla.getColor())){
+                            for (int j=0;j< match.getPlayersNum();j++) {
+                                if(e.getID()==land.getID() && towers.get(0).getColor().equals(match.getPlayer()[j].getColor())){
                                     ArrayList<Tower> tower=new ArrayList<>();
-                                    for (int i = 0; i < towers.size(); i++) {
-                                        tower.add(pla.getBoard().removeTower());
+                                    for (int i = 0; i < tow; i++) {
+                                        tower.add(match.getPlayer()[j].getBoard().removeTower());
+                                    }
+                                    for (int i = tow; i < e.size(); i++) {
+                                        tower.add(new Tower(match.getPlayer()[j].getColor(),match.getPlayer()[j].getBoard()));
                                     }
                                     e.changeTower(tower);
+                                    if(tow<e.size()){
+                                        for (int z = tow; z < e.size(); z++) {
+                                            match.getPlayer()[j].getBoard().removeTower();
+                                        }
+                                    }
                                 }
                             }
                         }
+
                         action.uniteLands();
                         view.printMatch(match);
                         server.sendACK();

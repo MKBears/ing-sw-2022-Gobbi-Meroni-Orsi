@@ -43,7 +43,7 @@ public class Board implements Serializable {
      */
     private void initializeTowers(int towersNum, Colors color){
         Tower temp;
-        towers=new ArrayList<>(towersNum);
+        towers=new ArrayList<>();
 
         for (int i=0; i< towersNum; i++){
             temp = new Tower(color, this);
