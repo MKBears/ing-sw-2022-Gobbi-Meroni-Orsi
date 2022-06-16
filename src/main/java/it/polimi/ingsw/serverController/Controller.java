@@ -612,6 +612,8 @@ public class Controller extends Thread{
                     if (myInfluence > dominantInfluence) {
                         dominant = player;
                         dominantInfluence = myInfluence;
+                    } else if (myInfluence == dominantInfluence) {
+                        dominant = null;
                     }
                 }
             }
@@ -622,6 +624,16 @@ public class Controller extends Thread{
                 for (int i = 0; i < land.size(); i++) {
                     try {
                         towers.add(dominant.getBoard().removeTower());
+
+                        if (dominant.getBoard().hasNoTowersLeft())
+                            for (ClientHandler winner : players)
+                                if (winner.getAvatar().equals(dominant))
+                                    synchronized (winner) {
+                                        do {
+                                            notifyBuiltLastTower(winner);
+                                            winner.wait();
+                                        } while (winner.getNack());
+                                    }
                     } catch (Exception e) {
                         for (ClientHandler p : players) {
                             if (p.getAvatar().equals(dominant)) {
