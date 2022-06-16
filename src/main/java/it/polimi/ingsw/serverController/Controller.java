@@ -695,10 +695,12 @@ public class Controller extends Thread{
         ArrayList<Tower> previousTowers = null;
         String player1 = null;
         ClientHandler player2 = null;
+        ArrayList<Tower> t=position.getPreviousTowers();
 
-        if (position.getPreviousTowers() != null)
-            if (!position.getPreviousTowers().isEmpty())
-                previousTowers = position.getPreviousTowers();
+        if (t != null) { /////////////
+            if (!t.isEmpty())
+                previousTowers = t;
+        }
 
         for (ClientHandler p : players) {
             if (position.getTower().getBoard() == p.getAvatar().getBoard()) {

@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ActionTest {
 
     @Test
-    void cardAndMoveMN() {
+     void cardAndMoveMN() {
         Player pl1=new Player("franco", Colors.BLACK,8, Wizards.WIZARD1,FALSE);
         Player pl2=new Player("alberto", Colors.WHITE,8, Wizards.WIZARD2,FALSE);
         Match match=new Match(pl1,pl2);
