@@ -59,6 +59,7 @@ class BoardExpertsTest {
                 fail();
             }
         }
+        System.out.println(board.toString());
 
         try{
             board.importStudents(entrance);

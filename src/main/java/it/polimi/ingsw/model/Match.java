@@ -290,19 +290,27 @@ public class Match implements Serializable {
 
     @Override
     public String toString() {
-        String a="\nplayer= " + Arrays.toString(player) +'\n'+
-                "nuvole= \n" + Arrays.toString(cloud) +"\n"+
-                "professori: \n";
-        for (Type_Student e:professors.keySet()) {
-            a=a+professors.get(e).getUserName()+" ha professore di tipo "+e+'\n';
+        StringBuilder a= new StringBuilder();
+
+        for (Player p : player)
+            a.append(p.toString());
+        a.append("nuvole= \n").append(Arrays.toString(cloud)).append("\n").append("professori: \n");
+        for (Player p : player) {
+            a.append(p.getColor()).append("\t").append(p.getUserName()).append("\u001B[0m").append(":  ");
+            for (Type_Student professor : professors.keySet()) {
+                if (professors.get(professor).getUserName().equals(p.getUserName()))
+                    a.append(professor.toString()).append("(₱)  ");
+            }
+            a.append("\n");
         }
-        a=a+"\n"+"isole:\n";
+        a.append("\n").append("isole:\n");
         for (Land e:lands) {
             if(motherNature.getPosition()==e){
-                a=a+" Madre Natura è su questa isola ↓\n";
+                a.append(" Madre Natura è su questa isola ↓\n");
             }
-            a=a+e.toString()+"\n";
+            a.append(e.toString()).append("\n");
         }
-        return a;
+        return a.toString();
     }
+
 }

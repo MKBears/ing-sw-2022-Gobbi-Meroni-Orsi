@@ -214,14 +214,14 @@ public class Board implements Serializable {
         board.append(" ");
         addTowerToString(board, 13);
         board.append(" \u001B[0m║\n");
-        board.append("║             ║                                                          ║                 ║\n");
+        board.append("║                                                                        ║                 ║\n");
         board.append("║   ");
         addStudentToString(board, 3);
         board.append("    ");
-        board.append("   ║   ").append(Type_Student.FAIRY).append("Fate    \u001B[0m :  ");
+        board.append("       ").append(Type_Student.FAIRY).append("Fate    \u001B[0m :  ");
         addTableToString(board, fairies);
         board.append("   ║                 ║\n");
-        board.append("║             ║                                                          ║                 ║\n");
+        board.append("║                                                                        ║                 ║\n");
         board.append("║   ");
         addStudentToString(board, 4);
         board.append(" ");

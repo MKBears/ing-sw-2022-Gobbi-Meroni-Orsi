@@ -8,7 +8,7 @@ import static it.polimi.ingsw.model.Colors.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MatchTest {
-    private final String u1 = "Pina", u2 = "Gino";
+    private final String u1 = "abcdefghijklmnopqrstuvwxyz", u2 = "Gino";
     @Test
     void checkInit(){
         Player pl1,pl2;
@@ -17,9 +17,9 @@ class MatchTest {
         Match a=new Match(pl1,pl2);
         for (int i=0;i<12;i++){
             if(i==0 || i==6)
-                assertTrue(a.getLands().get(i).getStudents().size()==0);
+                assertEquals(0, a.getLands().get(i).getStudents().size());
             else
-                assertTrue(a.getLands().get(i).getStudents().size()==1);
+                assertEquals(1, a.getLands().get(i).getStudents().size());
         }
         System.out.println(a);
     }
