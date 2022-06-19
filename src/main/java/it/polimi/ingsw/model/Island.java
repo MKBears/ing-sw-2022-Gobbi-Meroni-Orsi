@@ -97,12 +97,9 @@ public class Island implements Land, Serializable {
         if(this.tower!=null){
             this.tower.getBoard().returnTower(this.tower);
             previousTower = this.tower;
-            this.tower=n_tower.get(0);
-            hasChanged = true;
-        } else{
-            this.tower=n_tower.get(0);
-            hasChanged=true;
         }
+        this.tower=n_tower.get(0);
+        hasChanged = true;
     }
 
     /**
@@ -186,83 +183,6 @@ public class Island implements Land, Serializable {
             throw new Exception("A No Entry tile has already been set on this island");
         }
         this.noEntry = noEntry;
-    }
-
-    @Override
-    public String toString() {
-        String island;
-        int[] counter = countStudents();
-        island =    "   ___________\n"+
-                    "  /  ";
-
-        if (noEntry)
-            island +=   "\u001B[31;1m"+"DIVIETO"+"\u001B[0m";
-        else
-            island +=   "       ";
-
-        island +=   "  \\\n"+
-                    " /    "+new Student(Type_Student.DRAGON).toString()+"x"+counter[0];
-
-        if (counter[0] < 10)
-            island += " ";
-
-        island +=   "   \\\n"+
-                    "/"+new Student(Type_Student.FAIRY).toString()+"x"+counter[1];
-
-        if (counter[1] < 10)
-            island += " ";
-
-        if (tower != null)
-            island +=   tower.getColor().toString()+"|_|"+new Student(Type_Student.GNOME)+"x"+counter[2];
-        else
-            island +=   "   "+new Student(Type_Student.GNOME)+"x"+counter[2];
-
-        if (counter[2] < 10)
-            island += " ";
-
-        island +=   "\\\n"+
-                    "\\      ";
-
-        if (tower != null)
-            island += tower.getColor().toString()+"/_\\"+"\u001B[0m";
-        else
-            island += "   ";
-
-        island +=   "      /\n"+
-                    " \\ "+new Student(Type_Student.UNICORN)+"x"+counter[3];
-
-        if (counter[3] < 10)
-            island += " ";
-
-        island +=   ""+new Student(Type_Student.FROG)+"x"+counter[4];
-
-        if (counter[4] < 10)
-            island += " ";
-
-        island +=   "/\n"+
-                    "  \\___________/";
-
-        return island;
-    }
-
-    private int[] countStudents() {
-        int[] counter = new int[5];
-
-        for (int i=0; i<5; i++) {
-            counter[i] = 0;
-        }
-
-        for (Student student : students) {
-            switch (student.type()) {
-                case DRAGON -> counter[0]++;
-                case FAIRY -> counter[1]++;
-                case GNOME -> counter[2]++;
-                case UNICORN -> counter[3]++;
-                case FROG -> counter[4]++;
-            }
-        }
-
-        return counter;
     }
 
     @Override

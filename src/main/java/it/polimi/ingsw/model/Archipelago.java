@@ -144,7 +144,7 @@ public class Archipelago implements Land, Serializable {
             throw new Exception("Wrong Color of Towers");
         }
         group.addAll(other.getIslands());
-        this.size= (int) group.size();
+        this.size= group.size();
         return this; //ritorna me stesso
     }
 
@@ -205,27 +205,16 @@ public class Archipelago implements Land, Serializable {
     //    }
     //}
 
-
-    @Override
-    public String toString() {
-        String a="Arcipelago di "+size+" isole{ \n";
-        for (Island e:group) {
-            a=a+e.toString()+'\n';
-        }
-        a=a+"}\n";
-        return a;
-    }
-
     @Override
     public boolean hasChanged() {
         return hasChanged;
     }
 
     public ArrayList<Tower> getPreviousTowers(){
-        hasChanged = false;
         if (previousTowers == null || !hasChanged) {
             return null;  ///
         }
+        hasChanged = false;
         return previousTowers;
     }
 }

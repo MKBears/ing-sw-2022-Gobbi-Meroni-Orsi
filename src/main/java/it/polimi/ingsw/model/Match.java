@@ -302,7 +302,7 @@ public class Match implements Serializable {
                 if (professors.get(professor).getUserName().equals(p.getUserName()))
                     a.append(professor.toString()).append("(₱)  ");
             }
-            a.append("\n");
+            a.append("\u001B[0m\n");
         }
         a.append("\n");
 
@@ -376,27 +376,27 @@ public class Match implements Serializable {
                     return "  ## ## #  ";
                 }
                 case 2 -> {
-                    if (students.get(0) == null)
+                    if (students.isEmpty())
                         return " #       # ";
                     else
                         return " #  "+students.get(0).toString()+"\u001B[0m  # ";
                 }
                 case 3 -> {
-                    if (students.get(1) == null)
+                    if (students.isEmpty())
                         return "#         #";
                     else
                         return "# "+students.get(1)+" "+students.get(2)+"\u001B[0m #";
                 }
                 case 4 -> {
-                    if (students.size() == 3)
+                    if (player.length == 2)
                         return "  ## ## #  ";
-                    else if (students.get(3) == null)
+                    else if (students.isEmpty())
                         return " #       # ";
                     else
                         return " #  "+students.get(3).toString()+"\u001B[0m  #";
                 }
                 case 5 -> {
-                    if (students.size() == 4)
+                    if (player.length == 3)
                         return "  ## ## #  ";
                     else
                         return "           ";
@@ -437,7 +437,7 @@ public class Match implements Serializable {
                     if (s.type() == Type_Student.DRAGON)
                         counter1++;
                 }
-                result = Type_Student.DRAGON.toString()+"    (X)"+counter1;
+                result = Type_Student.DRAGON+"    (X)"+counter1;
 
                 if (counter1 < 10)
                     result += " ";
@@ -450,11 +450,11 @@ public class Match implements Serializable {
                     if (s.type()==Type_Student.GNOME)
                         counter2++;
                 }
-                result = Type_Student.FROG.toString()+"(X)"+counter1;
+                result = Type_Student.FROG+"(X)"+counter1;
 
                 if (counter1 < 10)
                     result += " ";
-                result += printTowerRow(island, 1)+Type_Student.GNOME.toString()+"(X)"+counter2;
+                result += printTowerRow(island, 1)+Type_Student.GNOME+"(X)"+counter2;
 
                 if (counter1 < 10)
                     result += " ";
@@ -466,11 +466,11 @@ public class Match implements Serializable {
                     if (s.type()==Type_Student.UNICORN)
                         counter2++;
                 }
-                result = Type_Student.FAIRY.toString()+" (X)"+counter1;
+                result = Type_Student.FAIRY+" (X)"+counter1;
 
                 if (counter1 < 10)
                     result += " ";
-                result += Type_Student.UNICORN.toString()+" (X)"+counter2;
+                result += Type_Student.UNICORN+" (X)"+counter2;
 
                 if (counter1 < 10)
                     result += " ";
