@@ -30,8 +30,9 @@ public class Match implements Serializable {
         }
         professors=new HashMap<>();
         lands=new ArrayList<>();
-        for(short i=0;i<12;i++)
+        for(short i=0;i<12;i++) {
             lands.add(new Island(i));
+        }
         List<Student> a=new ArrayList<>();
         for (Type_Student e:Type_Student.values()) {
             a.add(new Student(e));
@@ -294,7 +295,7 @@ public class Match implements Serializable {
 
         for (Player p : player)
             a.append(p.toString());
-        a.append("nuvole= \n").append(Arrays.toString(cloud)).append("\n").append("professori: \n");
+        a.append("\n").append(getSky()).append("\nProfessori: \n");
         for (Player p : player) {
             a.append(p.getColor()).append("\t").append(p.getUserName()).append("\u001B[0m").append(":  ");
             for (Type_Student professor : professors.keySet()) {
@@ -303,14 +304,225 @@ public class Match implements Serializable {
             }
             a.append("\n");
         }
-        a.append("\n").append("isole:\n");
-        for (Land e:lands) {
-            if(motherNature.getPosition()==e){
-                a.append(" Madre Natura è su questa isola ↓\n");
-            }
-            a.append(e.toString()).append("\n");
-        }
+        a.append("\n");
+
         return a.toString();
+    }
+
+    public String getSky () {
+        return "                                   " +
+                printMN(0) + "           " + printMN(1) +
+                "           " + printMN(2) + "\n" +
+                "                                ___________     ___________     ___________\n" +
+                "                               /" + printNoEntry(0) + "\\   /" + printNoEntry(1) + "\\   /" +
+                printNoEntry(2) + "\\\n" +
+                "                              /" + countStudents(0, 1) + "\\ /" + countStudents(1, 1) +
+                "\\ /" + countStudents(2, 1) + "\\\n" +
+                "                    " + printMN(11) + "     |" + countStudents(0, 2) + "| |" +
+                countStudents(1, 2) + "| |" + countStudents(2, 2) + "|     " + printMN(3) +
+                "\n" + "                 ___________  |" + printTowerRow(0, 2) + "| |" + printTowerRow(1, 2) +
+                "| |" + printTowerRow(2, 2) + "|  ___________\n" +
+                "                /" + printNoEntry(11) + "\\ \\" + countStudents(0, 3) + "/ \\" +
+                countStudents(1, 3) + "/ \\" + countStudents(2, 3) + "/ /" +
+                printNoEntry(3) + "\\\n" +
+                "               /" + countStudents(11, 1) + "\\ \\___________/   \\___________/   \\___________/ /" +
+                countStudents(3, 1) + "\\\n" + "     " + printMN(10) + "     |" +
+                countStudents(11, 2) + "|                                               |" + countStudents(3, 2) +
+                "|     " + printMN(4) + "\n" +
+                "  ___________  |" + printTowerRow(11, 2) + "|                                               |" +
+                printTowerRow(11, 2) + "|  ___________\n" +
+                " /" + printNoEntry(9) + "\\ \\" + countStudents(11, 3) + "/   " + printChosenCloud(0) +
+                "    " + printChosenCloud(2) + "    " + printChosenCloud(1) + "   \\" + countStudents(3, 3) +
+                "/ /" + printNoEntry(4) + "\\\n" +
+                "/" + countStudents(10, 1) + "\\ \\___________/    " + printCloudRow(0, 1) + "    " +
+                printCloudRow(2, 1) +
+                "    " + printCloudRow(1, 1) + "    \\___________/ /" + countStudents(4, 1) + "\\\n" +
+                "|" + countStudents(10, 2) + "|                  " + printCloudRow(0, 2) + "    " +
+                printCloudRow(2, 2) + "    " + printCloudRow(1, 2) + "                  |" +
+                countStudents(4, 2) + "|\n" + "|" + printTowerRow(10, 2) + "|  ___________     " +
+                printCloudRow(0, 3) + "    " + printCloudRow(2, 3) + "    " + printCloudRow(1, 3) +
+                "     ___________  |" + printTowerRow(4, 2) + "|\n" + "\\" + countStudents(10, 3) +
+                "/ /" + printNoEntry(8) + "\\    " + printCloudRow(0, 4) + "    " +
+                printCloudRow(2, 4) + "    " + printCloudRow(1, 4) + "    /" + printNoEntry(5) +
+                "\\ \\" + countStudents(4, 3) + "/\n" + " \\___________/ /" + countStudents(9, 1) +
+                "\\   " + printCloudRow(0, 5) + "    " + printCloudRow(2, 5) + "    " +
+                printCloudRow(1, 5) + "   /" + countStudents(5, 1) + "\\ \\___________/\n" +
+                "               |" + countStudents(9, 2) + "|                                               |" +
+                countStudents(5, 2) + "|\n" + "               |" + printTowerRow(9, 2) +
+                "|  ___________     ___________     ___________  |" + printTowerRow(10, 2) + "|\n" +
+                "               \\" + countStudents(9, 3) + "/ /" + printNoEntry(8) + "\\   /" +
+                printNoEntry(7) + "\\   /" + printNoEntry(6) + "\\ \\" + countStudents(5, 3) +
+                "/\n" + "                \\___________/ /" + countStudents(8, 1) + "\\ /" +
+                countStudents(7, 1) + "\\ /" + countStudents(6, 1) + "\\ \\___________/\n" +
+                "                     " + printMN(9) + "    |" + countStudents(8, 2) + "| |" +
+                countStudents(7, 2) + "| |" + countStudents(6, 2) + "|     " +
+                printMN(5) + "\n" + "                              |" + printTowerRow(8, 2) + "| |" +
+                printTowerRow(9, 2) + "| |" + printTowerRow(9, 2) + "|\n" +
+                "                              \\" + countStudents(8, 3) + "/ \\" + countStudents(7, 3) +
+                "/ \\" + countStudents(6, 3) + "/\n" +
+                "                               \\___________/   \\___________/   \\___________/\n" +
+                "                                   " + printMN(8) + "           " + printMN(7) +
+                "           " + printMN(6);
+    }
+
+    private String printCloudRow (int cloud, int row) {
+        ArrayList<Student> students;
+
+        if (cloud < this.cloud.length) {
+            students = this.cloud[cloud].getStudents();
+
+            switch (row) {
+                case 1 -> {
+                    return "  ## ## #  ";
+                }
+                case 2 -> {
+                    if (students.get(0) == null)
+                        return " #       # ";
+                    else
+                        return " #  "+students.get(0).toString()+"\u001B[0m  # ";
+                }
+                case 3 -> {
+                    if (students.get(1) == null)
+                        return "#         #";
+                    else
+                        return "# "+students.get(1)+" "+students.get(2)+"\u001B[0m #";
+                }
+                case 4 -> {
+                    if (students.size() == 3)
+                        return "  ## ## #  ";
+                    else if (students.get(3) == null)
+                        return " #       # ";
+                    else
+                        return " #  "+students.get(3).toString()+"\u001B[0m  #";
+                }
+                case 5 -> {
+                    if (students.size() == 4)
+                        return "  ## ## #  ";
+                    else
+                        return "           ";
+                }
+                default -> {
+                    return "           ";
+                }
+            }
+        }
+        else
+            return "           ";
+    }
+
+    private String printChosenCloud (int cloud) {
+        if (cloud < this.cloud.length)
+            if (this.cloud[cloud].hasBeenChosen())
+                return "   presa   ";
+
+        return "           ";
+    }
+
+    private String printNoEntry (int island) {
+        if (findIsland(island).isThereNoEntry())
+            return "\u001b[31m  DIVIETO  \u001b[0m";
+        else
+            return "           ";
+    }
+
+    private String countStudents (int island, int row) {
+        Island i = findIsland(island);
+        int counter1 = 0, counter2 = 0;
+        ArrayList<Student> students = i.getStudents();
+        String result;
+
+        switch (row) {
+            case 1 -> {
+                for (Student s : students) {
+                    if (s.type() == Type_Student.DRAGON)
+                        counter1++;
+                }
+                result = Type_Student.DRAGON.toString()+"    (X)"+counter1;
+
+                if (counter1 < 10)
+                    result += " ";
+                result += "    ";
+            }
+            case 2 -> {
+                for (Student s : students) {
+                    if (s.type()==Type_Student.FROG)
+                        counter1++;
+                    if (s.type()==Type_Student.GNOME)
+                        counter2++;
+                }
+                result = Type_Student.FROG.toString()+"(X)"+counter1;
+
+                if (counter1 < 10)
+                    result += " ";
+                result += printTowerRow(island, 1)+Type_Student.GNOME.toString()+"(X)"+counter2;
+
+                if (counter1 < 10)
+                    result += " ";
+            }
+            default -> {
+                for (Student s : students) {
+                    if (s.type()==Type_Student.FAIRY)
+                        counter1++;
+                    if (s.type()==Type_Student.UNICORN)
+                        counter2++;
+                }
+                result = Type_Student.FAIRY.toString()+" (X)"+counter1;
+
+                if (counter1 < 10)
+                    result += " ";
+                result += Type_Student.UNICORN.toString()+" (X)"+counter2;
+
+                if (counter1 < 10)
+                    result += " ";
+                result += " ";
+            }
+        }
+
+        return result+"\u001B[0m";
+    }
+
+    private Island findIsland (int island) {
+        int counter = 0;
+
+        for (Land land : lands)
+        {
+            if (counter+land.size() > island)
+                return land.getIslands().get(island-counter);
+            else
+                counter += land.size();
+        }
+
+        return null;
+    }
+
+    private String printTowerRow (int island, int row) {
+        Island i = findIsland(island);
+
+        if (i.getTower() != null)
+            if (row == 1)
+                return i.getTower().getColor().toString()+"|_|\u001B[0m";
+            else
+                return i.getTower().getColor().toString()+"     /_\\\u001B[0m     ";
+        else if (row ==1)
+            return "   ";
+        else
+            return "             ";
+    }
+
+    private String printMN (int island) {
+        Island i = findIsland(island);
+        String arrow;
+
+        if (motherNature.getPosition().equals(i)) {
+            if (island>3 && island<10)
+                arrow = "↑";
+            else
+                arrow = "↓";
+
+            return "\u001b[36m(▲) "+arrow+"\u001B[0m";
+        }
+        else
+            return "     ";
     }
 
 }

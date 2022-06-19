@@ -3,6 +3,7 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.characterCards.*;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -246,7 +247,7 @@ public class Cli extends Thread implements View{
                            |   ____||   _   /\\|  ||   ___   ||  ||\\  \\ |  ||  |  ||  |______   ||____   ||
                            |  |/____|  ||\\  \\_|  ||  ||  |  ||  || \\  \\|  ||  |  ||  /______|  |/____|  ||
                            |___________/  \\__________/   |______/   \\_____/   |__/   |__________________/
-                \u001B[0m""");
+                \u001B[0m""".indent(4));
     }
 
     /**
