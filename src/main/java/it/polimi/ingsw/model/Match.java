@@ -310,59 +310,59 @@ public class Match implements Serializable {
     }
 
     public String getSky () {
-        return "                                   " +
+        return ("                                   " +
                 printMN(0) + "           " + printMN(1) +
                 "           " + printMN(2) + "\n" +
-                "                                ___________     ___________     ___________\n" +
+                "                              1 ___________   2 ___________   3 ___________\n" +
                 "                               /" + printNoEntry(0) + "\\   /" + printNoEntry(1) + "\\   /" +
                 printNoEntry(2) + "\\\n" +
-                "                              /" + countStudents(0, 1) + "\\ /" + countStudents(1, 1) +
-                "\\ /" + countStudents(2, 1) + "\\\n" +
-                "                    " + printMN(11) + "     |" + countStudents(0, 2) + "| |" +
-                countStudents(1, 2) + "| |" + countStudents(2, 2) + "|     " + printMN(3) +
-                "\n" + "                 ___________  |" + printTowerRow(0, 2) + "| |" + printTowerRow(1, 2) +
-                "| |" + printTowerRow(2, 2) + "|  ___________\n" +
-                "                /" + printNoEntry(11) + "\\ \\" + countStudents(0, 3) + "/ \\" +
-                countStudents(1, 3) + "/ \\" + countStudents(2, 3) + "/ /" +
+                "                              /" + countStudents(0, 1) + "\\" + printBridge(0, 1) + "/" + countStudents(1, 1) +
+                "\\" + printBridge(1, 1) + "/" + countStudents(2, 1) + "\\\n" +
+                "                    " + printMN(11) + "     |" + countStudents(0, 2) + printBridge(0, 2) +
+                countStudents(1, 2) + printBridge(1, 3) + countStudents(2, 2) + "|     " + printMN(3) +
+                "\n" + "               12__________" + printBridge(11, 1) + "|" + printTowerRow(0, 2) + printBridge(0, 2) + printTowerRow(1, 2) +
+                printBridge(1, 2) + printTowerRow(2, 2) + "|" + printBridge(2, 1) +"__________ 4\n" +
+                "                /" + printNoEntry(11) + printBridge(11, 2) + countStudents(0, 3) + "/ \\" +
+                countStudents(1, 3) + "/ \\" + countStudents(2, 3) + printBridge(2, 2) +
                 printNoEntry(3) + "\\\n" +
                 "               /" + countStudents(11, 1) + "\\ \\___________/   \\___________/   \\___________/ /" +
                 countStudents(3, 1) + "\\\n" + "     " + printMN(10) + "     |" +
                 countStudents(11, 2) + "|                                               |" + countStudents(3, 2) +
                 "|     " + printMN(4) + "\n" +
-                "  ___________  |" + printTowerRow(11, 2) + "|                                               |" +
-                printTowerRow(11, 2) + "|  ___________\n" +
-                " /" + printNoEntry(9) + "\\ \\" + countStudents(11, 3) + "/   " + printChosenCloud(0) +
+                "11__________" + printBridge(10, 1) + "|" + printTowerRow(11, 2) + "|                                               |" +
+                printTowerRow(11, 2) + "|" + printBridge(3, 1) + "__________ 5\n" +
+                " /" + printNoEntry(9) + printBridge(10, 2) + countStudents(11, 3) + "/   " + printChosenCloud(0) +
                 "    " + printChosenCloud(2) + "    " + printChosenCloud(1) + "   \\" + countStudents(3, 3) +
-                "/ /" + printNoEntry(4) + "\\\n" +
+                printBridge(3, 2) + printNoEntry(4) + "\\\n" +
                 "/" + countStudents(10, 1) + "\\ \\___________/    " + printCloudRow(0, 1) + "    " +
                 printCloudRow(2, 1) +
                 "    " + printCloudRow(1, 1) + "    \\___________/ /" + countStudents(4, 1) + "\\\n" +
                 "|" + countStudents(10, 2) + "|                  " + printCloudRow(0, 2) + "    " +
                 printCloudRow(2, 2) + "    " + printCloudRow(1, 2) + "                  |" +
-                countStudents(4, 2) + "|\n" + "|" + printTowerRow(10, 2) + "|  ___________     " +
+                countStudents(4, 2) + "|\n" + "|" + printTowerRow(10, 2) + "|" + printBridge(9, 1) + "__________ 6   " +
                 printCloudRow(0, 3) + "    " + printCloudRow(2, 3) + "    " + printCloudRow(1, 3) +
-                "     ___________  |" + printTowerRow(4, 2) + "|\n" + "\\" + countStudents(10, 3) +
-                "/ /" + printNoEntry(8) + "\\    " + printCloudRow(0, 4) + "    " +
+                "   10__________" + printBridge(4, 1) + "|" + printTowerRow(4, 2) + "|\n" + "\\" + countStudents(10, 3) +
+                printBridge(9, 2) + printNoEntry(8) + "\\    " + printCloudRow(0, 4) + "    " +
                 printCloudRow(2, 4) + "    " + printCloudRow(1, 4) + "    /" + printNoEntry(5) +
-                "\\ \\" + countStudents(4, 3) + "/\n" + " \\___________/ /" + countStudents(9, 1) +
+                printBridge(4, 2) + countStudents(4, 3) + "/\n" + " \\___________/ /" + countStudents(9, 1) +
                 "\\   " + printCloudRow(0, 5) + "    " + printCloudRow(2, 5) + "    " +
                 printCloudRow(1, 5) + "   /" + countStudents(5, 1) + "\\ \\___________/\n" +
                 "               |" + countStudents(9, 2) + "|                                               |" +
                 countStudents(5, 2) + "|\n" + "               |" + printTowerRow(9, 2) +
-                "|  ___________     ___________     ___________  |" + printTowerRow(10, 2) + "|\n" +
-                "               \\" + countStudents(9, 3) + "/ /" + printNoEntry(8) + "\\   /" +
-                printNoEntry(7) + "\\   /" + printNoEntry(6) + "\\ \\" + countStudents(5, 3) +
-                "/\n" + "                \\___________/ /" + countStudents(8, 1) + "\\ /" +
-                countStudents(7, 1) + "\\ /" + countStudents(6, 1) + "\\ \\___________/\n" +
-                "                     " + printMN(9) + "    |" + countStudents(8, 2) + "| |" +
-                countStudents(7, 2) + "| |" + countStudents(6, 2) + "|     " +
-                printMN(5) + "\n" + "                              |" + printTowerRow(8, 2) + "| |" +
-                printTowerRow(9, 2) + "| |" + printTowerRow(9, 2) + "|\n" +
+                "|" + printBridge(8, 1) + "__________ 9   ___________ 8|7 __________" + printBridge(5, 1) + "|" + printTowerRow(10, 2) + "|\n" +
+                "               \\" + countStudents(9, 3) + printBridge(8, 2) + printNoEntry(8) + "\\   /" +
+                printNoEntry(7) + "\\   /" + printNoEntry(6) + printBridge(5, 2) + countStudents(5, 3) +
+                "/\n" + "                \\___________/ /" + countStudents(8, 1) + "\\" + printBridge(7, 1) + "/" +
+                countStudents(7, 1) + "\\" + printBridge(6, 1) + "/" + countStudents(6, 1) + "\\ \\___________/\n" +
+                "                     " + printMN(9) + "    |" + countStudents(8, 2) + printBridge(7, 2) +
+                countStudents(7, 2) + printBridge(6, 2) + countStudents(6, 2) + "|     " +
+                printMN(5) + "\n" + "                              |" + printTowerRow(8, 2) + printBridge(7, 3) +
+                printTowerRow(9, 2) + printBridge(6, 3) + printTowerRow(9, 2) + "|\n" +
                 "                              \\" + countStudents(8, 3) + "/ \\" + countStudents(7, 3) +
                 "/ \\" + countStudents(6, 3) + "/\n" +
                 "                               \\___________/   \\___________/   \\___________/\n" +
                 "                                   " + printMN(8) + "           " + printMN(7) +
-                "           " + printMN(6);
+                "           " + printMN(6)).indent(6);
     }
 
     private String printCloudRow (int cloud, int row) {
@@ -373,7 +373,7 @@ public class Match implements Serializable {
 
             switch (row) {
                 case 1 -> {
-                    return "  ## ## #  ";
+                    return (cloud+1) +" ## ## #  ";
                 }
                 case 2 -> {
                     if (students.isEmpty())
@@ -523,6 +523,49 @@ public class Match implements Serializable {
         }
         else
             return "     ";
+    }
+
+    private String printBridge (int island, int row) {
+        int counter = 0;
+
+        for (Land land : lands) {
+            counter += land.size();
+
+            if (counter-1 > island) {
+                if (island==0 || island==1 || island==6 || island==7 ){
+                    switch (row) {
+                        case 1 -> {return "_";}
+                        case 2 -> {return "   ";}
+                        default -> {return " _ ";}
+                    }
+                }
+                else
+                    return "___";
+            }
+            else {
+                switch (island) {
+                    case 0, 1, 6, 7 -> {
+                        if (row == 1)
+                            return " ";
+                        else
+                            return "| |";
+                    }
+                    case 2, 3, 8, 9 -> {
+                        if (row == 1)
+                            return "  _";
+                        else
+                            return "/ /";
+                    }
+                    default -> {
+                        if (row == 1)
+                            return "_  ";
+                        else
+                            return "\\ \\";
+                    }
+                }
+            }
+        }
+        return "   ";
     }
 
 }

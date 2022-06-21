@@ -133,9 +133,9 @@ public class Client  extends Thread{
                             if(match.getPlayer()[i].getUserName().equals(username))
                                 me=match.getPlayer()[i];
                         }
-                        view.printMatch(match);
                         view.setMe(me);
                         view.setMatch(match);
+                        view.printMatch(match);
                         server.sendACK();
                         break;
                     case "RefillClouds":

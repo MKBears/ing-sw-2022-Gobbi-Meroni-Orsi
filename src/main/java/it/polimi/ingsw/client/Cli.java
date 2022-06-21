@@ -3,13 +3,9 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.characterCards.*;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
-
-
-import static java.lang.Integer.parseInt;
 
 public class Cli extends Thread implements View{
     private final Scanner input;
@@ -60,9 +56,12 @@ public class Cli extends Thread implements View{
      */
     public String getUsername(){
         String user;
-        System.out.println("Inserire username:");
-        user=input.nextLine();
-        return user;
+        while (true) {
+            System.out.println("Inserire username:");
+            user = input.nextLine();
+            if (!user.equals(""))
+                return user;
+        }
     }
 
     /**
@@ -71,16 +70,62 @@ public class Cli extends Thread implements View{
      * @return the wizard chosen
      */
     public Wizards getWizard(List<Wizards> wizards){
-        System.out.println("Scegli il mago:");
-        for (Wizards e:wizards) {
-            System.out.println((wizards.indexOf(e)+1)+" per "+e.toString());
+        int choose;
+
+        System.out.println("Scegli il mago tra:");
+        printWizards();
+        while (true) {
+            try {
+                choose = input.nextInt();
+
+                for (Wizards w : willy) {
+                    if (choose == w.getOrder())
+                        return w;
+                }
+                System.out.println("Scegli il mago tra quelli che vedi");
+            } catch (Exception e) {
+                System.out.println("Inserire un valore numerico");
+            }
         }
-        int choose=input.nextInt();
-        while(choose<1 || choose>4){
-            System.out.println("Scegli il mago:");
-            choose = input.nextInt();
+    }
+
+    private void printWizards() {
+        StringBuilder wizards = new StringBuilder();
+        for (int i=0; i<5; i++) {
+            for (Wizards w : willy) {
+                switch (i) {
+                    case 0 -> wizards.append(" _____   ");
+                    case 1 -> {
+                        switch (w) {
+                            case WIZARD1 -> wizards.append("|  1  |  ");
+                            case WIZARD2 -> wizards.append("|  2  |  ");
+                            case WIZARD3 -> wizards.append("|  3  |  ");
+                            default -> wizards.append("|  4  |");
+                        }
+                    }
+                    case 2 -> {
+                        switch (w) {
+                            case WIZARD1 -> wizards.append("| $ $ |  ");
+                            case WIZARD2 -> wizards.append("| °|° |  ");
+                            case WIZARD3 -> wizards.append("| *_* |  ");
+                            default -> wizards.append("| ^ ^ |");
+                        }
+                    }
+                    case 3 -> {
+                        switch (w) {
+                            case WIZARD1 -> wizards.append("|  () |  ");
+                            case WIZARD2 -> wizards.append("|  ~  |  ");
+                            case WIZARD3 -> wizards.append("|     |  ");
+                            default -> wizards.append("|  o  |");
+                        }
+                    }
+                    default -> wizards.append("|_____|  ");
+                }
+            }
+            wizards.append('\n');
         }
-        return wizards.get(choose-1);
+
+        System.out.println(wizards.toString().indent(12));
     }
 
     /**
@@ -89,18 +134,25 @@ public class Cli extends Thread implements View{
      * @return the cloud chosen
      */
     public Cloud getCloud(List<Cloud> clouds){
-        int i =1;
-        System.out.println("Scegli la nuvola tra: \n");
-        for (Cloud e: clouds) {
-            System.out.println("Nuvola "+i+" "+e);
-            i++;
+        while (true) {
+            Cloud[] c = match.getCloud();
+            System.out.println("Scegli la nuvola tra: \n");
+            try {
+                int choose = input.nextInt();
+
+                while (choose < 1 || choose > c.length) {
+                    System.out.println("Scegli un numero tra 1 e " + c.length + ":");
+                    choose = input.nextInt();
+                }
+                if (clouds.contains(c[choose - 1]))
+                    return c[choose - 1];
+                else
+                    System.out.println("Questa nuvola é già stata scelta da un altro giocatore in questo  round");
+            }
+            catch (Exception e) {
+                System.out.println("Inserire un valore numerico");
+            }
         }
-        int choose= input.nextInt();
-        while (choose<1 || choose>=i){
-            System.out.println("Scegli un numero tra 1 e "+(i-1)+":");
-            choose = input.nextInt();
-        }
-        return clouds.get(choose-1);
     }
 
     /**
@@ -109,16 +161,41 @@ public class Cli extends Thread implements View{
      * @return the card chosen
      */
     public AssistantCard getAssistantCard(List<AssistantCard> cards){
-        System.out.println("Scegli la carta assistente tra: \n");
-        for(int i=0;i<cards.size();i++){
-            System.out.println((i+1)+" "+cards.get(i)+"\n");
-        }
-        int choose=input.nextInt();
-        while (choose<1 ||choose>cards.size()){
-            System.out.println("Scegli la carta assistente tra: \n");
-            choose=input.nextInt();
-        }
-        return cards.get(choose-1);
+        int choose = 1;
+        ArrayList<AssistantCard> deck = me.getDeck();
+        AssistantCard card;
+        boolean correctChoice;
+
+        do {
+            System.out.println("Scegli la carta assistente \n");
+            card = null;
+
+            try {
+                choose = input.nextInt();
+
+                for (AssistantCard c : deck) {
+                    if (c.getValue() == choose)
+                        card = c;
+                }
+                if (card != null) {
+                    if (cards.contains(deck.get(choose - 1)))
+                        correctChoice = true;
+                    else {
+                        System.out.println("Questa carta é già stata scelta da un altro giocatore in questo round");
+                        correctChoice = false;
+                    }
+                }
+                else {
+                    System.out.println("Non hai in mano questa carta");
+                    correctChoice = false;
+                }
+            } catch (Exception e) {
+                System.out.println("Inserire un valore numerico\n");
+                correctChoice = false;
+            }
+        } while (!correctChoice);
+
+        return deck.get(choose-1);
     }
 
     /**
@@ -129,13 +206,20 @@ public class Cli extends Thread implements View{
     public int getNumStep(Player pl){
         System.out.println("Scegli di spostare Madre Natura di? (deve " +
                 "essere un numero compreso tra 0 e "+pl.getPlayedCard().getMNSteps());
-        int step= input.nextInt();
-        while (step<0 || step>pl.getPlayedCard().getMNSteps()){
-            System.out.println("Scegli di spostare Madre Natura di? (deve " +
-                    "essere un numero compreso tra 0 e "+pl.getPlayedCard().getMNSteps());
-            step=input.nextInt();
+
+        while (true) {
+            try {
+                int step = input.nextInt();
+                while (step < 0 || step > pl.getPlayedCard().getMNSteps()) {
+                    System.out.println("Di quanti passi scegli di spostare Madre Natura? (deve " +
+                            "essere un numero compreso tra 0 e " + pl.getPlayedCard().getMNSteps());
+                    step = input.nextInt();
+                }
+                return step;
+            } catch (Exception e) {
+                System.out.println("Inserire un valore numerico");
+            }
         }
-        return step;
     }
 
     /**
@@ -152,19 +236,23 @@ public class Cli extends Thread implements View{
      * @return the student chosen
      */
     public Student getStudent(Player pl){
-        int i=1,choose;
-        System.out.println("Scegli uno studente tra: \n");
-        for (Student e:pl.getBoard().getEntrance()) {
-            System.out.println(i+") "+e.toString()+'\n');
-            i++;
+        int size = me.getBoard().getEntrance().size();
+        int choose;
+
+        while (true) {
+            System.out.println("Scegli uno studente nell'ingresso\n");
+
+            try {
+                choose = input.nextInt();
+                while (choose < 1 || choose >= size) {
+                    System.out.println("Scegli un numero tra 1 e " + size + " :");
+                    choose = input.nextInt();
+                }
+                return pl.getBoard().getEntrance().get(choose - 1);
+            } catch (Exception e) {
+                System.out.println("Inserire un valore numerico");
+            }
         }
-        System.out.println("Scegli un numero tra 1 e "+(i-1)+" :");
-        choose=input.nextInt();
-        while (choose<1 || choose>=i){
-            System.out.println("Scegli un numero tra 1 e "+(i-1)+" :");
-            choose=input.nextInt();
-        }
-        return pl.getBoard().getEntrance().get(choose-1);
     }
 
     /**
@@ -173,26 +261,28 @@ public class Cli extends Thread implements View{
      * @return int that express where move the student (12 for the board if less than 12 is the id of the land)
      */
     public int getDestination(Match match) {
-        int i = 0;
+        String value;
         int choose;
         System.out.println("Dove vuoi che vada lo studente?\n");
-        System.out.println("Se si vuole aggiungere alla sala scrivi sala oppure scegli tra le seguenti isole:\n");
-        for (Land e : match.getLands()) {
-            System.out.println("Scrivi " + i + " per scegliere" +"\n"+ e + "\n");
-            i++;
-        }
-        try {
-            do {
-                System.out.println("Inserire scelta: ");
-                choose = input.nextInt();
-            }while (choose<0 || choose>12);
-            if(choose>=match.getLands().size())
-                return 12;
-            else
-                return choose;
-        } catch (Exception e) {
-            return 12;
-        }
+        System.out.println("Se si vuole aggiungere alla sala scrivi sala oppure scegli tra le isole\n");
+        do {
+            try {
+                do {
+                    System.out.println("Inserire scelta: ");
+                    value = input.next().toLowerCase();
+
+                    if (value.equals("sala"))
+                        return 12;
+                    choose = Integer.parseInt(value);
+                } while (choose < 0 || choose > 12);
+                if (choose >= match.getLands().size())
+                    return 12;
+                else
+                    return choose;
+            } catch (Exception e) {
+                System.out.println("Inserire un valore numerico o 'sala'");
+            }
+        } while (true);
     }
 
     /**
@@ -200,9 +290,9 @@ public class Cli extends Thread implements View{
      * @param match match of the player
      */
     public void printMatch(Match match){
-        //clearConsole();
+        clearConsole();
         getTitolo();
-        System.out.println(match.toString()+'\n');
+        System.out.println(match.toString()+printAssistants());
     }
 
     /**
@@ -227,12 +317,18 @@ public class Cli extends Thread implements View{
      */
     public int getNumPlayer(){
         System.out.println("Inserire il numero di giocatori: ");
-        int num=input.nextInt();
-        while(num<=1 || num>=5){
-            System.out.println("Inserire il numero di giocatori: ");
-            num=input.nextInt();
+        while (true) {
+            try {
+                int num = input.nextInt();
+                while (num <= 1 || num >= 4) {
+                    System.out.println("Inserire il numero di giocatori: ");
+                    num = input.nextInt();
+                }
+                return num;
+            } catch (Exception e) {
+                System.out.println("Inserire un valore numerico");
+            }
         }
-        return num;
     }
 
     /**
@@ -247,7 +343,40 @@ public class Cli extends Thread implements View{
                            |   ____||   _   /\\|  ||   ___   ||  ||\\  \\ |  ||  |  ||  |______   ||____   ||
                            |  |/____|  ||\\  \\_|  ||  ||  |  ||  || \\  \\|  ||  |  ||  /______|  |/____|  ||
                            |___________/  \\__________/   |______/   \\_____/   |__/   |__________________/
-                \u001B[0m""".indent(4));
+                \u001B[0m""".indent(10));
+    }
+
+    private String printAssistants() {
+        StringBuilder c = new StringBuilder();
+        ArrayList<AssistantCard> deck = me. getDeck();
+
+        for (int i=0; i<6; i++) {
+            for (AssistantCard card : deck) {
+                if (cards != null) {
+                    if (!cards.contains(card))
+                        c.append("\u001b[30;1m");
+                }
+
+                switch (i) {
+                    case 0 -> c.append("  _______  ");
+                    case 1 -> {
+                        c.append(" | ").append(card.getValue());
+
+                        if (card.getValue() < 10)
+                            c.append(" ");
+                        c.append(card.getMNSteps()).append(" | ");
+                    }
+                    case 2 -> c.append(" |  /\\\\  | ");
+                    case 3 -> c.append(" | //_\\\\ | ");
+                    case 4 -> c.append(" |//   \\\\| ");
+                    default -> c.append(" |_______| ");
+                }
+                c.append("\u001b[0m");
+            }
+            c.append("\n");
+        }
+
+        return c.toString();
     }
 
     /**
@@ -256,7 +385,7 @@ public class Cli extends Thread implements View{
     @Override
     public void run() {
          try {
-             while (end == false) {
+             while (!end) {
                  switch (state) {
                      case ("Start"):
                          synchronized (this) {
@@ -271,7 +400,7 @@ public class Cli extends Thread implements View{
                                  nack=false;
                                  this.wait();
                              }
-                         } while (nack == true);
+                         } while (nack);
                          break;
                      case ("ChooseCard"):
                          AssistantCard a;
@@ -283,7 +412,7 @@ public class Cli extends Thread implements View{
                                  nack=false;
                                  this.wait();
                              }
-                         } while (nack == true);
+                         } while (nack);
                          break;
                      case ("MoveMN"):
                          int step = this.getNumStep(me);
@@ -294,7 +423,7 @@ public class Cli extends Thread implements View{
                                  nack=false;
                                  this.wait();
                              }
-                         } while (nack == true);
+                         } while (nack);
                          break;
                      case ("ChooseCloud"):
                          Cloud clo = this.getCloud(clouds);
@@ -324,9 +453,16 @@ public class Cli extends Thread implements View{
                                  try {
                                      action.moveFromIngressToBoard(me, st);
                                      server.sendMovedStudent(st, 12);
-                                 } catch (Exception e) {
-                                 }
+                                 } catch (Exception e) {}
                              } else {
+                                 int pos = 0;
+                                 for (int j=0; j<match.getLands().size(); j++) {
+                                     pos += match.getLands().get(j).size();
+                                     if (pos >= move) {
+                                         move = j;
+                                         break;
+                                     }
+                                 }
                                  action.moveFromIngressToLand(me, st, match.getLands().get(move));
                                  server.sendMovedStudent(st, match.getLands().get(move).getID());
                              }
@@ -428,10 +564,10 @@ public class Cli extends Thread implements View{
     @Override
     public void chooseMatch(List<String> join, List<String> resume) {
         String choose;
+
         if (join.isEmpty()) {
             System.out.println("Non ci sono partite a cui unirsi");
-        }
-        else {
+        } else {
             System.out.println("Puoi unirti alle seguenti partite: ");
             for (String e : join) {
                 System.out.println(e);
@@ -440,60 +576,95 @@ public class Cli extends Thread implements View{
 
         if (resume.isEmpty()) {
             System.out.println("Non ci sono partite da riprendere");
-        }
-        else {
+        } else {
             System.out.println("Puoi riunirti alle seguenti partite:");
             for (String e : resume) {
                 System.out.println(e);
             }
         }
-        System.out.println("Scegli la partita (oppure per creare una nuova partita scrivi NewGame):");
-        choose=input.nextLine();
 
-        if(choose.toLowerCase().equals("newgame")){
-            server.sendChoosingGame("NewGame");
-            createMatch();
-        }
-        else {
-            server.sendChoosingGame(choose);
-        }
+        do {
+            System.out.println("Scegli la partita (oppure per creare una nuova partita scrivi NewGame):");
+            choose = input.nextLine();
+
+            if (choose.equalsIgnoreCase("newgame")) {
+                server.sendChoosingGame("NewGame");
+                createMatch();
+            } else {
+                if (join.contains(choose) || resume.contains(choose))
+                    server.sendChoosingGame(choose);
+                else
+                    System.out.println("Non ci sono partite create da "+choose);
+            }
+        } while (!join.contains(choose) && !resume.contains(choose) && !choose.equalsIgnoreCase("newgame"));
     }
 
     public void createMatch () {
-        int playersNum;
-        boolean expert;
+        int playersNum = 0;
+        String expert;
+        while (playersNum == 0) {
+            try {
+                do {
+                    System.out.println("Da quanti giocatori sara' formata la partita? [2/3]");
+                    playersNum = input.nextInt();
+                } while (playersNum < 2 || playersNum > 3);
+            } catch (Exception e) {
+                System.out.println("Inserire un valore numerico");
+            }
+        }
+
         do {
-            System.out.println("Da quanti giocatori sara' formata la partita? [2/3]");
-            playersNum = input.nextInt();
-        } while (playersNum<2 || playersNum>3);
-        System.out.println("Creare una partita per esperti? [true/false]");
-        expert = input.nextBoolean();
+            System.out.println("Creare una partita per esperti? [si/no]");
+            expert = input.next();
+        } while (!expert.equalsIgnoreCase("si") && !expert.equalsIgnoreCase("no"));
         server.sendNumPlayers(playersNum);
-        server.sendExpertMatch(expert);
+        server.sendExpertMatch(expert.equalsIgnoreCase("si"));
     }
 
     public  String chooseLogin(){
-        System.out.println("Vuoi registrarti?");
-        String choose=input.nextLine();
+        String choose;
+        do {
+            System.out.println("Vuoi registrarti?");
+            choose = input.nextLine();
+        } while (!choose.equals("si") && !choose.equals("no"));
         return choose.toLowerCase();
     }
 
-    public Student chooseStudent(List<Student> student){
-        int i=1;
-        for (Student e:student) {
-            System.out.println("Scegli "+i+" per lo studente "+e+"\n");
+    public Student chooseStudent(List<Student> student) {
+        int i;
+
+        while (true){
+            try {
+                i = input.nextInt();
+                System.out.println("Scegli uno studente dall'ingresso");
+                return student.remove(i - 1);
+            } catch (Exception e) {
+                System.out.println("Inserire un valore numerico");
+            }
         }
-        input.nextInt();
-        return student.remove(i-1);
     }
 
     public Land chooseLand(List<Land> lands){
-        int i=1;
-        for (Land e:lands) {
-            System.out.println("Scegli "+i+" per l'isola \n"+e+"\n");
+        int i, c;
+        System.out.println("Scegli un'isola");
+        while (true) {
+            try {
+                i = input.nextInt();
+                if (i<=0 || i>11)
+                    System.out.println("Inserire un numero tra 1 e 12");
+                else {
+                    c = 0;
+                    for (Land l : lands) {
+                        c += l.size();
+
+                        if (c >= i)
+                            return l.getIslands().get(c-i);
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Inserire un valore numerico");
+            }
         }
-        i = input.nextInt();
-        return lands.get(i-1);
     }
 
     public Type_Student chooseColorStudent(){
