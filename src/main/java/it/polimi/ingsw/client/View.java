@@ -16,7 +16,6 @@ public interface View {
     void printMatch(Match match);
     void printTurn(Player pl,String phase);
     void lastRound();
-    int getNumPlayer();
     Student getStudent(Player pl);
     void getTitolo();
     void wakeUp(String state);
@@ -37,4 +36,5 @@ public interface View {
     void finishedAC(Player p);
     CharacterCard chooseChCard(CharacterCard[] cards);
     void setCharacters(CharacterCard[] characters);
+    void printNotification (String message);
 }

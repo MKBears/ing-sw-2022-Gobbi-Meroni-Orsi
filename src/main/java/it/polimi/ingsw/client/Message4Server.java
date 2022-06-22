@@ -126,7 +126,6 @@ public class Message4Server {
                 throw new RuntimeException(e);
             }
         }
-        System.out.println("Inviato: "+num);
     }
 
     public void sendExpertMatch (boolean expert) {
@@ -137,7 +136,6 @@ public class Message4Server {
                 throw new RuntimeException(e);
             }
         }
-        System.out.println("Inviato: "+expert);
     }
 
     /**

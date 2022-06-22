@@ -96,7 +96,7 @@ public class Player implements Serializable {
 
     @Override
     public String toString() {
-        return "" + color.toString() + megaUserName().indent(14) + "\u001B[0m" + board.toString().indent(14) +'\n';
+        return "" + color.toString() + megaUserName().indent(26) + "\u001B[0m" + board.toString().indent(22) +'\n';
     }
 
     private String megaUserName () {

@@ -122,7 +122,7 @@ public class Controller extends Thread{
                 currentPlayer = firstPlayer;
 
                 do {
-                    notifyTurn("Planning phase");
+                    notifyTurn("pianificazione");
                     System.out.println("Player "+players[currentPlayer].getUserName()+" in pianificazione");
                     synchronized (players[currentPlayer]) {
                         players[currentPlayer].notify();
@@ -158,7 +158,7 @@ public class Controller extends Thread{
                 }*/
                 synchronized (this) {
                     do {
-                        notifyTurn("Action phase");
+                        notifyTurn("azione");
 
                         synchronized (players[currentPlayer]) {
                             players[currentPlayer].notifyAll();

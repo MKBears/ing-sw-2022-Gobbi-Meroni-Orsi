@@ -47,7 +47,8 @@ public class Action {
                 match.uniteLandAfter(match.getLands().indexOf(match.getMotherNature().getPosition()));
             }
         }catch (Exception e){
-            System.out.println("isola dopo senza torre");
+            //System.out.println("isola dopo senza torre");
+            throw new RuntimeException();
         }
         try{
             if(match.getLands().indexOf(match.getMotherNature().getPosition())!=0){
@@ -59,7 +60,8 @@ public class Action {
                 match.uniteLandBefore(match.getLands().indexOf(match.getMotherNature().getPosition()));
             }
         }catch(Exception e){
-            System.out.println("isola prima senza torre");
+            //System.out.println("isola prima senza torre");
+            throw new RuntimeException();
         }
     }
 
@@ -69,9 +71,9 @@ public class Action {
      * @param cloud cloud choosen
      */
     public void chooseCloud(Player player, Cloud cloud){
-        System.out.println("Studenti che sposto sulla mia board (PRIMA): "+ cloud.getStudents().toString());
+        //System.out.println("Studenti che sposto sulla mia board (PRIMA): "+ cloud.getStudents().toString());
         player.getBoard().importStudents(cloud.getStudents());
-        System.out.println("Studenti che sposto sulla mia board (DOPO): "+ cloud.getStudents().toString());
+        //System.out.println("Studenti che sposto sulla mia board (DOPO): "+ cloud.getStudents().toString());
         cloud.choose();
     }
 

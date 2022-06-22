@@ -180,17 +180,17 @@ public class Board implements Serializable {
     public String toString() {
         StringBuilder board = new StringBuilder().append(
                 """
-                        ╔═════════════╦══════════════════════════════════════════════════════════╦═════════════════╗
-                        ║             ║                                                          ║                 ║
+                        ╔═══════════════╦══════════════════════════════════════════════════════════╦═════════════════╗
+                        ║               ║                                                          ║                 ║
                         """);
-        board.append("║   ");
+        board.append("║ 8.");
         addStudentToString(board, 7);
-        board.append(" ");
+        board.append(" 1.");
         addStudentToString(board, 0);
         board.append("   ║   ").append(Type_Student.DRAGON).append("Draghi   \u001B[0m:  ");
         addTableToString(board, dragons);
         board.append("   ║                 ║\n");
-        board.append("║             ║                                                          ║ ");
+        board.append("║               ║                                                          ║ ");
         addTowerToString(board, 0);
         board.append(" ");
         addTowerToString(board, 4);
@@ -199,9 +199,9 @@ public class Board implements Serializable {
         board.append(" ");
         addTowerToString(board, 12);
         board.append(" \u001B[0m║\n");
-        board.append("║   ");
+        board.append("║ 2.");
         addStudentToString(board, 1);
-        board.append(" ");
+        board.append(" 3.");
         addStudentToString(board, 2);
         board.append("   ║   ").append(Type_Student.GNOME).append("Gnomi   \u001B[0m :  ");
         addTableToString(board, gnomes);
@@ -214,17 +214,16 @@ public class Board implements Serializable {
         board.append(" ");
         addTowerToString(board, 13);
         board.append(" \u001B[0m║\n");
-        board.append("║                                                                        ║                 ║\n");
-        board.append("║   ");
+        board.append("║                                                                          ║                 ║\n");
+        board.append("║ 4.");
         addStudentToString(board, 3);
-        board.append("    ");
-        board.append("       ").append(Type_Student.FAIRY).append("Fate    \u001B[0m :  ");
+        board.append("             ").append(Type_Student.FAIRY).append("Fate    \u001B[0m :  ");
         addTableToString(board, fairies);
         board.append("   ║                 ║\n");
-        board.append("║                                                                        ║                 ║\n");
-        board.append("║   ");
+        board.append("║                                                                          ║                 ║\n");
+        board.append("║ 5.");
         addStudentToString(board, 4);
-        board.append(" ");
+        board.append(" 6.");
         addStudentToString(board, 5);
         board.append("   ║   ").append(Type_Student.UNICORN).append("Unicorni\u001B[0m :  ");
         addTableToString(board, unicorns);
@@ -237,7 +236,7 @@ public class Board implements Serializable {
         board.append(" ");
         addTowerToString(board, 14);
         board.append(" \u001B[0m║\n");
-        board.append("║             ║                                                          ║ ");
+        board.append("║               ║                                                          ║ ");
         addTowerToString(board, 3);
         board.append(" ");
         addTowerToString(board, 7);
@@ -246,16 +245,16 @@ public class Board implements Serializable {
         board.append(" ");
         addTowerToString(board, 15);
         board.append(" \u001B[0m║\n");
-        board.append("║   ");
+        board.append("║ 9.");
         addStudentToString(board, 8);
-        board.append(" ");
+        board.append(" 7.");
         addStudentToString(board, 6);
         board.append("   ║   ").append(Type_Student.FROG).append("Rane     \u001B[0m:  ");
         addTableToString(board, frogs);
         board.append("""
                    ║                 ║
-                ║             ║                                                          ║                 ║
-                ╚═════════════╩══════════════════════════════════════════════════════════╩═════════════════╝""");
+                ║               ║                                                          ║                 ║
+                ╚═══════════════╩══════════════════════════════════════════════════════════╩═════════════════╝""");
         return board.toString();
     }
 

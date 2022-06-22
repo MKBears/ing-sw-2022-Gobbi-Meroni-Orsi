@@ -80,6 +80,33 @@ public class Cloud implements Serializable {
         hasBeenChosen = false;
     }
 
+
+    @Override
+    public String toString() {
+        String cloud;
+
+        if (!students.isEmpty()) {
+            cloud = "\n    ## ## #\n" +
+                    "   #  " + students.get(0).toString() + "  #\n" +
+                    "  # " + students.get(1).toString() + " " + students.get(2).toString() + " #\n";
+
+            if (nop == 4) {
+                cloud = cloud + "   #  " + students.get(3).toString() + "  #\n";
+            }
+            cloud += "    ## # ##";
+        }
+        else {
+            cloud = """
+
+                      ## ## #
+                     #       #
+                    #         #
+                      ## # ##""".indent(2);
+        }
+
+        return cloud;
+    }
+
     public void setStudents(ArrayList<Student> students) {
         this.students = students;
     }

@@ -231,6 +231,7 @@ public class ClientHandler extends Thread{
                     //calculate the influence in that Land and verify if it joins other lands
                     do {
                         out.sendMoveMN();
+                        System.out.println("Mandato muovi mn");
                         wait();
                     } while (nack);
                     match.moveMotherNature(motherNatureSteps);

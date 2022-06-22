@@ -349,7 +349,7 @@ public class Match implements Serializable {
                 printCloudRow(1, 5) + "   /" + countStudents(5, 1) + "\\ \\___________/\n" +
                 "               |" + countStudents(9, 2) + "|                                               |" +
                 countStudents(5, 2) + "|\n" + "               |" + printTowerRow(9, 2) +
-                "|" + printBridge(8, 1) + "__________ 9   ___________ 8|7 __________" + printBridge(5, 1) + "|" + printTowerRow(10, 2) + "|\n" +
+                "|" + printBridge(8, 1) + "__________     ___________     __________" + printBridge(5, 1) + "|" + printTowerRow(10, 2) + "|\n" +
                 "               \\" + countStudents(9, 3) + printBridge(8, 2) + printNoEntry(8) + "\\   /" +
                 printNoEntry(7) + "\\   /" + printNoEntry(6) + printBridge(5, 2) + countStudents(5, 3) +
                 "/\n" + "                \\___________/ /" + countStudents(8, 1) + "\\" + printBridge(7, 1) + "/" +
@@ -360,9 +360,9 @@ public class Match implements Serializable {
                 printTowerRow(9, 2) + printBridge(6, 3) + printTowerRow(9, 2) + "|\n" +
                 "                              \\" + countStudents(8, 3) + "/ \\" + countStudents(7, 3) +
                 "/ \\" + countStudents(6, 3) + "/\n" +
-                "                               \\___________/   \\___________/   \\___________/\n" +
+                "                             9 \\___________/   \\___________/ 8 \\___________/ 7\n" +
                 "                                   " + printMN(8) + "           " + printMN(7) +
-                "           " + printMN(6)).indent(6);
+                "           " + printMN(6)).indent(16);
     }
 
     private String printCloudRow (int cloud, int row) {
@@ -393,7 +393,7 @@ public class Match implements Serializable {
                     else if (students.isEmpty())
                         return " #       # ";
                     else
-                        return " #  "+students.get(3).toString()+"\u001B[0m  #";
+                        return " #  "+students.get(3).toString()+"\u001B[0m  # ";
                 }
                 case 5 -> {
                     if (player.length == 3)

@@ -2,11 +2,11 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.characterCards.*;
+import it.polimi.ingsw.serverController.GameRecap;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Array;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,12 +54,12 @@ public class Client  extends Thread{
             addr[3]=(byte)255;
             dSokk=new DatagramSocket();
             dSokk.setSoTimeout(5000);
-            System.out.println("Client: Inizializzato");
+            //System.out.println("Client: Inizializzato");
             byte[] buf = new byte[1];
             starting= new DatagramPacket(buf, 0, buf.length, InetAddress.getByAddress(addr), 4898);
             do { //Ho messo il timeout per la ricezione dei messaggi
                 dSokk.send(starting);
-                System.out.println("Client: Ho mandato richiesta, ora vediamo di ricevere...");
+                //System.out.println("Client: Ho mandato richiesta, ora vediamo di ricevere...");
                 buf = new byte[1];
                 packet = new DatagramPacket(buf, buf.length);
                 try{
@@ -68,7 +68,9 @@ public class Client  extends Thread{
                 catch (SocketTimeoutException e){
                     counter ++;
                     if(counter==3){
-                        System.out.println("Connessione fallita. Far ripartire il client"); //fai eccezione
+                        view.printNotification("Connessione fallita. Far ripartire il client");
+                        dSokk.close();
+                        throw new RuntimeException();
                     }
                 }
                 if(packet.getData()[0]==1){ //inizializza a 1 nel server
@@ -84,9 +86,10 @@ public class Client  extends Thread{
             server=new Message4Server(out);
             view.setServer(server);
             received="base";
+            dSokk.close();
             view.getTitolo();
             while (true){
-                if(received!="base") {
+                if(!received.equals("base")) {
                     received = (String) in.readObject();
                 }
                 if(!received.equals("Ping")) {
@@ -104,7 +107,7 @@ public class Client  extends Thread{
                             }//Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
 
                             response = (String) in.readObject();
-                            System.out.println(response);
+                            view.printNotification(response);
                         } while(response.equals("LoginFailed"));
                         received="ok";
                         break;
@@ -135,34 +138,18 @@ public class Client  extends Thread{
                         }
                         view.setMe(me);
                         view.setMatch(match);
-                        view.printMatch(match);
+                        //view.printMatch(match);
                         server.sendACK();
                         break;
                     case "RefillClouds":
-                        ArrayList<Cloud> receivedClouds=new ArrayList<>();
-                        Cloud c;
                         ArrayList<Student> studen;
                         for(Cloud clo: match.getCloud()){
                             clo.clearStudents();
                         }
-                        //receivedClouds = (ArrayList<Cloud>) in.readObject();
                         for(int i=0; i<match.getPlayersNum(); i++) {
                             studen = (ArrayList<Student>) in.readObject();
-                            System.out.println(studen.toString());
-                            /*System.out.println("Ecco la nuvola n "+i+":");
-                            System.out.println(c.toString());
-                            System.out.println(c.getStudents().size());
-                            receivedClouds.add(c);*/
                             match.getCloud()[i].setStudents(studen);
                         }
-                        //Cloud[] clo=new Cloud[receivedClouds.size()];
-
-                        //for(Cloud i: receivedClouds){
-                            //System.out.println(i.toString());
-                        //}
-                        //match.setCloud(receivedClouds.toArray(new Cloud[0]));
-
-                        view.printMatch(match);
                         server.sendACK();
                         break;
                     case "ChooseCard":
@@ -173,20 +160,22 @@ public class Client  extends Thread{
                         break;
                     case "MoveStudents":
                     case "MoveMN": //DA MODIFICARE IL PROTOCOLLO
+                        System.out.println("Ricevuto "+received);
                         view.wakeUp(received);
+                        System.out.println("View svegliata");
                         break;
                     //nella nuova versione non è previsto ACK o NACK
                     case "ChooseCloud":
                         List<Cloud> clouds;
                         clouds = (ArrayList<Cloud>) in.readObject();
-                        view.setClouds(Arrays.asList(match.getCloud()));
+                        view.setClouds(clouds);
                         view.wakeUp("ChooseCloud");
-                        //server.sendChoiceCloud(cl);
                         break;
                     case "NotifyChosenCard":
                         AssistantCard card=(AssistantCard) in.readObject();
                         Player pl2=(Player) in.readObject();
-                        System.out.println(pl2.getUserName()+" ha giocato "+card.toString());
+                        view.printNotification(pl2.getColor()+pl2.getUserName()+
+                                "\u001b[0m ha giocatola carta:"+card.toString());
 
                         for (int i = 0; i < match.getPlayer().length; i++) {
                             if(match.getPlayer()[i].getUserName().equals(pl2.getUserName())){
@@ -209,7 +198,7 @@ public class Client  extends Thread{
                             }
                         }
                         action.checkAllProfessors();
-                        view.printMatch(match);
+                        view.printNotification(user+" ha spostato lo studente "+stu.toString()+" nell'isola "+id);
                         server.sendACK();
                         break;
                     case "NotifyMoveStudents (board)":
@@ -222,14 +211,14 @@ public class Client  extends Thread{
                             }
                         }
                         action.checkAllProfessors();
-                        view.printMatch(match);
+                        view.printNotification(usern+" ha spostato lo studente "+s.toString()+" nella sua sala");
                         server.sendACK();
                         break;
                     case "NotifyMovementMN":
                         int movement=(int)in.readObject();
                         int idLand;
                         ArrayList<Land> lands=(ArrayList<Land>) in.readObject();
-                        System.out.println(lands);
+                        //System.out.println(lands);
                         match.moveMotherNature(movement);
                         idLand=match.getMotherNature().getPosition().getID();
                         tow=match.getMotherNature().getPosition().size();
@@ -239,13 +228,13 @@ public class Client  extends Thread{
                                 match.getMotherNature().setPosition(e);
                             }
                         }
-                        view.printMatch(match);
+                        view.printNotification("Madre Natura é stata spostata di " + movement
+                                + " passi nell'isola "+idLand);
                         server.sendACK();
                         break;
                     case "NotifyProfessors":
                         Map<Type_Student, Player> prof=(Map<Type_Student, Player>) in.readObject();
                         match.setProfessors(prof);
-                        view.printMatch(match);
                         server.sendACK();
                         break;
                     case "NotifyChosenCloud":
@@ -262,7 +251,8 @@ public class Client  extends Thread{
                                 break;
                             }
                         }
-                        view.printMatch(match);
+                        view.printNotification(p.getColor().toString()+p.getUserName()
+                                +"\u001b[0m ha scelto la nuvola:\n"+ cl.toString());
                         server.sendACK();
                         break;
                     case "NotifyTowers (land)":
@@ -301,20 +291,16 @@ public class Client  extends Thread{
                             if(match.getPlayer()[i].getUserName().equals(us))
                                 match.getPlayer()[i].setBoard(board);
                         }
+                        view.printMatch(match);
                         server.sendACK();
                         break;
                     case "EndGame":
                         Player winner=(Player) in.readObject();
                         String ex=(String) in.readObject(); //spiegazione di perchè ha vinto
-                        ArrayList<Land> landd=(ArrayList<Land>) in.readObject(); //situa finale lands
-                        ArrayList<Board> boards=(ArrayList<Board>) in.readObject(); //situa di tutte le board
+                        GameRecap recap = (GameRecap) in.readObject();
                         view.getWinner(winner);
-                        match.setLands(landd);
-                        for (int i = 0; i < match.getPlayer().length; i++) {
-                            match.getPlayer()[i].setBoard(boards.get(i));
-                        }
-                        action.checkAllProfessors();
                         view.printMatch(match);
+                        view.printNotification(recap.toString());
                         view.wakeUp("EndGame");
                         end=true;
                         server.sendACK();
@@ -335,7 +321,7 @@ public class Client  extends Thread{
                         String phase=(String)in.readObject();
                         view.printTurn(play,phase);
                         server.sendACK();
-                        System.out.println("Mandato ack");
+                        //System.out.println("Mandato ack");
                         break;
                     case "Ping":
                         server.sendPONG();
@@ -362,7 +348,7 @@ public class Client  extends Thread{
                         break;
                     case "GenericError":
                         String error= (String) in.readObject();
-                        System.out.println(error);
+                        view.printNotification(error);
                         server.sendACK();
                         break;
                     case "Ch":
@@ -402,12 +388,18 @@ public class Client  extends Thread{
                     break;
             }
         } catch (IOException e) {
-            System.out.println("Non trovo il server");
-            System.err.println(e.getMessage());
+            view.printNotification("Non trovo il server\n"+e.getMessage());
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            server.sendNACK();
         } catch (Exception e) {
-            e.printStackTrace();
+            view.printNotification("Errore interno: "+e.getMessage());
+        }
+        try {
+            out.close();
+            in.close();
+            socket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

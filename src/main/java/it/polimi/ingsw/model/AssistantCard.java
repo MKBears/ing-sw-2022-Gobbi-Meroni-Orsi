@@ -26,4 +26,20 @@ public class AssistantCard implements Serializable{
 
     public void ch_4_effect(){MNSteps += 2;}
 
+    @Override
+    public String toString() {
+        String assistant =  "\n _______ \n"+
+                            "| "+value;
+
+        if (value < 10)
+            assistant += " ";
+
+        assistant +=    "  "+MNSteps+" |\n"+
+                        "|  /\\\\  |\n"+
+                        "| //_\\\\ |\n"+
+                        "|//   \\\\|\n"+
+                        "|_______|";
+
+        return assistant;
+    }
 }
