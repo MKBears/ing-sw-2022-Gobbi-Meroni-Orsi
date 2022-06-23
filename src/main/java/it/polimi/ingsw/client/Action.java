@@ -47,7 +47,6 @@ public class Action {
                 match.uniteLandAfter(match.getLands().indexOf(match.getMotherNature().getPosition()));
             }
         }catch (Exception e){
-            System.out.println("isola dopo senza torre");
         }
         try{
             if(match.getLands().indexOf(match.getMotherNature().getPosition())!=0){
@@ -59,7 +58,6 @@ public class Action {
                 match.uniteLandBefore(match.getLands().indexOf(match.getMotherNature().getPosition()));
             }
         }catch(Exception e){
-            System.out.println("isola prima senza torre");
         }
     }
 

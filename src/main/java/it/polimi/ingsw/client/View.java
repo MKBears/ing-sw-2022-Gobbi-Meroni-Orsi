@@ -37,4 +37,5 @@ public interface View {
     void finishedAC(Player p);
     CharacterCard chooseChCard(CharacterCard[] cards);
     void setCharacters(CharacterCard[] characters);
+    void printNotifications(String s);
 }

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.serverController;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.characterCards.Ch_1;
+import it.polimi.ingsw.model.characterCards.Ch_11;
 
 import javax.management.timer.Timer;
 import java.util.ArrayList;
@@ -378,15 +380,29 @@ public class Controller extends Thread{
             case 2:
                 if (expertMatch) {
                     match = new Expert_Match(players[0].getAvatar(), players[1].getAvatar());
+                    ((Expert_Match)match).setCard();
+                    for (ClientHandler ch:this.players) {
+                        ch.setExpertMatch(true);
+                    }
                 } else {
                     match = new Match(players[0].getAvatar(), players[1].getAvatar());
+                    for (ClientHandler ch:this.players) {
+                        ch.setExpertMatch(false);
+                    }
                 }
                 break;
             case 3:
                 if (expertMatch) {
                     match = new Expert_Match(players[0].getAvatar(), players[1].getAvatar(), players[2].getAvatar());
+                    ((Expert_Match)match).setCard();
+                    for (ClientHandler ch:this.players) {
+                        ch.setExpertMatch(true);
+                    }
                 } else {
                     match = new Match(players[0].getAvatar(), players[1].getAvatar(), players[2].getAvatar());
+                    for (ClientHandler ch:this.players) {
+                        ch.setExpertMatch(false);
+                    }
                 }
                 break;
             default:
@@ -601,14 +617,20 @@ public class Controller extends Thread{
             dominant = owner;
             dominantProfessors = getControlledProfessors(owner);
             dominantInfluence = land.getInfluence(dominantProfessors);
-
+            if(dominant.isTwo_more_influence()){
+                dominantInfluence+=2;
+                dominant.setTwo_more_influence(false);
+            }
             for (ClientHandler remotePlayer : players) {
                 player = remotePlayer.getAvatar();
 
                 if (dominant != player) {
                     myProfessors = getControlledProfessors(player);
                     myInfluence = land.getInfluence(myProfessors);
-
+                    if(player.isTwo_more_influence()){
+                        myInfluence+=2;
+                        player.setTwo_more_influence(false);
+                    }
                     if (myInfluence > dominantInfluence) {
                         dominant = player;
                         dominantInfluence = myInfluence;
@@ -663,13 +685,16 @@ public class Controller extends Thread{
             int max=0,influence;
             Player Pmax=null;
             for (ClientHandler c:players) {
-
-               ArrayList<Type_Student> professors=getControlledProfessors(c.getAvatar());
-               influence=land.getInfluence(professors);
-               if(influence>max){
+                ArrayList<Type_Student> professors=getControlledProfessors(c.getAvatar());
+                influence=land.getInfluence(professors);
+                if(c.getAvatar().isTwo_more_influence()){
+                    influence+=2;
+                    c.getAvatar().setTwo_more_influence(false);
+                }
+                if(influence>max){
                    max=influence;
                    Pmax=c.getAvatar();
-               }
+                }
             }
             if(max>0){
                 ArrayList<Tower> temp=new ArrayList<>();
@@ -792,5 +817,51 @@ public class Controller extends Thread{
 
     public void resumeMatch () {
 
+    }
+
+    public void notifyCh() throws InterruptedException {
+        for (ClientHandler player : players) {
+            do {
+                switch (players[currentPlayer].getChosenCh()) {
+                    case "Ch_1" -> {
+                        for (int i = 0; i < 3; i++) {
+                            if (((Expert_Match) match).getCard()[i] instanceof Ch_1)
+                                player.getOutputStream().sendNotifyCh_1(match.getLands(), ((Expert_Match) match).getCard()[i]);
+                        }
+                    }
+                    case "Ch_2" -> {
+                        player.getOutputStream().sendNotifyCh_2(match.getProfessors());
+                    }
+                    case "Ch_8" -> {
+                        player.getOutputStream().sendNotifyCh_8();
+                    }
+                    case "Ch_4" -> {
+                        player.getOutputStream().sendNotifyCh_4(players[currentPlayer].getAvatar().getUserName());
+                    }
+                    case "Ch_5" -> {
+                        player.getOutputStream().sendNotifyCh_5(players[currentPlayer].getCh_5_land());
+                    }
+                    case "Ch_10" -> {
+                        player.getOutputStream().sendNotifyCh_10(players[currentPlayer].getAvatar().getBoard(), players[currentPlayer].getAvatar().getUserName());
+                    }
+                    case "Ch_11" -> {
+                        for (int i = 0; i < 3; i++) {
+                            if (((Expert_Match) match).getCard()[i] instanceof Ch_11)
+                                player.getOutputStream().sendNotifyCh_11(((Expert_Match) match).getCard()[i], players[currentPlayer].getAvatar().getBoard(), players[currentPlayer].getAvatar().getUserName());
+                        }
+                    }
+                    case "Ch_12" -> {
+                        ArrayList<Board> boards = new ArrayList<>();
+                        for (Player p : match.getPlayer()) {
+                            boards.add(p.getBoard());
+                        }
+                        player.getOutputStream().sendNotifyCh_12(boards);
+                    }
+                }
+                synchronized (player) {
+                    player.wait();
+                }
+            } while (player.getNack());
+        }
     }
 }

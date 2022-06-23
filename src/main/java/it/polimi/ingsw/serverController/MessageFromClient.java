@@ -116,10 +116,8 @@ public class MessageFromClient extends Thread{
                         ch.setUseCh(true);
                         ch.setAck(true);
                         break;
-                    case "Ch_3":
-                        Land lan=(Land)in.readObject();
-                        ch.setCh_3_land(lan);
-                        ch.setChosenCh("Ch_3");
+                    case "Ch_8":
+                        ch.setChosenCh("Ch_8");
                         ch.setUseCh(true);
                         ch.setAck(true);
                         break;

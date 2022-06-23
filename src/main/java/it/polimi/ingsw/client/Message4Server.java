@@ -346,4 +346,16 @@ public class Message4Server {
             }
         }
     }
+
+
+    public void sendChooseCh8(){
+        synchronized (this){
+            try{
+                name="Ch_8";
+                out.writeObject(name);
+            }catch(IOException e){
+                throw new RuntimeException();
+            }
+        }
+    }
 }

@@ -19,8 +19,7 @@ public class Ch_8 implements CharacterCard {
 
     @Override
     public void activatePowerUp() {
-        //...
-
+        player.setTwo_more_influence(true);
         if(!activated){
             activated=true;
         }
