@@ -338,7 +338,7 @@ public class Cli extends Thread implements View{
                 }
                 default -> c.append("   |_______|");
             }
-            c.append("   |  ");
+            c.append("  | ");
             for (AssistantCard card : deck) {
                 if (cards != null) {
                     if (!cards.isEmpty())

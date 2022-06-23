@@ -225,15 +225,9 @@ public class Client  extends Thread{
                         int idLand;
                         ArrayList<Land> lands=(ArrayList<Land>) in.readObject();
                         //System.out.println(lands);
+                        match.setLands(lands);
                         match.moveMotherNature(movement);
                         idLand=match.getMotherNature().getPosition().getID();
-                        tow=match.getMotherNature().getPosition().size();
-                        match.setLands(lands);
-                        for (Land e:match.getLands()) {
-                            if(e.getID()==idLand){
-                                match.getMotherNature().setPosition(e);
-                            }
-                        }
                         view.printNotification("Madre Natura é stata spostata di " + movement
                                 + " passi nell'isola "+idLand);
                         server.sendACK();
