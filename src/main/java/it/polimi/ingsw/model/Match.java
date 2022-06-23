@@ -330,7 +330,7 @@ public class Match implements Serializable {
                 countStudents(11, 2) + "|                                               |" + countStudents(3, 2) +
                 "|     " + printMN(4) + "\n" +
                 "11__________" + printBridge(10, 1) + "|" + printTowerRow(11, 2) + "|                                               |" +
-                printTowerRow(11, 2) + "|" + printBridge(3, 1) + "__________ 5\n" +
+                printTowerRow(3, 2) + "|" + printBridge(3, 1) + "__________ 5\n" +
                 " /" + printNoEntry(9) + printBridge(10, 2) + countStudents(11, 3) + "/   " + printChosenCloud(0) +
                 "    " + printChosenCloud(2) + "    " + printChosenCloud(1) + "   \\" + countStudents(3, 3) +
                 printBridge(3, 2) + printNoEntry(4) + "\\\n" +
@@ -339,9 +339,9 @@ public class Match implements Serializable {
                 "    " + printCloudRow(1, 1) + "    \\___________/ /" + countStudents(4, 1) + "\\\n" +
                 "|" + countStudents(10, 2) + "|                  " + printCloudRow(0, 2) + "    " +
                 printCloudRow(2, 2) + "    " + printCloudRow(1, 2) + "                  |" +
-                countStudents(4, 2) + "|\n" + "|" + printTowerRow(10, 2) + "|" + printBridge(9, 1) + "__________ 10  " +
+                countStudents(4, 2) + "|\n" + "|" + printTowerRow(10, 2) + "|" + printBridge(9, 1) + "__________     " +
                 printCloudRow(0, 3) + "    " + printCloudRow(2, 3) + "    " + printCloudRow(1, 3) +
-                "   6 __________" + printBridge(4, 1) + "|" + printTowerRow(4, 2) + "|\n" + "\\" + countStudents(10, 3) +
+                "     __________" + printBridge(4, 1) + "|" + printTowerRow(4, 2) + "|\n" + "\\" + countStudents(10, 3) +
                 printBridge(9, 2) + printNoEntry(8) + "\\    " + printCloudRow(0, 4) + "    " +
                 printCloudRow(2, 4) + "    " + printCloudRow(1, 4) + "    /" + printNoEntry(5) +
                 printBridge(4, 2) + countStudents(4, 3) + "/\n" + " \\___________/ /" + countStudents(9, 1) +
@@ -349,15 +349,15 @@ public class Match implements Serializable {
                 printCloudRow(1, 5) + "   /" + countStudents(5, 1) + "\\ \\___________/\n" +
                 "               |" + countStudents(9, 2) + "|                                               |" +
                 countStudents(5, 2) + "|\n" + "               |" + printTowerRow(9, 2) +
-                "|" + printBridge(8, 1) + "__________     ___________     __________" + printBridge(5, 1) + "|" + printTowerRow(10, 2) + "|\n" +
+                "|" + printBridge(8, 1) + "__________     ___________     __________" + printBridge(5, 1) + "|" + printTowerRow(5, 2) + "|\n" +
                 "               \\" + countStudents(9, 3) + printBridge(8, 2) + printNoEntry(8) + "\\   /" +
                 printNoEntry(7) + "\\   /" + printNoEntry(6) + printBridge(5, 2) + countStudents(5, 3) +
-                "/\n" + "                \\___________/ /" + countStudents(8, 1) + "\\" + printBridge(7, 1) + "/" +
-                countStudents(7, 1) + "\\" + printBridge(6, 1) + "/" + countStudents(6, 1) + "\\ \\___________/\n" +
+                "/\n" + "             10 \\___________/ /" + countStudents(8, 1) + "\\" + printBridge(7, 1) + "/" +
+                countStudents(7, 1) + "\\" + printBridge(6, 1) + "/" + countStudents(6, 1) + "\\ \\___________/ 6\n" +
                 "                     " + printMN(9) + "    |" + countStudents(8, 2) + printBridge(7, 2) +
                 countStudents(7, 2) + printBridge(6, 2) + countStudents(6, 2) + "|     " +
                 printMN(5) + "\n" + "                              |" + printTowerRow(8, 2) + printBridge(7, 3) +
-                printTowerRow(9, 2) + printBridge(6, 3) + printTowerRow(9, 2) + "|\n" +
+                printTowerRow(6, 2) + printBridge(6, 3) + printTowerRow(7, 2) + "|\n" +
                 "                              \\" + countStudents(8, 3) + "/ \\" + countStudents(7, 3) +
                 "/ \\" + countStudents(6, 3) + "/\n" +
                 "                             9 \\___________/   \\___________/ 8 \\___________/ 7\n" +

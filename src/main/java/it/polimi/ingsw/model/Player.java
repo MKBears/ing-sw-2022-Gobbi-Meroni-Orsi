@@ -106,13 +106,14 @@ public class Player implements Serializable {
         for (int i=0; i<userName.length(); i++) {
             switch (userName.charAt(i)) {
                 case 'a', 'v', 'm', 'n' -> megaName.append("     ");
-                case 'b', 'r', 'p', 'd', 'g' -> megaName.append(" _  ");
+                case 'b', 'r', 'p', 'd', 'g', '8', '9', '0', '5', '6', '2' -> megaName.append(" _  ");
                 case 'c', 'f', 'e', 's' -> megaName.append(" _ ");
                 case 't' -> megaName.append("___ ");
-                case 'i', 'j' -> megaName.append("  ");
-                case 'q', 'o', 'k', 'l', 'x' -> megaName.append("   ");
+                case 'i', 'j', '.' -> megaName.append("  ");
+                case 'q', 'o', 'k', 'l', 'x', ' ', '4', '/' -> megaName.append("   ");
                 case 'w' -> megaName.append("       ");
-                case 'z' -> megaName.append("__ ");
+                case 'z', '7' -> megaName.append("__ ");
+                case '1', '3' -> megaName.append("_  ");
                 default -> megaName.append("    ");
             }
         }
@@ -123,7 +124,7 @@ public class Player implements Serializable {
             switch (userName.charAt(i)) {
                 case 'a' -> megaName.append(" /\\  ");
                 case 'b' -> megaName.append("|_> ");
-                case 'r', 'u' -> megaName.append("| | ");
+                case 'r', 'u', '0' -> megaName.append("| | ");
                 case 'c' -> megaName.append("/  ");
                 case 'g' -> megaName.append("/_  ");
                 case 'e', 'f' -> megaName.append("|_ ");
@@ -142,6 +143,15 @@ public class Player implements Serializable {
                 case 'w' -> megaName.append("\\    / ");
                 case 'x' -> megaName.append("\\/ ");
                 case 'z' -> megaName.append(" / ");
+                case '1' -> megaName.append(" | ");
+                case '2' -> megaName.append(" _| ");
+                case '3' -> megaName.append("_| ");
+                case '4' -> megaName.append(" / ");
+                case '5' -> megaName.append("|_  ");
+                case '6' -> megaName.append("|_  ");
+                case '7', '/' -> megaName.append(" / ");
+                case '8', '9' -> megaName.append("|_| ");
+                case '.' -> megaName.append("  ");
                 default -> megaName.append("   ");
             }
         }
@@ -176,6 +186,14 @@ public class Player implements Serializable {
                 case 'y' -> megaName.append(" _| ");
                 case 'z' -> megaName.append("/_ ");
                 case '_' -> megaName.append("___");
+                case '1' -> megaName.append(" | ");
+                case '2' -> megaName.append("|_  ");
+                case '3' -> megaName.append("_| ");
+                case '4' -> megaName.append("/┼ ");
+                case '5', '9' -> megaName.append(" _| ");
+                case '6', '8', '0' -> megaName.append("|_| ");
+                case '7', '/' -> megaName.append("/  ");
+                case '.' -> megaName.append("o ");
                 default  -> megaName.append("   ");
             }
         }

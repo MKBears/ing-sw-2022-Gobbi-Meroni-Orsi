@@ -15,8 +15,8 @@ class PlayerTest {
 
     @BeforeAll
     public static void instantiate() {
-        id1 = "Abcd";
-        id2 = "MK00";
+        id1 = "0123456789";
+        id2 = "abcdefghijklmnopqrstuvwxyz";
         color = Colors.BLACK;
         wizard = Wizards.WIZARD1;
         player1 = new Player(id1, color, 8, wizard, false);

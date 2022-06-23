@@ -280,6 +280,8 @@ public class Cli extends Thread implements View{
     public void printMatch(Match match){
         //clearConsole();
         getTitolo();
+        if (match instanceof Expert_Match)
+            System.out.println(printCharacters());
         System.out.println(match.toString()+printAssistants());
     }
 
@@ -305,6 +307,32 @@ public class Cli extends Thread implements View{
                            |  |/____|  ||\\  \\_|  ||  ||  |  ||  || \\  \\|  ||  |  ||  /______|  |/____|  ||
                            |___________/  \\__________/   |______/   \\_____/   |__/   |__________________/
                 \u001B[0m""".indent(18));
+    }
+
+    private @NotNull String printCharacters() {
+        StringBuilder chCards = new StringBuilder();
+
+        for (int j=0; j<6; j++) {
+            for (int i = 0; i < 2; i++) {
+                switch (j) {
+                    case 0 -> chCards.append("       _______ ");
+                    case 1 -> chCards.append("      | |‾‾‾| |");
+                    case 2 -> chCards.append("      | |___| |");
+                    case 3 -> chCards.append("      | |     |");
+                    case 4 -> {
+                        chCards.append("      | |  ").append(characters[i].getPrice());
+
+                        if (characters[i].getPrice() < 10)
+                            chCards.append(" ");
+                        chCards.append(" |");
+                    }
+                    default -> chCards.append("      |_______|");
+                }
+                chCards.append('\n');
+            }
+        }
+
+        return chCards.toString().indent(20);
     }
 
     /**
@@ -793,28 +821,6 @@ public class Cli extends Thread implements View{
      */
     @Override
     public CharacterCard chooseChCard(CharacterCard[] cards){
-        StringBuilder chCards = new StringBuilder();
-
-        for (int j=0; j<6; j++) {
-            for (int i = 0; i < 2; i++) {
-                switch (j) {
-                    case 0 -> chCards.append("       _______ ");
-                    case 1 -> chCards.append("      | |‾‾‾| |");
-                    case 2 -> chCards.append("      | |___| |");
-                    case 3 -> chCards.append("      | |     |");
-                    case 4 -> {
-                        chCards.append("      | |  ").append(cards[i].getPrice());
-
-                        if (cards[i].getPrice() < 10)
-                            chCards.append(" ");
-                        chCards.append(" |");
-                    }
-                    default -> chCards.append("      |_______|");
-                }
-                chCards.append('\n');
-            }
-        }
-        System.out.println("\n" + chCards.toString().indent(20));
         System.out.println("\nVuoi giocare una carta personaggio? [si/no]");
         System.out.println("Per visualizzare la descrizione dell'effetto della carta scrivi 'info'");
         String choose=input.next();

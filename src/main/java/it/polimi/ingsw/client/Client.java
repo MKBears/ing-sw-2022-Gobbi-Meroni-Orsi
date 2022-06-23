@@ -151,6 +151,7 @@ public class Client  extends Thread{
                         ArrayList<Student> studen;
                         for(Cloud clo: match.getCloud()){
                             clo.clearStudents();
+                            clo.reset();
                         }
                         for(int i=0; i<match.getPlayersNum(); i++) {
                             studen = (ArrayList<Student>) in.readObject();
@@ -248,6 +249,7 @@ public class Client  extends Thread{
                         for (Cloud e:match.getCloud()) {
                             if(cl.equals(e)){
                                 e.clearStudents();
+                                e.choose();
                                 break;
                             }
                         }
