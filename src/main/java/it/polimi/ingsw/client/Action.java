@@ -45,10 +45,7 @@ public class Action {
             }else if (match.getLands().get(0).getTowerColor()==match.getLands().get(match.getLands().size()-1).getTowerColor()){
                 match.uniteLandAfter(match.getLands().indexOf(match.getMotherNature().getPosition()));
             }
-        }catch (Exception e){
-            //System.out.println("isola dopo senza torre");
-            throw new RuntimeException();
-        }
+        }catch (Exception e){}
         try{
             if(match.getLands().indexOf(match.getMotherNature().getPosition())!=0){
                 if(match.getMotherNature().getPosition().getTowerColor()==
@@ -58,10 +55,7 @@ public class Action {
             }else if(match.getLands().get(0).getTowerColor()==match.getLands().get(match.getLands().size()-1).getTowerColor()){
                 match.uniteLandBefore(match.getLands().indexOf(match.getMotherNature().getPosition()));
             }
-        }catch(Exception e){
-            //System.out.println("isola prima senza torre");
-            throw new RuntimeException();
-        }
+        }catch(Exception e){}
     }
 
     /**

@@ -367,7 +367,8 @@ public class Client  extends Thread{
         } catch (ClassNotFoundException e) {
             server.sendNACK();
         } catch (Exception e) {
-            view.printNotification("Errore interno: "+e.getMessage());
+            view.printNotification("Errore interno: ");
+            e.printStackTrace();
         }
         try {
             out.close();
