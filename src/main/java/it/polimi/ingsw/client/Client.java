@@ -352,35 +352,9 @@ public class Client  extends Thread{
                         server.sendACK();
                         break;
                     case "Ch":
-                        CharacterCard ch[]=(CharacterCard[])in.readObject();
+                        CharacterCard[] ch=(CharacterCard[])in.readObject();
                         view.setCharacters(ch);
                         view.wakeUp("Ch");
-                        /*switch (n){
-                            case 1:
-                                Ch_1 c=(Ch_1) in.readObject();
-                                break;
-                            case 2:
-                                Ch_2 ca=(Ch_2)in.readObject();
-                                break;
-                            case 4:
-                                Ch_4 car=(Ch_4)in.readObject();
-                                break;
-                            case 5:
-                                Ch_5 cara=(Ch_5)in.readObject();
-                                break;
-                            case 7:
-                                Ch_7 carac=(Ch_7)in.readObject();
-                                break;
-                            case 10:
-                                Ch_10 caract=(Ch_10)in.readObject();
-                                break;
-                            case 11:
-                                Ch_11 caracte=(Ch_11)in.readObject();
-                                break;
-                            case 12:
-                                Ch_12 caracter=(Ch_12)in.readObject();
-                                break;
-                        }*/
                         break;
                     default: server.sendNACK();
                 }

@@ -48,6 +48,9 @@ public class Cli extends Thread implements View{
     public void setMatch(Match match) {
         this.match = match;
         action=new Action(match);
+
+        if (match instanceof Expert_Match)
+            characters = ((Expert_Match) match).getCard();
     }
 
     /**
@@ -518,15 +521,13 @@ public class Cli extends Thread implements View{
                          end = true;
                          System.out.println("Grazie di aver giocato a Eriantys. Premere qualsiasi tasto per terminare");
                          state = input.next();
-                         svnProcessBuilder = new ProcessBuilder("exit");
+                         svnProcessBuilder = new ProcessBuilder("PowerShell", "/c", "exit");
                          svnProcessBuilder.inheritIO().start().waitFor();
                          break;
                      case("Ch"):
                          CharacterCard character=chooseChCard(characters);
                          Board_Experts me_ex=(Board_Experts) me.getBoard();
-                         if(character==null){
-                             //no carta personaggio
-                         }else{
+                         if(character != null ) {
                              if(character.getPrice()>me_ex.getCoinsNumber()){
                                  System.out.println("non hai abbastanza monete");
                                  //no carta personaggio
@@ -750,20 +751,52 @@ public class Cli extends Thread implements View{
     }
 
     public CharacterCard chooseChCard(CharacterCard[] cards){
-        for (int i = 0; i < 2; i++) {
-            System.out.println(i+')'+characters[i].toString()+'\n');
+        StringBuilder chCards = new StringBuilder();
+
+
+        for (int j=0; j<6; j++) {
+            for (int i = 0; i < 2; i++) {
+                switch (j) {
+                    case 0 -> chCards.append("       _______ ");
+                    case 1 -> chCards.append("      | |‾‾‾| |");
+                    case 2 -> chCards.append("      | |___| |");
+                    case 3 -> chCards.append("      | |     |");
+                    case 4 -> {
+                        chCards.append("      | |  ").append(cards[i].getPrice());
+
+                        if (cards[i].getPrice() < 10)
+                            chCards.append(" ");
+                        chCards.append(" |");
+                    }
+                    default -> chCards.append("      |_______|");
+                }
+                chCards.append('\n');
+            }
         }
-        System.out.println("Vuoi giocare una carta personaggio? [si/no]");
+        System.out.println("\n" + chCards.toString().indent(20));
+        System.out.println("\nVuoi giocare una carta personaggio? [si/no]");
+        System.out.println("Per visualizzare la descrizione dell'effetto della carta scrivi 'info'");
         String choose=input.next();
         int chosen;
-        if(choose.equals("si")){
-            do {
-                System.out.println("Quale delle tre?");
-                chosen = input.nextInt();
-            }while(chosen<0 || chosen>2);
-            return cards[chosen];
-        }else{
-            return null;
+        while (true) {
+            switch (choose.toLowerCase()) {
+                case "si" -> {
+                    do {
+                        System.out.println("\nQuale delle tre?");
+                        chosen = input.nextInt();
+                    } while (chosen < 0 || chosen > 2);
+                    return cards[chosen];
+                }
+                case "no" -> {
+                    return null;
+                }
+                case "info" -> {
+                    for (CharacterCard card : cards) {
+                        System.out.println("\nPersonaggio 1 :\n\t" + card.getPowerUp());
+                    }
+                }
+                default -> System.out.println("Inserisci si/no oppure info");
+            }
         }
     }
 
@@ -785,13 +818,9 @@ public class Cli extends Thread implements View{
             System.out.flush();
         }
     }
-
-    public synchronized String state() {
-        return state;
-    }
-
     @Override
     public void printNotification(String message) {
         System.out.println('\n' + message);
     }
+
 }
