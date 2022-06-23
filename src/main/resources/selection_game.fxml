@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.guiControllers.SelectionGameController">
+   <children>
+      <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@sfondo.jpg" />
+         </image>
+      </ImageView>
+   <Pane fx:id="first" prefHeight="400.0" prefWidth="600.0">
+      <children>
+         <ChoiceBox fx:id="selectionGames" layoutX="84.0" layoutY="153.0" prefWidth="150.0" />
+         <Button fx:id="new_match" layoutX="403.0" layoutY="153.0" mnemonicParsing="false" onAction="#newGame" text="Nuova partita" />
+         <Label layoutX="84.0" layoutY="116.0" prefHeight="25.0" prefWidth="133.0" text="Aggiungiti ad una partita" />
+         <Button fx:id="joinGame" layoutX="143.0" layoutY="217.0" mnemonicParsing="false" onAction="#gameSelected" text="Vai" />
+      </children>
+   </Pane>
+   </children>
+</AnchorPane>
