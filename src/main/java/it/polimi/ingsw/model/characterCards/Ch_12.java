@@ -13,11 +13,10 @@ public class Ch_12 implements CharacterCard {
     private final String powerUp;
     private Player player;
     private Match match;
-    private View view;
+    private Type_Student type;
 
 
-    public Ch_12(Match match, View view){
-        this.view=view;
+    public Ch_12(Match match){
         this.match=match;
         price=3;
         activated=false;
@@ -29,7 +28,6 @@ public class Ch_12 implements CharacterCard {
 
     @Override
     public void activatePowerUp() {
-        Type_Student type=view.chooseColorStudent();
         for (int i = 0; i < match.getPlayersNum(); i++) {
             match.getBag().ch12effect(match.getPlayer()[i].getBoard().ch_12_effect(type));
         }
@@ -62,5 +60,9 @@ public class Ch_12 implements CharacterCard {
     @Override
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public void setType(Type_Student type) {
+        this.type = type;
     }
 }

@@ -27,19 +27,11 @@ public class Board_Experts extends Board {
     /**
      * Controls if the player has enough coins to play the specified card and activates its power
      * @param card the card a player chooses to play
-     * @throws Exception if there are not enough coins to activate the card's power
      */
-    public void playCharacter(CharacterCard card) throws Exception{
+    public void playCharacter(CharacterCard card){
         int cost = card.getPrice();
-
-        if(coins<cost){
-            throw new Exception("You don't have enough money to activate this card.");
-        }
-        else
-        {
-            coins=coins-cost;
-            card.activatePowerUp();
-        }
+        coins=coins-cost;
+        card.activatePowerUp();
     }
 
     @Override

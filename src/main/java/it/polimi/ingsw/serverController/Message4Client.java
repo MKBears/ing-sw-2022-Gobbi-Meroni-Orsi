@@ -551,14 +551,12 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
     }
 
     /**
-     * Sends the CharacterCard to the client in order to make him choose which one he wants to use
-     * @param n the number of CharacterCard which is
-     * @param ch the card
+     * Sends the CharacterCards to the client in order to make him choose which one he wants to use
+     * @param ch the cards
      */
-    public void sendCh(int n, CharacterCard ch){
+    public void sendCh(CharacterCard[] ch){
         try {
             out.writeObject("Ch");
-            out.writeObject(n);
             out.writeObject(ch);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -577,5 +575,6 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
             throw new RuntimeException(e);
         }
     }
+
 
 }

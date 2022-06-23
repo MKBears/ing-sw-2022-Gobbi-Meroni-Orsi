@@ -11,9 +11,10 @@ public class Ch_5 implements CharacterCard {
     private Island[] Islands= new Island[4];
     private Player player;
     private Match match;
-    private View view;
-    public Ch_5(Match match, View view){
-        this.view=view;
+    private Land land;
+
+
+    public Ch_5(Match match){
         this.match=match;
         price=2;
         activated=false;
@@ -28,7 +29,6 @@ public class Ch_5 implements CharacterCard {
 
     @Override
     public void activatePowerUp() {
-        Land land=view.chooseLand(match.getLands());
         try {
             land.setNoEntry(true);
         } catch (Exception e) {
@@ -66,5 +66,9 @@ public class Ch_5 implements CharacterCard {
     @Override
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public void setLand(Land land) {
+        this.land = land;
     }
 }

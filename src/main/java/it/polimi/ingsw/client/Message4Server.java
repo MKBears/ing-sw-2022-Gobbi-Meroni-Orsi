@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import it.polimi.ingsw.model.*;
 
@@ -223,4 +225,125 @@ public class Message4Server {
         }
     }
 
+    public void sendChooseCh1(Student student,Land land){
+        synchronized (this){
+            try{
+                name= "Ch_1";
+                out.writeObject(name);
+                out.writeObject(student);
+                out.writeObject(land);
+            }catch (IOException e){
+                throw new RuntimeException();
+            }
+        }
+    }
+
+    public void sendChooseCh2(){
+        synchronized (this){
+            try{
+                name= "Ch_2";
+                out.writeObject(name);
+            }catch (IOException e){
+                throw new RuntimeException();
+            }
+        }
+    }
+
+    public void sendChooseCh4(){
+        synchronized (this){
+            try{
+                name= "Ch_4";
+                out.writeObject(name);
+            }catch (IOException e){
+                throw new RuntimeException();
+            }
+        }
+    }
+
+    public void sendChooseCh5(Land land) {
+        synchronized (this) {
+            try {
+                name = "Ch_5";
+                out.writeObject(name);
+                out.writeObject(land);
+            } catch (IOException e) {
+                throw new RuntimeException();
+            }
+        }
+    }
+
+    public void sendChooseCh7(Student st,Student st1,Student st2) {
+        synchronized (this) {
+            try {
+                name = "Ch_7";
+                out.writeObject(name);
+                out.writeObject(st);
+                out.writeObject(st1);
+                out.writeObject(st2);
+            } catch (IOException e) {
+                throw new RuntimeException();
+            }
+        }
+    }
+
+    public void sendChooseCh11(Student student){
+        synchronized (this){
+            try{
+                name= "Ch_11";
+                out.writeObject(name);
+                out.writeObject(student);
+            }catch (IOException e){
+                throw new RuntimeException();
+            }
+        }
+    }
+
+    public void sendChooseCh12(Type_Student type_student){
+        synchronized (this){
+            try{
+                name="Ch_12";
+                out.writeObject(name);
+                out.writeObject(type_student);
+            }catch (IOException e){
+                throw new RuntimeException();
+            }
+        }
+    }
+
+    public void sendNoCh(){
+        synchronized (this){
+            try{
+                name="No_Ch";
+                out.writeObject(name);
+            }catch(IOException e){
+                throw new RuntimeException();
+            }
+        }
+    }
+
+
+    public void sendChooseCh10(ArrayList<Student> students,ArrayList<Type_Student> type_students){
+        synchronized (this){
+            try{
+                name="Ch_10";
+                out.writeObject(name);
+                out.writeObject(students);
+                out.writeObject(type_students);
+            }catch(IOException e){
+                throw new RuntimeException();
+            }
+        }
+    }
+
+    public void sendChooseCh3(Land land) {
+        synchronized (this){
+            try{
+                name="Ch_3";
+                out.writeObject(name);
+                out.writeObject(land);
+            }catch(IOException e){
+                throw new RuntimeException();
+            }
+        }
+    }
 }

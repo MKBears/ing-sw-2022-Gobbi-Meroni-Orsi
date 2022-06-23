@@ -1,10 +1,9 @@
 package it.polimi.ingsw.model.characterCards;
 
 import it.polimi.ingsw.client.View;
-import it.polimi.ingsw.model.CharacterCard;
-import it.polimi.ingsw.model.Archipelago;
-import it.polimi.ingsw.model.Match;
-import it.polimi.ingsw.model.Player;
+import it.polimi.ingsw.model.*;
+
+import java.awt.*;
 
 public class Ch_3 implements CharacterCard {
 
@@ -13,22 +12,20 @@ public class Ch_3 implements CharacterCard {
     private final String powerUp;
     private Player player;
     private Match match;
-    private View view;
+    private Land land;
 
-    public Ch_3(Match match,View view){
+    public Ch_3(Match match){
         this.match=match;
-        this.view=view;
         price=3;
         activated=false;
         powerUp="Choose an Island and resolve the Island as if "+
-                "Mothere Nature had ended her movement there."+
+                "Mother Nature had ended her movement there."+
                 " Mother Nature will still move and the island where" +
                 " she ends her movement will also be resolved.";
     }
 
     @Override
     public void activatePowerUp() {
-
         if(!activated){
             activated=true;
         }
@@ -60,5 +57,9 @@ public class Ch_3 implements CharacterCard {
     @Override
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public void setLand(Land land) {
+        this.land = land;
     }
 }

@@ -481,42 +481,43 @@ public class Cli extends Thread implements View{
                          CharacterCard character=chooseChCard(characters);
                          Board_Experts me_ex=(Board_Experts) me.getBoard();
                          if(character==null){
-                             //no carta personaggio
+                             server.sendNoCh();
                          }else{
                              if(character.getPrice()>me_ex.getCoinsNumber()){
                                  System.out.println("non hai abbastanza monete");
-                                 //no carta personaggio
+                                 server.sendNoCh();
                              }else{
                                  if(character instanceof Ch_1){
                                      Student student=chooseStudent(((Ch_1) character).getStudents());
                                      Land land= chooseLand(match.getLands());
-                                     //messaggio
+                                     server.sendChooseCh1(student,land);
                                  }else if(character instanceof Ch_2){
-                                     //messaggio
+                                     server.sendChooseCh2();
                                  }else if(character instanceof Ch_4){
-                                     //messaggio
+                                     server.sendChooseCh4();
+                                     character.setPlayer(me);
+                                     character.activatePowerUp();
                                  }else if(character instanceof Ch_5){
                                      Land land=chooseLand(match.getLands());
-                                     //messaggio
-                                 }else if(character instanceof Ch_7){
-                                     Student st1=chooseStudent(me.getBoard().getEntrance());
-                                     Student st2=chooseStudent(me.getBoard().getEntrance());
-                                     Student st3=chooseStudent(me.getBoard().getEntrance());
-                                     //messaggio
+                                     server.sendChooseCh5(land);
+                                 }else if(character instanceof Ch_3){
+                                     Land land=chooseLand(match.getLands());
+                                     server.sendChooseCh3(land);
                                  }else if(character instanceof Ch_10){
+                                     ArrayList<Student> students=new ArrayList<>();
+                                     ArrayList<Type_Student> type_students=new ArrayList<>();
                                      for (int i = 0; i < 2; i++) {
-                                         Student entrance_student=chooseStudent(me.getBoard().getEntrance());
-                                         Type_Student room_student=chooseColorStudent();
+                                         students.add(chooseStudent(me.getBoard().getEntrance()));
+                                         type_students.add(chooseColorStudent());
                                      }
-                                     //messaggio
+                                     server.sendChooseCh10(students,type_students);
                                  }else if(character instanceof Ch_11){
                                      Student student=chooseStudent(((Ch_11) character).getStudents());
-                                     //messaggio
+                                     server.sendChooseCh11(student);
                                  }else if(character instanceof Ch_12){
                                      Type_Student type=chooseColorStudent();
-                                     //messaggio
+                                     server.sendChooseCh12(type);
                                  }
-                                 // invio carta personaggio con quello che serve
                              }
                          }
                          synchronized (this) {
@@ -679,9 +680,9 @@ public class Cli extends Thread implements View{
                 case ("blu"):
                     return Type_Student.UNICORN;
                 case ("giallo"):
-                    return Type_Student.FAIRY;
-                case ("rosa"):
                     return Type_Student.GNOME;
+                case ("rosa"):
+                    return Type_Student.FAIRY;
             }
         }
     }
