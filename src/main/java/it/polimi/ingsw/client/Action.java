@@ -2,10 +2,9 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
-
+/**
+ * Class which modifies the local instance of the match in the client side
+ */
 public class Action {
     Match match;
 

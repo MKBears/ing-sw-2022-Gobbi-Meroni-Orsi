@@ -339,9 +339,9 @@ public class Match implements Serializable {
                 "    " + printCloudRow(1, 1) + "    \\___________/ /" + countStudents(4, 1) + "\\\n" +
                 "|" + countStudents(10, 2) + "|                  " + printCloudRow(0, 2) + "    " +
                 printCloudRow(2, 2) + "    " + printCloudRow(1, 2) + "                  |" +
-                countStudents(4, 2) + "|\n" + "|" + printTowerRow(10, 2) + "|" + printBridge(9, 1) + "__________ 6   " +
+                countStudents(4, 2) + "|\n" + "|" + printTowerRow(10, 2) + "|" + printBridge(9, 1) + "__________ 10  " +
                 printCloudRow(0, 3) + "    " + printCloudRow(2, 3) + "    " + printCloudRow(1, 3) +
-                "   10__________" + printBridge(4, 1) + "|" + printTowerRow(4, 2) + "|\n" + "\\" + countStudents(10, 3) +
+                "   6 __________" + printBridge(4, 1) + "|" + printTowerRow(4, 2) + "|\n" + "\\" + countStudents(10, 3) +
                 printBridge(9, 2) + printNoEntry(8) + "\\    " + printCloudRow(0, 4) + "    " +
                 printCloudRow(2, 4) + "    " + printCloudRow(1, 4) + "    /" + printNoEntry(5) +
                 printBridge(4, 2) + countStudents(4, 3) + "/\n" + " \\___________/ /" + countStudents(9, 1) +
@@ -514,7 +514,7 @@ public class Match implements Serializable {
         String arrow;
 
         if (motherNature.getPosition().equals(i)) {
-            if (island>3 && island<10)
+            if (island>4 && island<10)
                 arrow = "↑";
             else
                 arrow = "↓";

@@ -2,11 +2,15 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.characterCards.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
+/**
+ * Representation of the game via command line
+ */
 public class Cli extends Thread implements View{
     private final Scanner input;
     private String state;
@@ -22,12 +26,15 @@ public class Cli extends Thread implements View{
     Boolean nack;
     ProcessBuilder svnProcessBuilder;
 
+    /**
+     * Constructor of class Cli: initializes the input Scanner and sets the state to "Start"
+     */
     public Cli(){
        input=new Scanner(System.in);
        end=false;
        nack=false;
        state="Start";
-        svnProcessBuilder = new ProcessBuilder("PowerShell", "/c", "clear");
+       svnProcessBuilder = new ProcessBuilder("PowerShell", "/c", "clear");
     }
 
     public static void main(String[] args) {
@@ -37,26 +44,23 @@ public class Cli extends Thread implements View{
         view.start();
     }
 
+    @Override
     public void setServer(Message4Server server) {
         this.server = server;
     }
 
+    @Override
     public void setMe(Player me) {
         this.me = me;
     }
 
+    @Override
     public void setMatch(Match match) {
         this.match = match;
         action=new Action(match);
-
-        if (match instanceof Expert_Match)
-            characters = ((Expert_Match) match).getCard();
     }
 
-    /**
-     * request for the username
-     * @return username of the player
-     */
+    @Override
     public String getUsername(){
         String user;
         while (true) {
@@ -67,11 +71,7 @@ public class Cli extends Thread implements View{
         }
     }
 
-    /**
-     * request of the wizard
-     * @param wizards wizard that can be chosen
-     * @return the wizard chosen
-     */
+    @Override
     public Wizards getWizard(List<Wizards> wizards){
         int choose;
 
@@ -93,6 +93,10 @@ public class Cli extends Thread implements View{
         }
     }
 
+    /**
+     * Auxiliary method used in order to print all the available wizards
+     * when asking the player to choose a wizard
+     */
     private void printWizards() {
         StringBuilder wizards = new StringBuilder();
         for (int i=0; i<5; i++) {
@@ -132,11 +136,7 @@ public class Cli extends Thread implements View{
         System.out.println(wizards.toString().indent(12));
     }
 
-    /**
-     * request to choose the cloud
-     * @param clouds that can be chosen
-     * @return the cloud chosen
-     */
+    @Override
     public Cloud getCloud(List<Cloud> clouds){
         while (true) {
             Cloud[] c = match.getCloud();
@@ -148,7 +148,7 @@ public class Cli extends Thread implements View{
                     System.out.println("Scegli un numero tra 1 e " + c.length + ":");
                     choose = input.nextInt();
                 }
-                if (clouds.contains(c[choose - 1]))
+                if (!c[choose-1].hasBeenChosen())
                     return c[choose - 1];
                 else
                     System.out.println("Questa nuvola é già stata scelta da un altro giocatore in questo  round");
@@ -160,11 +160,7 @@ public class Cli extends Thread implements View{
         }
     }
 
-    /**
-     * request to choose the assistant card
-     * @param cards that can be chosen
-     * @return the card chosen
-     */
+    @Override
     public AssistantCard getAssistantCard(List<AssistantCard> cards){
         int choose;
         ArrayList<AssistantCard> deck = me.getDeck();
@@ -204,11 +200,7 @@ public class Cli extends Thread implements View{
         return card;
     }
 
-    /**
-     * request for the number of steps
-     * @param pl the player who want to move mother nature
-     * @return the number of step
-     */
+    @Override
     public int getNumStep(Player pl){
         System.out.println("\nScegli di spostare Madre Natura di? (deve " +
                 "essere un numero compreso tra 0 e "+pl.getPlayedCard().getMNSteps());
@@ -229,19 +221,12 @@ public class Cli extends Thread implements View{
         }
     }
 
-    /**
-     * comunicate the player who win the match
-     * @param pl player who win
-     */
+    @Override
     public void getWinner(Player pl){
         System.out.println("Il vincitore della partita è: "+pl.getUserName());
     }
 
-    /**
-     * choose of a student in the entrance to be moved
-     * @param pl player who have to move the student
-     * @return the student chosen
-     */
+    @Override
     public Student getStudent(Player pl){
         int size = me.getBoard().getEntrance().size();
         int choose;
@@ -263,11 +248,7 @@ public class Cli extends Thread implements View{
         }
     }
 
-    /**
-     * request of where move the student
-     * @param match match of the player
-     * @return int that express where move the student (12 for the board if less than 12 is the id of the land)
-     */
+    @Override
     public int getDestination(Match match) {
         String value;
         int choose;
@@ -295,35 +276,24 @@ public class Cli extends Thread implements View{
         } while (true);
     }
 
-    /**
-     * show the match
-     * @param match match of the player
-     */
+    @Override
     public void printMatch(Match match){
         //clearConsole();
         getTitolo();
         System.out.println(match.toString()+printAssistants());
     }
 
-    /**
-     * show the turn
-     * @param pl player of the turn
-     * @param phase phase of the match
-     */
+    @Override
     public void printTurn(Player pl,String phase){
         System.out.println("Tocca a "+pl.getColor().toString()+pl.getUserName()+"\u001b[0m in fase di "+phase);
     }
 
-    /**
-     * show that it is the last round
-     */
+    @Override
     public void lastRound(){
         System.out.println("Sono finiti gli studenti nel sacchetto! Questo sarà l'ultimo round\n");
     }
 
-    /**
-     * show the title
-     */
+    @Override
     public void getTitolo(){
         System.out.println("""
                 
@@ -337,7 +307,11 @@ public class Cli extends Thread implements View{
                 \u001B[0m""".indent(18));
     }
 
-    private String printAssistants() {
+    /**
+     * Auxiliary method used in order to get the String for of the available cards too play
+     * @return all the available assistant cards in a human-readable form
+     */
+    private @NotNull String printAssistants() {
         StringBuilder c = new StringBuilder();
         ArrayList<AssistantCard> deck = me. getDeck();
         Wizards gandalf = me.getWizard();
@@ -388,7 +362,7 @@ public class Cli extends Thread implements View{
                 }
                 c.append("\u001b[0m");
             }
-            c.append("  ");
+            c.append(" | ");
 
             if (me.getPlayedCard() != null) {
                 c.append("\u001b[36m");
@@ -578,36 +552,51 @@ public class Cli extends Thread implements View{
          }
     }
 
-    /**
-     * wake up the thread from a wait to do a new request
-     * @param state request that the thread has to do to the player
-     */
+    @Override
     public synchronized void wakeUp(String state){
         this.state=state;
         this.nack=false;
         this.notifyAll();
     }
 
-    /**
-     * set nack tru to resend the parameters to the sever
-     */
+    @Override
     public synchronized void setNack(){
         nack=true;
         this.notifyAll();
     }
 
+    /**
+     * Sets the list of available wizards
+     * @param willy
+     */
+    @Override
     public void setWilly(List<Wizards> willy) {
         this.willy = willy;
     }
 
+    /**
+     * Sets the lists of available assistants cards to play
+     * @param cards
+     */
+    @Override
     public void setCards(List<AssistantCard> cards) {
         this.cards = cards;
     }
 
+    /**
+     * sets the list of available clouds to choose between
+     * @param clouds
+     */
+    @Override
     public void setClouds(List<Cloud> clouds) {
         this.clouds = clouds;
     }
 
+    /**
+     * Asks the user to choose between joining, resuming o creating a new match
+     * @param join the list of matches the player can join
+     * @param resume the list of matches the player can resume
+     */
     @Override
     public void chooseMatch(List<String> join, List<String> resume) {
         String choose;
@@ -646,6 +635,10 @@ public class Cli extends Thread implements View{
         } while (!join.contains(choose) && !resume.contains(choose) && !choose.equalsIgnoreCase("newgame"));
     }
 
+    /**
+     * If the player chooses to create a match this method asks them how many players there will be
+     * and if they want to create an expert match
+     */
     public void createMatch () {
         int playersNum = 0;
         String expert;
@@ -669,6 +662,11 @@ public class Cli extends Thread implements View{
         server.sendExpertMatch(expert.equalsIgnoreCase("si"));
     }
 
+    /**
+     * Asks the player if they want to register and then the username
+     * @return the username
+     */
+    @Override
     public  String chooseLogin(){
         String choose;
         do {
@@ -678,6 +676,12 @@ public class Cli extends Thread implements View{
         return choose.toLowerCase();
     }
 
+    /**
+     * Asks the player to choose a student to move from the entrance (used when playing a character card)
+     * @param student the entrance
+     * @return the chosen student
+     */
+    @Override
     public Student chooseStudent(List<Student> student) {
         int i;
 
@@ -693,6 +697,12 @@ public class Cli extends Thread implements View{
         }
     }
 
+    /**
+     * Asks the player to choose a land to put the student on
+     * @param lands all the lands in the sky
+     * @return the chosen land
+     */
+    @Override
     public Land chooseLand(List<Land> lands){
         int i, c;
         System.out.println("Scegli un'isola");
@@ -717,6 +727,11 @@ public class Cli extends Thread implements View{
         }
     }
 
+    /**
+     * Asks the player to choose a color of which not to compute influence on a land
+     * @return
+     */
+    @Override
     public Type_Student chooseColorStudent(){
         System.out.println("Scegli un colore di cui non verrà calcolata l'influenza");
         while (true) {
@@ -735,24 +750,50 @@ public class Cli extends Thread implements View{
             }
         }
     }
+
+    /**
+     * Notifies the player if another one connects to the match
+     * @param username the username of the connected player
+     */
+    @Override
     public void playerConnected(String username){
         System.out.println("Si e' connesso "+ username);
     }
+
+    /**
+     * Notifies the player if another one disconnects from the match
+     * @param username the username of the disconnected player
+     */
+    @Override
     public void playerDisconnected(String username){
         System.out.println("Si e' disconnesso "+ username);
     }
 
+    /**
+     * Notifies the player if all the other players are disconnected from the match
+     */
+    @Override
     public void playerDisconnectedAll(){
         System.out.println("Tutti gli altri giocatori si sono disconnessi");
     }
 
+    /**
+     * Notifies the player if another player finished their assistant cards
+     * @param p the player who finished their assistants
+     */
+    @Override
     public void finishedAC(Player p){
         System.out.println(p+" ha finito le carte assistente: ultimo turno!");
     }
 
+    /**
+     * Asks the user if they want to play a character card
+     * @param cards the available character cards
+     * @return the chosen card
+     */
+    @Override
     public CharacterCard chooseChCard(CharacterCard[] cards){
         StringBuilder chCards = new StringBuilder();
-
 
         for (int j=0; j<6; j++) {
             for (int i = 0; i < 2; i++) {
@@ -800,10 +841,18 @@ public class Cli extends Thread implements View{
         }
     }
 
+    /**
+     * Sets the available character cards
+     * @param characters
+     */
+     @Override
     public void setCharacters(CharacterCard[] characters) {
         this.characters = characters;
     }
 
+    /**
+     * Clears the console screen
+     */
     private void clearConsole(){
         if (System.getProperty("os.name").contains("Windows")) {
             try {
@@ -818,6 +867,7 @@ public class Cli extends Thread implements View{
             System.out.flush();
         }
     }
+
     @Override
     public void printNotification(String message) {
         System.out.println('\n' + message);

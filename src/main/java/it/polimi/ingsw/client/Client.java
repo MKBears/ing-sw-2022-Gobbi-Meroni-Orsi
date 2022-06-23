@@ -1,7 +1,6 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.characterCards.*;
 import it.polimi.ingsw.serverController.GameRecap;
 
 import java.io.IOException;
@@ -9,10 +8,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The client side of the controller
+ */
 public class Client  extends Thread{
     private Socket socket;
     private ObjectOutputStream out;
@@ -36,6 +37,10 @@ public class Client  extends Thread{
     private Boolean nack;
     private int tow;
 
+    /**
+     * Constructor of the class Client
+     * @param view the instance of the view (it can be Cli or Gui)
+     */
     public Client(View view) {
         match=null;
         username=null;
@@ -138,7 +143,8 @@ public class Client  extends Thread{
                         }
                         view.setMe(me);
                         view.setMatch(match);
-                        //view.printMatch(match);
+                        if (match instanceof Expert_Match)
+                            view.setCharacters(((Expert_Match) match).getCard());
                         server.sendACK();
                         break;
                     case "RefillClouds":
@@ -251,6 +257,7 @@ public class Client  extends Thread{
                                 break;
                             }
                         }
+                        view.printMatch(match);
                         view.printNotification(p.getColor().toString()+p.getUserName()
                                 +"\u001b[0m ha scelto la nuvola:\n"+ cl.toString());
                         server.sendACK();

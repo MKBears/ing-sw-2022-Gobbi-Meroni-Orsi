@@ -137,6 +137,9 @@ public class Cloud implements Serializable {
         }
         ArrayList<Student>s= (ArrayList<Student>) students.clone();
         cloud.setStudents(s);
+
+        if (hasBeenChosen)
+            cloud.choose();
         return cloud;
     }
 

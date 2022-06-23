@@ -5,9 +5,7 @@ import it.polimi.ingsw.model.Student;
 import it.polimi.ingsw.model.Wizards;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintStream;
 
 import it.polimi.ingsw.model.*;
 
@@ -89,6 +87,10 @@ public class Message4Server {
             }
         }
     }
+
+    /**
+     * When receives ping responds with pong
+     */
     public void sendPONG(){
         synchronized (this) {
             try {
@@ -128,6 +130,10 @@ public class Message4Server {
         }
     }
 
+    /**
+     * Sends true if the player wants to play an expert match, elsewhere sends false
+     * @param expert
+     */
     public void sendExpertMatch (boolean expert) {
         synchronized (this) {
             try {
