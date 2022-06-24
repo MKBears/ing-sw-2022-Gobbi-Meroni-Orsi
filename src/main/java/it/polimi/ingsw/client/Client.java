@@ -369,7 +369,7 @@ public class Client  extends Thread{
                         }
                         match.setLands(lan);
                         view.printMatch(match);
-                        view.printNotifications("");
+                        view.printNotification("");
                         server.sendACK();
                         break;
                     case "NotifyCh_2":
@@ -382,7 +382,7 @@ public class Client  extends Thread{
                         String userna=(String) in.readObject();
                         for (int i = 0; i < 3; i++) {
                             if(((Expert_Match)match).getCard()[i] instanceof Ch_4)
-                                view.printNotifications("giocatore "+userna+" ha giocato la carta personaggio\n"+((Expert_Match)match).getCard()[i].toString());
+                                view.printNotification("giocatore "+userna+" ha giocato la carta personaggio\n"+((Expert_Match)match).getCard()[i].toString());
                         }
                         server.sendACK();
                         break;
@@ -403,7 +403,7 @@ public class Client  extends Thread{
                         view.printMatch(match);
                         for (int i = 0; i < 3; i++) {
                             if(((Expert_Match)match).getCard()[i] instanceof Ch_4)
-                                view.printNotifications("giocatore "+usa+" ha giocato la carta personaggio\n"+((Expert_Match)match).getCard()[i].toString());
+                                view.printNotification("giocatore "+usa+" ha giocato la carta personaggio\n"+((Expert_Match)match).getCard()[i].toString());
                         }
                         server.sendACK();
                         break;
