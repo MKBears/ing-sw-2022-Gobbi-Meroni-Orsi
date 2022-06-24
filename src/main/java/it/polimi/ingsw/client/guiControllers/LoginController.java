@@ -12,7 +12,7 @@ import it.polimi.ingsw.client.Message4Server;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-public class LoginController {
+public class LoginController{
 
 
     private String us;
@@ -47,8 +47,8 @@ public class LoginController {
         result_username.setText("Scegleire l'username");
         result_username.setVisible(true);
         newlogin.setSelected(false);
+        us=null;
     }
-
 
     @FXML
     public void username(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
@@ -58,7 +58,7 @@ public class LoginController {
         } else {
             server.sendLogin(us);
         }
-        synchronized (gui){
+        synchronized (gui) {
             gui.notifyAll();
         }
        /* String response= (String)in.readObject();

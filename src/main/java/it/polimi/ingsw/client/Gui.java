@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.guiControllers.MatchController;
 import it.polimi.ingsw.client.guiControllers.PopUpController;
 import it.polimi.ingsw.client.guiControllers.WizardsController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -13,6 +14,8 @@ import it.polimi.ingsw.model.*;
 
 import java.io.IOException;
 import java.util.List;
+
+import static java.lang.Thread.sleep;
 
 public class Gui extends Application implements View {
     private Stage stage;
@@ -42,12 +45,23 @@ public class Gui extends Application implements View {
     @Override
     public void start(Stage stage) throws Exception {
         setStage(stage);
+        GuiThread gt=new GuiThread(this);
+        gt.start();
+        System.out.println("BUONGIORNOOOOO");
+        System.out.println("Ho creato il client");
+        Client c=new Client(this);
+        c.start();
+        System.out.println("Il client è partito");
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-        stage.sizeToScene();
+    public void setStage(Stage s) throws IOException {
+        this.stage = s;
         stage.setTitle("Eryantis");
+        FXMLLoader fxml=new FXMLLoader(getClass().getClassLoader().getResource("loading_page.fxml"));
+        Scene scene=new Scene(fxml.load());
+        stage.setScene(scene);
+        stage.sizeToScene();
+        stage.show();
     }
 
     public void setUsername(String username){
@@ -55,16 +69,8 @@ public class Gui extends Application implements View {
     }
 
     public static void main(String[] args) {
+        System.out.println("BUONGIORNOOOOO");
         launch(args);
-        Gui view= new Gui();
-        Client client= new Client(view);
-        client.start();
-        Stage s=new Stage();
-        try {
-            view.start(s);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
 
@@ -79,13 +85,7 @@ public class Gui extends Application implements View {
             e.printStackTrace();
         }
         stage.show();
-        synchronized (this){
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        System.out.println(((LoginController)fxmlLoader.getController()).getUs());
         return ((LoginController)fxmlLoader.getController()).getUs();
     }
 
@@ -106,13 +106,13 @@ public class Gui extends Application implements View {
             e.printStackTrace();
         }
         stage.show();
-        synchronized (this){
+        /*synchronized (this){
             try {
                 wait();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        }
+        }*/
         return w;
     }
 
@@ -125,12 +125,12 @@ public class Gui extends Application implements View {
         PopUpController.setNotify(message);
         FXMLLoader fxmlLoader=new FXMLLoader(getClass().getClassLoader().getResource("popup_notify.fxml"));
         try {
-            stage.setScene(new Scene(fxmlLoader.load()));
+            s.setScene(new Scene(fxmlLoader.load()));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        stage.setTitle(title);
-        stage.show();
+        s.setTitle(title);
+        s.show();
     }
 
     @Override
@@ -184,7 +184,7 @@ public class Gui extends Application implements View {
 
     @Override
     public void getTitolo() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("titolo.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("initial_page.fxml"));
         try {
             stage.setScene(new Scene(fxmlLoader.load()));
         } catch (IOException e) {

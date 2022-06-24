@@ -2,6 +2,7 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.serverController.GameRecap;
+import javafx.application.Platform;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,7 +15,7 @@ import java.util.Map;
 /**
  * The client side of the controller
  */
-public class Client  extends Thread{
+public class Client  extends Thread implements Runnable{
     private Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
@@ -92,7 +93,16 @@ public class Client  extends Thread{
             view.setServer(server);
             received="base";
             dSokk.close();
-            view.getTitolo();
+            //sleep(2000);
+            synchronized (view) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.getTitolo();
+                    }
+                });
+                sleep(2000);
+            }
             while (true){
                 if(!received.equals("base")) {
                     received = (String) in.readObject();
@@ -103,14 +113,23 @@ public class Client  extends Thread{
                 switch (received) {
                     case "base": //login
                         do {
-                            if (view.chooseLogin().equals("si")) {
-                                username = view.getUsername();
-                                server.sendRegistration(username);
-                            } else {
-                                username = view.getUsername();
-                                server.sendLogin(username);
-                            }//Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
-
+                            if(!(view instanceof Gui)) {
+                                if (view.chooseLogin().equals("si")) {
+                                    username = view.getUsername();
+                                    server.sendRegistration(username);
+                                } else {
+                                    username = view.getUsername();
+                                    server.sendLogin(username);
+                                }//Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
+                            }else{
+                                //sleep(2000);
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        username=view.getUsername();
+                                    }
+                                });
+                            }
                             response = (String) in.readObject();
                             view.printNotification(response);
                         } while(response.equals("LoginFailed"));
