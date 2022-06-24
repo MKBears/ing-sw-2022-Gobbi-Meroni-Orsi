@@ -225,11 +225,15 @@ public class Client  extends Thread{
                     case "NotifyMovementMN":
                         int movement=(int)in.readObject();
                         int idLand;
+                        match.moveMotherNature(movement);
+                        idLand=match.getMotherNature().getPosition().getID();
                         ArrayList<Land> lands=(ArrayList<Land>) in.readObject();
                         //System.out.println(lands);
                         match.setLands(lands);
-                        match.moveMotherNature(movement);
-                        idLand=match.getMotherNature().getPosition().getID();
+                        for (Land l: match.getLands()) {
+                            if(l.getID()==match.getMotherNature().getPosition().getID())
+                                match.getMotherNature().setPosition(l);
+                        }
                         view.printNotification("Madre Natura é stata spostata di " + movement
                                 + " passi nell'isola "+idLand);
                         server.sendACK();
