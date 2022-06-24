@@ -423,21 +423,6 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
     }
 
     /**
-     * @deprecated
-     */
-    public void sendChanges() {//DA MODIFICARE----------
-        synchronized (this) {
-            name = "Changes";
-            try {
-                out.writeObject(name);
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    /**
      * The server notifies the players the one ho has to begin his turn
      *
      * @param player the palyer that begins the turn
@@ -454,15 +439,6 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
                 throw new RuntimeException(e);
             }
         }
-        /*if(co.getCurrentPlayer()>0) {
-            synchronized (co) {
-                try {
-                    co.wait();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }*/
     }
 
     public void run() {
@@ -557,7 +533,7 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
     public void sendCh(CharacterCard[] ch){
         try {
             out.writeObject("Ch");
-            out.writeObject(ch);
+            out.writeObject(ch.clone());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -595,18 +571,6 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
             try {
                 out.writeObject(name);
                 out.writeObject(professors);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    public void sendNotifyCh_3(ArrayList<Land> lands) {
-        synchronized (this) {
-            name = "NotifyCh_3";
-            try {
-                out.writeObject(name);
-                out.writeObject(lands);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

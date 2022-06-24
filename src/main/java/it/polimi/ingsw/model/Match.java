@@ -323,7 +323,6 @@ public class Match implements Serializable {
             }
             a.append("\u001B[0m\n");
         }
-        a.append("\n");
 
         return a.toString();
     }
@@ -599,9 +598,12 @@ public class Match implements Serializable {
         int counter = 0;
 
         for (Land land : lands) {
+            if (counter > island)
+                break;
+
             counter += land.size();
 
-            if (counter-1 > island) {
+            if (counter > island) {
                 if (island==0 || island==1 || island==6 || island==7 ){
                     switch (row) {
                         case 1 -> {return "_";}
@@ -613,24 +615,26 @@ public class Match implements Serializable {
                     return "___";
             }
             else {
-                switch (island) {
-                    case 0, 1, 6, 7 -> {
-                        if (row == 1)
-                            return " ";
-                        else
-                            return "| |";
-                    }
-                    case 2, 3, 8, 9 -> {
-                        if (row == 1)
-                            return "  _";
-                        else
-                            return "/ /";
-                    }
-                    default -> {
-                        if (row == 1)
-                            return "_  ";
-                        else
-                            return "\\ \\";
+                if (counter == island) {
+                    switch (island) {
+                        case 0, 1, 6, 7 -> {
+                            if (row == 1)
+                                return " ";
+                            else
+                                return "| |";
+                        }
+                        case 2, 3, 8, 9 -> {
+                            if (row == 1)
+                                return "  _";
+                            else
+                                return "/ /";
+                        }
+                        default -> {
+                            if (row == 1)
+                                return "_  ";
+                            else
+                                return "\\ \\";
+                        }
                     }
                 }
             }

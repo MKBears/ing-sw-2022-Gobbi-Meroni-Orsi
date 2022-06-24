@@ -281,7 +281,7 @@ public class Cli extends Thread implements View{
     public void printMatch(Match match){
         //clearConsole();
         getTitolo();
-        System.out.println(match.toString());
+        System.out.print(match.toString());
 
         if (match instanceof Expert_Match)
             System.out.println(printCharacters());
@@ -315,37 +315,38 @@ public class Cli extends Thread implements View{
     private @NotNull String printCharacters() {
         StringBuilder chCards = new StringBuilder();
 
-        for (int j=0; j<6; j++) {
+        for (int j=0; j<7; j++) {
             for (int i = 0; i < 3; i++) {
 
                 if (((Board_Experts)me.getBoard()).getCoinsNumber() < characters[i].getPrice())
                     chCards.append("\u001b[30;1m");
                 switch (j) {
-                    case 0 -> chCards.append("       _______ ");
-                    case 1 -> chCards.append("      | ||‾\\\\ |");
-                    case 2 -> chCards.append("      | ||_// |");
-                    case 3 -> {
-                        chCards.append("      | || ").append(characters[i].getNumber());
+                    case 0 -> chCards.append("           _______ ");
+                    case 1 -> chCards.append("          |  ___  |");
+                    case 2 -> chCards.append("          | ||‾\\\\ |");
+                    case 3 -> chCards.append("          | ||_// |");
+                    case 4 -> {
+                        chCards.append("          | ||‾").append(characters[i].getNumber());
 
                         if (characters[i].getNumber() < 10)
                             chCards.append(" ");
                         chCards.append(" |");
                     }
-                    case 4 -> {
-                        chCards.append("      | || ").append(characters[i].getPrice());
+                    case 5 -> {
+                        chCards.append("          | || ").append(characters[i].getPrice());
 
                         if (characters[i].getPrice() < 10)
                             chCards.append(" ");
                         chCards.append(" |");
                     }
-                    default -> chCards.append("      |_______|");
+                    default -> chCards.append("          |_______|");
                 }
                 chCards.append("\u001b[0m");
             }
             chCards.append('\n');
         }
 
-        return chCards.toString().indent(20);
+        return chCards.toString().indent(26);
     }
 
     /**
