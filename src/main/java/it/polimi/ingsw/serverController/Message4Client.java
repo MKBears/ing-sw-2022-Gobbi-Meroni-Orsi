@@ -551,14 +551,12 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
     }
 
     /**
-     * Sends the CharacterCard to the client in order to make him choose which one he wants to use
-     * @param n the number of CharacterCard which is
-     * @param ch the card
+     * Sends the CharacterCards to the client in order to make him choose which one he wants to use
+     * @param ch the cards
      */
-    public void sendCh(int n, CharacterCard ch){
+    public void sendCh(CharacterCard[] ch){
         try {
             out.writeObject("Ch");
-            out.writeObject(n);
             out.writeObject(ch);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -578,4 +576,114 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
         }
     }
 
+    public void sendNotifyCh_1(ArrayList<Land> lands,CharacterCard card) {
+        synchronized (this) {
+            name = "NotifyCh_1";
+            try {
+                out.writeObject(name);
+                out.writeObject(lands);
+                out.writeObject(card);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void sendNotifyCh_2(Map<Type_Student,Player> professors) {
+        synchronized (this) {
+            name = "NotifyCh_2";
+            try {
+                out.writeObject(name);
+                out.writeObject(professors);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void sendNotifyCh_3(ArrayList<Land> lands) {
+        synchronized (this) {
+            name = "NotifyCh_3";
+            try {
+                out.writeObject(name);
+                out.writeObject(lands);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void sendNotifyCh_4(String username) {
+        synchronized (this) {
+            name = "NotifyCh_4";
+            try {
+                out.writeObject(name);
+                out.writeObject(username);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void sendNotifyCh_5(Land land) {
+        synchronized (this) {
+            name = "NotifyCh_5";
+            try {
+                out.writeObject(name);
+                out.writeObject(land);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void sendNotifyCh_10(Board board,String username) {
+        synchronized (this) {
+            name = "NotifyCh_10";
+            try {
+                out.writeObject(name);
+                out.writeObject(board);
+                out.writeObject(username);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void sendNotifyCh_11(CharacterCard card,Board board,String username) {
+        synchronized (this) {
+            name = "NotifyCh_11";
+            try {
+                out.writeObject(name);
+                out.writeObject(card);
+                out.writeObject(username);
+                out.writeObject(board);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void sendNotifyCh_12(ArrayList<Board> boards) {
+        synchronized (this) {
+            name = "NotifyCh_12";
+            try {
+                out.writeObject(name);
+                out.writeObject(boards);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void sendNotifyCh_8(){
+        synchronized (this) {
+            name = "NotifyCh_8";
+            try {
+                out.writeObject(name);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

@@ -6,17 +6,18 @@ import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Student;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Ch_11 implements CharacterCard {
+public class Ch_11 implements CharacterCard, Serializable {
 
     private final short price;
     private boolean activated;
     private final String powerUp;
     private  ArrayList<Student> students;
     private Bag bag;
-    View view;
     Player player;
+    private Student student;
 
     public Player getPlayer() {
         return player;
@@ -26,8 +27,7 @@ public class Ch_11 implements CharacterCard {
         this.player = player;
     }
 
-    public Ch_11(Bag bag, View view){
-        this.view=view;
+    public Ch_11(Bag bag){
         price=2;
         activated=false;
         powerUp="Take 1 Student from this card and place it in your Dining Room. " +
@@ -45,7 +45,12 @@ public class Ch_11 implements CharacterCard {
 
     @Override
     public void activatePowerUp() {
-        Student student=view.chooseStudent(students);
+        for (Student s:this.students) {
+            if(student.type().equals(s.type())){
+                students.remove(s);
+                break;
+            }
+        }
         player.getBoard().ch_11_effect(student);
         try {
             students.add(bag.getRandomStudent());
@@ -79,5 +84,9 @@ public class Ch_11 implements CharacterCard {
 
     public ArrayList<Student> getStudents() {
         return students;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 }

@@ -5,6 +5,8 @@ import it.polimi.ingsw.model.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+
 public class MessageFromClient extends Thread{
 
     private final ObjectInputStream in;
@@ -84,13 +86,63 @@ public class MessageFromClient extends Thread{
                             ch.setConnected();
                         }
                         break;
+                    case "No_Ch":
+                        ch.setUseCh(false);
+                        ch.setAck(true);
+                        break;
                     case "Ch_1":
                         Student s=(Student) in.readObject();
                         Land l=(Land)in.readObject();
-                        //decisione
+                        ch.setCh_1_Student(s);
+                        ch.setCh_1_land(l);
+                        ch.setChosenCh("Ch_1");
+                        ch.setUseCh(true);
+                        ch.setAck(true);
                         break;
                     case "Ch_2":
-                        //decisione
+                        ch.setChosenCh("Ch_2");
+                        ch.setUseCh(true);
+                        ch.setAck(true);
+                        break;
+                    case "Ch_4":
+                        ch.setChosenCh("Ch_4");
+                        ch.setUseCh(true);
+                        ch.setAck(true);
+                        break;
+                    case "Ch_5":
+                        Land land=(Land)in.readObject();
+                        ch.setCh_5_land(land);
+                        ch.setChosenCh("Ch_5");
+                        ch.setUseCh(true);
+                        ch.setAck(true);
+                        break;
+                    case "Ch_8":
+                        ch.setChosenCh("Ch_8");
+                        ch.setUseCh(true);
+                        ch.setAck(true);
+                        break;
+                    case "Ch_10":
+                        ArrayList<Student> stds=(ArrayList<Student>)in.readObject();
+                        ArrayList<Type_Student> types=(ArrayList<Type_Student>)in.readObject();
+                        ch.setCh_10_students(stds);
+                        ch.setCh_10_types(types);
+                        ch.setChosenCh("Ch_10");
+                        ch.setUseCh(true);
+                        ch.setAck(true);
+                        break;
+                    case "Ch_11":
+                        Student st=(Student)in.readObject();
+                        ch.setCh_11_student(st);
+                        ch.setChosenCh("Ch_11");
+                        ch.setUseCh(true);
+                        ch.setAck(true);
+                        break;
+                    case "Ch_12":
+                        Type_Student type=(Type_Student)in.readObject();
+                        ch.setCh_12_type(type);
+                        ch.setChosenCh("Ch_12");
+                        ch.setUseCh(true);
+                        ch.setAck(true);
                         break;
                     default:
                         System.out.println("Player "+ch.getUserName()+": "+"Ricevo stringhe strane: "+message);

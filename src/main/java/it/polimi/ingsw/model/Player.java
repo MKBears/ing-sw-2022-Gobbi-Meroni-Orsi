@@ -13,6 +13,7 @@ public class Player implements Serializable {
     private final Wizards wizard;
     private ArrayList<AssistantCard> deck;
     private AssistantCard playedCard;
+    private boolean two_more_influence;
 
     /**
      * @param userName the userName of the player
@@ -25,6 +26,7 @@ public class Player implements Serializable {
         this.userName = userName;
         this.color = color;
         this.wizard = wizard;
+        two_more_influence=false;
         if (expert){
             board = new Board_Experts(towersNum, color);
         }
@@ -235,5 +237,13 @@ public class Player implements Serializable {
      */
     public void setBoard(Board board) {
         this.board = board;
+    }
+
+    public void setTwo_more_influence(boolean two_more_influence) {
+        this.two_more_influence = two_more_influence;
+    }
+
+    public boolean isTwo_more_influence() {
+        return two_more_influence;
     }
 }

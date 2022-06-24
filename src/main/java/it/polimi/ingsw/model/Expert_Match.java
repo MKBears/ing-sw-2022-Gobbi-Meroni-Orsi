@@ -1,8 +1,32 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.characterCards.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class Expert_Match extends Match{
     CharacterCard[] card;
 
+    public void setCard() {
+        card=new CharacterCard[3];
+        List<CharacterCard> c=new ArrayList<>();
+        c.add(new Ch_1(this));
+        c.add(new Ch_2(this));
+        c.add(new Ch_4());
+        c.add(new Ch_5(this));
+        c.add(new Ch_8());
+        c.add(new Ch_10());
+        c.add(new Ch_11(this.bag));
+        c.add(new Ch_12(this));
+        for(int i=0; i<3; i++) {
+            Random a = new Random();
+            int x = a.nextInt(1000);
+            x = x % c.size();
+            card[i]=c.remove(x);
+        }
+    }
     /**
      * create an instance of an expert match
      * @param pl1 first player of the match
@@ -27,6 +51,6 @@ public class Expert_Match extends Match{
      * @return the character card of the match
      */
     public CharacterCard[] getCard() {
-        return card;
+        return card.clone();
     }
 }

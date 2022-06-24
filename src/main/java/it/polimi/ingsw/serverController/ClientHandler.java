@@ -1,6 +1,7 @@
 package it.polimi.ingsw.serverController;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.characterCards.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -35,6 +36,16 @@ public class ClientHandler extends Thread{
     private Cloud chosenCloud;
     private boolean nack;
     private int nackCounter;
+    private boolean useCh;
+    private String chosenCh;
+    private Student ch_1_Student;
+    private Land ch_1_land;
+    private Land ch_5_land;
+    private Land ch_3_land;
+    private ArrayList<Student> ch_10_students;
+    private ArrayList<Type_Student> ch_10_types;
+    private Student ch_11_student;
+    private Type_Student ch_12_type;
 
     /**
      *
@@ -45,7 +56,7 @@ public class ClientHandler extends Thread{
         this.serve = server;
         connected = true;
         ongoingMatch = false;
-
+        expertMatch=true;
         try {
             out = new Message4Client(socket);
             in = new MessageFromClient(socket, this);
@@ -183,6 +194,8 @@ public class ClientHandler extends Thread{
                     state = 3;
                     break;
                 case 3:
+
+
                     //ACTION phase: moving students from the entrance
                     //check if they can control any professor
                     do {
@@ -225,7 +238,20 @@ public class ClientHandler extends Thread{
                     }
                     checkAllProfessors();
                     controller.notifyProfessors();
-                    state = 4;
+                    System.out.println("carte personaggio");
+                    if(expertMatch){
+                        do{
+                            out.sendCh(((Expert_Match)match).getCard());
+                            wait();
+                        }while(nack);
+                    }
+                    if (expertMatch){
+                        if (useCh) {
+                            effectCh();
+                            controller.notifyCh();
+                        }
+                    }
+                    state=4;
                 case 4:
                     ///ACTION phase: moving Mother Nature
                     //calculate the influence in that Land and verify if it joins other lands
@@ -235,25 +261,32 @@ public class ClientHandler extends Thread{
                         wait();
                     } while (nack);
                     match.moveMotherNature(motherNatureSteps);
-                    try {
-                        controller.controlLand();
-                    } catch (Exception e) {
-                        out.sendGenericError("Desynchronized ("+e.getMessage()+")");
-                        out.sendCreation(match);
-                    }
-                    uniteLands();
-                    //System.out.println(match);
-                    controller.notifyMovedMN(this, motherNatureSteps);
-
-                    if (match.getMotherNature().getPosition().hasChanged()) {
+                    if(!match.getMotherNature().getPosition().isThereNoEntry()) {
                         try {
-                            controller.notifyChanges();
+                            controller.controlLand();
                         } catch (Exception e) {
-                            out.sendGenericError("Desynchronized ("+e.getMessage()+")");
+                            out.sendGenericError("Desynchronized (" + e.getMessage() + ")");
                             out.sendCreation(match);
                         }
-                    }
+                        uniteLands();
+                        //System.out.println(match);
+                        controller.notifyMovedMN(this, motherNatureSteps);
 
+                        if (match.getMotherNature().getPosition().hasChanged()) {
+                            try {
+                                controller.notifyChanges();
+                            } catch (Exception e) {
+                                out.sendGenericError("Desynchronized (" + e.getMessage() + ")");
+                                out.sendCreation(match);
+                            }
+                        }
+                    }else{
+                        try {
+                            match.getMotherNature().getPosition().setNoEntry(false);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                     if (ongoingMatch) {
                         state = 5;
                     } else {
@@ -304,6 +337,20 @@ public class ClientHandler extends Thread{
                     }
                     break;
                 case 7:
+                    System.out.println("carte personaggio");
+                    if(expertMatch){
+                        do{
+                            out.sendCh(((Expert_Match)match).getCard());
+                            wait();
+                        }while(nack);
+                    }
+                    if (expertMatch){
+                        if (useCh) {
+                            effectCh();
+                        }
+                    }
+                    controller.notifyCh();
+                    state=4;
                     //Fase AZIONE: gioca una carta personaggio
             }
         }
@@ -592,4 +639,151 @@ public class ClientHandler extends Thread{
         socket.close();
     }
 
+    /**
+     * set noCh when a player doesn't use a character card
+     * @param useCh
+     */
+    public void setUseCh(boolean useCh) {
+        this.useCh = useCh;
+    }
+
+    /**
+     * set the name of the character that it is used by the player
+     * @param chosenCh name of the character
+     */
+    public void setChosenCh(String chosenCh) {
+        this.chosenCh = chosenCh;
+    }
+
+    public void setCh_1_Student(Student ch_1_Student) {
+        this.ch_1_Student = ch_1_Student;
+    }
+
+    public void setCh_1_land(Land ch_1_land) {
+        this.ch_1_land = ch_1_land;
+    }
+
+    public void setCh_5_land(Land ch_5_land) {
+        this.ch_5_land = ch_5_land;
+    }
+
+    public void effectCh(){
+        switch (chosenCh) {
+            case "Ch_1" -> {
+                for (CharacterCard c : ((Expert_Match) match).getCard()) {
+                    if (c instanceof Ch_1) {
+                        ((Ch_1) c).setStudent(ch_1_Student);
+                        for (Land land : match.getLands()) {
+                            if (ch_1_land.getID() == land.getID()) {
+                                ((Ch_1) c).setLand(land);
+                            }
+                        }
+                        c.setPlayer(avatar);
+                        ((Board_Experts) avatar.getBoard()).playCharacter(c);
+                    }
+                }
+            }
+            case "Ch_4" -> {
+                for (CharacterCard c : ((Expert_Match) match).getCard()) {
+                    if (c instanceof Ch_4) {
+                        c.setPlayer(avatar);
+                        ((Board_Experts) avatar.getBoard()).playCharacter(c);
+                    }
+                }
+            }
+            case "Ch_5" -> {
+                for (CharacterCard c : ((Expert_Match) match).getCard()) {
+                    if (c instanceof Ch_5) {
+                        c.setPlayer(avatar);
+                        for (Land land : match.getLands()) {
+                            if (land.getID() == ch_5_land.getID())
+                                ((Ch_5) c).setLand(land);
+                        }
+                        ((Board_Experts) avatar.getBoard()).playCharacter(c);
+                    }
+                }
+            }
+            case "Ch_8" -> {
+                for (CharacterCard c : ((Expert_Match) match).getCard()) {
+                    if (c instanceof Ch_8) {
+                        c.setPlayer(avatar);
+                        ((Board_Experts) avatar.getBoard()).playCharacter(c);
+                    }
+                }
+            }
+            case "Ch_10" -> {
+                for (CharacterCard c : ((Expert_Match) match).getCard()) {
+                    if (c instanceof Ch_10) {
+                        c.setPlayer(avatar);
+                        ((Ch_10) c).setEntrance_student(ch_10_students);
+                        ((Ch_10) c).setRoom_student(ch_10_types);
+                        ((Board_Experts) avatar.getBoard()).playCharacter(c);
+                    }
+                }
+            }
+            case "Ch_11" -> {
+                for (CharacterCard c : ((Expert_Match) match).getCard()) {
+                    if (c instanceof Ch_11) {
+                        c.setPlayer(avatar);
+                        ((Ch_11) c).setStudent(ch_11_student);
+                        ((Board_Experts) avatar.getBoard()).playCharacter(c);
+                    }
+                }
+            }
+            case "Ch_12" -> {
+                for (CharacterCard c : ((Expert_Match) match).getCard()) {
+                    if (c instanceof Ch_12) {
+                        c.setPlayer(avatar);
+                        ((Ch_12) c).setType(ch_12_type);
+                        ((Board_Experts) avatar.getBoard()).playCharacter(c);
+                    }
+                }
+            }
+            case "Ch_2" -> {
+                for (CharacterCard c : ((Expert_Match) match).getCard()) {
+                    if (c instanceof Ch_2) {
+                        c.setPlayer(avatar);
+                        ((Ch_12) c).setType(ch_12_type);
+                        ((Board_Experts) avatar.getBoard()).playCharacter(c);
+                    }
+                }
+            }
+        }
+    }
+
+    public Land getCh_3_land() {
+        return ch_3_land;
+    }
+
+    public void setCh_3_land(Land ch_3_land) {
+        this.ch_3_land = ch_3_land;
+    }
+
+    public void setCh_10_students(ArrayList<Student> ch_10_students) {
+        this.ch_10_students = ch_10_students;
+    }
+
+    public void setCh_10_types(ArrayList<Type_Student> ch_10_types) {
+        this.ch_10_types = ch_10_types;
+    }
+
+    public void setCh_11_student(Student ch_11_student) {
+        this.ch_11_student = ch_11_student;
+    }
+
+    public void setCh_12_type(Type_Student ch_12_type) {
+        this.ch_12_type = ch_12_type;
+    }
+
+    public String getChosenCh() {
+        return chosenCh;
+    }
+
+    public Land getCh_5_land() {
+        return ch_5_land;
+    }
+
+    public void setExpertMatch(boolean expertMatch) {
+        this.expertMatch = expertMatch;
+    }
 }

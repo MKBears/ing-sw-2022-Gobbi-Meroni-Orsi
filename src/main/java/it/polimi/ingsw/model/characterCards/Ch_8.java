@@ -3,7 +3,9 @@ package it.polimi.ingsw.model.characterCards;
 import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.Player;
 
-public class Ch_8 implements CharacterCard {
+import java.io.Serializable;
+
+public class Ch_8 implements CharacterCard, Serializable {
 
     private final short price;
     private boolean activated;
@@ -19,8 +21,7 @@ public class Ch_8 implements CharacterCard {
 
     @Override
     public void activatePowerUp() {
-        //...
-
+        player.setTwo_more_influence(true);
         if(!activated){
             activated=true;
         }

@@ -25,6 +25,7 @@ public class Cli extends Thread implements View{
     private CharacterCard[] characters;
     Boolean nack;
     ProcessBuilder svnProcessBuilder;
+    private String card;
 
     /**
      * Constructor of class Cli: initializes the input Scanner and sets the state to "Start"
@@ -524,7 +525,6 @@ public class Cli extends Thread implements View{
                          svnProcessBuilder.inheritIO().start().waitFor();
                          break;
                      case("Ch"):
-                         CharacterCard character=chooseChCard(characters);
                          Board_Experts me_ex=(Board_Experts) me.getBoard();
                          if(character != null ) {
                              if(character.getPrice()>me_ex.getCoinsNumber()){
@@ -559,9 +559,61 @@ public class Cli extends Thread implements View{
                                  }else if(character instanceof Ch_12){
                                      Type_Student type=chooseColorStudent();
                                      //messaggio
-                                 }
-                                 // invio carta personaggio con quello che serve
+                         Boolean enough_money=false;
+                         for (CharacterCard c:characters) {
+                             if(c.getPrice()<=me_ex.getCoinsNumber()){
+                                 enough_money=true;
                              }
+                         }
+                         CharacterCard character=chooseChCard(characters);
+                         if(enough_money) {
+                             if (character == null) {
+                                 server.sendNoCh();
+                             } else {
+                                 if (character.getPrice() > me_ex.getCoinsNumber()) {
+                                     System.out.println("non hai abbastanza monete");
+                                     server.sendNoCh();
+                                 } else {
+                                     if (character instanceof Ch_1) {
+                                         System.out.println("scegli uno studente da mettere in un'isola\n");
+                                         Student student = chooseStudent(((Ch_1) character).getStudents());
+                                         Land land = chooseLand(match.getLands());
+                                         server.sendChooseCh1(student, land);
+                                     } else if (character instanceof Ch_2) {
+                                         server.sendChooseCh2();
+                                     } else if (character instanceof Ch_4) {
+                                         me.getPlayedCard().ch_4_effect();
+                                         server.sendChooseCh4();
+                                     } else if (character instanceof Ch_5) {
+                                         System.out.println("scegli l'isola su cui mettere il divieto\n");
+                                         Land land = chooseLand(match.getLands());
+                                         server.sendChooseCh5(land);
+                                     } else if (character instanceof Ch_10) {
+                                         ArrayList<Student> students = new ArrayList<>();
+                                         ArrayList<Type_Student> type_students = new ArrayList<>();
+                                         for (int i = 0; i < 2; i++) {
+                                             System.out.println("scegli uno studente da sostituire con uno della tua sala da pranzo\n");
+                                             students.add(chooseStudent(me.getBoard().getEntrance()));
+                                             card = "Ch_10";
+                                             type_students.add(chooseColorStudent());
+                                         }
+                                         server.sendChooseCh10(students, type_students);
+                                     } else if (character instanceof Ch_11) {
+                                         System.out.println("scegli uno studente dalla carta da piazzare nella tua sala da pranzo\n");
+                                         Student student = chooseStudent(((Ch_11) character).getStudents());
+                                         server.sendChooseCh11(student);
+                                     } else if (character instanceof Ch_12) {
+                                         card = "Ch_12";
+                                         Type_Student type = chooseColorStudent();
+                                         server.sendChooseCh12(type);
+                                     } else if (character instanceof Ch_8) {
+                                         server.sendChooseCh8();
+                                     }
+                                 }
+                             }
+                         }else {
+                             System.out.println("non hai abbastanza monete per comprare le carte personaggio");
+                             server.sendNoCh();
                          }
                          synchronized (this) {
                              nack=false;
@@ -723,20 +775,49 @@ public class Cli extends Thread implements View{
 
     @Override
     public Type_Student chooseColorStudent(){
-        System.out.println("Scegli un colore di cui non verrà calcolata l'influenza");
-        while (true) {
-            String choose=input.nextLine();
-            switch (choose.toLowerCase()) {
-                case ("rosso"):
-                    return Type_Student.DRAGON;
-                case ("verde"):
-                    return Type_Student.FROG;
-                case ("blu"):
-                    return Type_Student.UNICORN;
-                case ("giallo"):
-                    return Type_Student.FAIRY;
-                case ("rosa"):
-                    return Type_Student.GNOME;
+        if(card.equals("Ch_10")) {
+            System.out.println("Scegli un colore da sostituire con lo studente dell'entrata\n");
+            while (true) {
+                String choose = input.nextLine();
+                switch (choose.toLowerCase()) {
+                    case ("rosso"):
+                        if (me.getBoard().getStudentsOfType(Type_Student.DRAGON) > 0)
+                            return Type_Student.DRAGON;
+                        break;
+                    case ("verde"):
+                        if (me.getBoard().getStudentsOfType(Type_Student.FROG) > 0)
+                            return Type_Student.FROG;
+                        break;
+                    case ("blu"):
+                        if (me.getBoard().getStudentsOfType(Type_Student.UNICORN) > 0)
+                            return Type_Student.UNICORN;
+                        break;
+                    case ("giallo"):
+                        if(me.getBoard().getStudentsOfType(Type_Student.GNOME) > 0)
+                            return Type_Student.GNOME;
+                        break;
+                    case ("rosa"):
+                        if(me.getBoard().getStudentsOfType(Type_Student.FAIRY) > 0)
+                            return Type_Student.FAIRY;
+                        break;
+                }
+            }
+        }else{
+            System.out.println("Scegli un colore a cui togliere a tutti tre studenti\n");
+            while (true) {
+                String choose = input.nextLine();
+                switch (choose.toLowerCase()) {
+                    case ("rosso"):
+                        return Type_Student.DRAGON;
+                    case ("verde"):
+                        return Type_Student.FROG;
+                    case ("blu"):
+                        return Type_Student.UNICORN;
+                    case ("giallo"):
+                        return Type_Student.GNOME;
+                    case ("rosa"):
+                        return Type_Student.FAIRY;
+                }
             }
         }
     }
@@ -765,6 +846,10 @@ public class Cli extends Thread implements View{
     public CharacterCard chooseChCard(CharacterCard[] cards){
         System.out.println("\nVuoi giocare una carta personaggio? [si/no]");
         System.out.println("Per visualizzare la descrizione dell'effetto della carta scrivi 'info'");
+        for (int i = 0; i < 3; i++) {
+            System.out.println(i+")  "+characters[i].toString()+'\n');
+        }
+        System.out.println("Vuoi giocare una carta personaggio? [si/no] il tio numero di monete è "+((Board_Experts)me.getBoard()).getCoinsNumber());
         String choose=input.next();
         int chosen;
         while (true) {
@@ -816,5 +901,10 @@ public class Cli extends Thread implements View{
     public void printNotification(String message) {
         System.out.println('\n' + message);
     }
+
+    public void printNotifications(String s){
+        System.out.println(s+"\n");
+    }
+}
 
 }

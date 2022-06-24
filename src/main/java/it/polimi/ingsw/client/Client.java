@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.characterCards.*;
 import it.polimi.ingsw.serverController.GameRecap;
 
 import java.io.IOException;
@@ -358,6 +359,79 @@ public class Client  extends Thread{
                         CharacterCard[] ch=(CharacterCard[])in.readObject();
                         view.setCharacters(ch);
                         view.wakeUp("Ch");
+                        break;
+                    case "NotifyCh_1":
+                        ArrayList<Land> lan=(ArrayList<Land>)in.readObject();
+                        CharacterCard c1=(CharacterCard) in.readObject();
+                        for (int i = 0; i < ((Expert_Match)match).getCard().length; i++) {
+                            if(((Expert_Match)match).getCard()[i] instanceof Ch_1)
+                                ((Expert_Match)match).getCard()[i]=c1;
+                        }
+                        match.setLands(lan);
+                        view.printMatch(match);
+                        view.printNotifications("");
+                        server.sendACK();
+                        break;
+                    case "NotifyCh_2":
+                        Map<Type_Student,Player> pro=(Map<Type_Student, Player>) in.readObject();
+                        match.setProfessors(pro);
+                        view.printMatch(match);
+                        server.sendACK();
+                        break;
+                    case "NotifyCh_4":
+                        String userna=(String) in.readObject();
+                        for (int i = 0; i < 3; i++) {
+                            if(((Expert_Match)match).getCard()[i] instanceof Ch_4)
+                                view.printNotifications("giocatore "+userna+" ha giocato la carta personaggio\n"+((Expert_Match)match).getCard()[i].toString());
+                        }
+                        server.sendACK();
+                        break;
+                    case "NotifyCh_5":
+                        ArrayList<Land> lands2=(ArrayList<Land>)in.readObject();
+                        match.setLands(lands2);
+                        view.printMatch(match);
+                        server.sendACK();
+                        break;
+                    case "NotifyCh_10":
+                        Board boa=(Board)in.readObject();
+                        String usa=(String) in.readObject();
+                        for (Player player:match.getPlayer()) {
+                            if(player.getUserName().equals(usa)){
+                                player.setBoard(boa);
+                            }
+                        }
+                        view.printMatch(match);
+                        for (int i = 0; i < 3; i++) {
+                            if(((Expert_Match)match).getCard()[i] instanceof Ch_4)
+                                view.printNotifications("giocatore "+usa+" ha giocato la carta personaggio\n"+((Expert_Match)match).getCard()[i].toString());
+                        }
+                        server.sendACK();
+                        break;
+                    case "NotifyCh_11":
+                        CharacterCard ch11=(CharacterCard) in.readObject();
+                        String usernam=(String) in.readObject();
+                        Board board2=(Board) in.readObject();
+                        for (Player player:match.getPlayer()) {
+                            if(player.getUserName().equals(usernam)){
+                                player.setBoard(board2);
+                            }
+                        }
+                        for (int i = 0; i < 3; i++) {
+                            ((Expert_Match)match).getCard()[i]=ch11;
+                        }
+                        view.printMatch(match);
+                        server.sendACK();
+                        break;
+                    case "NotifyCh_12":
+                        ArrayList<Board> boards2=(ArrayList<Board>) in.readObject();
+                        for (int i = 0; i < match.getPlayer().length; i++) {
+                            match.getPlayer()[i].setBoard(boards2.get(i));
+                        }
+                        view.printMatch(match);
+                        server.sendACK();
+                        break;
+                    case "NotifyCh_8":
+                        server.sendACK();
                         break;
                     default: server.sendNACK();
                 }
