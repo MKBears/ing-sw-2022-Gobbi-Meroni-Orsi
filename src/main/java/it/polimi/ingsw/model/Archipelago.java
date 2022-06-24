@@ -136,7 +136,7 @@ public class Archipelago implements Land, Serializable {
      *
      * @param other Land with this Archipelago will be united
      * @return Archipelago (myself)
-     * @throws Exception
+     * @throws Exception if some island's tower's color is different from the others
      */
     @Override
     public Archipelago uniteIslands(Land other) throws Exception {
@@ -196,23 +196,22 @@ public class Archipelago implements Land, Serializable {
         return head;
     }
 
-    //public void mergeGroups(ArrayList<Island> group){
-    //    int size = (int) group.size();
-    //    for (Island i : group){
-    //        this.group.add(i);
-    //        group.remove(i);
-    //        this.size++;
-    //    }
-    //}
-
+    /**
+     * Tells you if the towers have changed since tha last time you checked
+     * @return true if towers have changed
+     */
     @Override
     public boolean hasChanged() {
         return hasChanged;
     }
 
+    /**
+     *
+     * @return the previous towers after a new player controls the archipelago
+     */
     public ArrayList<Tower> getPreviousTowers(){
         if (previousTowers == null || !hasChanged) {
-            return null;  ///
+            return null;
         }
         hasChanged = false;
         return previousTowers;

@@ -20,6 +20,10 @@ public class Board_Experts extends Board {
         coins=1;
     }
 
+    /**
+     *
+     * @return the number of coins held by the player on their board
+     */
     public int getCoinsNumber() {
         return coins;
     }
@@ -57,6 +61,6 @@ public class Board_Experts extends Board {
     @Override
     public String toString() {
         return  super.toString()+
-                "\n"+Colors.BLACK.toString()+"(¤)\u001B[0mx" + coins;
+                "\n"+Colors.BLACK+"(¤)\u001B[0mx" + coins;
     }
 }

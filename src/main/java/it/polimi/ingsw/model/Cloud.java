@@ -107,6 +107,10 @@ public class Cloud implements Serializable {
         return cloud;
     }
 
+    /**
+     * Sets the students on the cloud
+     * @param students
+     */
     public void setStudents(ArrayList<Student> students) {
         this.students = students;
     }
@@ -121,6 +125,7 @@ public class Cloud implements Serializable {
         return students.equals(cloud.students);
     }
 
+    @Override
     public Cloud clone () {
         Cloud cloud;
         int players;

@@ -258,6 +258,12 @@ public class Board implements Serializable {
         return board.toString();
     }
 
+    /**
+     * Auxiliary method used by toString method in order to add the String representation
+     * of a student to the board's entrance
+     * @param board
+     * @param position the position of the student in the entrance
+     */
     private void addStudentToString (StringBuilder board, int position){
         if (entrance == null)
             board.append("( )");
@@ -267,6 +273,11 @@ public class Board implements Serializable {
             board.append(entrance.get(position).toString());
     }
 
+    /**
+     * Auxiliary method used by toString method in order to add a table's String representation to the board
+     * @param board
+     * @param table the table to print
+     */
     private void addTableToString (StringBuilder board, ArrayList<Student> table) {
         for (int i = 0; i<10; i++) {
             if (i > table.size()-1)
@@ -276,6 +287,11 @@ public class Board implements Serializable {
         }
     }
 
+    /**
+     * Auxiliary method used by toString method in order to add the towers' String representation to the board
+     * @param board
+     * @param position
+     */
     private void addTowerToString (StringBuilder board, int position) {
         if (position/2 > towers.size()-1)
             if (position%2 ==1)
@@ -306,6 +322,12 @@ public class Board implements Serializable {
         }
     }
 
+    /**
+     * Activates 12th character card's power and removes up to 3 students of the specified type
+     * from the corresponding table
+     * @param type the type of students to remove
+     * @return the removed students (an empty list if there haven't been removed any student)
+     */
     public List<Student> ch_12_effect(Type_Student type){
         List<Student> stu=new ArrayList<>();
         switch (type){
@@ -338,6 +360,11 @@ public class Board implements Serializable {
         return stu;
     }
 
+    /**
+     * Activates 10th character card's power and switches two students between entrance and a table
+     * @param st the student from the entrance
+     * @param type the type of student to take from a table
+     */
     public void ch_10_effect(Student st,Type_Student type){
         try {
             this.placeStudent(st);
@@ -354,10 +381,4 @@ public class Board implements Serializable {
         }
     }
 
-    public void ch_7_effect(Student st1, Student st2, Student st3, List<Student> stu){
-        entrance.remove(st1);
-        entrance.remove(st2);
-        entrance.remove(st3);
-        entrance.addAll(stu);
-    }
 }

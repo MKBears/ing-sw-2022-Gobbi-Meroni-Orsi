@@ -2,6 +2,9 @@ package it.polimi.ingsw.model;
 
 import java.io.Serializable;
 
+/**
+ * The enumeration of the colors of each player' towers
+ */
 public enum Colors implements Serializable {
 
     WHITE ("\u001b[37m", "Bianco"),
@@ -16,6 +19,10 @@ public enum Colors implements Serializable {
         this.name = name;
     }
 
+    /**
+     *
+     * @return the name of the clor
+     */
     public String getName()
     {
         return name;

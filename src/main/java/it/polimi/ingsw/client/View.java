@@ -107,24 +107,102 @@ public interface View {
      * @param match
      */
     void setMatch(Match match);
+
+    /**
+     * Sets the lists of available assistants cards to play
+     * @param cards
+     */
     void setCards(List<AssistantCard> cards);
+
+    /**
+     * Sets the list of available wizards
+     * @param willy
+     */
     void setWilly(List<Wizards> willy);
+
+    /**
+     * sets the list of available clouds to choose between
+     * @param clouds
+     */
     void setClouds(List<Cloud> clouds);
+
+    /**
+     * Asks the user to choose between joining, resuming o creating a new match
+     * @param join the list of matches the player can join
+     * @param resume the list of matches the player can resume
+     */
     void chooseMatch(List<String> join,List<String> resume);
 
     /**
      * set nack tru to resend the parameters to the sever
      */
     void setNack();
+
+    /**
+     * Asks the player if they want to register and then the username
+     * @return the username
+     */
     String chooseLogin();
+
+    /**
+     * Asks the player to choose a land to put the student on
+     * @param lands all the lands in the sky
+     * @return the chosen land
+     */
     Land chooseLand(List<Land> lands);
+
+    /**
+     * Asks the player to choose a student to move from the entrance (used when playing a character card)
+     * @param student the entrance
+     * @return the chosen student
+     */
     Student chooseStudent(List<Student> student);
+
+    /**
+     * Asks the player to choose a color of which not to compute influence on a land
+     * @return
+     */
     Type_Student chooseColorStudent();
+
+    /**
+     * Notifies the player if another one connects to the match
+     * @param username the username of the connected player
+     */
     void playerConnected(String username);
+
+    /**
+     * Notifies the player if another one disconnects from the match
+     * @param username the username of the disconnected player
+     */
     void playerDisconnected(String username);
+
+    /**
+     * Notifies the player if all the other players are disconnected from the match
+     */
     void playerDisconnectedAll();
+
+    /**
+     * Notifies the player if another player finished their assistant cards
+     * @param p the player who finished their assistants
+     */
     void finishedAC(Player p);
+
+    /**
+     * Asks the user if they want to play a character card
+     * @param cards the available character cards
+     * @return the chosen card
+     */
     CharacterCard chooseChCard(CharacterCard[] cards);
+
+    /**
+     * Sets the available character cards
+     * @param characters
+     */
     void setCharacters(CharacterCard[] characters);
+
+    /**
+     * Prints the received notification
+     * @param message the message to print
+     */
     void printNotification (String message);
 }

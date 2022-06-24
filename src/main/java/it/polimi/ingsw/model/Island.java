@@ -152,7 +152,7 @@ public class Island implements Land, Serializable {
 
     /**
      *
-     * @return 1
+     * @return the size of the island (it is always 1)
      */
     @Override
     public int size() {
@@ -167,7 +167,7 @@ public class Island implements Land, Serializable {
     @Override
     public Colors getTowerColor() throws Exception{
         if (tower != null) {
-            return tower.getColor(); //
+            return tower.getColor();
         }
         else
             throw new Exception("There are currently no Towers here");

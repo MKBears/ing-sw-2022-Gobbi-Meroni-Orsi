@@ -417,9 +417,6 @@ public class Cli extends Thread implements View{
         return c.toString();
     }
 
-    /**
-     * thread that allows the player to choose his plays
-     */
     @Override
     public void run() {
          try {
@@ -593,38 +590,21 @@ public class Cli extends Thread implements View{
         this.notifyAll();
     }
 
-    /**
-     * Sets the list of available wizards
-     * @param willy
-     */
     @Override
     public void setWilly(List<Wizards> willy) {
         this.willy = willy;
     }
 
-    /**
-     * Sets the lists of available assistants cards to play
-     * @param cards
-     */
     @Override
     public void setCards(List<AssistantCard> cards) {
         this.cards = cards;
     }
 
-    /**
-     * sets the list of available clouds to choose between
-     * @param clouds
-     */
     @Override
     public void setClouds(List<Cloud> clouds) {
         this.clouds = clouds;
     }
 
-    /**
-     * Asks the user to choose between joining, resuming o creating a new match
-     * @param join the list of matches the player can join
-     * @param resume the list of matches the player can resume
-     */
     @Override
     public void chooseMatch(List<String> join, List<String> resume) {
         String choose;
@@ -690,10 +670,6 @@ public class Cli extends Thread implements View{
         server.sendExpertMatch(expert.equalsIgnoreCase("si"));
     }
 
-    /**
-     * Asks the player if they want to register and then the username
-     * @return the username
-     */
     @Override
     public  String chooseLogin(){
         String choose;
@@ -704,11 +680,6 @@ public class Cli extends Thread implements View{
         return choose.toLowerCase();
     }
 
-    /**
-     * Asks the player to choose a student to move from the entrance (used when playing a character card)
-     * @param student the entrance
-     * @return the chosen student
-     */
     @Override
     public Student chooseStudent(List<Student> student) {
         int i;
@@ -725,11 +696,6 @@ public class Cli extends Thread implements View{
         }
     }
 
-    /**
-     * Asks the player to choose a land to put the student on
-     * @param lands all the lands in the sky
-     * @return the chosen land
-     */
     @Override
     public Land chooseLand(List<Land> lands){
         int i, c;
@@ -755,10 +721,6 @@ public class Cli extends Thread implements View{
         }
     }
 
-    /**
-     * Asks the player to choose a color of which not to compute influence on a land
-     * @return
-     */
     @Override
     public Type_Student chooseColorStudent(){
         System.out.println("Scegli un colore di cui non verrà calcolata l'influenza");
@@ -779,46 +741,26 @@ public class Cli extends Thread implements View{
         }
     }
 
-    /**
-     * Notifies the player if another one connects to the match
-     * @param username the username of the connected player
-     */
     @Override
     public void playerConnected(String username){
         System.out.println("Si e' connesso "+ username);
     }
 
-    /**
-     * Notifies the player if another one disconnects from the match
-     * @param username the username of the disconnected player
-     */
     @Override
     public void playerDisconnected(String username){
         System.out.println("Si e' disconnesso "+ username);
     }
 
-    /**
-     * Notifies the player if all the other players are disconnected from the match
-     */
     @Override
     public void playerDisconnectedAll(){
         System.out.println("Tutti gli altri giocatori si sono disconnessi");
     }
 
-    /**
-     * Notifies the player if another player finished their assistant cards
-     * @param p the player who finished their assistants
-     */
     @Override
     public void finishedAC(Player p){
         System.out.println(p+" ha finito le carte assistente: ultimo turno!");
     }
 
-    /**
-     * Asks the user if they want to play a character card
-     * @param cards the available character cards
-     * @return the chosen card
-     */
     @Override
     public CharacterCard chooseChCard(CharacterCard[] cards){
         System.out.println("\nVuoi giocare una carta personaggio? [si/no]");
@@ -847,10 +789,6 @@ public class Cli extends Thread implements View{
         }
     }
 
-    /**
-     * Sets the available character cards
-     * @param characters
-     */
      @Override
     public void setCharacters(CharacterCard[] characters) {
         this.characters = characters;

@@ -2,6 +2,9 @@ package it.polimi.ingsw.model;
 
 import java.io.Serializable;
 
+/**
+ * The class representing an assistant card
+ */
 public class AssistantCard implements Serializable{
     private final int value;
     private int MNSteps;
@@ -16,14 +19,25 @@ public class AssistantCard implements Serializable{
         MNSteps = steps;
     }
 
+    /**
+     *
+     * @return the value of the card
+     */
     public int getValue() {
         return value;
     }
 
+    /**
+     *
+     * @return the maximum mn steps written on the card
+     */
     public int getMNSteps() {
         return MNSteps;
     }
 
+    /**
+     * Activates 4th character card's power and increases the number of steps by 2
+     */
     public void ch_4_effect(){MNSteps += 2;}
 
     @Override

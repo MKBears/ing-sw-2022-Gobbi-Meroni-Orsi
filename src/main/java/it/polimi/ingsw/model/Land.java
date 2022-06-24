@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Interface for Archipelagos and Islands
@@ -42,7 +41,7 @@ public interface Land extends Serializable {
     /**
      *
      * @param noEntry changes te state of "noEntry"
-     * @throws Exception
+     * @throws Exception if there's already a no entry tile on the island
      */
     void setNoEntry(boolean noEntry) throws Exception;
     /**
@@ -54,7 +53,7 @@ public interface Land extends Serializable {
      *
      * @param other Land that will be united with this land
      * @return Archipelago type
-     * @throws Exception
+     * @throws Exception if some islands' tower's color is different from the others'
      */
     Archipelago uniteIslands(Land other)throws Exception;
     /**
@@ -80,7 +79,7 @@ public interface Land extends Serializable {
     /**
      *
      * @return the color of the towers (if it contains a tower)
-     * @throws Exception
+     * @throws Exception if there isn't any tower on the island
      */
     Colors getTowerColor() throws Exception;
 

@@ -3,6 +3,9 @@ package it.polimi.ingsw.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * The class representing a player in the match
+ */
 public class Player implements Serializable {
     private final String userName;
     private final Colors color;
@@ -44,23 +47,42 @@ public class Player implements Serializable {
         }
     }
 
-
+    /**
+     *
+     * @return the player's username
+     */
     public String getUserName() {
         return userName;
     }
 
+    /**
+     *
+     * @return the player's towers' color
+     */
     public Colors getColor() {
         return color;
     }
 
+    /**
+     *
+     * @return the player's wizard
+     */
     public Wizards getWizard() {
         return wizard;
     }
 
+    /**
+     *
+     * @return the player's board
+     */
     public Board getBoard() {
         return board;
     }
 
+    /**
+     *
+     * @return the player's deck
+     */
     public ArrayList<AssistantCard> getDeck() {
         return (ArrayList<AssistantCard>) deck.clone();
     }
@@ -99,6 +121,10 @@ public class Player implements Serializable {
         return "" + color.toString() + megaUserName().indent(26) + "\u001B[0m" + board.toString().indent(22) +'\n';
     }
 
+    /**
+     * Auxiliary method used by toString method in order to get the player's username in a fancy way
+     * @return the player's username
+     */
     private String megaUserName () {
         String userName = this.userName.toLowerCase();
         StringBuilder megaName = new StringBuilder();

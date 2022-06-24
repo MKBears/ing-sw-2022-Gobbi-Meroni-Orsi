@@ -2,6 +2,10 @@ package it.polimi.ingsw.model;
 
 import java.io.Serializable;
 
+/**
+ * Record representing a student
+ * @param type the type of the student (dragon, gnome, ...)
+ */
 public record Student(Type_Student type) implements Serializable {
 
     @Override

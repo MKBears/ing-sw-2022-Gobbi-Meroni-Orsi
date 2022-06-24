@@ -3,6 +3,9 @@ package it.polimi.ingsw.model;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * The class representing an Eriantys match
+ */
 public class Match implements Serializable {
     Player[] player;
     Cloud[] cloud;
@@ -89,6 +92,10 @@ public class Match implements Serializable {
         motherNature =new MotherNature(lands.get(0));
     }
 
+    /**
+     *
+     * @return the number of players in the game
+     */
     public int getPlayersNum() {
         return player.length;
     }
@@ -248,6 +255,10 @@ public class Match implements Serializable {
         else return null;
     }
 
+    /**
+     *
+     * @return the player who won this match
+     */
     public Player getWinner() {
         int minIndex, min, temp, countProf1, countProf2;
         minIndex = 0;
@@ -281,10 +292,18 @@ public class Match implements Serializable {
     }
 
 
+    /**
+     * Sets the map binding each professor to a player
+     * @param professors
+     */
     public void setProfessors(Map<Type_Student, Player> professors) {
         this.professors = professors;
     }
 
+    /**
+     * Sets the list of lands of the match
+     * @param lands
+     */
     public void setLands(ArrayList<Land> lands) {
         this.lands = lands;
     }
@@ -309,6 +328,11 @@ public class Match implements Serializable {
         return a.toString();
     }
 
+    /**
+     * Auxiliary method used by toString method in order to get a String representation of the lands and clouds
+     * with mn position
+     * @return
+     */
     public String getSky () {
         return ("                                   " +
                 printMN(0) + "           " + printMN(1) +
@@ -365,6 +389,12 @@ public class Match implements Serializable {
                 "           " + printMN(6)).indent(16);
     }
 
+    /**
+     * Auxiliary method used by getSky method in order to get a String representation of a cloud's row
+     * @param cloud
+     * @param row
+     * @return
+     */
     private String printCloudRow (int cloud, int row) {
         ArrayList<Student> students;
 
@@ -410,6 +440,12 @@ public class Match implements Serializable {
             return "           ";
     }
 
+    /**
+     * Auxiliary method used by getSky method to print the status of a cloud
+     * (whether if it has been chosen by a player or not)
+     * @param cloud
+     * @return
+     */
     private String printChosenCloud (int cloud) {
         if (cloud < this.cloud.length)
             if (this.cloud[cloud].hasBeenChosen())
@@ -418,6 +454,11 @@ public class Match implements Serializable {
         return "           ";
     }
 
+    /**
+     * Auxiliary method used by getSky method in order to add if there is a no entry tile on an island
+     * @param island
+     * @return
+     */
     private String printNoEntry (int island) {
         if (findIsland(island).isThereNoEntry())
             return "\u001b[31m  DIVIETO  \u001b[0m";
@@ -425,6 +466,12 @@ public class Match implements Serializable {
             return "           ";
     }
 
+    /**
+     * Auxiliary method used by getSky method in order to print a line of the island's String representation
+     * @param island
+     * @param row
+     * @return
+     */
     private String countStudents (int island, int row) {
         Island i = findIsland(island);
         int counter1 = 0, counter2 = 0;
@@ -481,6 +528,11 @@ public class Match implements Serializable {
         return result+"\u001B[0m";
     }
 
+    /**
+     * Auxiliary method used in order to find the specified island inside the lands
+     * @param island
+     * @return
+     */
     private Island findIsland (int island) {
         int counter = 0;
 
@@ -495,6 +547,12 @@ public class Match implements Serializable {
         return null;
     }
 
+    /**
+     * Auxiliary method used in order to print a line of a tower on an island
+     * @param island
+     * @param row
+     * @return
+     */
     private String printTowerRow (int island, int row) {
         Island i = findIsland(island);
 
@@ -509,6 +567,11 @@ public class Match implements Serializable {
             return "             ";
     }
 
+    /**
+     * Auxiliary method used by getSky method in order to print mn if it's on the specified island
+     * @param island
+     * @return
+     */
     private String printMN (int island) {
         Island i = findIsland(island);
         String arrow;
@@ -525,6 +588,13 @@ public class Match implements Serializable {
             return "     ";
     }
 
+    /**
+     * If two contiguous islands are in the same archipelago,
+     * this auxiliary method prints a bridge linking them
+     * @param island
+     * @param row
+     * @return
+     */
     private String printBridge (int island, int row) {
         int counter = 0;
 
