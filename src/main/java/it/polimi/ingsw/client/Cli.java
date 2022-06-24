@@ -841,7 +841,7 @@ public class Cli extends Thread implements View{
 
                                      for (int i=0; i<3; i++)
                                          if (characters[i].getNumber() == chosen)
-                                            return cards[chosen];
+                                            return cards[i];
                                      System.out.println("Scegli una tra le carte che vedi e inserisci" +
                                              " il valore (il primo numero che vedi)");
                                  }
