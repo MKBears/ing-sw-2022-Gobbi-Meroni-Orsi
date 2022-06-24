@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Manages all the interactions between Controller (server) and the remote player (client)
@@ -41,7 +40,6 @@ public class ClientHandler extends Thread{
     private Student ch_1_Student;
     private Land ch_1_land;
     private Land ch_5_land;
-    private Land ch_3_land;
     private ArrayList<Student> ch_10_students;
     private ArrayList<Type_Student> ch_10_types;
     private Student ch_11_student;
@@ -95,8 +93,8 @@ public class ClientHandler extends Thread{
 
     /**
      * Is the finite state machine thart controls the single client (therefore the single player). It is made of cases that simulate the states of the ideal machine
-     * @throws InterruptedException
-     * @throws SocketException
+     * @throws InterruptedException if a wait is interrupted
+     * @throws SocketException if the socket goes down unexpectedly
      */
     private void changeState() throws InterruptedException, SocketException {
         synchronized (this) {
@@ -360,7 +358,7 @@ public class ClientHandler extends Thread{
      * If in input is false it sends a nack message to the client, if the counter of NACK is equal to 3 it sends creation.
      * If the input is true is all ok and it wakes up himself to continue the game
      * @param ack
-     * @throws Exception
+     * @throws Exception if closeConnection throws Exception
      */
     public synchronized void setAck (boolean ack) throws Exception {
         nack = !ack;
@@ -385,13 +383,17 @@ public class ClientHandler extends Thread{
         }
     }
 
+    /**
+     *
+     * @return true if the server received a nack without being followed by any ack
+     */
     public boolean getNack() {
         return nack;
     }
 
     /**
      * Called from MessageFromClient and sends the creation message after receiving three NACK message or sends the last sent message
-     * @throws Exception
+     * @throws Exception if closeConnection goes wrong
      */
     public synchronized void sendMessageAgain () throws Exception {
         nack = true;
@@ -406,6 +408,10 @@ public class ClientHandler extends Thread{
         notifyAll();
     }
 
+    /**
+     * Sets the player's username
+     * @param userName
+     */
     public synchronized void setUserName(String userName) {
         this.userName = userName;
         //System.out.println("Username impostato");
@@ -416,24 +422,40 @@ public class ClientHandler extends Thread{
      * Sends the server the new player's username and sets it to himself
      * @param userName
      */
-    //@SuppressWarnings("unchecked")
     public synchronized void register (String userName) {
         this.serve.addUserName(userName);
         setUserName(userName);
         //System.out.println("Registrato");
     }
 
+    /**
+     *
+     * @return the player's username
+     */
     public String getUserName() {
         return userName;
     }
 
+    /**
+     * Sets the player's towers' color
+     * @param color
+     */
     public synchronized void setColor(Colors color) {
         this.color = color;
     }
 
+    /**
+     *
+     * @return the player's towers' color
+     */
     public Colors getColor() {
         return color;
     }
+
+    /**
+     * Sets the player's wizard
+     * @param wizard
+     */
     public synchronized void setWizard(Wizards wizard) {
         this.wizard = wizard;
     }
@@ -462,6 +484,10 @@ public class ClientHandler extends Thread{
         }
     }
 
+    /**
+     * Sets the match the player joined
+     * @param match
+     */
     public synchronized void setMatch(Match match){
         this.match = match;
 
@@ -475,6 +501,10 @@ public class ClientHandler extends Thread{
         notify();
     }
 
+    /**
+     *
+     * @return the stream towards the client
+     */
     public synchronized Message4Client getOutputStream() {
         return out;
     }
@@ -537,6 +567,10 @@ public class ClientHandler extends Thread{
         }
     }
 
+    /**
+     * Sets the assistant card played by the remote user
+     * @param playedAssistant
+     */
     public synchronized void setPlayedAssistant(AssistantCard playedAssistant) {
         this.playedAssistant = playedAssistant;
     }
@@ -550,7 +584,7 @@ public class ClientHandler extends Thread{
     }
 
     /**
-     * For every Type_Student
+     * For every Type_Student instance checks what player controls it
      */
     private void checkAllProfessors(){
         for (Type_Student e: Type_Student.values()) {
@@ -558,6 +592,9 @@ public class ClientHandler extends Thread{
         }
     }
 
+    /**
+     * Unites the land on which there is nm with the previous or following one if the towers have the same color
+     */
     private void uniteLands()  {
         try{
             if(match.getLands().indexOf(match.getMotherNature().getPosition())!=match.getLands().size()-1) {
@@ -743,22 +780,12 @@ public class ClientHandler extends Thread{
                 for (CharacterCard c : ((Expert_Match) match).getCard()) {
                     if (c instanceof Ch_2) {
                         c.setPlayer(avatar);
-                        ((Ch_12) c).setType(ch_12_type);
                         ((Board_Experts) avatar.getBoard()).playCharacter(c);
                     }
                 }
             }
         }
     }
-
-    public Land getCh_3_land() {
-        return ch_3_land;
-    }
-
-    public void setCh_3_land(Land ch_3_land) {
-        this.ch_3_land = ch_3_land;
-    }
-
     public void setCh_10_students(ArrayList<Student> ch_10_students) {
         this.ch_10_students = ch_10_students;
     }
