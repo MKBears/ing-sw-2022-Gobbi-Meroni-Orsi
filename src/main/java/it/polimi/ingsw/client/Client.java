@@ -369,20 +369,21 @@ public class Client  extends Thread{
                         }
                         match.setLands(lan);
                         view.printMatch(match);
-                        view.printNotification("");
+                        view.printNotification("Il player [nome] ha giocato la carta personaggio 1");
                         server.sendACK();
                         break;
                     case "NotifyCh_2":
                         Map<Type_Student,Player> pro=(Map<Type_Student, Player>) in.readObject();
                         match.setProfessors(pro);
                         view.printMatch(match);
+                        view.printNotification("Il player [nome] ha giocato la carta personaggio 2");
                         server.sendACK();
                         break;
                     case "NotifyCh_4":
                         String userna=(String) in.readObject();
                         for (int i = 0; i < 3; i++) {
                             if(((Expert_Match)match).getCard()[i] instanceof Ch_4)
-                                view.printNotification("giocatore "+userna+" ha giocato la carta personaggio\n"+((Expert_Match)match).getCard()[i].toString());
+                                view.printNotification("giocatore "+userna+" ha giocato la carta personaggio 4");
                         }
                         server.sendACK();
                         break;
@@ -390,6 +391,7 @@ public class Client  extends Thread{
                         ArrayList<Land> lands2=(ArrayList<Land>)in.readObject();
                         match.setLands(lands2);
                         view.printMatch(match);
+                        view.printNotification("Il player [nome] ha giocato la carta personaggio 5");
                         server.sendACK();
                         break;
                     case "NotifyCh_10":
@@ -403,7 +405,7 @@ public class Client  extends Thread{
                         view.printMatch(match);
                         for (int i = 0; i < 3; i++) {
                             if(((Expert_Match)match).getCard()[i] instanceof Ch_4)
-                                view.printNotification("giocatore "+usa+" ha giocato la carta personaggio\n"+((Expert_Match)match).getCard()[i].toString());
+                                view.printNotification("giocatore "+usa+" ha giocato la carta personaggio 10");
                         }
                         server.sendACK();
                         break;
@@ -420,6 +422,7 @@ public class Client  extends Thread{
                             ((Expert_Match)match).getCard()[i]=ch11;
                         }
                         view.printMatch(match);
+                        view.printNotification("Il player [nome] ha giocato la carta personaggio 11");
                         server.sendACK();
                         break;
                     case "NotifyCh_12":
@@ -428,6 +431,7 @@ public class Client  extends Thread{
                             match.getPlayer()[i].setBoard(boards2.get(i));
                         }
                         view.printMatch(match);
+                        view.printNotification("Il player [nome] ha giocato la carta personaggio 12");
                         server.sendACK();
                         break;
                     case "NotifyCh_8":

@@ -46,7 +46,7 @@ public class Board_Experts extends Board {
 
     @Override
     public void placeStudent(Student student) throws Exception{
-        final int c1 = 2, c2 = 5, c3 = 8;
+        final int c1 = 3, c2 = 6, c3 = 9;
         super.placeStudent(student);
 
         if (getStudentsOfType(student.type()) == c1 ||

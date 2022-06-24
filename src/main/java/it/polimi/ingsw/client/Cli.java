@@ -322,17 +322,17 @@ public class Cli extends Thread implements View{
                     chCards.append("\u001b[30;1m");
                 switch (j) {
                     case 0 -> chCards.append("       _______ ");
-                    case 1 -> chCards.append("      | |‾‾‾| |");
-                    case 2 -> chCards.append("      | |___| |");
+                    case 1 -> chCards.append("      | ||‾\\\\ |");
+                    case 2 -> chCards.append("      | ||_// |");
                     case 3 -> {
-                        chCards.append("      | |  ").append(characters[i].getNumber());
+                        chCards.append("      | || ").append(characters[i].getNumber());
 
                         if (characters[i].getNumber() < 10)
                             chCards.append(" ");
-                        chCards.append("   |");
+                        chCards.append(" |");
                     }
                     case 4 -> {
-                        chCards.append("      | |  ").append(characters[i].getPrice());
+                        chCards.append("      | || ").append(characters[i].getPrice());
 
                         if (characters[i].getPrice() < 10)
                             chCards.append(" ");
