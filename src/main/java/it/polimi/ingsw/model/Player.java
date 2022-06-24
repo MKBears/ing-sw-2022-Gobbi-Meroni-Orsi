@@ -78,7 +78,7 @@ public class Player implements Serializable {
      * @return the player's board
      */
     public Board getBoard() {
-        return board;
+        return  board;
     }
 
     /**

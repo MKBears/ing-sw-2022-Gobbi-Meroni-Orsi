@@ -408,7 +408,7 @@ public class Client  extends Thread{
                         }
                         view.printMatch(match);
                         for (int i = 0; i < 3; i++) {
-                            if(((Expert_Match)match).getCard()[i] instanceof Ch_4)
+                            if(((Expert_Match)match).getCard()[i] instanceof Ch_10)
                                 view.printNotification("giocatore "+usa+" ha giocato la carta personaggio 10");
                         }
                         server.sendACK();
@@ -423,7 +423,8 @@ public class Client  extends Thread{
                             }
                         }
                         for (int i = 0; i < 3; i++) {
-                            ((Expert_Match)match).getCard()[i]=ch11;
+                            if(((Expert_Match)match).getCard()[i] instanceof Ch_11)
+                                ((Expert_Match)match).getCard()[i]=ch11;
                         }
                         view.printMatch(match);
                         view.printNotification("Il player [nome] ha giocato la carta personaggio 11");
