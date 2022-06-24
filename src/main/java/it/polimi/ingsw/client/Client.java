@@ -390,11 +390,6 @@ public class Client  extends Thread{
                         break;
                     case "NotifyCh_4":
                         String userna=(String) in.readObject();
-                        for (Player pla: match.getPlayer()) {
-                            if(pla.getUserName().equals(userna)){
-                                pla.getPlayedCard().ch_4_effect();
-                            }
-                        }
                         for (int i = 0; i < 3; i++) {
                             if(((Expert_Match)match).getCard()[i] instanceof Ch_4)
                                 view.printNotifications("giocatore "+userna+" ha giocato la carta personaggio\n"+((Expert_Match)match).getCard()[i].toString());

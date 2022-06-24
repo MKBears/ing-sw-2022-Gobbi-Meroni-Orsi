@@ -479,51 +479,62 @@ public class Cli extends Thread implements View{
                          end = true;
                          break;
                      case("Ch"):
-                         CharacterCard character=chooseChCard(characters);
                          Board_Experts me_ex=(Board_Experts) me.getBoard();
-                         if(character==null){
-                             server.sendNoCh();
-                         }else{
-                             if(character.getPrice()>me_ex.getCoinsNumber()){
-                                 System.out.println("non hai abbastanza monete");
+                         Boolean enough_money=false;
+                         for (CharacterCard c:characters) {
+                             if(c.getPrice()<=me_ex.getCoinsNumber()){
+                                 enough_money=true;
+                             }
+                         }
+                         CharacterCard character=chooseChCard(characters);
+                         if(enough_money) {
+                             if (character == null) {
                                  server.sendNoCh();
-                             }else{
-                                 if(character instanceof Ch_1){
-                                     System.out.println("scegli uno studente da mettere in un'isola\n");
-                                     Student student=chooseStudent(((Ch_1) character).getStudents());
-                                     Land land= chooseLand(match.getLands());
-                                     server.sendChooseCh1(student,land);
-                                 }else if(character instanceof Ch_2){
-                                     server.sendChooseCh2();
-                                 }else if(character instanceof Ch_4){
-                                     server.sendChooseCh4();
-                                     character.setPlayer(me);
-                                 }else if(character instanceof Ch_5){
-                                     System.out.println("scegli l'isola su cui mettere il divieto\n");
-                                     Land land=chooseLand(match.getLands());
-                                     server.sendChooseCh5(land);
-                                 }else if(character instanceof Ch_10){
-                                     ArrayList<Student> students=new ArrayList<>();
-                                     ArrayList<Type_Student> type_students=new ArrayList<>();
-                                     for (int i = 0; i < 2; i++) {
-                                         System.out.println("scegli uno studente da sostituire con uno della tua sala da pranzo\n");
-                                         students.add(chooseStudent(me.getBoard().getEntrance()));
-                                         card="Ch_10";
-                                         type_students.add(chooseColorStudent());
+                             } else {
+                                 if (character.getPrice() > me_ex.getCoinsNumber()) {
+                                     System.out.println("non hai abbastanza monete");
+                                     server.sendNoCh();
+                                 } else {
+                                     if (character instanceof Ch_1) {
+                                         System.out.println("scegli uno studente da mettere in un'isola\n");
+                                         Student student = chooseStudent(((Ch_1) character).getStudents());
+                                         Land land = chooseLand(match.getLands());
+                                         server.sendChooseCh1(student, land);
+                                     } else if (character instanceof Ch_2) {
+                                         server.sendChooseCh2();
+                                     } else if (character instanceof Ch_4) {
+                                         me.getPlayedCard().ch_4_effect();
+                                         server.sendChooseCh4();
+                                     } else if (character instanceof Ch_5) {
+                                         System.out.println("scegli l'isola su cui mettere il divieto\n");
+                                         Land land = chooseLand(match.getLands());
+                                         server.sendChooseCh5(land);
+                                     } else if (character instanceof Ch_10) {
+                                         ArrayList<Student> students = new ArrayList<>();
+                                         ArrayList<Type_Student> type_students = new ArrayList<>();
+                                         for (int i = 0; i < 2; i++) {
+                                             System.out.println("scegli uno studente da sostituire con uno della tua sala da pranzo\n");
+                                             students.add(chooseStudent(me.getBoard().getEntrance()));
+                                             card = "Ch_10";
+                                             type_students.add(chooseColorStudent());
+                                         }
+                                         server.sendChooseCh10(students, type_students);
+                                     } else if (character instanceof Ch_11) {
+                                         System.out.println("scegli uno studente dalla carta da piazzare nella tua sala da pranzo\n");
+                                         Student student = chooseStudent(((Ch_11) character).getStudents());
+                                         server.sendChooseCh11(student);
+                                     } else if (character instanceof Ch_12) {
+                                         card = "Ch_12";
+                                         Type_Student type = chooseColorStudent();
+                                         server.sendChooseCh12(type);
+                                     } else if (character instanceof Ch_8) {
+                                         server.sendChooseCh8();
                                      }
-                                     server.sendChooseCh10(students,type_students);
-                                 }else if(character instanceof Ch_11){
-                                     System.out.println("scegli uno studente dalla carta da piazzare nella tua sala da pranzo\n");
-                                     Student student=chooseStudent(((Ch_11) character).getStudents());
-                                     server.sendChooseCh11(student);
-                                 }else if(character instanceof Ch_12){
-                                     card="Ch_12";
-                                     Type_Student type=chooseColorStudent();
-                                     server.sendChooseCh12(type);
-                                 }else if(character instanceof Ch_8){
-                                     server.sendChooseCh8();
                                  }
                              }
+                         }else {
+                             System.out.println("non hai abbastanza monete per comprare le carte personaggio");
+                             server.sendNoCh();
                          }
                          synchronized (this) {
                              nack=false;
@@ -736,7 +747,7 @@ public class Cli extends Thread implements View{
     }
 
     public CharacterCard chooseChCard(CharacterCard[] cards){
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             System.out.println(i+")  "+characters[i].toString()+'\n');
         }
         System.out.println("Vuoi giocare una carta personaggio? [si/no] il tio numero di monete è "+((Board_Experts)me.getBoard()).getCoinsNumber());

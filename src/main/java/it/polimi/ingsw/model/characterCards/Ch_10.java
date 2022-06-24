@@ -6,9 +6,10 @@ import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Student;
 import it.polimi.ingsw.model.Type_Student;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Ch_10 implements CharacterCard {
+public class Ch_10 implements CharacterCard, Serializable {
 
     private final short price;
     private boolean activated;

@@ -4,10 +4,11 @@ import it.polimi.ingsw.client.Action;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.model.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ch_1 implements CharacterCard {
+public class Ch_1 implements CharacterCard, Serializable {
     private final short price;
     private boolean activated;
     private final String powerUp;

@@ -6,7 +6,9 @@ import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Type_Student;
 
-public class Ch_12 implements CharacterCard {
+import java.io.Serializable;
+
+public class Ch_12 implements CharacterCard, Serializable {
 
     private final short price;
     private boolean activated;
