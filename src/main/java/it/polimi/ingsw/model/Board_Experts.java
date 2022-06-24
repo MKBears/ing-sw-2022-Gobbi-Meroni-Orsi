@@ -61,4 +61,8 @@ public class Board_Experts extends Board {
         return  super.toString()+
                 "\n\u001b[33m(¤)\u001B[0mx" + coins;
     }
+
+    public void subCoin(int s){
+        coins=coins-s;
+    }
 }

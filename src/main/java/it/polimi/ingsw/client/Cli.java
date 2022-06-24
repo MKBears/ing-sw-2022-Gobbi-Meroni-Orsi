@@ -588,6 +588,7 @@ public class Cli extends Thread implements View{
                                     } else if (character instanceof Ch_8) {
                                         server.sendChooseCh8();
                                     }
+                                    me_ex.subCoin(character.getPrice());
                                 }
                             }
                         } else {
