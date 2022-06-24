@@ -233,6 +233,23 @@ public class ClientHandler extends Thread{
                     }
                     checkAllProfessors();
                     controller.notifyProfessors();
+                    System.out.println("carte personaggio");
+                    if(expertMatch){
+                        do{
+                            out.sendCh(((Expert_Match)match).getCard());
+                            wait();
+                        }while(nack);
+                    }
+                    if (expertMatch){
+                        if (useCh) {
+                            try {
+                                effectCh();
+                            } catch (Exception e) {
+                                controller.notifyFinishedStudents();
+                            }
+                        }
+                    }
+                    controller.notifyCh();
                     state=4;
                 case 4:
                     ///ACTION phase: moving Mother Nature
