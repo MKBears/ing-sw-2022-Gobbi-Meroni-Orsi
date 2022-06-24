@@ -9,7 +9,7 @@ import java.util.Random;
 public class Expert_Match extends Match{
     CharacterCard[] card;
 
-    public void setCard() {
+    public void setCard() throws Exception{
         card=new CharacterCard[3];
         List<CharacterCard> c=new ArrayList<>();
         c.add(new Ch_1(this));

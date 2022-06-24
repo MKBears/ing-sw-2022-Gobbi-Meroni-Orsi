@@ -116,7 +116,7 @@ class BoardExpertsTest {
         assertThrows(NullPointerException.class, ()->board.playCharacter(c));
         assertTrue(c.hasBeenActivated());
         assertSame(2, board.getCoinsNumber());
-        assertThrows(Exception.class, ()->board.playCharacter(new Ch_9()));
+        assertThrows(Exception.class, ()->board.playCharacter(new Ch_8()));
     }
 
     @Test

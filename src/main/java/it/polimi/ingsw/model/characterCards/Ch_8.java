@@ -51,5 +51,11 @@ public class Ch_8 implements CharacterCard, Serializable {
     public void setPlayer(Player player) {
         this.player = player;
     }
+
+    @Override
+    public int getNumber() {
+        return 8;
+    }
+
 }
 

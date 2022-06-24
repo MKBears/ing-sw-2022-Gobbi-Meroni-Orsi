@@ -32,10 +32,16 @@ public class Board_Experts extends Board {
      * Controls if the player has enough coins to play the specified card and activates its power
      * @param card the card a player chooses to play
      */
-    public void playCharacter(CharacterCard card){
+    public void playCharacter(CharacterCard card) throws Exception {
         int cost = card.getPrice();
-        coins=coins-cost;
-        card.activatePowerUp();
+        coins -= cost;
+
+        try {
+            card.activatePowerUp();
+        } catch (Exception e) {
+            coins += cost;
+            throw new Exception(e.getMessage());
+        }
     }
 
     @Override
@@ -53,6 +59,6 @@ public class Board_Experts extends Board {
     @Override
     public String toString() {
         return  super.toString()+
-                "\n"+Colors.BLACK+"(¤)\u001B[0mx" + coins;
+                "\n\u001b[33m(¤)\u001B[0mx" + coins;
     }
 }

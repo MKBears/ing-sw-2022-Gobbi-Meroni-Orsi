@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.characterCards;
 
-import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.model.*;
 
 import java.io.Serializable;
@@ -10,9 +9,8 @@ public class Ch_5 implements CharacterCard, Serializable {
     private final short price;
     private boolean activated;
     private final String powerUp;
-    private Island[] Islands= new Island[4];
-    private Player player;
-    private Match match;
+    private final Island[] Islands= new Island[4];
+    private final Match match;
     private Land land;
 
 
@@ -67,10 +65,14 @@ public class Ch_5 implements CharacterCard, Serializable {
 
     @Override
     public void setPlayer(Player player) {
-        this.player = player;
     }
 
     public void setLand(Land land) {
         this.land = land;
+    }
+
+    @Override
+    public int getNumber() {
+        return 5;
     }
 }

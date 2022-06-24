@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.characterCards;
 
-import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Student;
@@ -68,4 +67,10 @@ public class Ch_10 implements CharacterCard, Serializable {
     public void setRoom_student(ArrayList<Type_Student> room_student) {
         this.room_student = room_student;
     }
+
+    @Override
+    public int getNumber() {
+        return 10;
+    }
+
 }

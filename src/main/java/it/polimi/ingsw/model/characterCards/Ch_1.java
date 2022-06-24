@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.characterCards;
 
-import it.polimi.ingsw.client.Action;
-import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.model.*;
 
 import java.io.Serializable;
@@ -13,8 +11,7 @@ public class Ch_1 implements CharacterCard, Serializable {
     private boolean activated;
     private final String powerUp;
     private final Match match;
-    private Player player;
-    private List<Student> students;
+    private final List<Student> students;
     private Student student;
     private Land land;
 
@@ -48,6 +45,7 @@ public class Ch_1 implements CharacterCard, Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        activated = true;
     }
 
     @Override
@@ -76,7 +74,6 @@ public class Ch_1 implements CharacterCard, Serializable {
 
     @Override
     public void setPlayer(Player player) {
-        this.player = player;
     }
 
     public void setStudent(Student student) {
@@ -86,4 +83,10 @@ public class Ch_1 implements CharacterCard, Serializable {
     public void setLand(Land land) {
         this.land = land;
     }
+
+    @Override
+    public int getNumber() {
+        return 1;
+    }
+
 }

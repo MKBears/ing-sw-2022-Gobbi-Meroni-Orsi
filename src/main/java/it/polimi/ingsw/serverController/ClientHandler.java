@@ -84,7 +84,7 @@ public class ClientHandler extends Thread{
                         System.out.println("Player " + userName + ": sveglio");
                     } while (!controller.isMyTurn(this));
                 }
-            } catch (InterruptedException | SocketException e) {
+            } catch (Exception e) {
                 out.sendGenericError("Internal server error ("+e.getMessage()+")");
                 state = 8;
             }
@@ -96,7 +96,7 @@ public class ClientHandler extends Thread{
      * @throws InterruptedException if a wait is interrupted
      * @throws SocketException if the socket goes down unexpectedly
      */
-    private void changeState() throws InterruptedException, SocketException {
+    private void changeState() throws Exception {
         synchronized (this) {
             switch (state) {
                 case 0:
@@ -198,9 +198,6 @@ public class ClientHandler extends Thread{
                     //check if they can control any professor
                     do {
                         out.sendMoveStudents();
-                        /*if(controller.getCurrentPlayer()!=controller.getFirstPlayer()){
-                            wait();
-                        }*/
                         System.out.println(this.avatar.getUserName()+": sto aspettando");
                         wait();
                     } while (nack);
@@ -236,19 +233,6 @@ public class ClientHandler extends Thread{
                     }
                     checkAllProfessors();
                     controller.notifyProfessors();
-                    System.out.println("carte personaggio");
-                    if(expertMatch){
-                        do{
-                            out.sendCh(((Expert_Match)match).getCard());
-                            wait();
-                        }while(nack);
-                    }
-                    if (expertMatch){
-                        if (useCh) {
-                            effectCh();
-                            controller.notifyCh();
-                        }
-                    }
                     state=4;
                 case 4:
                     ///ACTION phase: moving Mother Nature
@@ -344,7 +328,11 @@ public class ClientHandler extends Thread{
                     }
                     if (expertMatch){
                         if (useCh) {
-                            effectCh();
+                            try {
+                                effectCh();
+                            } catch (Exception e) {
+                                controller.notifyFinishedStudents();
+                            }
                         }
                     }
                     controller.notifyCh();
@@ -704,7 +692,7 @@ public class ClientHandler extends Thread{
         this.ch_5_land = ch_5_land;
     }
 
-    public void effectCh(){
+    public void effectCh() throws Exception{
         switch (chosenCh) {
             case "Ch_1" -> {
                 for (CharacterCard c : ((Expert_Match) match).getCard()) {

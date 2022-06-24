@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.characterCards;
 
-import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.model.Bag;
 import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.Player;
@@ -14,8 +13,8 @@ public class Ch_11 implements CharacterCard, Serializable {
     private final short price;
     private boolean activated;
     private final String powerUp;
-    private  ArrayList<Student> students;
-    private Bag bag;
+    private final ArrayList<Student> students;
+    private final Bag bag;
     Player player;
     private Student student;
 
@@ -27,7 +26,7 @@ public class Ch_11 implements CharacterCard, Serializable {
         this.player = player;
     }
 
-    public Ch_11(Bag bag){
+    public Ch_11(Bag bag) throws Exception {
         price=2;
         activated=false;
         powerUp="Take 1 Student from this card and place it in your Dining Room. " +
@@ -36,15 +35,12 @@ public class Ch_11 implements CharacterCard, Serializable {
         this.bag = bag;
 
         for (int i=0; i<4; i++){
-            try {
-                students.add(bag.getRandomStudent());
-            }
-            catch (Exception e){};
+            students.add(bag.getRandomStudent());
         }
     }
 
     @Override
-    public void activatePowerUp() {
+    public void activatePowerUp() throws Exception {
         for (Student s:this.students) {
             if(student.type().equals(s.type())){
                 students.remove(s);
@@ -52,11 +48,7 @@ public class Ch_11 implements CharacterCard, Serializable {
             }
         }
         player.getBoard().ch_11_effect(student);
-        try {
-            students.add(bag.getRandomStudent());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        students.add(bag.getRandomStudent());
         if(!activated){
             activated=true;
         }
@@ -88,5 +80,10 @@ public class Ch_11 implements CharacterCard, Serializable {
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    @Override
+    public int getNumber() {
+        return 11;
     }
 }

@@ -369,7 +369,7 @@ public class Controller extends Thread{
         }
     }
 
-    public void createMatch() {
+    public void createMatch() throws Exception{
         for (int i=0; i<playersNum; i++) {
             if (players[i] == null) {
                 return;
@@ -768,7 +768,7 @@ public class Controller extends Thread{
         }
     }
 
-    private void notifyFinishedStudents() {
+    public void notifyFinishedStudents() {
         for (ClientHandler player: players){
             player.getOutputStream().sendNoMoreStudents();
             player.endMatch();

@@ -55,5 +55,9 @@ public class Ch_4 implements CharacterCard, Serializable {
         return powerUp;
     }
 
+    @Override
+    public int getNumber() {
+        return 4;
+    }
 
 }

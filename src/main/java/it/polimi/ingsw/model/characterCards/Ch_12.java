@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.characterCards;
 
-import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
@@ -13,8 +12,7 @@ public class Ch_12 implements CharacterCard, Serializable {
     private final short price;
     private boolean activated;
     private final String powerUp;
-    private Player player;
-    private Match match;
+    private final Match match;
     private Type_Student type;
 
 
@@ -61,10 +59,14 @@ public class Ch_12 implements CharacterCard, Serializable {
 
     @Override
     public void setPlayer(Player player) {
-        this.player = player;
     }
 
     public void setType(Type_Student type) {
         this.type = type;
+    }
+
+    @Override
+    public int getNumber() {
+        return 12;
     }
 }

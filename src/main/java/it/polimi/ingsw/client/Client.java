@@ -118,9 +118,9 @@ public class Client  extends Thread{
                         received="ok";
                         break;
                     case "ListOfGames":
-                        ArrayList<String> join=new ArrayList<>();
+                        ArrayList<String> join;
                         join=(ArrayList<String>) in.readObject();
-                        ArrayList<String> resume=new ArrayList<>();
+                        ArrayList<String> resume;
                         resume=(ArrayList<String>) in.readObject();
                         view.chooseMatch(join,resume);
                     case "ACK":

@@ -281,9 +281,11 @@ public class Cli extends Thread implements View{
     public void printMatch(Match match){
         //clearConsole();
         getTitolo();
+        System.out.println(match.toString());
+
         if (match instanceof Expert_Match)
             System.out.println(printCharacters());
-        System.out.println(match.toString()+printAssistants());
+        System.out.println(printAssistants());
     }
 
     @Override
@@ -314,12 +316,21 @@ public class Cli extends Thread implements View{
         StringBuilder chCards = new StringBuilder();
 
         for (int j=0; j<6; j++) {
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 3; i++) {
+
+                if (((Board_Experts)me.getBoard()).getCoinsNumber() < characters[i].getPrice())
+                    chCards.append("\u001b[30;1m");
                 switch (j) {
                     case 0 -> chCards.append("       _______ ");
                     case 1 -> chCards.append("      | |‾‾‾| |");
                     case 2 -> chCards.append("      | |___| |");
-                    case 3 -> chCards.append("      | |     |");
+                    case 3 -> {
+                        chCards.append("      | |  ").append(characters[i].getNumber());
+
+                        if (characters[i].getNumber() < 10)
+                            chCards.append(" ");
+                        chCards.append("   |");
+                    }
                     case 4 -> {
                         chCards.append("      | |  ").append(characters[i].getPrice());
 
@@ -329,8 +340,9 @@ public class Cli extends Thread implements View{
                     }
                     default -> chCards.append("      |_______|");
                 }
-                chCards.append('\n');
+                chCards.append("\u001b[0m");
             }
+            chCards.append('\n');
         }
 
         return chCards.toString().indent(20);
@@ -812,15 +824,17 @@ public class Cli extends Thread implements View{
 
                  @Override
                  public CharacterCard chooseChCard (CharacterCard[]cards){
+                     int chosen;
                      System.out.println("\nVuoi giocare una carta personaggio? [si/no]");
                      System.out.println("Per visualizzare la descrizione dell'effetto della carta scrivi 'info'");
                      for (int i = 0; i < 3; i++) {
                          System.out.println(i + ")  " + characters[i].toString() + '\n');
                      }
                      System.out.println("Vuoi giocare una carta personaggio? [si/no] il tio numero di monete è " + ((Board_Experts) me.getBoard()).getCoinsNumber());
-                     String choose = input.next();
-                     int chosen;
+
                      while (true) {
+                        String choose = input.next();
+
                          switch (choose.toLowerCase()) {
                              case "si" -> {
                                  do {
@@ -834,7 +848,7 @@ public class Cli extends Thread implements View{
                              }
                              case "info" -> {
                                  for (CharacterCard card : cards) {
-                                     System.out.println("\nPersonaggio 1 :\n\t" + card.getPowerUp());
+                                     System.out.println("\nPersonaggio "+card.getNumber()+":\n" + card.getPowerUp()+"\n");
                                  }
                              }
                              default -> System.out.println("Inserisci si/no oppure info");

@@ -10,7 +10,7 @@ public interface CharacterCard extends Serializable {
     /**
      * Activates the card's power
      */
-    void activatePowerUp();
+    void activatePowerUp() throws Exception;
 
     /**
      *
@@ -35,4 +35,6 @@ public interface CharacterCard extends Serializable {
      * @param player
      */
     void setPlayer(Player player);
+
+    int getNumber();
 }
