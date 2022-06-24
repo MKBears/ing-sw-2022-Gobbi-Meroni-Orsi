@@ -239,17 +239,16 @@ public class ClientHandler extends Thread{
                             out.sendCh(((Expert_Match)match).getCard());
                             wait();
                         }while(nack);
-                    }
-                    if (expertMatch){
+
                         if (useCh) {
                             try {
                                 effectCh();
                             } catch (Exception e) {
                                 controller.notifyFinishedStudents();
                             }
+                            controller.notifyCh();
                         }
                     }
-                    controller.notifyCh();
                     state=4;
                 case 4:
                     ///ACTION phase: moving Mother Nature
@@ -335,26 +334,6 @@ public class ClientHandler extends Thread{
                         out.sendGenericError("Desynchronized ("+e.getMessage()+")");
                     }
                     break;
-                case 7:
-                    System.out.println("carte personaggio");
-                    if(expertMatch){
-                        do{
-                            out.sendCh(((Expert_Match)match).getCard());
-                            wait();
-                        }while(nack);
-                    }
-                    if (expertMatch){
-                        if (useCh) {
-                            try {
-                                effectCh();
-                            } catch (Exception e) {
-                                controller.notifyFinishedStudents();
-                            }
-                        }
-                    }
-                    controller.notifyCh();
-                    state=4;
-                    //Fase AZIONE: gioca una carta personaggio
             }
         }
     }

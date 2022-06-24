@@ -827,21 +827,24 @@ public class Cli extends Thread implements View{
                      int chosen;
                      System.out.println("\nVuoi giocare una carta personaggio? [si/no]");
                      System.out.println("Per visualizzare la descrizione dell'effetto della carta scrivi 'info'");
-                     for (int i = 0; i < 3; i++) {
-                         System.out.println(i + ")  " + characters[i].toString() + '\n');
-                     }
-                     System.out.println("Vuoi giocare una carta personaggio? [si/no] il tio numero di monete è " + ((Board_Experts) me.getBoard()).getCoinsNumber());
 
                      while (true) {
                         String choose = input.next();
 
                          switch (choose.toLowerCase()) {
                              case "si" -> {
-                                 do {
-                                     System.out.println("\nQuale delle tre?");
-                                     chosen = input.nextInt();
-                                 } while (chosen < 0 || chosen > 2);
-                                 return cards[chosen];
+                                 while (true) {
+                                     do {
+                                         System.out.println("\nQuale delle tre?");
+                                         chosen = input.nextInt();
+                                     } while (chosen <= 0 || chosen > 12);
+
+                                     for (int i=0; i<3; i++)
+                                         if (characters[i].getNumber() == chosen)
+                                            return cards[chosen];
+                                     System.out.println("Scegli una tra le carte che vedi e inserisci" +
+                                             " il valore (il primo numero che vedi)");
+                                 }
                              }
                              case "no" -> {
                                  return null;
