@@ -62,4 +62,6 @@ public class Ch_2 implements CharacterCard, Serializable {
         return 2;
     }
 
+    public void setActivated(){activated=true;}
+
 }

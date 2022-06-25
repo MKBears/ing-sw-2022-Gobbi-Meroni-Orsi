@@ -75,4 +75,6 @@ public class Ch_5 implements CharacterCard, Serializable {
     public int getNumber() {
         return 5;
     }
+
+    public void setActivated(){activated=true;}
 }

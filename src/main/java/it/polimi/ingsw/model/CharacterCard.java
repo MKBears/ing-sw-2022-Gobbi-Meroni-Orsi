@@ -37,4 +37,6 @@ public interface CharacterCard extends Serializable {
     void setPlayer(Player player);
 
     int getNumber();
+
+    void setActivated();
 }

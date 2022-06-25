@@ -13,7 +13,7 @@ public class Ch_11 implements CharacterCard, Serializable {
     private final short price;
     private boolean activated;
     private final String powerUp;
-    private final ArrayList<Student> students;
+    private ArrayList<Student> students;
     private final Bag bag;
     Player player;
     private Student student;
@@ -86,4 +86,18 @@ public class Ch_11 implements CharacterCard, Serializable {
     public int getNumber() {
         return 11;
     }
+
+    public ArrayList<Student> copy(){
+        ArrayList<Student> result=new ArrayList<>();
+        for (Student s:students) {
+            result.add(new Student(s.type()));
+        }
+        return result;
+    }
+
+    public void setStudents(ArrayList<Student> students) {
+        this.students = students;
+    }
+
+    public void setActivated(){activated=true;}
 }
