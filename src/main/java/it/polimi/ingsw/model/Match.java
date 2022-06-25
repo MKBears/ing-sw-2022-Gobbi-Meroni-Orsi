@@ -330,7 +330,7 @@ public class Match implements Serializable {
     /**
      * Auxiliary method used by toString method in order to get a String representation of the lands and clouds
      * with mn position
-     * @return
+     * @return the String representation of all the match's islands and clouds
      */
     public String getSky () {
         return ("                                   " +
@@ -342,9 +342,9 @@ public class Match implements Serializable {
                 "                              /" + countStudents(0, 1) + "\\" + printBridge(0, 1) + "/" + countStudents(1, 1) +
                 "\\" + printBridge(1, 1) + "/" + countStudents(2, 1) + "\\\n" +
                 "                    " + printMN(11) + "     |" + countStudents(0, 2) + printBridge(0, 2) +
-                countStudents(1, 2) + printBridge(1, 3) + countStudents(2, 2) + "|     " + printMN(3) +
-                "\n" + "               12__________" + printBridge(11, 1) + "|" + printTowerRow(0, 2) + printBridge(0, 2) + printTowerRow(1, 2) +
-                printBridge(1, 2) + printTowerRow(2, 2) + "|" + printBridge(2, 1) +"__________ 4\n" +
+                countStudents(1, 2) + printBridge(1, 2) + countStudents(2, 2) + "|     " + printMN(3) +
+                "\n" + "               12__________" + printBridge(11, 1) + "|" + printTowerRow(0, 2) + printBridge(0, 3) + printTowerRow(1, 2) +
+                printBridge(1, 3) + printTowerRow(2, 2) + "|" + printBridge(2, 1) +"__________ 4\n" +
                 "                /" + printNoEntry(11) + printBridge(11, 2) + countStudents(0, 3) + "/ \\" +
                 countStudents(1, 3) + "/ \\" + countStudents(2, 3) + printBridge(2, 2) +
                 printNoEntry(3) + "\\\n" +
@@ -380,7 +380,7 @@ public class Match implements Serializable {
                 "                     " + printMN(9) + "    |" + countStudents(8, 2) + printBridge(7, 2) +
                 countStudents(7, 2) + printBridge(6, 2) + countStudents(6, 2) + "|     " +
                 printMN(5) + "\n" + "                              |" + printTowerRow(8, 2) + printBridge(7, 3) +
-                printTowerRow(6, 2) + printBridge(6, 3) + printTowerRow(7, 2) + "|\n" +
+                printTowerRow(7, 2) + printBridge(6, 3) + printTowerRow(6, 2) + "|\n" +
                 "                              \\" + countStudents(8, 3) + "/ \\" + countStudents(7, 3) +
                 "/ \\" + countStudents(6, 3) + "/\n" +
                 "                             9 \\___________/   \\___________/ 8 \\___________/ 7\n" +
@@ -392,7 +392,7 @@ public class Match implements Serializable {
      * Auxiliary method used by getSky method in order to get a String representation of a cloud's row
      * @param cloud
      * @param row
-     * @return
+     * @return part of a cloud
      */
     private String printCloudRow (int cloud, int row) {
         ArrayList<Student> students;
@@ -443,7 +443,7 @@ public class Match implements Serializable {
      * Auxiliary method used by getSky method to print the status of a cloud
      * (whether if it has been chosen by a player or not)
      * @param cloud
-     * @return
+     * @return whether a cloud has already been chosen or not
      */
     private String printChosenCloud (int cloud) {
         if (cloud < this.cloud.length)
@@ -456,7 +456,7 @@ public class Match implements Serializable {
     /**
      * Auxiliary method used by getSky method in order to add if there is a no entry tile on an island
      * @param island
-     * @return
+     * @return the no entry tile on an island
      */
     private String printNoEntry (int island) {
         if (findIsland(island).isThereNoEntry())
@@ -469,7 +469,7 @@ public class Match implements Serializable {
      * Auxiliary method used by getSky method in order to print a line of the island's String representation
      * @param island
      * @param row
-     * @return
+     * @return part of an island
      */
     private String countStudents (int island, int row) {
         Island i = findIsland(island);
@@ -530,15 +530,19 @@ public class Match implements Serializable {
     /**
      * Auxiliary method used in order to find the specified island inside the lands
      * @param island
-     * @return
+     * @return the requested island
      */
-    private Island findIsland (int island) {
+    public Island findIsland (int island) {
         int counter = 0;
+
+        if (island == 12)
+            island = 0;
 
         for (Land land : lands)
         {
-            if (counter+land.size() > island)
-                return land.getIslands().get(island-counter);
+            if (counter+land.size() > island) {
+                return land.getIslands().get(island - counter);
+            }
             else
                 counter += land.size();
         }
@@ -550,7 +554,7 @@ public class Match implements Serializable {
      * Auxiliary method used in order to print a line of a tower on an island
      * @param island
      * @param row
-     * @return
+     * @return part of a tower on an island
      */
     private String printTowerRow (int island, int row) {
         Island i = findIsland(island);
@@ -569,22 +573,25 @@ public class Match implements Serializable {
     /**
      * Auxiliary method used by getSky method in order to print mn if it's on the specified island
      * @param island
-     * @return
+     * @return the String representation of mn
      */
     private String printMN (int island) {
         Island i = findIsland(island);
         String arrow;
 
-        if (motherNature.getPosition().equals(i)) {
-            if (island>4 && island<10)
-                arrow = "↑";
-            else
-                arrow = "↓";
-
-            return "\u001b[36m(▲) "+arrow+"\u001B[0m";
+        for (Land land : lands) {
+            if (motherNature.getPosition().equals(land) || land.getIslands().contains((Island)motherNature.getPosition())) {
+                if (land.getIslands().get(0).equals(i)) {
+                    if (island > 4 && island < 10)
+                        arrow = "↑";
+                    else
+                        arrow = "↓";
+                    return "\u001b[36m(▲) " + arrow + "\u001B[0m";
+                }
+            }
         }
-        else
-            return "     ";
+
+        return "     ";
     }
 
     /**
@@ -592,30 +599,29 @@ public class Match implements Serializable {
      * this auxiliary method prints a bridge linking them
      * @param island
      * @param row
-     * @return
+     * @return part of the bridge linking two islands
      */
     private String printBridge (int island, int row) {
-        int counter = 0;
+        Land i1 = findIsland(island), i2 = findIsland(island+1);
 
         for (Land land : lands) {
-            if (counter > island)
-                break;
-
-            counter += land.size();
-
-            if (counter > island) {
-                if (island==0 || island==1 || island==6 || island==7 ){
-                    switch (row) {
-                        case 1 -> {return "_";}
-                        case 2 -> {return "   ";}
-                        default -> {return " _ ";}
-                    }
-                }
-                else
-                    return "___";
-            }
-            else {
-                if (counter == island) {
+            if (land.getIslands().contains(i1)) {
+                if (land.getIslands().contains(i2)) {
+                    if (island == 0 || island == 1 || island == 6 || island == 7) {
+                        switch (row) {
+                            case 1 -> {
+                                return "_";
+                            }
+                            case 2 -> {
+                                return "   ";
+                            }
+                            default -> {
+                                return " _ ";
+                            }
+                        }
+                    } else
+                        return "___";
+                } else {
                     switch (island) {
                         case 0, 1, 6, 7 -> {
                             if (row == 1)

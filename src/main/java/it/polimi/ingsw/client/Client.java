@@ -146,6 +146,7 @@ public class Client  extends Thread{
                         view.setMatch(match);
                         if (match instanceof Expert_Match)
                             view.setCharacters(((Expert_Match) match).getCard());
+                        view.printMatch(match);
                         server.sendACK();
                         break;
                     case "RefillClouds":
@@ -308,7 +309,9 @@ public class Client  extends Thread{
                         GameRecap recap = (GameRecap) in.readObject();
                         view.getWinner(winner);
                         view.printMatch(match);
+                        view. printNotification(winner.getColor()+winner.getUserName()+" ha vinto perché "+ex);
                         view.printNotification(recap.toString());
+                        sleep(5000);
                         view.wakeUp("EndGame");
                         end=true;
                         server.sendACK();

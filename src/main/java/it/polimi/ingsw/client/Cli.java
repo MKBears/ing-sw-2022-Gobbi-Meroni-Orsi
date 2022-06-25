@@ -264,11 +264,11 @@ public class Cli extends Thread implements View{
                         value = input.nextLine().toLowerCase();
 
                     if (value.equals("sala"))
-                        return 12;
+                        return 13;
                     choose = Integer.parseInt(value);
                 } while (choose < 0 || choose > 12);
                 if (choose >= match.getLands().size())
-                    return 12;
+                    System.out.println("Scegli un'isola tra quelle che vedi");
                 else
                     return choose;
             } catch (Exception e) {
@@ -326,18 +326,18 @@ public class Cli extends Thread implements View{
                     case 2 -> chCards.append("          | ||‾\\\\ |");
                     case 3 -> chCards.append("          | ||_// |");
                     case 4 -> {
-                        chCards.append("          | ||‾").append(characters[i].getNumber());
+                        chCards.append("          | ||‾‾").append(characters[i].getNumber());
 
                         if (characters[i].getNumber() < 10)
                             chCards.append(" ");
-                        chCards.append(" |");
+                        chCards.append("|");
                     }
                     case 5 -> {
-                        chCards.append("          | || ").append(characters[i].getPrice());
+                        chCards.append("          | ||  ").append(characters[i].getPrice());
 
                         if (characters[i].getPrice() < 10)
                             chCards.append(" ");
-                        chCards.append(" |");
+                        chCards.append("|");
                     }
                     default -> chCards.append("          |_______|");
                 }
@@ -503,7 +503,7 @@ public class Cli extends Thread implements View{
                         for (int i = 0; i < match.getPlayer().length + 1; i++) {
                             st = this.getStudent(me);
                             move = this.getDestination(match);
-                            if (move == 12) {
+                            if (move == 13) {
                                 try {
                                     action.moveFromIngressToBoard(me, st);
                                     server.sendMovedStudent(st, 12);
