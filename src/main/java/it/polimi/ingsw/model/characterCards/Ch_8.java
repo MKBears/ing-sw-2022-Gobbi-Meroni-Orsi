@@ -57,5 +57,7 @@ public class Ch_8 implements CharacterCard, Serializable {
         return 8;
     }
 
+    public void setActivated(){activated=true;}
+
 }
 

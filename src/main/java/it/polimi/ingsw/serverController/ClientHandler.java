@@ -281,6 +281,7 @@ public class ClientHandler extends Thread{
                     }else{
                         try {
                             match.getMotherNature().getPosition().setNoEntry(false);
+                            controller.notifyMovedMN(this, motherNatureSteps);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -691,16 +692,18 @@ public class ClientHandler extends Thread{
     public void effectCh() throws Exception{
         switch (chosenCh) {
             case "Ch_1" -> {
-                for (CharacterCard c : ((Expert_Match) match).getCard()) {
-                    if (c instanceof Ch_1) {
-                        ((Ch_1) c).setStudent(ch_1_Student);
+                for (int i=0;i<3;i++) {
+                    if (((Expert_Match)match).getCard()[i] instanceof Ch_1) {
+                        Ch_1 c=(Ch_1) ((Expert_Match)match).getCard()[i];
+                        c.setStudent(ch_1_Student);
                         for (Land land : match.getLands()) {
                             if (ch_1_land.getID() == land.getID()) {
-                                ((Ch_1) c).setLand(land);
+                                c.setLand(land);
                             }
                         }
                         c.setPlayer(avatar);
                         ((Board_Experts) avatar.getBoard()).playCharacter(c);
+                        System.out.println(c.getStudents());
                     }
                 }
             }
@@ -797,4 +800,26 @@ public class ClientHandler extends Thread{
     public void setExpertMatch(boolean expertMatch) {
         this.expertMatch = expertMatch;
     }
+
+    public Type_Student getCh_12_type() {
+        return ch_12_type;
+    }
+
+    public ArrayList<Student> getCh_10_students() {
+        return ch_10_students;
+    }
+
+    public ArrayList<Type_Student> getCh_10_types() {
+        return ch_10_types;
+    }
+
+    public Land getCh_1_land() {
+        return ch_1_land;
+    }
+
+    public Student getCh_1_Student() {
+        return ch_1_Student;
+    }
+
+    public Student getCh_11_student() {return ch_11_student;}
 }

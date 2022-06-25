@@ -15,11 +15,11 @@ public class Expert_Match extends Match{
         c.add(new Ch_1(this));
         c.add(new Ch_2(this));
         c.add(new Ch_4());
-        /*c.add(new Ch_5(this));
+        c.add(new Ch_5(this));
         c.add(new Ch_8());
         c.add(new Ch_10());
         c.add(new Ch_11(this.bag));
-        c.add(new Ch_12(this));*/
+        c.add(new Ch_12(this));
         for(int i=0; i<3; i++) {
             Random a = new Random();
             int x = a.nextInt(1000);
@@ -51,6 +51,6 @@ public class Expert_Match extends Match{
      * @return the character card of the match
      */
     public CharacterCard[] getCard() {
-        return card.clone();
+        return card;
     }
 }

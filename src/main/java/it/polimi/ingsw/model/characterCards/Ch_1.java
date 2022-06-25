@@ -11,7 +11,7 @@ public class Ch_1 implements CharacterCard, Serializable {
     private boolean activated;
     private final String powerUp;
     private final Match match;
-    private final List<Student> students;
+    private ArrayList<Student> students;
     private Student student;
     private Land land;
 
@@ -34,17 +34,19 @@ public class Ch_1 implements CharacterCard, Serializable {
     @Override
     public void activatePowerUp() {
         land.addStudent(student);
-        for (Student s:students) {
-            if(s.type().equals(student.type()))   {
-                students.remove(s);
+        for (int i = 0; i < 4; i++) {
+            if(students.get(i).type()==student.type()){
+                students.remove(i);
                 break;
             }
         }
         try {
             students.add(match.getBag().getRandomStudent());
         } catch (Exception e) {
+            System.out.println("problema");
             e.printStackTrace();
         }
+        System.out.println(students);
         activated = true;
     }
 
@@ -89,4 +91,17 @@ public class Ch_1 implements CharacterCard, Serializable {
         return 1;
     }
 
+    public void setStudents(ArrayList<Student> students) {
+        this.students = students;
+    }
+
+    public ArrayList<Student> copy(){
+        ArrayList<Student> result=new ArrayList<>();
+        for (Student s:students) {
+           result.add(new Student(s.type()));
+        }
+        return result;
+    }
+
+    public void setActivated(){activated=true;}
 }

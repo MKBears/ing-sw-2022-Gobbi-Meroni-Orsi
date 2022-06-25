@@ -69,4 +69,6 @@ public class Ch_12 implements CharacterCard, Serializable {
     public int getNumber() {
         return 12;
     }
+
+    public void setActivated(){activated=true;}
 }

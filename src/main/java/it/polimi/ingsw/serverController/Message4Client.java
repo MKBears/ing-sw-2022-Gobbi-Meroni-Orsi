@@ -5,6 +5,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import it.polimi.ingsw.model.*;
@@ -552,25 +553,28 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
         }
     }
 
-    public void sendNotifyCh_1(ArrayList<Land> lands,CharacterCard card) {
+    public void sendNotifyCh_1(Land land,List<Student> students, Student student,String username) {
         synchronized (this) {
             name = "NotifyCh_1";
             try {
                 out.writeObject(name);
-                out.writeObject(lands);
-                out.writeObject(card);
+                out.writeObject(land);
+                out.writeObject(students);
+                out.writeObject(student);
+                out.writeObject(username);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public void sendNotifyCh_2(Map<Type_Student,Player> professors) {
+    public void sendNotifyCh_2(Map<Type_Student,Player> professors,String username) {
         synchronized (this) {
             name = "NotifyCh_2";
             try {
                 out.writeObject(name);
                 out.writeObject(professors);
+                out.writeObject(username);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -589,24 +593,12 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
         }
     }
 
-    public void sendNotifyCh_5(Land land) {
+    public void sendNotifyCh_5(Land land,String username) {
         synchronized (this) {
             name = "NotifyCh_5";
             try {
                 out.writeObject(name);
                 out.writeObject(land);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    public void sendNotifyCh_10(Board board,String username) {
-        synchronized (this) {
-            name = "NotifyCh_10";
-            try {
-                out.writeObject(name);
-                out.writeObject(board);
                 out.writeObject(username);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -614,37 +606,53 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
         }
     }
 
-    public void sendNotifyCh_11(CharacterCard card,Board board,String username) {
+    public void sendNotifyCh_10(String username,ArrayList<Student> students,ArrayList<Type_Student> type_students) {
+        synchronized (this) {
+            name = "NotifyCh_10";
+            try {
+                out.writeObject(name);
+                out.writeObject(username);
+                out.writeObject(students);
+                out.writeObject(type_students);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public void sendNotifyCh_11(ArrayList<Student> card,Student student,String username) {
         synchronized (this) {
             name = "NotifyCh_11";
             try {
                 out.writeObject(name);
                 out.writeObject(card);
                 out.writeObject(username);
-                out.writeObject(board);
+                out.writeObject(student);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public void sendNotifyCh_12(ArrayList<Board> boards) {
+    public void sendNotifyCh_12(Type_Student type_student,String username) {
         synchronized (this) {
             name = "NotifyCh_12";
             try {
                 out.writeObject(name);
-                out.writeObject(boards);
+                out.writeObject(type_student);
+                out.writeObject(username);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public void sendNotifyCh_8(){
+    public void sendNotifyCh_8(String username){
         synchronized (this) {
             name = "NotifyCh_8";
             try {
                 out.writeObject(name);
+                out.writeObject(username);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

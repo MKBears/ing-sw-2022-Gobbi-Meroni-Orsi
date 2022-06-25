@@ -825,37 +825,37 @@ public class Controller extends Thread{
                 switch (players[currentPlayer].getChosenCh()) {
                     case "Ch_1" -> {
                         for (int i = 0; i < 3; i++) {
-                            if (((Expert_Match) match).getCard()[i] instanceof Ch_1)
-                                player.getOutputStream().sendNotifyCh_1(match.getLands(), ((Expert_Match) match).getCard()[i]);
+                            if (((Expert_Match) match).getCard()[i] instanceof Ch_1){
+                                player.getOutputStream().sendNotifyCh_1(players[currentPlayer].getCh_1_land(),((Ch_1)(((Expert_Match) match).getCard()[i])).copy(),
+                                        players[currentPlayer].getCh_1_Student(),players[currentPlayer].getAvatar().getUserName());
+                            }
                         }
                     }
                     case "Ch_2" -> {
-                        player.getOutputStream().sendNotifyCh_2(match.getProfessors());
+                        player.getOutputStream().sendNotifyCh_2(match.getProfessors(),players[currentPlayer].getAvatar().getUserName());
                     }
                     case "Ch_8" -> {
-                        player.getOutputStream().sendNotifyCh_8();
+                        player.getOutputStream().sendNotifyCh_8(players[currentPlayer].getAvatar().getUserName());
                     }
                     case "Ch_4" -> {
                         player.getOutputStream().sendNotifyCh_4(players[currentPlayer].getAvatar().getUserName());
                     }
                     case "Ch_5" -> {
-                        player.getOutputStream().sendNotifyCh_5(players[currentPlayer].getCh_5_land());
+                        player.getOutputStream().sendNotifyCh_5(players[currentPlayer].getCh_5_land(),players[currentPlayer].getAvatar().getUserName());
                     }
                     case "Ch_10" -> {
-                        player.getOutputStream().sendNotifyCh_10(players[currentPlayer].getAvatar().getBoard(), players[currentPlayer].getAvatar().getUserName());
+                        player.getOutputStream().sendNotifyCh_10(players[currentPlayer].getAvatar().getUserName(),
+                                players[currentPlayer].getCh_10_students(),players[currentPlayer].getCh_10_types());
                     }
                     case "Ch_11" -> {
                         for (int i = 0; i < 3; i++) {
                             if (((Expert_Match) match).getCard()[i] instanceof Ch_11)
-                                player.getOutputStream().sendNotifyCh_11(((Expert_Match) match).getCard()[i], players[currentPlayer].getAvatar().getBoard(), players[currentPlayer].getAvatar().getUserName());
+                                player.getOutputStream().sendNotifyCh_11(((Ch_11)((Expert_Match) match).getCard()[i]).copy(),
+                                        players[currentPlayer].getCh_11_student(), players[currentPlayer].getAvatar().getUserName());
                         }
                     }
                     case "Ch_12" -> {
-                        ArrayList<Board> boards = new ArrayList<>();
-                        for (Player p : match.getPlayer()) {
-                            boards.add(p.getBoard());
-                        }
-                        player.getOutputStream().sendNotifyCh_12(boards);
+                        player.getOutputStream().sendNotifyCh_12(players[currentPlayer].getCh_12_type(),players[currentPlayer].getAvatar().getUserName());
                     }
                 }
                 synchronized (player) {
