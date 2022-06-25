@@ -396,7 +396,7 @@ public class Client  extends Thread{
                             }
                         }
                         view.printMatch(match);
-                        view.printNotification("Il player [nome] ha giocato la carta personaggio 1");
+                        view.printNotification("Il player "+us6+" ha giocato la carta personaggio 1");
                         server.sendACK();
                         break;
                     case "NotifyCh_2":
