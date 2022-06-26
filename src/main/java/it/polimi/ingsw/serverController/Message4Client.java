@@ -5,6 +5,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import it.polimi.ingsw.model.*;
@@ -12,7 +13,7 @@ import it.polimi.ingsw.model.*;
 /**
  * This class contains all the possible message to send to the client
  */
-public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
+public class Message4Client extends Thread {
 
     private final ObjectOutputStream out;
     private String name;
@@ -160,7 +161,7 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
             name = "ChooseCard";
             try {
                 out.writeObject(name);
-                out.writeObject(cards);
+                out.writeObject((List<AssistantCard>)cards);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

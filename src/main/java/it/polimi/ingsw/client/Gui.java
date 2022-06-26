@@ -36,6 +36,9 @@ public class Gui extends Application {
     private AssistantCard ass;
     private ClientGui cg;
     private Scene g;
+    private boolean time;
+    private FXMLLoader pup;
+    private boolean newgame;
 
     public Gui() {
         end=false;
@@ -47,6 +50,14 @@ public class Gui extends Application {
         ass=null;
         popup=new Stage();
         game=new FXMLLoader(getClass().getClassLoader().getResource("real_matchh.fxml"));
+        pup=new FXMLLoader(getClass().getClassLoader().getResource("popup_notify.fxml"));
+        try {
+            g=new Scene(pup.load());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        //time=false;
+        //newgame=false;
     }
 
     public void setCG(ClientGui cg){
@@ -151,7 +162,7 @@ public class Gui extends Application {
     public void popUp(String title, String message){
         System.out.println("In popup di GUI ho: "+message);
         if(message.contains("carta")){
-            message=message.replace("|", "");
+            /*message=message.replace("|", "");
             message=message.replace("_", "");
             message=message.replace("/", "");
             message=message.replace("-", "");
@@ -165,21 +176,28 @@ public class Gui extends Application {
             message=message.replace("7", "");
             message=message.replace("8", "");
             message=message.replace("9", "");
-            message=message.replace("0", "");
+            message=message.replace("0", "");*/
             synchronized (cg){
                 cg.notifyAll();
             }
         }
         //PopUpController.setNotify(message);
+
+        //System.out.println(fxmlLoader.getLocation().toString());
+        //try {
+            //popup.setScene(new Scene(pup.load()));
         FXMLLoader fxmlLoader=new FXMLLoader(getClass().getClassLoader().getResource("popup_notify.fxml"));
-        System.out.println(fxmlLoader.getLocation().toString());
         try {
             popup.setScene(new Scene(fxmlLoader.load()));
-            ((PopUpController)fxmlLoader.getController()).setNotify(message);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+        ((PopUpController)fxmlLoader.getController()).setNotify(message);
+        //} catch (IOException e) {
+        //    e.printStackTrace();
+        //}
         popup.setTitle(title);
+        popup.setAlwaysOnTop(true);
         popup.show();
     }
 
@@ -226,17 +244,7 @@ public class Gui extends Application {
                 MatchController.setAction(this.action);
                 MatchController.setServer(this.server);
                 MatchController.setMe(this.me);
-                //MatchController.setStateLabel("Benvenuto!");
                 game=new FXMLLoader(getClass().getClassLoader().getResource("real_matchh.fxml"));
-                //game=fxmlLoader;
-                System.out.println(game.getLocation().toString());
-                //g=;
-                //g=new Scene(game.load());
-                //((MatchController)game.getController()).setAction(this.action);
-                //((MatchController)game.getController()).setmatch(this.match);
-                //((MatchController)game.getController()).setMe(this.me);
-                //((MatchController)game.getController()).setServer(this.server);
-                //((MatchController)game.getController()).setGui(this);
                 stage.setScene(new Scene(game.load()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -298,8 +306,12 @@ public class Gui extends Application {
 
 
     public void setCards(List<AssistantCard> cards) {
+        System.out.println("Sono all'inizio di setCards di Gui");
         this.cards=cards;
-        ((MatchController)game.getController()).setVisibleAssCards((ArrayList<AssistantCard>) cards);
+        //if(!time && newgame) {
+            ((MatchController) game.getController()).setVisibleAssCards((List<AssistantCard>) cards);////ERRORE QUI
+        //}else time=true;
+        System.out.println("Sono alla fine di setCards di Gui");
     }
 
 

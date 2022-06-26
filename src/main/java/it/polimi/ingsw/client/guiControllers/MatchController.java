@@ -2036,7 +2036,7 @@ public class MatchController extends Thread {
         board2.setDisable(v);
     }
 
-    public void setVisibleAssCards(ArrayList<AssistantCard> ass){
+    public void setVisibleAssCards(List<AssistantCard> ass){
         assistant0.setVisible(false);
         assistant1.setVisible(false);
         assistant2.setVisible(false);
