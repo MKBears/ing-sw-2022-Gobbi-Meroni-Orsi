@@ -23,6 +23,6 @@
       <TextField fx:id="username" layoutX="196.0" layoutY="168.0" prefHeight="31.0" prefWidth="208.0" />
       <Button fx:id="send_username" layoutX="273.0" layoutY="264.0" mnemonicParsing="false" onAction="#username" text="Invia" />
       <Label fx:id="result_username" layoutX="199.0" layoutY="230.0" opacity="1.0" text="" />
-      <CheckBox fx:id="newlogin" layoutX="172.0" layoutY="306.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="243.0" text="Selezionare per creare un nuovo account" />
+      <CheckBox fx:id="newlogin" layoutX="172.0" layoutY="306.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="243.0" selected="true" text="Selezionare per creare un nuovo account" />
    </children>
 </AnchorPane>

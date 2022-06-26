@@ -5,6 +5,8 @@ import it.polimi.ingsw.model.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+
 public class MessageFromClient extends Thread{
 
     private final ObjectInputStream in;
@@ -40,13 +42,13 @@ public class MessageFromClient extends Thread{
                         message = (String) in.readObject();
 
                         if (message.equals("NewGame")) {
-                            //System.out.println("Ricevuto: "+message);
+                            System.out.println("Ricevuto: "+message);
                             Integer playersNum = (Integer) in.readObject();
-                            //System.out.println("Ricevuto: "+playersNum);
+                            System.out.println("Ricevuto: "+playersNum);
                             Boolean expert = (Boolean) in.readObject();
-                            //System.out.println("Ricevuto: "+expert);
+                            System.out.println("Ricevuto: "+expert);
                             ch.createMatch(playersNum, expert);
-                            //System.out.println("Ricevuto num giocatori e expert");
+                            System.out.println("Ricevuto num giocatori e expert");
                             ch.setAck(true);
                         }
                         else {

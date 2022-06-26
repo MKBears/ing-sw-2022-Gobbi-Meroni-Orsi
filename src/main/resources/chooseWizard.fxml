@@ -7,8 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi
-.ingsw.client.WizardsController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.guiControllers.WizardsController">
    <children>
       <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -39,9 +38,9 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Button layoutX="58.0" layoutY="338.0" managed="true" mnemonicParsing="false" onAction="#chooseWizard" text="mago 1" visible="true" />
-      <Button layoutX="205.0" layoutY="338.0" managed="true" mnemonicParsing="false" onAction="#chooseWizard" text="mago 2" visible="true" />
-      <Button layoutX="343.0" layoutY="338.0" managed="true" mnemonicParsing="false" onAction="#chooseWizard" text="mago 3" visible="true" />
-      <Button layoutX="489.0" layoutY="338.0" managed="true" mnemonicParsing="false" onAction="#chooseWizard" text="mago 4" visible="true" />
+      <Button fx:id="w_1" layoutX="58.0" layoutY="338.0" managed="true" mnemonicParsing="false" onAction="#chooseWizard" text="mago 1" visible="true" />
+      <Button fx:id="w_2" layoutX="205.0" layoutY="338.0" managed="true" mnemonicParsing="false" onAction="#chooseWizard" text="mago 2" visible="true" />
+      <Button fx:id="w_3" layoutX="343.0" layoutY="338.0" managed="true" mnemonicParsing="false" onAction="#chooseWizard" text="mago 3" visible="true" />
+      <Button fx:id="w_4" layoutX="489.0" layoutY="338.0" managed="true" mnemonicParsing="false" onAction="#chooseWizard" text="mago 4" visible="true" />
    </children>
 </AnchorPane>

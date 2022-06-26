@@ -1,9 +1,11 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.client.guiControllers.LoginController;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.characterCards.*;
 import it.polimi.ingsw.serverController.GameRecap;
 import javafx.application.Platform;
+import javafx.scene.input.SwipeEvent;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,7 +18,7 @@ import java.util.Map;
 /**
  * The client side of the controller
  */
-public class Client  extends Thread{
+public class ClientGui  extends Thread{
     private Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
@@ -30,26 +32,37 @@ public class Client  extends Thread{
     private String response;
     private Message4Server server;
     private Match match;
-    private View view;
+    private Gui view;
     private Action action;
     private String username;
     private Player me;
     private boolean end;
     private int counter;
     private Boolean nack;
+    private Wizards wizard;
     private int tow;
+    private  AssistantCard ass;
+    private boolean pm;
 
     /**
      * Constructor of the class Client
      * @param view the instance of the view (it can be Cli or Gui)
      */
-    public Client(View view) {
+    public ClientGui(Gui view) {
         match=null;
         username=null;
         me=null;
         end=false;
         counter=0;
         this.view = view;
+        wizard=null;
+        ass=null;
+        pm=false;
+    }
+
+    public void setUsername(String username){
+        this.username=username;
+        System.out.println("Ho aggiornato lo username: "+username);
     }
 
     public void run(){
@@ -75,7 +88,12 @@ public class Client  extends Thread{
                 catch (SocketTimeoutException e){
                     counter ++;
                     if(counter==3){
-                        view.printNotification("Connessione fallita. Far ripartire il client");
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.printNotification("Connessione fallita. Far ripartire il client");
+                            }
+                        });
                         dSokk.close();
                         throw new RuntimeException();
                     }
@@ -95,7 +113,15 @@ public class Client  extends Thread{
             received="base";
             dSokk.close();
             //sleep(2000);
-            view.getTitolo();
+            synchronized (view) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.getTitolo();
+                    }
+                });
+                sleep(2000);
+            }
             while (true){
                 if(!received.equals("base")) {
                     received = (String) in.readObject();
@@ -106,24 +132,44 @@ public class Client  extends Thread{
                 switch (received) {
                     case "base": //login
                         do {
-                            if (view.chooseLogin().equals("si")) {
-                                username = view.getUsername();
-                                server.sendRegistration(username);
-                            } else {
-                                username = view.getUsername();
-                                server.sendLogin(username);
+                            //sleep(2000);
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.getUsername();
+                                }
+                            });
+                            synchronized (this){
+                                this.wait();
                             }
+                            System.out.println("Ho lo username: "+username);
+                            //username= view.getUs();
                             response = (String) in.readObject();
-                            view.printNotification(response);
+                            System.out.println("Ricevuto in CG: "+response);
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printNotification(response);
+                                }
+                            });
+                            //this.sleep(2000);
                         } while(response.equals("LoginFailed"));
                         received="ok";
                         break;
                     case "ListOfGames":
-                        ArrayList<String> join=new ArrayList<>();
+                        ArrayList<String> join;
                         join=(ArrayList<String>) in.readObject();
-                        ArrayList<String> resume=new ArrayList<>();
+                        ArrayList<String> resume;
                         resume=(ArrayList<String>) in.readObject();
-                        view.chooseMatch(join,resume);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.chooseMatch(join,resume);
+                            }
+                        });
+                        synchronized (this){
+                            this.wait();
+                        }
                     case "ACK":
                         //view.wakeUp("MoveStudents");
                         break;
@@ -131,10 +177,26 @@ public class Client  extends Thread{
                         view.setNack();
                         break;
                     case "Wizard":
+                        System.out.println("Sono in WIZARD");
                         List<Wizards> willy;
                         willy = (ArrayList<Wizards>)in.readObject();
-                        view.setWilly(willy);
-                        view.wakeUp(received);
+                        view.setWilly(willy);  //un po' inutile
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.getWizard(willy);//manda lui il wizard scelto
+                            }
+                        });
+                        synchronized (this){
+                            this.wait();
+                        }
+                        wizard=view.getW();
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.showLoading();
+                            }
+                        });
                         break;
                     case "Creation":
                         match=(Match) in.readObject();
@@ -160,32 +222,80 @@ public class Client  extends Thread{
                             match.getCloud()[i].setStudents(studen);
                         }
                         server.sendACK();
+                        //if(!pm){
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printMatch(match);
+                                }
+                            });
+                            //pm=false;
+                        //}
                         break;
                     case "ChooseCard":
                         List<AssistantCard> cards;
                         cards = (ArrayList<AssistantCard>) in.readObject();
                         view.setCards(cards);
-                        view.wakeUp("ChooseCard");
+                        System.out.println("Sono in ChooseAssistant");
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.getAssistantCard();
+                            }
+                        });
+                        synchronized (this){
+                            this.wait();
+                        }
+                        ass=view.getAssistant();
                         break;
                     case "MoveStudents":
-                    case "MoveMN": //DA MODIFICARE IL PROTOCOLLO
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.moveStudent();
+                            }
+                        });
+                        synchronized (this){
+                            this.wait();
+                        }
+                        break;
+                    case "MoveMN":
                         System.out.println("Ricevuto "+received);
-                        view.wakeUp(received);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.moveMN();
+                            }
+                        });
+                        synchronized (this){
+                            this.wait();
+                        }
                         System.out.println("View svegliata");
                         break;
                     //nella nuova versione non è previsto ACK o NACK
                     case "ChooseCloud":
                         List<Cloud> clouds;
                         clouds = (ArrayList<Cloud>) in.readObject();
-                        view.setClouds(clouds);
-                        view.wakeUp("ChooseCloud");
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.getCloud();
+                            }
+                        });
+                        synchronized (this){
+                            this.wait();
+                        }
                         break;
                     case "NotifyChosenCard":
                         AssistantCard card=(AssistantCard) in.readObject();
                         Player pl2=(Player) in.readObject();
-                        view.printNotification(pl2.getColor()+pl2.getUserName()+
-                                "\u001b[0m ha giocatola carta:"+card.toString());
-
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.printNotification(pl2.getColor()+pl2.getUserName()+
+                                        "\u001b[0m ha giocatola carta:"+card.toString());
+                            }
+                        });
                         for (int i = 0; i < match.getPlayer().length; i++) {
                             if(match.getPlayer()[i].getUserName().equals(pl2.getUserName())){
                                 match.getPlayer()[i].draw(card);
@@ -207,7 +317,12 @@ public class Client  extends Thread{
                             }
                         }
                         action.checkAllProfessors();
-                        view.printNotification(user+" ha spostato lo studente "+stu.toString()+" nell'isola "+id);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.printNotification(user+" ha spostato lo studente "+stu.toString()+" nell'isola "+id);
+                            }
+                        });
                         server.sendACK();
                         break;
                     case "NotifyMoveStudents (board)":
@@ -220,7 +335,12 @@ public class Client  extends Thread{
                             }
                         }
                         action.checkAllProfessors();
-                        view.printNotification(usern+" ha spostato lo studente "+s.toString()+" nella sua sala");
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.printNotification(usern+" ha spostato lo studente "+s.toString()+" nella sua sala");
+                            }
+                        });
                         server.sendACK();
                         break;
                     case "NotifyMovementMN":
@@ -231,8 +351,13 @@ public class Client  extends Thread{
                         match.setLands(lands);
                         match.moveMotherNature(movement);
                         idLand=match.getMotherNature().getPosition().getID();
-                        view.printNotification("Madre Natura é stata spostata di " + movement
-                                + " passi nell'isola "+idLand);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.printNotification("Madre Natura é stata spostata di " + movement
+                                        + " passi nell'isola "+idLand);
+                            }
+                        });
                         server.sendACK();
                         break;
                     case "NotifyProfessors":
@@ -256,8 +381,13 @@ public class Client  extends Thread{
                             }
                         }
                         view.printMatch(match);
-                        view.printNotification(p.getColor().toString()+p.getUserName()
-                                +"\u001b[0m ha scelto la nuvola:\n"+ cl.toString());
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.printNotification(p.getColor().toString()+p.getUserName()
+                                        +"\u001b[0m ha scelto la nuvola:\n"+ cl.toString());
+                            }
+                        });
                         server.sendACK();
                         break;
                     case "NotifyTowers (land)":
@@ -285,7 +415,12 @@ public class Client  extends Thread{
                         }
 
                         action.uniteLands();
-                        view.printMatch(match);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.printMatch(match);
+                            }
+                        });
                         server.sendACK();
                         break;
                     case "NotifyTowers (board)":
@@ -296,7 +431,12 @@ public class Client  extends Thread{
                             if(match.getPlayer()[i].getUserName().equals(us))
                                 match.getPlayer()[i].setBoard(board);
                         }
-                        view.printMatch(match);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.printMatch(match);
+                            }
+                        });
                         server.sendACK();
                         break;
                     case "EndGame":
@@ -324,7 +464,12 @@ public class Client  extends Thread{
                     case "NextTurn":
                         Player play=(Player) in.readObject();
                         String phase=(String)in.readObject();
-                        view.printTurn(play,phase);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.printTurn(play,phase);
+                            }
+                        });
                         server.sendACK();
                         //System.out.println("Mandato ack");
                         break;
@@ -335,15 +480,30 @@ public class Client  extends Thread{
                         String u=(String) in.readObject();
                         boolean connected=(boolean) in.readObject();
                         if(connected){
-                            view.playerConnected(u);
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.playerConnected(u);
+                                }
+                            });
                         }else
                         {
-                            view.playerDisconnected(u);
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.playerDisconnected(u);
+                                }
+                            });
                         }
                         server.sendACK();
                         break;
                     case "NotifyAllPlayersDisconnected":
-                        view.playerDisconnectedAll();
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.playerDisconnectedAll();
+                            }
+                        });
                         server.sendACK();
                         break;
                     case "FinishedAssistants":
@@ -353,7 +513,12 @@ public class Client  extends Thread{
                         break;
                     case "GenericError":
                         String error= (String) in.readObject();
-                        view.printNotification(error);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.printNotification(error);
+                            }
+                        });
                         server.sendACK();
                         break;
                     case "Ch":

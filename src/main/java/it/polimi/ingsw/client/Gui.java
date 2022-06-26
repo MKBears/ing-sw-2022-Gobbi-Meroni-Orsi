@@ -1,9 +1,6 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.client.guiControllers.LoginController;
-import it.polimi.ingsw.client.guiControllers.MatchController;
-import it.polimi.ingsw.client.guiControllers.PopUpController;
-import it.polimi.ingsw.client.guiControllers.WizardsController;
+import it.polimi.ingsw.client.guiControllers.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -13,12 +10,14 @@ import it.polimi.ingsw.model.*;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
 
-public class Gui extends Application implements View {
+public class Gui extends Application {
     private Stage stage;
+    private Stage popup;
     private String state;
     private Boolean end;
     private Message4Server server;
@@ -28,11 +27,15 @@ public class Gui extends Application implements View {
     private List<Wizards> willy;
     private List<Cloud> clouds;
     private List<AssistantCard> cards;
-    private CharacterCard[] characters;
+    //private CharacterCard[] characters;
     private String username;
     private Wizards w;
     private FXMLLoader game;
     private boolean printmatch;
+    private String us;
+    private AssistantCard ass;
+    private ClientGui cg;
+    private Scene g;
 
     public Gui() {
         end=false;
@@ -40,6 +43,14 @@ public class Gui extends Application implements View {
         username=null;
         w=null;
         printmatch=false;
+        us=null;
+        ass=null;
+        popup=new Stage();
+        game=new FXMLLoader(getClass().getClassLoader().getResource("real_matchh.fxml"));
+    }
+
+    public void setCG(ClientGui cg){
+        this.cg=cg;
     }
 
     @Override
@@ -49,8 +60,9 @@ public class Gui extends Application implements View {
         gt.start();
         System.out.println("BUONGIORNOOOOO");
         System.out.println("Ho creato il client");
-        Client c=new Client(this);
+        ClientGui c=new ClientGui(this);
         c.start();
+        setCG(c);
         System.out.println("Il client è partito");
     }
 
@@ -74,10 +86,10 @@ public class Gui extends Application implements View {
     }
 
 
-    @Override
-    public String getUsername() {
+    public void getUsername() {
         LoginController.setServer(server);
         LoginController.setGui(this);
+        LoginController.setCl(cg);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("login_page.fxml"));
         try {
             stage.setScene(new Scene(fxmlLoader.load()));
@@ -85,26 +97,37 @@ public class Gui extends Application implements View {
             e.printStackTrace();
         }
         stage.show();
-        System.out.println(((LoginController)fxmlLoader.getController()).getUs());
-        return ((LoginController)fxmlLoader.getController()).getUs();
+        //System.out.println("Sono nella gui: "+((LoginController)fxmlLoader.getController()).getUs());
+        //us=((LoginController)fxmlLoader.getController()).getUs();
     }
 
-    @Override
+    public void setUs(String us){
+        this.us=us;
+        cg.setUsername(us);
+    }
+
+    public String getUs(){
+        return us;
+    }
+
     public void setServer(Message4Server server) {
         this.server=server;
     }
 
-    @Override
-    public Wizards getWizard(List<Wizards> wizards) {
+
+    public void getWizard(List<Wizards> wizards) {
+        System.out.println("Sono in getWizard");
         WizardsController.setServer(server);
         WizardsController.setGui(this);
+        WizardsController.setCl(cg);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("chooseWizard.fxml"));
-        WizardsController.setWilly(wizards);
         try {
             stage.setScene(new Scene(fxmlLoader.load()));
+            ((WizardsController)fxmlLoader.getController()).setWilly(wizards);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("Faccio show di getwizards");
         stage.show();
         /*synchronized (this){
             try {
@@ -113,76 +136,141 @@ public class Gui extends Application implements View {
                 throw new RuntimeException(e);
             }
         }*/
+    }
+
+    public Wizards getW(){
         return w;
     }
 
-    @Override
-    public Cloud getCloud(List<Cloud> clouds) { //serve solo alla cli
-        return null;
+    public void getCloud() {
+        ((MatchController)game.getController()).wakeUp("ChooseCloud");
+        synchronized (cg){
+            cg.notifyAll();
+        }
     }
     public void popUp(String title, String message){
-        Stage s=new Stage();
-        PopUpController.setNotify(message);
+        System.out.println("In popup di GUI ho: "+message);
+        if(message.contains("carta")){
+            message=message.replace("|", "");
+            message=message.replace("_", "");
+            message=message.replace("/", "");
+            message=message.replace("-", "");
+            message=message.replace("\\", "");
+            message=message.replace("1", "");
+            message=message.replace("2", "");
+            message=message.replace("3", "");
+            message=message.replace("4", "");
+            message=message.replace("5", "");
+            message=message.replace("6", "");
+            message=message.replace("7", "");
+            message=message.replace("8", "");
+            message=message.replace("9", "");
+            message=message.replace("0", "");
+            synchronized (cg){
+                cg.notifyAll();
+            }
+        }
+        //PopUpController.setNotify(message);
         FXMLLoader fxmlLoader=new FXMLLoader(getClass().getClassLoader().getResource("popup_notify.fxml"));
+        System.out.println(fxmlLoader.getLocation().toString());
         try {
-            s.setScene(new Scene(fxmlLoader.load()));
+            popup.setScene(new Scene(fxmlLoader.load()));
+            ((PopUpController)fxmlLoader.getController()).setNotify(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        s.setTitle(title);
-        s.show();
+        popup.setTitle(title);
+        popup.show();
     }
 
-    @Override
-    public AssistantCard getAssistantCard(List<AssistantCard> cards) { //serve solo alla cli
-        return null;
+    public void getAssistantCard() {
+        System.out.println("Sono in getAssistantCard");
+        synchronized (cg){
+            cg.notifyAll();
+        }
+        //printMatch(match); //non lo so...
+        ((MatchController)game.getController()).wakeUp("ChooseAssistant");
+        stage.show();
+        /*synchronized (cg){
+            cg.notifyAll();
+        }*/
     }
 
-    @Override
+    public void setAssistant(AssistantCard ass){
+        this.ass=ass;
+    }
+
+    public AssistantCard getAssistant(){
+        return ass;
+    }
+
+
     public int getNumStep(Player pl) { //serve alla cli
         return 0;
     }
 
-    @Override
     public void getWinner(Player pl) { //da fare
 
     }
 
-    @Override
     public int getDestination(Match match) { //serve alla cli
         return 0;
     }
 
-    @Override
     public void printMatch(Match match) {
+        this.match=match;
         if(!printmatch){
-            game=new FXMLLoader(getClass().getClassLoader().getResource("prova.fxml"));
-            ((MatchController)game.getController()).setAction(this.action);
-            ((MatchController)game.getController()).setmatch(this.match);
-            ((MatchController)game.getController()).setMe(this.me);
-            ((MatchController)game.getController()).setServer(this.server);
-            ((MatchController)game.getController()).setGui(this);
+            try {
+                MatchController.setmatch(this.match);
+                MatchController.setGui(this);
+                MatchController.setAction(this.action);
+                MatchController.setServer(this.server);
+                MatchController.setMe(this.me);
+                //MatchController.setStateLabel("Benvenuto!");
+                game=new FXMLLoader(getClass().getClassLoader().getResource("real_matchh.fxml"));
+                //game=fxmlLoader;
+                System.out.println(game.getLocation().toString());
+                //g=;
+                //g=new Scene(game.load());
+                //((MatchController)game.getController()).setAction(this.action);
+                //((MatchController)game.getController()).setmatch(this.match);
+                //((MatchController)game.getController()).setMe(this.me);
+                //((MatchController)game.getController()).setServer(this.server);
+                //((MatchController)game.getController()).setGui(this);
+                stage.setScene(new Scene(game.load()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            printmatch=true;
+        }
+        else {
+            MatchController.setmatch(this.match);
         }
         ((MatchController)game.getController()).wakeUp("Start");
+        stage.show();
     }
 
-    @Override
+
     public void printTurn(Player pl, String phase) {
-        popUp("Notifica turni", "E' il turno di "+pl.getUserName()+ "in fase di "+phase.toString());
+        popUp("Notifica turni", "E' il turno di "+pl.getUserName()+ " in fase di "+phase.toString());
+        //MatchController.setStateLabel(phase.toString());
+        ((MatchController)game.getController()).setStateLabel("E' il turno di "+pl.getUserName()+ " in fase di "+phase.toString());
         ((MatchController)game.getController()).wakeUp("Next Turn");
+        synchronized (cg){
+            cg.notifyAll();
+        }
     }
 
-    @Override
+
     public void lastRound() { //da fare
 
     }
 
-    @Override
     public Student getStudent(Player pl) { //serve alla cli
         return null;
     }
 
-    @Override
+
     public void getTitolo() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("initial_page.fxml"));
         try {
@@ -193,7 +281,6 @@ public class Gui extends Application implements View {
         stage.show();
     }
 
-    @Override
     public void wakeUp(String state) {
         //((MatchController)game.getController()).wakeUp();
     }
@@ -202,98 +289,115 @@ public class Gui extends Application implements View {
         this.me=me;
     }
 
-    @Override
+
     public void setMatch(Match match) {
         this.match=match;
         action=new Action(match);
     }
 
 
-    @Override
+
     public void setCards(List<AssistantCard> cards) {
         this.cards=cards;
+        ((MatchController)game.getController()).setVisibleAssCards((ArrayList<AssistantCard>) cards);
     }
 
-    @Override
+
     public void setWilly(List<Wizards> willy) {
         this.willy=willy;
     }
 
-    @Override
+
     public void setClouds(List<Cloud> clouds) {
         this.clouds=clouds;
     }
 
-    @Override
     public void chooseMatch(List<String> join, List<String> resume) {
+        SelectionGameController.setJoin((ArrayList<String>) join);
+        SelectionGameController.setResume((ArrayList<String>) resume);
+        SelectionGameController.setCl(cg);
+        SelectionGameController.setServer(server);
+        SelectionGameController.setStage(stage);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("selection_game.fxml"));
-        Scene scene=null;
         try {
-            scene=fxmlLoader.load();
+            stage.setScene(new Scene(fxmlLoader.load()));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        stage.setScene(scene);
         stage.show();
     }
 
-    @Override
+    public void showLoading(){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("loading_page.fxml"));
+        //Scene scene=new Scene(stage);
+        try {
+            stage.setScene(new Scene(fxmlLoader.load()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stage.show();
+    }
+
     public void setNack() { //non sono sicura che serva a qualcosa
 
     }
 
-    @Override
     public String chooseLogin() {
         //lo fa già in getusername
         return null;
     }
 
-    @Override
     public Land chooseLand(List<Land> lands) { //serve alla cli e ch
         return null;
     }
 
-    @Override
-    public Student chooseStudent(List<Student> student) {//serve alla cli e ch
-        return null;
+
+    public void moveStudent() {
+        ((MatchController)game.getController()).wakeUp("MoveStudent");
+        synchronized (cg){
+            cg.notifyAll();
+        }
     }
 
-    @Override
-    public Type_Student chooseColorStudent() { //serve alla cli e ch
-        return null;
+    public void moveMN() {
+        ((MatchController)game.getController()).wakeUp("ChooseMN");
+        synchronized (cg){
+            cg.notifyAll();
+        }
     }
 
-    @Override
+
+
     public void playerConnected(String username) {
         popUp("Nuovo giocatore connesso!", "Si è connesso "+ username);
     }
 
-    @Override
+
     public void playerDisconnected(String username) {
         popUp("Giocatore disconnesso!", "Si è disconnesso "+ username);
     }
 
-    @Override
+
     public void playerDisconnectedAll() {
         popUp("Si sono tutti disconnessi", "Tutti i giocatori si sono disconnessi...");
     }
 
-    @Override
+
     public void finishedAC(Player p) { //da fare
 
     }
 
-    @Override
+
     public CharacterCard chooseChCard(CharacterCard[] cards) { //da fare
         return null;
     }
 
-    @Override
+
     public void setCharacters(CharacterCard[] characters) { //da fare
 
     }
 
-    @Override
+
     public void printNotification(String message) {
         popUp("Notifica", message);
     }

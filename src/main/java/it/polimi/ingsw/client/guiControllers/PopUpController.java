@@ -6,10 +6,10 @@ import javafx.scene.control.Label;
 public class PopUpController {
 
     @FXML
-    static
     Label notify;
 
-    public static void setNotify(String s){
+    public void setNotify(String s){
+        System.out.println("In popupcontroller ho: "+s);
         notify.setText(s);
     }
 }

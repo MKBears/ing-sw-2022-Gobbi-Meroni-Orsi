@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.guiControllers;
 
+import it.polimi.ingsw.client.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,11 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import it.polimi.ingsw.client.Action;
-import it.polimi.ingsw.client.Gui;
-import it.polimi.ingsw.client.Message4Server;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.model.characterCards.*;
 
 import java.io.*;
@@ -26,11 +23,12 @@ import java.util.List;
 import java.util.Map;
 
 public class MatchController extends Thread {
-    private Gui gui;
-    private Match match;
-    private Action action;
-    private Player me;
-    private Message4Server server;
+    private static Gui gui;
+    private static ClientGui cg;
+    private static Match match;
+    private static Action action;
+    private static Player me;
+    private static Message4Server server;
     private ObjectInputStream in;
     private boolean selectedmn;
     private boolean selectedstudent;
@@ -42,6 +40,7 @@ public class MatchController extends Thread {
     private FileInputStream pink_student;
     private String state;
     private ArrayList<Land> stepsmn;
+
 
     @FXML
     Pane land_view;
@@ -193,6 +192,8 @@ public class MatchController extends Thread {
     Label name1;
     @FXML
     Label name2;
+    @FXML
+    Label state_label;
     @FXML
     ImageView profred0;
     @FXML
@@ -590,20 +591,20 @@ public class MatchController extends Thread {
     @FXML
     Button character_button;
 
-    public void setServer(Message4Server server) {
-        this.server = server;
+    public static void setServer(Message4Server server) {
+        MatchController.server = server;
     }
 
-    public void setAction(Action action) {
-        this.action = action;
+    public static void setAction(Action action) {
+        MatchController.action = action;
     }
 
-    public void setMe(Player me) {
-        this.me = me;
+    public static void setMe(Player me) {
+        MatchController.me = me;
     }
 
-    public void setGui(Gui gui) {
-        this.gui = gui;
+    public static void setGui(Gui gui) {
+        MatchController.gui = gui;
     }
 
 
@@ -655,19 +656,21 @@ public class MatchController extends Thread {
         mn9.setVisible(false);
         mn10.setVisible(false);
         mn11.setVisible(false);
+        state_label.setText("Benvenuto!");
+        state_label.setVisible(true);
         for (int i = 0; i < 12; i++) {
             show_islands(i);
         }
-        File f = new File("untitled/src/main/resources/wooden_pieces/wooden_pieces/student_red.png");
+        File f = new File("src/main/resources/wooden_pieces/wooden_pieces/student_red.png");
         try {
             red_student = new FileInputStream(f);
-            f = new File("untitled/src/main/resources/wooden_pieces/wooden_pieces/student_yellow.png");
+            f = new File("src/main/resources/wooden_pieces/wooden_pieces/student_yellow.png");
             yellow_student = new FileInputStream(f);
-            f = new File("untitled/src/main/resources/wooden_pieces/wooden_pieces/student_blue.png");
+            f = new File("src/main/resources/wooden_pieces/wooden_pieces/student_blue.png");
             blue_student = new FileInputStream(f);
-            f = new File("untitled/src/main/resources/wooden_pieces/wooden_pieces/student_pink.png");
+            f = new File("src/main/resources/wooden_pieces/wooden_pieces/student_pink.png");
             pink_student = new FileInputStream(f);
-            f = new File("untitled/src/main/resources/wooden_pieces/wooden_pieces/student_green.png");
+            f = new File("src/main/resources/wooden_pieces/wooden_pieces/student_green.png");
             green_student = new FileInputStream(f);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -697,6 +700,10 @@ public class MatchController extends Thread {
             character(ch2, ((Expert_Match) match).getCard()[2]);
         }
         state = "Start";
+    }
+
+    public void setStateLabel(String s){
+        state_label.setText(s);
     }
 
     @FXML
@@ -813,6 +820,10 @@ public class MatchController extends Thread {
         this.stepsmn=n;
     }
 
+    public static void setClientGui(ClientGui cg){
+        MatchController.cg=cg;
+    }
+
     @FXML
     /**
      * When the cloud is chosen by the click it sends the Students to the player's board and sends the message to
@@ -852,9 +863,9 @@ public class MatchController extends Thread {
         Image colored_tower = null;
         File f = null;
         switch (pl.getColor()) {
-            case GREY -> f = new File("untitled/src/main/resources/wooden_pieces/wooden_pieces/grey_tower.png");
-            case BLACK -> f = new File("untitled/src/main/resources/wooden_pieces/wooden_pieces/black_tower.png");
-            case WHITE -> f = new File("untitled/src/main/resources/wooden_pieces/wooden_pieces/white_tower.png");
+            case GREY -> f = new File("src/main/resources/wooden_pieces/wooden_pieces/grey_tower.png");
+            case BLACK -> f = new File("src/main/resources/wooden_pieces/wooden_pieces/black_tower.png");
+            case WHITE -> f = new File("src/main/resources/wooden_pieces/wooden_pieces/white_tower.png");
         }
         FileInputStream fis = null;
         try {
@@ -1171,7 +1182,8 @@ public class MatchController extends Thread {
                     if (a.getValue() == 1) {
                         server.sendChosenCard(a);
                         me.draw(a);
-                        assistant1.setVisible(false);
+                        assistant0.setVisible(false);
+                        gui.setAssistant(a);
                     }
                 }
                 break;
@@ -1181,6 +1193,7 @@ public class MatchController extends Thread {
                         server.sendChosenCard(a);
                         me.draw(a);
                         assistant1.setVisible(false);
+                        gui.setAssistant(a);
                     }
                 }
                 break;
@@ -1190,6 +1203,7 @@ public class MatchController extends Thread {
                         server.sendChosenCard(a);
                         me.draw(a);
                         assistant2.setVisible(false);
+                        gui.setAssistant(a);
                     }
                 }
                 break;
@@ -1199,6 +1213,7 @@ public class MatchController extends Thread {
                         server.sendChosenCard(a);
                         me.draw(a);
                         assistant3.setVisible(false);
+                        gui.setAssistant(a);
                     }
                 }
                 break;
@@ -1208,6 +1223,7 @@ public class MatchController extends Thread {
                         server.sendChosenCard(a);
                         me.draw(a);
                         assistant4.setVisible(false);
+                        gui.setAssistant(a);
                     }
                 }
                 break;
@@ -1217,6 +1233,7 @@ public class MatchController extends Thread {
                         server.sendChosenCard(a);
                         me.draw(a);
                         assistant5.setVisible(false);
+                        gui.setAssistant(a);
                     }
                 }
                 break;
@@ -1226,6 +1243,7 @@ public class MatchController extends Thread {
                         server.sendChosenCard(a);
                         me.draw(a);
                         assistant6.setVisible(false);
+                        gui.setAssistant(a);
                     }
                 }
                 break;
@@ -1235,6 +1253,7 @@ public class MatchController extends Thread {
                         server.sendChosenCard(a);
                         me.draw(a);
                         assistant7.setVisible(false);
+                        gui.setAssistant(a);
                     }
                 }
                 break;
@@ -1244,6 +1263,7 @@ public class MatchController extends Thread {
                         server.sendChosenCard(a);
                         me.draw(a);
                         assistant8.setVisible(false);
+                        gui.setAssistant(a);
                     }
                 }
                 break;
@@ -1253,10 +1273,15 @@ public class MatchController extends Thread {
                         server.sendChosenCard(a);
                         me.draw(a);
                         assistant9.setVisible(false);
+                        gui.setAssistant(a);
                     }
                 }
                 break;
         }
+        synchronized (cg){
+            cg.notifyAll();
+        }
+
     }
 
     /**
@@ -1903,8 +1928,8 @@ public class MatchController extends Thread {
     }
 
 
-    public void setmatch(Match m) {
-        match = m;
+    public static void setmatch(Match m) {
+        MatchController.match = m;
     }
 
     public void setIn(ObjectInputStream i) {
@@ -2011,12 +2036,60 @@ public class MatchController extends Thread {
         board2.setDisable(v);
     }
 
+    public void setVisibleAssCards(ArrayList<AssistantCard> ass){
+        assistant0.setVisible(false);
+        assistant1.setVisible(false);
+        assistant2.setVisible(false);
+        assistant3.setVisible(false);
+        assistant4.setVisible(false);
+        assistant5.setVisible(false);
+        assistant6.setVisible(false);
+        assistant7.setVisible(false);
+        assistant8.setVisible(false);
+        assistant9.setVisible(false);
+        for(AssistantCard a: ass){
+            switch(a.getValue()){
+                case 1:
+                    assistant0.setVisible(true);
+                    break;
+                case 2:
+                    assistant1.setVisible(true);
+                    break;
+                case 3:
+                    assistant2.setVisible(true);
+                    break;
+                case 4:
+                    assistant3.setVisible(true);
+                    break;
+                case 5:
+                    assistant4.setVisible(true);
+                    break;
+                case 6:
+                    assistant5.setVisible(true);
+                    break;
+                case 7:
+                    assistant6.setVisible(true);
+                    break;
+                case 8:
+                    assistant7.setVisible(true);
+                    break;
+                case 9:
+                    assistant8.setVisible(true);
+                    break;
+                case 10:
+                    assistant9.setVisible(true);
+                    break;
+            }
+        }
+    }
+
 
     @Override
     public void run() {
         Runnable updater = new Runnable() {
             @Override
             public void run() {
+                System.out.println(state);
                 switch (state) {
                     case "Start":
 
@@ -2029,6 +2102,7 @@ public class MatchController extends Thread {
                         setDisableLands(true);
                         setDisableMN(true);
                     case "ChooseAssistant":
+                        System.out.println("Sono in MatchController ChooseAssistant");
                         setDisableAssistants(false);
                         setDisableBoards(true);
                         setDisableClouds(true);
@@ -2053,46 +2127,6 @@ public class MatchController extends Thread {
                         setDisableBoards(true);
                         setDisableClouds(true);
                         setDisableEntrance(true);
-                        for(Land l: stepsmn){
-                            switch(l.getID()) {
-                                case 0:
-                                    island0.setDisable(false);
-                                    break;
-                                case 1:
-                                    island1.setDisable(false);
-                                    break;
-                                case 2:
-                                    island2.setDisable(false);
-                                    break;
-                                case 3:
-                                    island3.setDisable(false);
-                                    break;
-                                case 4:
-                                    island4.setDisable(false);
-                                    break;
-                                case 5:
-                                    island5.setDisable(false);
-                                    break;
-                                case 6:
-                                    island6.setDisable(false);
-                                    break;
-                                case 7:
-                                    island7.setDisable(false);
-                                    break;
-                                case 8:
-                                    island8.setDisable(false);
-                                    break;
-                                case 9:
-                                    island9.setDisable(false);
-                                    break;
-                                case 10:
-                                    island10.setDisable(false);
-                                    break;
-                                case 11:
-                                    island11.setDisable(false);
-                                    break;
-                            }
-                        }
                         gui.popUp("Spostare Madre Natura", "Ora puoi spostare madre natura");
                         break;
                     case "ChooseCloud":
@@ -2120,74 +2154,76 @@ public class MatchController extends Thread {
                         show_towers(i);
                     }
                     show_entry();
-                    assistant0.setVisible(false);
-                    assistant1.setVisible(false);
-                    assistant2.setVisible(false);
-                    assistant3.setVisible(false);
-                    assistant4.setVisible(false);
-                    assistant5.setVisible(false);
-                    assistant6.setVisible(false);
-                    assistant7.setVisible(false);
-                    assistant8.setVisible(false);
-                    assistant9.setVisible(false);
-                    for (AssistantCard a : me.getDeck()) {
-                        if (a.getValue() == 1) {
-                            assistant0.setVisible(true);
-                            break;
+                    if (!state.equals("ChooseAssistant")) {
+                        assistant0.setVisible(false);
+                        assistant1.setVisible(false);
+                        assistant2.setVisible(false);
+                        assistant3.setVisible(false);
+                        assistant4.setVisible(false);
+                        assistant5.setVisible(false);
+                        assistant6.setVisible(false);
+                        assistant7.setVisible(false);
+                        assistant8.setVisible(false);
+                        assistant9.setVisible(false);
+                        for (AssistantCard a : me.getDeck()) {
+                            if (a.getValue() == 1) {
+                                assistant0.setVisible(true);
+                                break;
+                            }
                         }
-                    }
-                    for (AssistantCard a : me.getDeck()) {
-                        if (a.getValue() == 2) {
-                            assistant1.setVisible(true);
-                            break;
+                        for (AssistantCard a : me.getDeck()) {
+                            if (a.getValue() == 2) {
+                                assistant1.setVisible(true);
+                                break;
+                            }
                         }
-                    }
-                    for (AssistantCard a : me.getDeck()) {
-                        if (a.getValue() == 3) {
-                            assistant2.setVisible(true);
-                            break;
+                        for (AssistantCard a : me.getDeck()) {
+                            if (a.getValue() == 3) {
+                                assistant2.setVisible(true);
+                                break;
+                            }
                         }
-                    }
-                    for (AssistantCard a : me.getDeck()) {
-                        if (a.getValue() == 4) {
-                            assistant3.setVisible(true);
-                            break;
+                        for (AssistantCard a : me.getDeck()) {
+                            if (a.getValue() == 4) {
+                                assistant3.setVisible(true);
+                                break;
+                            }
                         }
-                    }
-                    for (AssistantCard a : me.getDeck()) {
-                        if (a.getValue() == 5) {
-                            assistant4.setVisible(true);
-                            break;
+                        for (AssistantCard a : me.getDeck()) {
+                            if (a.getValue() == 5) {
+                                assistant4.setVisible(true);
+                                break;
+                            }
                         }
-                    }
-                    for (AssistantCard a : me.getDeck()) {
-                        if (a.getValue() == 6) {
-                            assistant5.setVisible(true);
-                            break;
+                        for (AssistantCard a : me.getDeck()) {
+                            if (a.getValue() == 6) {
+                                assistant5.setVisible(true);
+                                break;
+                            }
                         }
-                    }
-                    for (AssistantCard a : me.getDeck()) {
-                        if (a.getValue() == 7) {
-                            assistant6.setVisible(true);
-                            break;
+                        for (AssistantCard a : me.getDeck()) {
+                            if (a.getValue() == 7) {
+                                assistant6.setVisible(true);
+                                break;
+                            }
                         }
-                    }
-                    for (AssistantCard a : me.getDeck()) {
-                        if (a.getValue() == 8) {
-                            assistant7.setVisible(true);
-                            break;
+                        for (AssistantCard a : me.getDeck()) {
+                            if (a.getValue() == 8) {
+                                assistant7.setVisible(true);
+                                break;
+                            }
                         }
-                    }
-                    for (AssistantCard a : me.getDeck()) {
-                        if (a.getValue() == 9) {
-                            assistant8.setVisible(true);
-                            break;
+                        for (AssistantCard a : me.getDeck()) {
+                            if (a.getValue() == 9) {
+                                assistant8.setVisible(true);
+                                break;
+                            }
                         }
-                    }
-                    for (AssistantCard a : me.getDeck()) {
-                        if (a.getValue() == 10) {
-                            assistant9.setVisible(true);
-                            break;
+                        for (AssistantCard a : me.getDeck()) {
+                            if (a.getValue() == 10) {
+                                assistant9.setVisible(true);
+                                break;
+                            }
                         }
                     }
                 }
@@ -2227,27 +2263,27 @@ public class MatchController extends Thread {
             switch (student.type()){
                 case GNOME -> {
                     imageView.setImage(new Image(yellow_student));
-                    File f=new File("untitled/src/main/resources/wooden_pieces/wooden_pieces/student_yellow.png");
+                    File f=new File("src/main/resources/wooden_pieces/wooden_pieces/student_yellow.png");
                     yellow_student=new FileInputStream(f);
                 }
                 case FAIRY -> {
                     imageView.setImage(new Image(pink_student));
-                    File f=new File("untitled/src/main/resources/wooden_pieces/wooden_pieces/student_pink.png");
+                    File f=new File("src/main/resources/wooden_pieces/wooden_pieces/student_pink.png");
                     pink_student=new FileInputStream(f);
                 }
                 case FROG -> {
                     imageView.setImage(new Image(green_student));
-                    File f=new File("untitled/src/main/resources/wooden_pieces/wooden_pieces/student_green.png");
+                    File f=new File("src/main/resources/wooden_pieces/wooden_pieces/student_green.png");
                     green_student=new FileInputStream(f);
                 }
                 case UNICORN -> {
                     imageView.setImage(new Image(blue_student));
-                    File f=new File("untitled/src/main/resources/wooden_pieces/wooden_pieces/student_blue.png");
+                    File f=new File("src/main/resources/wooden_pieces/wooden_pieces/student_blue.png");
                     blue_student=new FileInputStream(f);
                 }
                 case DRAGON -> {
                     imageView.setImage(new Image(red_student));
-                    File f=new File("untitled/src/main/resources/wooden_pieces/wooden_pieces/student_red.png");
+                    File f=new File("src/main/resources/wooden_pieces/wooden_pieces/student_red.png");
                     red_student=new FileInputStream(f);
                 }
             }
@@ -2321,22 +2357,22 @@ public class MatchController extends Thread {
         try {
             switch (wizards) {
                 case WIZARD1 -> {
-                    File f = new File("untitled/src/main/resources/Graphical_Assets/Assistenti/retro/CarteTOT_back_1@3x.png");
+                    File f = new File("src/main/resources/Graphical_Assets/Assistenti/retro/CarteTOT_back_1@3x.png");
                     FileInputStream fis = new FileInputStream(f);
                     imageView.setImage(new Image(fis));
                 }
                 case WIZARD2 -> {
-                    File f = new File("untitled/src/main/resources/Graphical_Assets/Assistenti/retro/CarteTOT_back_11@3x.png");
+                    File f = new File("src/main/resources/Graphical_Assets/Assistenti/retro/CarteTOT_back_11@3x.png");
                     FileInputStream fis = new FileInputStream(f);
                     imageView.setImage(new Image(fis));
                 }
                 case WIZARD3 -> {
-                    File f = new File("untitled/src/main/resources/Graphical_Assets/Assistenti/retro/CarteTOT_back_21@3x.png");
+                    File f = new File("src/main/resources/Graphical_Assets/Assistenti/retro/CarteTOT_back_21@3x.png");
                     FileInputStream fis = new FileInputStream(f);
                     imageView.setImage(new Image(fis));
                 }
                 case WIZARD4 -> {
-                    File f = new File("untitled/src/main/resources/Graphical_Assets/Assistenti/retro/CarteTOT_back_31@3x.png");
+                    File f = new File("src/main/resources/Graphical_Assets/Assistenti/retro/CarteTOT_back_31@3x.png");
                     FileInputStream fis = new FileInputStream(f);
                     imageView.setImage(new Image(fis));
                 }
@@ -2357,51 +2393,51 @@ public class MatchController extends Thread {
         FileInputStream fil;
         try {
             if (character instanceof Ch_1) {
-                f = new File("untitled/src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front.jpg");
+                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front.jpg");
                 fil = new FileInputStream(f);
                 imageView.setImage(new Image(fil));
             }else if(character instanceof Ch_2){
-                f = new File("untitled/src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front2.jpg");
+                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front2.jpg");
                 fil = new FileInputStream(f);
                 imageView.setImage(new Image(fil));
             }else if(character instanceof Ch_3){
-                f = new File("untitled/src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front3.jpg");
+                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front3.jpg");
                 fil = new FileInputStream(f);
                 imageView.setImage(new Image(fil));
             }else if(character instanceof Ch_4){
-                f = new File("untitled/src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front4.jpg");
+                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front4.jpg");
                 fil = new FileInputStream(f);
                 imageView.setImage(new Image(fil));
             }else if(character instanceof Ch_5){
-                f = new File("untitled/src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front5.jpg");
+                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front5.jpg");
                 fil = new FileInputStream(f);
                 imageView.setImage(new Image(fil));
             }else if(character instanceof Ch_6){
-                f = new File("untitled/src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front6.jpg");
+                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front6.jpg");
                 fil = new FileInputStream(f);
                 imageView.setImage(new Image(fil));
             }else if(character instanceof Ch_7){
-                f = new File("untitled/src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front7.jpg");
+                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front7.jpg");
                 fil = new FileInputStream(f);
                 imageView.setImage(new Image(fil));
             }else if(character instanceof Ch_8){
-                f = new File("untitled/src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front8.jpg");
+                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front8.jpg");
                 fil = new FileInputStream(f);
                 imageView.setImage(new Image(fil));
             }else if(character instanceof Ch_9){
-                f = new File("untitled/src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front9.jpg");
+                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front9.jpg");
                 fil = new FileInputStream(f);
                 imageView.setImage(new Image(fil));
             }else if(character instanceof Ch_10){
-                f = new File("untitled/src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front10.jpg");
+                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front10.jpg");
                 fil = new FileInputStream(f);
                 imageView.setImage(new Image(fil));
             }else if(character instanceof Ch_11){
-                f = new File("untitled/src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front11.jpg");
+                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front11.jpg");
                 fil = new FileInputStream(f);
                 imageView.setImage(new Image(fil));
             }else if(character instanceof Ch_12){
-                f = new File("untitled/src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front12.jpg");
+                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front12.jpg");
                 fil = new FileInputStream(f);
                 imageView.setImage(new Image(fil));
             }

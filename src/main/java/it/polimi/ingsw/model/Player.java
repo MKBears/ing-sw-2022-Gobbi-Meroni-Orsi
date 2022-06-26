@@ -210,4 +210,5 @@ public class Player implements Serializable {
     public void setBoard(Board board) {
         this.board = board;
     }
+
 }

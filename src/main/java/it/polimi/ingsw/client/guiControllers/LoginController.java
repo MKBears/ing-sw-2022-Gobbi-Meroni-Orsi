@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.guiControllers;
 
+import it.polimi.ingsw.client.ClientGui;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -18,7 +19,7 @@ public class LoginController{
     private String us;
     private static Gui gui;
     private static Message4Server server;
-    private static ObjectInputStream in;
+    private static ClientGui cl;
 
     @FXML
     public CheckBox newlogin;
@@ -29,10 +30,15 @@ public class LoginController{
     @FXML
     Label result_username;
 
+    public static void setCl(ClientGui cl){
+        LoginController.cl=cl;
+    }
 
     public static void setServer(Message4Server server){
         LoginController.server=server;
     }
+
+
 
     public static void setGui(Gui gui) {
         LoginController.gui = gui;
@@ -53,13 +59,16 @@ public class LoginController{
     @FXML
     public void username(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
         us = username.getCharacters().toString();
+        //cl.setUsername(us);
+        System.out.println("Ho inserito: "+us);
         if (newlogin.isSelected()) {
             server.sendRegistration(us);
         } else {
             server.sendLogin(us);
         }
-        synchronized (gui) {
-            gui.notifyAll();
+        gui.setUs(us);
+        synchronized (cl){
+            cl.notifyAll();
         }
        /* String response= (String)in.readObject();
         if(response.equals("LoginFailed")){
