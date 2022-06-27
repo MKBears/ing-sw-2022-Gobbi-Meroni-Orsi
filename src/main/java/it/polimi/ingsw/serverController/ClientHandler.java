@@ -132,25 +132,26 @@ public class ClientHandler extends Thread{
                             wait();
                         } while (nack);
                         //System.out.println("Mando maghi");
+                        if(!controller.isGame_from_memory()) {
+                            do {
+                                out.sendWizard(controller.getWizards());
+                                wait();
+                            } while (nack);
+                            out.sendACK();
+                            controller.chooseWizard(wizard);
+                            //System.out.println("helooo");
+                            createAvatar(color, controller.getPlayersNum(), expertMatch);
 
-                        do {
-                            out.sendWizard(controller.getWizards());
-                            wait();
-                        } while (nack);
-                        out.sendACK();
-                        controller.chooseWizard(wizard);
-                        //System.out.println("helooo");
-                        createAvatar(color, controller.getPlayersNum(), expertMatch);
-
-                        controller.createMatch();
+                            controller.createMatch();
+                        }
                         //wait();
                     }
-
-                    do {
-                        System.out.println("Player "+userName+": aspetto la creazione del match");
-                        this.wait();
-                    } while (!controller.readyToStart());
-
+                    if(!controller.isGame_from_memory()) {
+                        do {
+                            System.out.println("Player " + userName + ": aspetto la creazione del match");
+                            this.wait();
+                        } while (!controller.readyToStart());
+                    }
                     do {
                         out.sendCreation(controller.getMatch());
                         System.out.println("Mandata creation");
@@ -158,7 +159,9 @@ public class ClientHandler extends Thread{
                     } while (nack);
                     out.start();
                     socket.setSoTimeout(5000);
-                    state = 1;
+                    if(!controller.isGame_from_memory()) {
+                        state = 1;
+                    }
                     break;
                 case 1:
                     //PLANNING phase: notify refilled clouds
@@ -465,6 +468,7 @@ public class ClientHandler extends Thread{
             controller = serve.joinGame(creator, this);
         } catch (Exception e) {
             out.sendGenericError(e.getMessage());
+            e.printStackTrace();
             state = 8;
         }
     }
@@ -689,6 +693,10 @@ public class ClientHandler extends Thread{
         this.ch_5_land = ch_5_land;
     }
 
+    /**
+     * does the effect of the character card if the player has played one
+     * @throws Exception if the bag is empty
+     */
     public void effectCh() throws Exception{
         switch (chosenCh) {
             case "Ch_1" -> {
@@ -822,4 +830,12 @@ public class ClientHandler extends Thread{
     }
 
     public Student getCh_11_student() {return ch_11_student;}
+
+    public void setController(Controller controller) {this.controller = controller;}
+
+    public void setAvatar(Player avatar){this.avatar=avatar;}
+
+    public void setmatch(Match match){this.match=match;}
+
+
 }

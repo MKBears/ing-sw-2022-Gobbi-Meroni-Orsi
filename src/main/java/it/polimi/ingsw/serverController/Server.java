@@ -1,6 +1,6 @@
 package it.polimi.ingsw.serverController;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -8,13 +8,43 @@ import java.util.concurrent.Executors;
 
 public class Server extends Thread{
     private final ExecutorService players;
-    private final ArrayList<String> userNames;
-
+    private ArrayList<String> userNames;
     private final ArrayList<Controller> matches;
+    private final ArrayList<GameSaved> interrupt_matches;
 
     public Server(){
         players = Executors.newCachedThreadPool();
         userNames = new ArrayList<>();
+        interrupt_matches=new ArrayList<>();
+        File file=new File("src/main/resources/username.txt");
+        try {
+            if(!file.createNewFile()) {
+                file.setReadable(true);
+                FileInputStream fIn = new FileInputStream(file);
+                ObjectInputStream oIn = new ObjectInputStream(fIn);
+                userNames=(ArrayList<String>)oIn.readObject();
+                fIn.close();
+                oIn.close();
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        File matchFile;
+        for (String u: userNames) {
+           matchFile=new File("src/main/resources/matches/"+u+".txt");
+           if(matchFile.exists()){
+               try{
+                   FileInputStream fIn = new FileInputStream(matchFile);
+                   ObjectInputStream oIn = new ObjectInputStream(fIn);
+                   GameSaved game=(GameSaved) oIn.readObject();
+                   fIn.close();
+                   oIn.close();
+                   interrupt_matches.add(game);
+               } catch (IOException | ClassNotFoundException e) {
+                   e.printStackTrace();
+               }
+           }
+        }
         matches = new ArrayList<>(1);
     }
 
@@ -66,6 +96,20 @@ public class Server extends Thread{
     public synchronized void addUserName(String userName) {
         if (!userNames.contains(userName)){
             userNames.add(userName);
+            File file=new File("src/main/resources/username.txt");
+            FileOutputStream f;
+            ObjectOutputStream out;
+            try {
+                file.createNewFile();
+                file.setWritable(true);
+                f=new FileOutputStream(file);
+                out=new ObjectOutputStream(f);
+                out.writeObject(userNames);
+                out.close();
+                f.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -113,7 +157,13 @@ public class Server extends Thread{
                             match.resumeMatch();
                         }
                     } else {
-                        match.addPlayer(player);
+                        if(!match.isGame_from_memory()) {
+                            match.addPlayer(player);
+                        }else{
+                            if(match!=null) {
+                                match.restartMatch(player);
+                            }
+                        }
                     }
                     return match;
                 }
@@ -127,6 +177,13 @@ public class Server extends Thread{
                 }
             }
         }
+        for (GameSaved g:interrupt_matches) {
+            if(g.getUsernames().get(0).equals(creator)){
+                Controller game=new Controller(player,g);
+                matches.add(game);
+                return  game;
+            }
+        }
         return null;
     }
 
@@ -135,6 +192,11 @@ public class Server extends Thread{
         for (Controller match : matches){
             if (match.isPaused() && match.getPlayers().contains(userName)) {
                 creators.add(match.getCreator());
+            }
+        }
+        for (GameSaved g:interrupt_matches) {
+            if(g.getUsernames().contains(userName)){
+                creators.add(g.getUsernames().get(0));
             }
         }
         return creators;

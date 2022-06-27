@@ -366,11 +366,11 @@ public class Client  extends Thread{
                         break;
                     case "Ch":
                         CharacterCard[] ch = (CharacterCard[]) in.readObject();
-                        for (int i = 0; i < 3; i++) {
+                        /*for (int i = 0; i < 3; i++) {
                             if (ch[i] instanceof Ch_11) {
                                 System.out.println(((Ch_11) ch[i]).getStudents());
                             }
-                        }
+                        }*/
                         view.setCharacters(ch);
                         view.wakeUp("Ch");
                         break;

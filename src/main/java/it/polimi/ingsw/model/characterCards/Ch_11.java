@@ -74,10 +74,18 @@ public class Ch_11 implements CharacterCard, Serializable {
         return powerUp;
     }
 
+    /**
+     *
+     * @return the students on this card
+     */
     public ArrayList<Student> getStudents() {
         return students;
     }
 
+    /**
+     *
+     * @param student to be added to the dinning room
+     */
     public void setStudent(Student student) {
         this.student = student;
     }
@@ -95,6 +103,10 @@ public class Ch_11 implements CharacterCard, Serializable {
         return result;
     }
 
+    /**
+     * change the student on the card for the client
+     * @param students new students of the card
+     */
     public void setStudents(ArrayList<Student> students) {
         this.students = students;
     }

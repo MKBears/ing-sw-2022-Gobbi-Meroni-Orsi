@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.characterCards.Ch_1;
 import it.polimi.ingsw.model.characterCards.Ch_11;
 
 import javax.management.timer.Timer;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -28,6 +29,8 @@ public class Controller extends Thread{
     private ClientHandler winner;
     private GameRecap gameRecap;
     private String endExplanation;
+    private final boolean game_from_memory;
+    private GameSaved gameSaved;
 
     public Controller (ClientHandler creator, int playersNum, boolean expertMatch){
         state = 0;
@@ -42,11 +45,57 @@ public class Controller extends Thread{
         paused = false;
         firstPlayer = 0;
         wizards = new ArrayList<>(Arrays.asList(Wizards.values()));
+        game_from_memory=false;
     }
+
+
+    public Controller (ClientHandler first,GameSaved gamesaved){
+        this.gameSaved=gamesaved;
+        state = gameSaved.getState();
+        this.playersNum = gameSaved.getPlayers_num();
+        this.expertMatch = gameSaved.isExpert_match();
+        players = new ClientHandler[gameSaved.getPlayers_num()];
+        int i=0;
+        for (String u: gameSaved.getUsernames()) {
+           if(u.equals(first.getUserName())){
+              players[i]=first;
+              first.setController(this);
+              players[i].setMatch(gameSaved.getMatch());
+              players[i].setAvatar(gameSaved.getMatch().getPlayer()[i]);
+              players[i].setPlayedAssistant(gameSaved.getMatch().getPlayer()[i].getPlayedCard());
+           }
+           i++;
+        }
+        switch (gameSaved.getState()){
+            case 1 -> first.setState(1);
+            case 2 -> first.setState(2);
+            case 4 -> first.setState(3);
+        }
+        playedAssistants=new ArrayList<>();
+        playing = true;
+        paused = false;
+        connectedPlayers=1;
+        match=gameSaved.getMatch();
+        this.firstPlayer=gameSaved.getFirstPlayer();
+        game_from_memory=true;
+        paused=false;
+        playing=true;
+        go=true;
+    }
+
 
     public void run() throws IllegalArgumentException {
         System.out.println("Controller partito");
         //Start match
+        if(isGame_from_memory()) {
+            for (ClientHandler p : this.players) {
+                switch (this.state) {
+                    case 1 -> p.setState(1);
+                    case 2 -> p.setState(2);
+                    case 4 -> p.setState(3);
+                }
+            }
+        }
         while (!paused && state!=6) {
             try {
                 changeState();
@@ -94,6 +143,7 @@ public class Controller extends Thread{
                 System.out.println("Match impostato a tutti i player");
                 //sleep(1000);
                 state = 1;
+                save();
             }
             case 1 -> {
                 //PLANNING phase: all the clouds are filled with 3 or 4 students
@@ -118,6 +168,7 @@ public class Controller extends Thread{
                 } while (currentPlayer != firstPlayer);
                 System.out.println("uscito dal while");
                 state = 2;
+                save();
             }
             case 2 -> {
                 //PLANNING phase: each player plays an assistant card
@@ -146,8 +197,8 @@ public class Controller extends Thread{
                 for (currentPlayer = 1; currentPlayer < playersNum; currentPlayer++)
                     if (players[currentPlayer].getAvatar().getPlayedCard().getValue() < players[firstPlayer].getAvatar().getPlayedCard().getValue())
                         firstPlayer = currentPlayer;
-
                 state = 4;
+                save();
             }
             case 4 -> {
                 //ACTION phase
@@ -164,7 +215,7 @@ public class Controller extends Thread{
 
                         synchronized (players[currentPlayer]) {
                             players[currentPlayer].notifyAll();
-                            System.out.println("Controller: "+players[currentPlayer]+" in fase di azione");
+                            System.out.println("Controller: "+players[currentPlayer].getUserName()+" in fase di azione");
                         }
                         sleep(100);
                         go = false;
@@ -179,6 +230,7 @@ public class Controller extends Thread{
                 }
                 if (playing) {
                     state = 1;
+                    save();
                 } else {
                     state = 6;
                 }
@@ -210,6 +262,7 @@ public class Controller extends Thread{
                     player.setState(6);
                     player.notify();
                 }
+                delete();
                 state = 6;
             }
         }
@@ -819,6 +872,10 @@ public class Controller extends Thread{
 
     }
 
+    /**
+     * notify to the players the character card played to update the client
+     * @throws InterruptedException
+     */
     public void notifyCh() throws InterruptedException {
         for (ClientHandler player : players) {
             do {
@@ -863,5 +920,62 @@ public class Controller extends Thread{
                 }
             } while (player.getNack());
         }
+    }
+
+    public void save(){
+        File file=new File("src/main/resources/matches/"+match.getPlayer()[0].getUserName()+".txt");
+        file.delete();
+        FileOutputStream f;
+        ObjectOutputStream out;
+        try {
+            file.createNewFile();
+            file.setWritable(true);
+            f=new FileOutputStream(file);
+            out=new ObjectOutputStream(f);
+            ArrayList<String> usernames=new ArrayList<>();
+            for (Player p: match.getPlayer()) {
+                usernames.add(p.getUserName());
+            }
+            GameSaved data=new GameSaved(match,state,playersNum,firstPlayer,expertMatch,usernames);
+            out.writeObject(data);
+            out.close();
+            f.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void delete(){
+        File file=new File("src/main/resources/matches/"+match.getPlayer()[0].getUserName()+".txt");
+        file.delete();
+    }
+
+    public boolean isGame_from_memory() {
+        return game_from_memory;
+    }
+
+    public void restartMatch(ClientHandler player){
+        int j=-1;
+        for (int i=0;i< match.getPlayersNum();i++) {
+            if(match.getPlayer()[i].getUserName().equals(player.getUserName())){
+                players[i]=player;
+                connectedPlayers++;
+                j=i;
+            }
+        }
+        player.setController(this);
+        player.setMatch(gameSaved.getMatch());
+        player.setExpertMatch(gameSaved.isExpert_match());
+        player.setAvatar(gameSaved.getMatch().getPlayer()[j]);
+        player.setPlayedAssistant(gameSaved.getMatch().getPlayer()[j].getPlayedCard());
+        switch (this.state){
+            case 1 -> player.setState(1);
+            case 2 -> player.setState(2);
+            case 4 -> player.setState(3);
+        }
+        if(connectedPlayers==gameSaved.getPlayers_num()){
+            this.start();
+        }
+        System.out.println(players[0].getAvatar().getUserName()+" "+players[1].getAvatar().getUserName());
     }
 }

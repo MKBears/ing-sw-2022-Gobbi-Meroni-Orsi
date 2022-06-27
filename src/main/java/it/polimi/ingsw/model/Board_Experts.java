@@ -62,6 +62,10 @@ public class Board_Experts extends Board {
                 "\n\u001b[33m(¤)\u001B[0mx" + coins;
     }
 
+    /**
+     * method for the client to sub coins of a character card
+     * @param s price
+     */
     public void subCoin(int s){
         coins=coins-s;
     }

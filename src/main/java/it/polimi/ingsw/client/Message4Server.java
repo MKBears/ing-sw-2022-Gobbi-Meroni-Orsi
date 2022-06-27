@@ -230,6 +230,11 @@ public class Message4Server {
         }
     }
 
+    /**
+     * message to play the character card 1
+     * @param student student moved
+     * @param land where move the student
+     */
     public void sendChooseCh1(Student student,Land land){
         synchronized (this){
             try{
@@ -243,6 +248,9 @@ public class Message4Server {
         }
     }
 
+    /**
+     * message to play the character card 2
+     */
     public void sendChooseCh2(){
         synchronized (this){
             try{
@@ -254,6 +262,9 @@ public class Message4Server {
         }
     }
 
+    /**
+     * message to play the character card 4
+     */
     public void sendChooseCh4(){
         synchronized (this){
             try{
@@ -265,6 +276,10 @@ public class Message4Server {
         }
     }
 
+    /**
+     * message to play the character card 5
+     * @param land to set no entry
+     */
     public void sendChooseCh5(Land land) {
         synchronized (this) {
             try {
@@ -277,20 +292,10 @@ public class Message4Server {
         }
     }
 
-    public void sendChooseCh7(Student st,Student st1,Student st2) {
-        synchronized (this) {
-            try {
-                name = "Ch_7";
-                out.writeObject(name);
-                out.writeObject(st);
-                out.writeObject(st1);
-                out.writeObject(st2);
-            } catch (IOException e) {
-                throw new RuntimeException();
-            }
-        }
-    }
-
+    /**
+     * message to use the character card 11
+     * @param student student to be placed in the dinning room
+     */
     public void sendChooseCh11(Student student){
         synchronized (this){
             try{
@@ -303,6 +308,10 @@ public class Message4Server {
         }
     }
 
+    /**
+     * message for use the character card 12
+     * @param type_student to be removed from the dinning room
+     */
     public void sendChooseCh12(Type_Student type_student){
         synchronized (this){
             try{
@@ -315,6 +324,9 @@ public class Message4Server {
         }
     }
 
+    /**
+     * message for decide to not use a character card
+     */
     public void sendNoCh(){
         synchronized (this){
             try{
@@ -326,7 +338,11 @@ public class Message4Server {
         }
     }
 
-
+    /**
+     * message for the character card 10
+     * @param students to be moved from the entrance to the dinning room
+     * @param type_students type of the student removed from the dinning room and placed in the entrance
+     */
     public void sendChooseCh10(ArrayList<Student> students,ArrayList<Type_Student> type_students){
         synchronized (this){
             try{
@@ -340,19 +356,10 @@ public class Message4Server {
         }
     }
 
-    public void sendChooseCh3(Land land) {
-        synchronized (this){
-            try{
-                name="Ch_3";
-                out.writeObject(name);
-                out.writeObject(land);
-            }catch(IOException e){
-                throw new RuntimeException();
-            }
-        }
-    }
 
-
+    /**
+     * message to use the character card 8
+     */
     public void sendChooseCh8(){
         synchronized (this){
             try{

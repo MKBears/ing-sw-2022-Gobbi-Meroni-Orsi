@@ -59,11 +59,18 @@ public class Ch_10 implements CharacterCard, Serializable {
         this.player = player;
     }
 
-
+    /**
+     *
+     * @param entrance_student student moved from entrance to dinning room
+     */
     public void setEntrance_student(ArrayList<Student> entrance_student) {
         this.entrance_student = entrance_student;
     }
 
+    /**
+     *
+     * @param room_student type of students moved from dinning room to entrance
+     */
     public void setRoom_student(ArrayList<Type_Student> room_student) {
         this.room_student = room_student;
     }

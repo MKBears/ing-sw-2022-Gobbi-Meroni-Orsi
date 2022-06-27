@@ -9,6 +9,10 @@ import java.util.Random;
 public class Expert_Match extends Match{
     CharacterCard[] card;
 
+    /**
+     * set the character cards on the match
+     * @throws Exception the bag is empty
+     */
     public void setCard() throws Exception{
         card=new CharacterCard[3];
         List<CharacterCard> c=new ArrayList<>();

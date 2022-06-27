@@ -2,6 +2,7 @@ package it.polimi.ingsw.serverController;
 
 import it.polimi.ingsw.model.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -49,6 +50,8 @@ public class MessageFromClient extends Thread{
                             //System.out.println("Ricevuto: "+expert);
                             ch.createMatch(playersNum, expert);
                             //System.out.println("Ricevuto num giocatori e expert");
+                            File file=new File("src/main/resources/matches/"+ch.getUserName()+".txt");
+                            file.delete();
                             ch.setAck(true);
                         }
                         else {

@@ -78,10 +78,18 @@ public class Ch_1 implements CharacterCard, Serializable {
     public void setPlayer(Player player) {
     }
 
+    /**
+     *
+     * @param student student to be moved
+     */
     public void setStudent(Student student) {
         this.student = student;
     }
 
+    /**
+     *
+     * @param land where put the student
+     */
     public void setLand(Land land) {
         this.land = land;
     }
@@ -91,6 +99,10 @@ public class Ch_1 implements CharacterCard, Serializable {
         return 1;
     }
 
+    /**
+     * student update for the client
+     * @param students new students of the card
+     */
     public void setStudents(ArrayList<Student> students) {
         this.students = students;
     }

@@ -61,6 +61,10 @@ public class Ch_12 implements CharacterCard, Serializable {
     public void setPlayer(Player player) {
     }
 
+    /**
+     *
+     * @param type of the student to be removed from the dinning room
+     */
     public void setType(Type_Student type) {
         this.type = type;
     }

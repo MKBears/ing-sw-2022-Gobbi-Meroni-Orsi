@@ -38,5 +38,8 @@ public interface CharacterCard extends Serializable {
 
     int getNumber();
 
+    /**
+     * method for the client to set the card activated after the first time
+     */
     void setActivated();
 }

@@ -67,6 +67,10 @@ public class Ch_5 implements CharacterCard, Serializable {
     public void setPlayer(Player player) {
     }
 
+    /**
+     *
+     * @param land where add the no entry
+     */
     public void setLand(Land land) {
         this.land = land;
     }

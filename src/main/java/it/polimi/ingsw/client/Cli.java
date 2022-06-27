@@ -440,6 +440,7 @@ public class Cli extends Thread implements View {
                             nack = false;
                             this.wait();
                         }
+                        break;
                     case ("Wizard"):
                         Wizards choose = this.getWizard(willy);
                         do {

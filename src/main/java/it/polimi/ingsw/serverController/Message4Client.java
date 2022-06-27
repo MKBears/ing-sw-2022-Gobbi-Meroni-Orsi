@@ -553,6 +553,13 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
         }
     }
 
+    /**
+     * notification of played character card 1
+     * @param land land to move the student
+     * @param students new students of the card
+     * @param student student moved
+     * @param username who moved the student
+     */
     public void sendNotifyCh_1(Land land,List<Student> students, Student student,String username) {
         synchronized (this) {
             name = "NotifyCh_1";
@@ -568,6 +575,11 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
         }
     }
 
+    /**
+     * notify changes of the card 2
+     * @param professors change on the professors
+     * @param username who played the card
+     */
     public void sendNotifyCh_2(Map<Type_Student,Player> professors,String username) {
         synchronized (this) {
             name = "NotifyCh_2";
@@ -581,6 +593,10 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
         }
     }
 
+    /**
+     * notify played the card 4
+     * @param username who played the card
+     */
     public void sendNotifyCh_4(String username) {
         synchronized (this) {
             name = "NotifyCh_4";
@@ -593,6 +609,11 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
         }
     }
 
+    /**
+     * notify played the card number 5
+     * @param land land to put the no_entry
+     * @param username who played the card
+     */
     public void sendNotifyCh_5(Land land,String username) {
         synchronized (this) {
             name = "NotifyCh_5";
@@ -606,6 +627,12 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
         }
     }
 
+    /**
+     * notify played the card number 10
+     * @param username who played the card
+     * @param students student moved from the entry to the dining room
+     * @param type_students type of student moved from dining room to entrance
+     */
     public void sendNotifyCh_10(String username,ArrayList<Student> students,ArrayList<Type_Student> type_students) {
         synchronized (this) {
             name = "NotifyCh_10";
@@ -620,6 +647,12 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
         }
     }
 
+    /**
+     * notify played card 11
+     * @param card new students on the card
+     * @param student chosen to be placed in the dining room
+     * @param username who played the card
+     */
     public void sendNotifyCh_11(ArrayList<Student> card,Student student,String username) {
         synchronized (this) {
             name = "NotifyCh_11";
@@ -634,6 +667,11 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
         }
     }
 
+    /**
+     * notify used card number 12
+     * @param type_student type of the student to be sub in the dinning room
+     * @param username who played the card
+     */
     public void sendNotifyCh_12(Type_Student type_student,String username) {
         synchronized (this) {
             name = "NotifyCh_12";
@@ -647,6 +685,10 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
         }
     }
 
+    /**
+     * notify used card 8
+     * @param username  who played the card
+     */
     public void sendNotifyCh_8(String username){
         synchronized (this) {
             name = "NotifyCh_8";
