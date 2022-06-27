@@ -183,21 +183,7 @@ public class ArchipelagoTest {
         assertEquals(arr.size(),a.size());
         assertEquals(pelago.getID(),a.getID());
     }
-@Test
-    public void toStringTest(){
-        ArrayList<Island>isles=new ArrayList<>();
-        Tower tw=new Tower(Colors.BLACK,board);
-        Island isa= new Island(9999);
-        ArrayList<Tower>hehe=new ArrayList<>();
-        hehe.add(tw);
-        isa.changeTower(hehe);
-        Student gobbi=new Student(Type_Student.DRAGON);
-        isa.addStudent(gobbi);
-        isles.add(isa);
-        pelago=new Archipelago(isles);
-        String s="Arcipelago di 1 isole{ \nisola 9999 con studenti: ["+gobbi+"] e torre di colore Nero \n}\n";
-        assertEquals(pelago.toString(),s);
-    }
+
 @Test
     public void hasChangedTest() throws Exception {
         pelago=new Archipelago(is);
@@ -223,7 +209,7 @@ public class ArchipelagoTest {
         pelago.changeTower(tt);
         String s=l.toString();
         assertEquals(pelago.getPreviousTowers().toString(),s);
-        assertThrows(Exception.class, ()->pelago.getPreviousTowers());
+        assertSame(null, pelago.getPreviousTowers());
     }
 
 }

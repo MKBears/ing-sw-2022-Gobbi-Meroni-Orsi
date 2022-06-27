@@ -900,8 +900,13 @@ public class Cli extends Thread implements View {
     }
 
 
+    /**
+     * Asks the user to choose a student for the activation of 1st ch card's power
+     * @param students the students to choose between
+     * @return the chosen student
+     */
     public Student chooseStudentCh1(List<Student> students) {
-        System.out.println("scegli uno stdente da mettere in un'isola a tua scelta tra:");
+        System.out.println("scegli uno studente da mettere in un'isola a tua scelta tra:");
         for (int i = 0; i < 4; i++) {
             System.out.println((i+1)+") "+students.get(i));
         }

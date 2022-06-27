@@ -6,9 +6,7 @@ import it.polimi.ingsw.model.Wizards;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.List;
 
 import it.polimi.ingsw.model.*;
 
@@ -16,9 +14,8 @@ import it.polimi.ingsw.model.*;
  * This class contains all the possible message to send to the sever
  */
 public class Message4Server {
-    private ObjectOutputStream out;
+    private final ObjectOutputStream out;
     private String name;
-    private String message;
 
     /**
      *
@@ -276,20 +273,6 @@ public class Message4Server {
         }
     }
 
-    public void sendChooseCh7(Student st,Student st1,Student st2) {
-        synchronized (this) {
-            try {
-                name = "Ch_7";
-                out.writeObject(name);
-                out.writeObject(st);
-                out.writeObject(st1);
-                out.writeObject(st2);
-            } catch (IOException e) {
-                throw new RuntimeException();
-            }
-        }
-    }
-
     public void sendChooseCh11(Student student){
         synchronized (this){
             try{
@@ -338,19 +321,6 @@ public class Message4Server {
             }
         }
     }
-
-    public void sendChooseCh3(Land land) {
-        synchronized (this){
-            try{
-                name="Ch_3";
-                out.writeObject(name);
-                out.writeObject(land);
-            }catch(IOException e){
-                throw new RuntimeException();
-            }
-        }
-    }
-
 
     public void sendChooseCh8(){
         synchronized (this){

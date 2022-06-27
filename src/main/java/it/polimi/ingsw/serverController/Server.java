@@ -113,6 +113,13 @@ public class Server extends Thread{
         return creators;
     }
 
+    /**
+     * Makes a player join a match
+     * @param creator the creator of the match
+     * @param player the palyer to add to the match
+     * @return the controller of the match
+     * @throws Exception if the match is already full
+     */
     public synchronized Controller joinGame (String creator, ClientHandler player)throws Exception  {
         for (Controller match : matches){
             if (creator != null) {
@@ -141,6 +148,11 @@ public class Server extends Thread{
         return null;
     }
 
+    /**
+     *
+     * @param userName the username of the player
+     * @return the paused matches containing the player's username
+     */
     public ArrayList<String> getPausedMatches(String userName){
         ArrayList<String> creators = new ArrayList<>();
         for (Controller match : matches){
@@ -151,6 +163,11 @@ public class Server extends Thread{
         return creators;
     }
 
+    /**
+     * Check if the player is already connected
+     * @param player
+     * @return true if the player is not connected
+     */
     public boolean inactivePlayer (ClientHandler player) {
         for (Controller match : matches) {
             if (match.getPlayers().contains(player.getUserName())) {
@@ -164,6 +181,11 @@ public class Server extends Thread{
         return true;
     }
 
+    /**
+     *
+     * @param player
+     * @return true if the player can be reconnected to an ongoing match
+     */
     public boolean canConnectPlayer (String player) {
         for (Controller match : matches) {
             if (match.getPlayers().contains(player)) {

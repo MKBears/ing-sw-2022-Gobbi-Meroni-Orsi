@@ -20,14 +20,14 @@ class ActionTest {
         try{
             a.cardAndMoveMN(card,4);
         }catch(IllegalArgumentException e){
-            assertTrue(match.getLands().indexOf(match.getMotherNature().getPosition())==0);
+            assertEquals(0, match.getLands().indexOf(match.getMotherNature().getPosition()));
         }
         try{
             a.cardAndMoveMN(card,3);
         }catch(IllegalArgumentException e){
             System.out.println("error");
         }finally {
-            assertTrue(match.getLands().indexOf(match.getMotherNature().getPosition())==3);
+            assertEquals(3, match.getLands().indexOf(match.getMotherNature().getPosition()));
         }
 
     }
@@ -64,11 +64,11 @@ class ActionTest {
         match.getPlayer()[1].getBoard().importStudents(array);
         match.getPlayer()[1].getBoard().placeStudent(student);
         a.checkAllProfessors();
-        assertTrue(match.getProfessors().get(Type_Student.DRAGON)==match.getPlayer()[0]);
-        assertTrue(match.getProfessors().get(Type_Student.FAIRY)==match.getPlayer()[1]);
-        assertTrue(match.getProfessors().get(Type_Student.FROG)==match.getPlayer()[0]);
-        assertTrue(match.getProfessors().get(Type_Student.GNOME)==match.getPlayer()[1]);
-        assertTrue(match.getProfessors().get(Type_Student.UNICORN)==match.getPlayer()[1]);
+        assertSame(match.getProfessors().get(Type_Student.DRAGON), match.getPlayer()[0]);
+        assertSame(match.getProfessors().get(Type_Student.FAIRY), match.getPlayer()[1]);
+        assertSame(match.getProfessors().get(Type_Student.FROG), match.getPlayer()[0]);
+        assertSame(match.getProfessors().get(Type_Student.GNOME), match.getPlayer()[1]);
+        assertSame(match.getProfessors().get(Type_Student.UNICORN), match.getPlayer()[1]);
     }
 
 
@@ -84,10 +84,8 @@ class ActionTest {
         match.getLands().get(0).changeTower(t);
         match.getLands().get(1).changeTower(t);
         a.uniteLands();
-        assertTrue(match.getLands().size()==10);
-        assertTrue(match.getLands().get(0).getTower().getColor()==Colors.BLACK);
-        System.out.println(match.getLands().get(0));
-        System.out.println(match);
+        assertEquals(10, match.getLands().size());
+        assertSame(match.getLands().get(0).getTower().getColor(), Colors.BLACK);
     }
 
     @Test
@@ -103,9 +101,9 @@ class ActionTest {
         match.getLands().get(0).changeTower(t);
         match.getMotherNature().setPosition(match.getLands().get(11));
         a.uniteLands();
-        assertTrue(match.getLands().size()==10);
-        assertTrue(match.getLands().get(0).getTower().getColor()==Colors.BLACK);
-        assertTrue(match.getMotherNature().getPosition()==match.getLands().get(0));
+        assertEquals(10, match.getLands().size());
+        assertSame(match.getLands().get(0).getTower().getColor(), Colors.BLACK);
+        assertSame(match.getMotherNature().getPosition(), match.getLands().get(0));
     }
 
     @Test
@@ -123,9 +121,9 @@ class ActionTest {
         match.getLands().get(11).changeTower(t);
         match.getMotherNature().setPosition(match.getLands().get(11));
         a.uniteLands();
-        assertTrue(match.getLands().size()==12);
-        assertTrue(match.getLands().get(0).getTower().getColor()==Colors.BLACK);
-        assertTrue(match.getMotherNature().getPosition()==match.getLands().get(11));
+        assertEquals(12, match.getLands().size());
+        assertSame(match.getLands().get(0).getTower().getColor(), Colors.BLACK);
+        assertSame(match.getMotherNature().getPosition(), match.getLands().get(11));
     }
 
     @Test
@@ -141,9 +139,9 @@ class ActionTest {
         t.remove(0);
         match.getMotherNature().setPosition(match.getLands().get(5));
         a.uniteLands();
-        assertTrue(match.getLands().size()==11);
-        assertTrue(match.getLands().get(5).getTower().getColor()==Colors.BLACK);
-        assertTrue(match.getMotherNature().getPosition()==match.getLands().get(5));
+        assertEquals(11, match.getLands().size());
+        assertSame(match.getLands().get(5).getTower().getColor(), Colors.BLACK);
+        assertSame(match.getMotherNature().getPosition(), match.getLands().get(5));
     }
 
     @Test
@@ -159,9 +157,9 @@ class ActionTest {
         t.remove(0);
         match.getMotherNature().setPosition(match.getLands().get(6));
         a.uniteLands();
-        assertTrue(match.getLands().size()==11);
-        assertTrue(match.getLands().get(5).getTower().getColor()==Colors.BLACK);
-        assertTrue(match.getMotherNature().getPosition()==match.getLands().get(5));
+        assertEquals(11, match.getLands().size());
+        assertSame(match.getLands().get(5).getTower().getColor(), Colors.BLACK);
+        assertSame(match.getMotherNature().getPosition(), match.getLands().get(5));
     }
 
 
@@ -181,8 +179,8 @@ class ActionTest {
             fail();
         }
         a.moveFromIngressToLand(match.getPlayer()[0],match.getPlayer()[0].getBoard().getEntrance().get(0),match.getLands().get(0));
-        assertTrue(pl1.getBoard().getEntrance().isEmpty()==TRUE);
-        assertTrue(match.getLands().get(0).getStudents().get(0)==student);
+        assertTrue(pl1.getBoard().getEntrance().isEmpty());
+        assertSame(match.getLands().get(0).getStudents().get(0), student);
     }
 
     @Test
@@ -199,9 +197,9 @@ class ActionTest {
         match.getPlayer()[0].getBoard().setEntrance(array);
         System.out.println(match.getPlayer()[0].getBoard());
         a.moveFromIngressToBoard(match.getPlayer()[0],match.getPlayer()[0].getBoard().getEntrance().get(0));
-        assertTrue(pl1.getBoard().getEntrance().isEmpty()==FALSE);
+        assertFalse(pl1.getBoard().getEntrance().isEmpty());
         assertEquals(1,pl1.getBoard().getEntrance().size());
-        assertTrue(pl1.getBoard().getStudentsOfType(Type_Student.DRAGON)==1);
+        assertEquals(1, pl1.getBoard().getStudentsOfType(Type_Student.DRAGON));
         System.out.println(match.getPlayer()[0].getBoard());
     }
 }
