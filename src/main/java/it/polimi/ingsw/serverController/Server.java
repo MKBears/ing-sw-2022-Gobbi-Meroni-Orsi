@@ -12,6 +12,9 @@ public class Server extends Thread{
     private final ArrayList<Controller> matches;
     private final ArrayList<GameSaved> interrupt_matches;
 
+    /**
+     * The server of the game Eriantys
+     */
     public Server(){
         players = Executors.newCachedThreadPool();
         userNames = new ArrayList<>();
@@ -64,26 +67,22 @@ public class Server extends Thread{
             ClientHandler newPlayer;
             myIP=new InetSocketAddress(InetAddress.getLocalHost(),portTCP); //indirizzo tcp
             sSocket.bind(myIP);
-            System.out.println("Server ready");
+            System.out.println("Server running @"+myIP);
             byte[] buf=new byte[1];
             buf[0]=1;
             packet=new DatagramPacket(buf, 0, 0);
 
             while (true) {
                 try {
-                    //System.out.println("Aspetto datagram packet");
                     sock.receive(packet); //ricevo richiesta di connessione dal client
                     packet4client = new DatagramPacket(buf, 0, buf.length, packet.getAddress(), packet.getPort());
                     sock.send(packet4client);//gli mando un datagrampacket all'indirizzo al pacchetto che ho ricevuto
-                    //System.out.println("Info mandate");
                     Socket client = sSocket.accept(); //accetto connessione tcp dal client
                     newPlayer = new ClientHandler(client, this);
                     players.submit(newPlayer);
-                    //newPlayer.start();
-                    //System.out.println("Client accettato");
                 }catch (IOException e) {
                     System.out.println("Server cannot connect with a client. Trying a new connection.");
-                    throw new RuntimeException(e);
+                    break;
                 }
             }
         } catch (IOException e) {
@@ -92,7 +91,10 @@ public class Server extends Thread{
         }
     }
 
-    //@SuppressWarnings("unchecked")
+    /**
+     * Adds a username to the registered ones
+     * @param userName the username to add
+     */
     public synchronized void addUserName(String userName) {
         if (!userNames.contains(userName)){
             userNames.add(userName);
@@ -119,9 +121,15 @@ public class Server extends Thread{
         return (ArrayList<String>)userNames.clone();
     }
 
+    /**
+     * Creates an instance of the controller managing a match
+     * @param creator the player who created the match
+     * @param playersNum the number of players the match should contain
+     * @param expertMatch true if it is an expert match
+     * @return the instance of the controller managing the match
+     */
     public synchronized Controller createMatch(ClientHandler creator, int playersNum, boolean expertMatch) {
         if (!matches.isEmpty()) {
-            //System.out.println("Controllo se questo giocatore ha gia' creato una partita");
             for (Controller match : matches) {
                 if (match.getCreator().equals(creator.getUserName())) {
                     matches.remove(match);
@@ -132,10 +140,13 @@ public class Server extends Thread{
         }
         Controller match = new Controller(creator, playersNum, expertMatch);
         matches.add(match);
-        //System.out.println("Match creato");
         return match;
     }
 
+    /**
+     *
+     * @return the list of the matches which are not full yet
+     */
     public ArrayList<String> getJoinableMatches() {
         ArrayList<String> creators = new ArrayList<>();
         for (Controller match : matches){
@@ -146,6 +157,13 @@ public class Server extends Thread{
         return creators;
     }
 
+    /**
+     * Makes a player join a match
+     * @param creator the creator of the match
+     * @param player the palyer to add to the match
+     * @return the controller of the match
+     * @throws Exception if the match is already full
+     */
     public synchronized Controller joinGame (String creator, ClientHandler player)throws Exception  {
         for (Controller match : matches){
             if (creator != null) {
@@ -187,6 +205,11 @@ public class Server extends Thread{
         return null;
     }
 
+    /**
+     *
+     * @param userName the username of the player
+     * @return the paused matches containing the player's username
+     */
     public ArrayList<String> getPausedMatches(String userName){
         ArrayList<String> creators = new ArrayList<>();
         for (Controller match : matches){
@@ -202,11 +225,14 @@ public class Server extends Thread{
         return creators;
     }
 
+    /**
+     * Check if the player is already connected
+     * @param player
+     * @return true if the player is not connected
+     */
     public boolean inactivePlayer (ClientHandler player) {
         for (Controller match : matches) {
-            //System.out.println("Match creato da: "+match.getCreator());
             if (match.getPlayers().contains(player.getUserName())) {
-                //System.out.println("Ho trovato "+player.getUserName());
                 if (!match.isPaused()) {
                     if (match.getPlayer(player.getUserName()).isConnected()) {
                         return false;
@@ -214,10 +240,14 @@ public class Server extends Thread{
                 }
             }
         }
-        //System.out.println("Player non attivo");
         return true;
     }
 
+    /**
+     *
+     * @param player
+     * @return true if the player can be reconnected to an ongoing match
+     */
     public boolean canConnectPlayer (String player) {
         for (Controller match : matches) {
             if (match.getPlayers().contains(player)) {

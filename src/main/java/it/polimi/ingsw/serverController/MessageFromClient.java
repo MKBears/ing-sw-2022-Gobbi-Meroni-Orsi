@@ -8,6 +8,9 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 
+/**
+ * The class representing the output stream towards the client and all the possible messages
+ */
 public class MessageFromClient extends Thread{
 
     private final ObjectInputStream in;
@@ -26,134 +29,119 @@ public class MessageFromClient extends Thread{
         while (running) {
             try {
                 String message = (String) in.readObject();
-                System.out.println("Ricevuto: "+message);
                 switch (message) {
-                    case "ACK":
-                        ch.setAck(true);
-                        break;
-                    case "Login":
+                    case "ACK" -> ch.setAck(true);
+                    case "Login" -> {
                         ch.setUserName((String) in.readObject());
                         ch.setAck(true);
-                        break;
-                    case "Registration":
+                    }
+                    case "Registration" -> {
                         ch.register((String) in.readObject());
                         ch.setAck(true);
-                        break;
-                    case "ChoosingGame":
+                    }
+                    case "ChoosingGame" -> {
                         message = (String) in.readObject();
-
                         if (message.equals("NewGame")) {
-                            //System.out.println("Ricevuto: "+message);
                             Integer playersNum = (Integer) in.readObject();
-                            //System.out.println("Ricevuto: "+playersNum);
                             Boolean expert = (Boolean) in.readObject();
-                            //System.out.println("Ricevuto: "+expert);
                             ch.createMatch(playersNum, expert);
                             //System.out.println("Ricevuto num giocatori e expert");
                             File file=new File("src/main/resources/matches/"+ch.getUserName()+".txt");
                             file.delete();
                             ch.setAck(true);
-                        }
-                        else {
+                        } else {
                             ch.joinMatch(message);
                             ch.setAck(true);
                         }
-                        break;
-                    case "Choice":
+                    }
+                    case "Choice" -> {
                         ch.setWizard((Wizards) in.readObject());
                         ch.setAck(true);
-                        break;
-                    case "ChosenCard":
+                    }
+                    case "ChosenCard" -> {
                         ch.setPlayedAssistant((AssistantCard) in.readObject());
                         ch.setAck(true);
-                        break;
-                    case "MovedStudent":
+                    }
+                    case "MovedStudent" -> {
                         ch.moveStudent((Student) in.readObject(), (int) in.readObject());
                         ch.setAck(true);
-                        break;
-                    case "StepsMN":
+                    }
+                    case "StepsMN" -> {
                         ch.moveMN((int) in.readObject());
                         ch.setAck(true);
-                        break;
-                    case "ChoiceCloud":
+                    }
+                    case "ChoiceCloud" -> {
                         ch.chooseCloud((Cloud) in.readObject());
                         ch.setAck(true);
-                        break;
-                    case "NACK":
-                        ch.sendMessageAgain();
-                        break;
-                    case "Pong":
+                    }
+                    case "NACK" -> ch.sendMessageAgain();
+                    case "Pong" -> {
                         missedPongs = 0;
-
                         if (!ch.isConnected()) {
                             ch.setConnected();
                         }
-                        break;
-                    case "No_Ch":
+                    }
+                    case "No_Ch" -> {
                         ch.setUseCh(false);
                         ch.setAck(true);
-                        break;
-                    case "Ch_1":
-                        Student s=(Student) in.readObject();
-                        Land l=(Land)in.readObject();
+                    }
+                    case "Ch_1" -> {
+                        Student s = (Student) in.readObject();
+                        Land l = (Land) in.readObject();
                         ch.setCh_1_Student(s);
                         ch.setCh_1_land(l);
                         ch.setChosenCh("Ch_1");
                         ch.setUseCh(true);
                         ch.setAck(true);
-                        break;
-                    case "Ch_2":
+                    }
+                    case "Ch_2" -> {
                         ch.setChosenCh("Ch_2");
                         ch.setUseCh(true);
                         ch.setAck(true);
-                        break;
-                    case "Ch_4":
+                    }
+                    case "Ch_4" -> {
                         ch.setChosenCh("Ch_4");
                         ch.setUseCh(true);
                         ch.setAck(true);
-                        break;
-                    case "Ch_5":
-                        Land land=(Land)in.readObject();
+                    }
+                    case "Ch_5" -> {
+                        Land land = (Land) in.readObject();
                         ch.setCh_5_land(land);
                         ch.setChosenCh("Ch_5");
                         ch.setUseCh(true);
                         ch.setAck(true);
-                        break;
-                    case "Ch_8":
+                    }
+                    case "Ch_8" -> {
                         ch.setChosenCh("Ch_8");
                         ch.setUseCh(true);
                         ch.setAck(true);
-                        break;
-                    case "Ch_10":
-                        ArrayList<Student> stds=(ArrayList<Student>)in.readObject();
-                        ArrayList<Type_Student> types=(ArrayList<Type_Student>)in.readObject();
+                    }
+                    case "Ch_10" -> {
+                        ArrayList<Student> stds = (ArrayList<Student>) in.readObject();
+                        ArrayList<Type_Student> types = (ArrayList<Type_Student>) in.readObject();
                         ch.setCh_10_students(stds);
                         ch.setCh_10_types(types);
                         ch.setChosenCh("Ch_10");
                         ch.setUseCh(true);
                         ch.setAck(true);
-                        break;
-                    case "Ch_11":
-                        Student st=(Student)in.readObject();
+                    }
+                    case "Ch_11" -> {
+                        Student st = (Student) in.readObject();
                         ch.setCh_11_student(st);
                         ch.setChosenCh("Ch_11");
                         ch.setUseCh(true);
                         ch.setAck(true);
-                        break;
-                    case "Ch_12":
-                        Type_Student type=(Type_Student)in.readObject();
+                    }
+                    case "Ch_12" -> {
+                        Type_Student type = (Type_Student) in.readObject();
                         ch.setCh_12_type(type);
                         ch.setChosenCh("Ch_12");
                         ch.setUseCh(true);
                         ch.setAck(true);
-                        break;
-                    default:
-                        System.out.println("Player "+ch.getUserName()+": "+"Ricevo stringhe strane: "+message);
-                        ch.setAck(false);
-                        break;
+                    }
+                    default -> ch.setAck(false);
                 }
             } catch (ClassNotFoundException e) {
-                System.out.println("Player "+ch.getUserName()+": "+"Ricevo oggetti sconosciuti");
                 try {
                     ch.setAck(false);
                 } catch (Exception ex) {
@@ -161,7 +149,6 @@ public class MessageFromClient extends Thread{
                 }
             } catch (Exception i) {
                 missedPongs++;
-                System.out.println("Player "+ch.getUserName()+": "+i.getMessage());
 
                 if (missedPongs == 3) {
                     try {
@@ -181,6 +168,9 @@ public class MessageFromClient extends Thread{
         }
     }
 
+    /**
+     * Sets the state to stopped
+     */
     public void halt () {
         running = false;
     }

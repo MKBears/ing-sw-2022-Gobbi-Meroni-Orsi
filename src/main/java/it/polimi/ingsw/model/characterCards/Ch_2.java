@@ -22,9 +22,9 @@ public class Ch_2 implements CharacterCard, Serializable {
     public Ch_2(Match match){
         this.match=match;
         activated = false;
-        powerUp = "During this turn you take control of any number " +
-                "of Professors even if you have the same number of Students " +
-                "as the player who currently controls them.";
+        powerUp = "Durate questo turno, prendi il controllo dei professori " +
+                "anche se nella tua sala hai lo stesso numero di studenti del giocatore" +
+                "che li controlla in quel momento.";
     }
 
     @Override

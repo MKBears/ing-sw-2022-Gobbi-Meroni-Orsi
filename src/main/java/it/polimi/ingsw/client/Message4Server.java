@@ -6,9 +6,7 @@ import it.polimi.ingsw.model.Wizards;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.List;
 
 import it.polimi.ingsw.model.*;
 
@@ -16,9 +14,8 @@ import it.polimi.ingsw.model.*;
  * This class contains all the possible message to send to the sever
  */
 public class Message4Server {
-    private ObjectOutputStream out;
+    private final ObjectOutputStream out;
     private String name;
-    private String message;
 
     /**
      *
@@ -191,7 +188,6 @@ public class Message4Server {
                 out.writeObject(name);
                 out.writeObject(stu);
                 out.writeObject(pos);
-                System.out.println("mandato movedstudent");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -291,6 +287,7 @@ public class Message4Server {
             }
         }
     }
+
 
     /**
      * message to use the character card 11

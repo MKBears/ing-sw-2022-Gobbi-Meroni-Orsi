@@ -19,23 +19,14 @@ public class Client  extends Thread{
     private Socket socket;
     private ObjectOutputStream out;
     private ObjectInputStream in;
-    private DatagramSocket dSokk;
-    private byte[] addr;
-    private DatagramPacket starting;
-    private DatagramPacket packet;
-    private boolean condition;
-    private String received;
-    private String send;
-    private String response;
     private Message4Server server;
     private Match match;
-    private View view;
+    private final View view;
     private Action action;
     private String username;
     private Player me;
     private boolean end;
     private int counter;
-    private Boolean nack;
     private int tow;
 
     /**
@@ -54,18 +45,18 @@ public class Client  extends Thread{
     public void run(){
 
         try {
-            nack=false;
-            condition=false;
-            addr= InetAddress.getLocalHost().getAddress();
+            boolean condition = false;
+            byte[] addr = InetAddress.getLocalHost().getAddress();
             addr[3]=(byte)255;
-            dSokk=new DatagramSocket();
+            DatagramSocket dSokk = new DatagramSocket();
             dSokk.setSoTimeout(5000);
-            //System.out.println("Client: Inizializzato");
+            System.out.println("Client inizializzato");
             byte[] buf = new byte[1];
-            starting= new DatagramPacket(buf, 0, buf.length, InetAddress.getByAddress(addr), 4898);
-            do { //Ho messo il timeout per la ricezione dei messaggi
+            DatagramPacket starting = new DatagramPacket(buf, 0, buf.length, InetAddress.getByAddress(addr), 4898);
+            DatagramPacket packet;
+            System.out.println("Connessione in corso");
+            do {
                 dSokk.send(starting);
-                //System.out.println("Client: Ho mandato richiesta, ora vediamo di ricevere...");
                 buf = new byte[1];
                 packet = new DatagramPacket(buf, buf.length);
                 try{
@@ -73,14 +64,14 @@ public class Client  extends Thread{
                 }
                 catch (SocketTimeoutException e){
                     counter ++;
-                    if(counter==3){
+                    if(counter==5){
                         view.printNotification("Connessione fallita. Far ripartire il client");
                         dSokk.close();
                         throw new RuntimeException();
                     }
                 }
-                if(packet.getData()[0]==1){ //inizializza a 1 nel server
-                    condition=true;
+                if(packet.getData()[0]==1){
+                    condition =true;
                 }
             }while(!condition);
 
@@ -91,16 +82,14 @@ public class Client  extends Thread{
             in= new ObjectInputStream(socket.getInputStream());
             server=new Message4Server(out);
             view.setServer(server);
-            received="base";
+            String received = "base";
             dSokk.close();
             view.getTitolo();
-            while (true){
+            while (!end){
                 if(!received.equals("base")) {
                     received = (String) in.readObject();
                 }
-                if(!received.equals("Ping")) {
-                    System.out.println("Ricevuto: " + received);
-                }
+                String response;
                 switch (received) {
                     case "base": //login
                         do {
@@ -168,10 +157,8 @@ public class Client  extends Thread{
                         view.wakeUp("ChooseCard");
                         break;
                     case "MoveStudents":
-                    case "MoveMN": //DA MODIFICARE IL PROTOCOLLO
-                        System.out.println("Ricevuto " + received);
+                    case "MoveMN":
                         view.wakeUp(received);
-                        System.out.println("View svegliata");
                         break;
                     //nella nuova versione non è previsto ACK o NACK
                     case "ChooseCloud":
@@ -211,8 +198,7 @@ public class Client  extends Thread{
                         server.sendACK();
                         break;
                     case "NotifyMoveStudents (board)":
-                        Student s = (Student) in.readObject(); //lo studente stesso
-                        Board b = (Board) in.readObject();
+                        Student s = (Student) in.readObject();
                         String usern = (String) in.readObject();
                         for (int i = 0; i < match.getPlayer().length; i++) {
                             if (match.getPlayer()[i].getUserName().equals(usern)) {
@@ -229,7 +215,6 @@ public class Client  extends Thread{
                         match.moveMotherNature(movement);
                         idLand = match.getMotherNature().getPosition().getID();
                         ArrayList<Land> lands = (ArrayList<Land>) in.readObject();
-                        //System.out.println(lands);
                         match.setLands(lands);
                         for (Land l : match.getLands()) {
                             if (l.getID() == match.getMotherNature().getPosition().getID())
@@ -293,10 +278,10 @@ public class Client  extends Thread{
 
                         action.uniteLands();
                         view.printMatch(match);
+                        view.printNotification(f + " ha costruito delle torri");
                         server.sendACK();
                         break;
                     case "NotifyTowers (board)":
-                        ArrayList<Tower> towers1 = (ArrayList<Tower>) in.readObject();
                         Board board = (Board) in.readObject();
                         String us = (String) in.readObject();
                         for (int i = 0; i < match.getPlayer().length; i++) {
@@ -335,7 +320,6 @@ public class Client  extends Thread{
                         String phase = (String) in.readObject();
                         view.printTurn(play, phase);
                         server.sendACK();
-                        //System.out.println("Mandato ack");
                         break;
                     case "Ping":
                         server.sendPONG();
@@ -362,15 +346,13 @@ public class Client  extends Thread{
                     case "GenericError":
                         String error = (String) in.readObject();
                         view.printNotification(error);
+                        view.printNotification("Chiusura gioco");
+                        view.wakeUp("EndGame");
+
                         server.sendACK();
                         break;
                     case "Ch":
                         CharacterCard[] ch = (CharacterCard[]) in.readObject();
-                        /*for (int i = 0; i < 3; i++) {
-                            if (ch[i] instanceof Ch_11) {
-                                System.out.println(((Ch_11) ch[i]).getStudents());
-                            }
-                        }*/
                         view.setCharacters(ch);
                         view.wakeUp("Ch");
                         break;
@@ -556,8 +538,6 @@ public class Client  extends Thread{
                         break;
                     default: server.sendNACK();
                 }
-                if(end)
-                    break;
             }
         } catch (IOException e) {
             view.printNotification("Non trovo il server\n"+e.getMessage());
@@ -566,13 +546,14 @@ public class Client  extends Thread{
         } catch (Exception e) {
             view.printNotification("Errore interno: ");
             e.printStackTrace();
-        }
-        try {
-            out.close();
-            in.close();
-            socket.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } finally {
+            try {
+                out.close();
+                in.close();
+                socket.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

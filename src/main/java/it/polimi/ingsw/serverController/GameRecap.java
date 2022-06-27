@@ -4,6 +4,9 @@ import it.polimi.ingsw.model.*;
 
 import java.util.Map;
 
+/**
+ * The class representing the recap of an ended match
+ */
 public class GameRecap {
     int playersNum;
     String[] players;
@@ -12,6 +15,11 @@ public class GameRecap {
     int[] builtTowers;
     int[] controlledProfessors;
 
+    /**
+     * Constructor of class GameRecap: it initializes all the necessary stuff to print the recap
+     * @param players the list of players
+     * @param match
+     */
     public GameRecap (ClientHandler[] players, Match match) {
         playersNum = players.length;
         this.players = new String[playersNum];
@@ -24,6 +32,11 @@ public class GameRecap {
         fieldSort();
     }
 
+    /**
+     * Fills the fields of the table with the recap
+     * @param players
+     * @param match
+     */
     private void fillFields(ClientHandler[] players, Match match) {
         Map<Type_Student, Player> professors = match.getProfessors();
 
@@ -53,6 +66,9 @@ public class GameRecap {
         }
     }
 
+    /**
+     * Sorts the rows of the table depending on the number of built towers
+     */
     private void fieldSort() {
         int maxIndex;
         String tempPlayer;

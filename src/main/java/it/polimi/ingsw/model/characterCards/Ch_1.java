@@ -19,8 +19,8 @@ public class Ch_1 implements CharacterCard, Serializable {
         students = new ArrayList<>();
         price = 1;
         activated = false;
-        powerUp = "Choose between the four Students on this card and place it on an " +
-                "Island of your choice.";
+        powerUp = "Prendi 1 studente dalla carta e piazzalo su un'isola a scelta." +
+                " Poi, pesca 1 studente dal sacchetto e mettilo su questa carta.";
         this.match = match;
         for (int i=0; i<4; i++){
             try {
@@ -32,7 +32,7 @@ public class Ch_1 implements CharacterCard, Serializable {
     }
 
     @Override
-    public void activatePowerUp() {
+    public void activatePowerUp() throws Exception {
         land.addStudent(student);
         for (int i = 0; i < 4; i++) {
             if(students.get(i).type()==student.type()){
@@ -40,13 +40,7 @@ public class Ch_1 implements CharacterCard, Serializable {
                 break;
             }
         }
-        try {
-            students.add(match.getBag().getRandomStudent());
-        } catch (Exception e) {
-            System.out.println("problema");
-            e.printStackTrace();
-        }
-        System.out.println(students);
+        students.add(match.getBag().getRandomStudent());
         activated = true;
     }
 
@@ -67,7 +61,13 @@ public class Ch_1 implements CharacterCard, Serializable {
 
     @Override
     public String getPowerUp() {
-        return powerUp;
+        StringBuilder pu = new StringBuilder(powerUp);
+        pu.append("\nStudenti sulla carta :  ");
+
+        for (int i=0; i<students.size(); i++)
+            pu.append("  ").append(i+1).append(".").append(students.get(i));
+
+        return pu.toString();
     }
 
     public List<Student> getStudents() {

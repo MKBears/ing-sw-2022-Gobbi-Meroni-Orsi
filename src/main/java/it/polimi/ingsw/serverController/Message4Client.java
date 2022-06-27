@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -352,17 +351,12 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
 
     /**
      * The server notifies the clients the situation of the towers in the game
-     *
-     * @param towers
-     * @param board  the board involved
      */
-    public void sendNotifyTowers(ArrayList<Tower> towers, Board board, String username) {
+    public void sendNotifyTowers(String username) {
         synchronized (this) {
             name = "NotifyTowers (board)";
             try {
                 out.writeObject(name);
-                out.writeObject(towers);
-                out.writeObject(board);
                 out.writeObject(username);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -429,7 +423,7 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
      * @param player the palyer that begins the turn
      * @param turn
      */
-    public void sendNextTurn(Player player, String turn, Controller co) {
+    public void sendNextTurn(Player player, String turn) {
         synchronized (this) {
             name = "NextTurn";
             try {
@@ -457,9 +451,12 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
             } catch (IOException e) {
                     sendGenericError("Internal server error");
             }
-
         }
-
+        try {
+            out.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -544,13 +541,8 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
     /**
      * Closes the connection with the client
      */
-    public void close() {
-        try {
-            condition = false;
-            out.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void halt() {
+        condition = false;
     }
 
     /**
