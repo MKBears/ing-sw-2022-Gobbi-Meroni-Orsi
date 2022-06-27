@@ -26,13 +26,13 @@ public class MessageFromServer extends Thread{
         while (true) {
             try {
                 message = (String) in.readObject();
-                if(message!="Ping") {
+                if(!message.equals("Ping")) {
                     System.out.println("Ricevuto: " + message);
                 }
                 switch (message) {
                     case "Ping":
                         server.sendPONG();
-                        System.out.println("Mandato pong");
+                        //System.out.println("Mandato pong");
                         break;
                     case "NACK": //non lo soooo
                         break;
@@ -43,19 +43,29 @@ public class MessageFromServer extends Thread{
                         cg.setWilly((ArrayList<Wizards>) in.readObject());
                         break;
                     case "Creation":
-                        cg.setMatch((Match) in.readObject());
+                        synchronized (in) {
+                            cg.setMatch((Match) in.readObject());
+                        }
                         break;
                     case "RefillClouds":
-                        cg.setStudentsClouds();
+                        synchronized (in) {
+                            cg.setStudentsClouds();
+                        }
                         break;
                     case "ChooseCard": //"ChooseCard"
-                        cg.setCards((List<AssistantCard>) in.readObject());
+                        synchronized (in) {
+                            cg.setCards((List<AssistantCard>) in.readObject());
+                        }
                         break;
                     case "ChooseCloud":
-                        cg.setClouds((ArrayList<Cloud>) in.readObject());
+                        synchronized (in) {
+                            cg.setClouds((ArrayList<Cloud>) in.readObject());
+                        }
                         break;
                     case "NotifyChosenCard":
-                        cg.setChosenCard((AssistantCard) in.readObject(), (Player) in.readObject());
+                        synchronized (in) {
+                            cg.setChosenCard((AssistantCard) in.readObject(), (Player) in.readObject());
+                        }
                         break;
                     case "NotifyAllPlayersDisconnected":
                     case "ACK":
@@ -63,25 +73,41 @@ public class MessageFromServer extends Thread{
                     case "MoveMN":
                         break;
                     case "NotifyMoveStudents (id)":
-                        cg.setNotifyMovedStudentId((Student) in.readObject(),(int)in.readObject(),(String) in.readObject());
+                        synchronized (in) {
+                            cg.setNotifyMovedStudentId((Student) in.readObject(), (int) in.readObject(), (String) in.readObject());
+                        }
                         break;
                     case "NotifyMoveStudents (board)":
-                        cg.setNotifyMovedStudentBoard((Student) in.readObject(), (Board) in.readObject(), (String) in.readObject());
+                        synchronized (in) {
+                            cg.setNotifyMovedStudentBoard((Student) in.readObject(), (Board) in.readObject(), (String) in.readObject());
+                        }
                         break;
                     case "NotifyMovementMN":
-                        cg.setNotifyMovementMN((int)in.readObject(),(ArrayList<Land>) in.readObject());
+                        synchronized (in) {
+                            cg.setNotifyMovementMN((int) in.readObject(), (ArrayList<Land>) in.readObject());
+                        }
                         break;
                     case "NotifyProfessors":
-                        cg.setProf((Map<Type_Student, Player>) in.readObject());
+                        synchronized (in) {
+                            cg.setProf((Map<Type_Student, Player>) in.readObject());
+                        }
                         break;
                     case "NotifyChosenCloud":
-                        cg.setNotifyChosenCLoud((Player) in.readObject(), (Cloud) in.readObject());
+                        synchronized (in) {
+                            Player p=(Player) in.readObject();
+                            Cloud c=(Cloud) in.readObject();
+                            cg.setNotifyChosenCLoud(p,c);
+                        }
                         break;
                     case "NotifyTowers (land)":
-                        cg.setNotifyTowersLand((ArrayList<Tower>) in.readObject(),(Land) in.readObject(),(String) in.readObject());
+                        synchronized (in) {
+                            cg.setNotifyTowersLand((ArrayList<Tower>) in.readObject(), (Land) in.readObject(), (String) in.readObject());
+                        }
                         break;
                     case "NotifyTowers (board)":
-                        cg.setNotifyTowersBoard((ArrayList<Tower>) in.readObject(), (Board) in.readObject(), (String) in.readObject());
+                        synchronized (in) {
+                            cg.setNotifyTowersBoard((ArrayList<Tower>) in.readObject(), (Board) in.readObject(), (String) in.readObject());
+                        }
                         break;
                     case "EndGame":
                         //qualcosa
@@ -93,10 +119,12 @@ public class MessageFromServer extends Thread{
                         //qualcosa
                         break;
                     case "NextTurn":
-                        cg.setNextTurn((Player) in.readObject(), (String) in.readObject());
+                        synchronized (in) {
+                            cg.setNextTurn((Player) in.readObject(), (String) in.readObject());
+                        }
                         break;
                     case "NotifyPlayerConnected":
-                        cg.setNotifyPlayerConnected((String) in.readObject(),(boolean) in.readObject());
+                            cg.setNotifyPlayerConnected((String) in.readObject(), (boolean) in.readObject());
                         break;
                     case "FinishedAssistants":
                         //qualcosa
@@ -110,9 +138,11 @@ public class MessageFromServer extends Thread{
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
-            synchronized (cg){
-                cg.setReceived(message);
-                cg.notifyAll();
+            if(!message.equals("Ping") && !message.equals("ACK")) {
+                synchronized (cg) {
+                    cg.setReceived(message);
+                    cg.notifyAll();
+                }
             }
         }
     }

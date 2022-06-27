@@ -17,7 +17,7 @@
          <Image url="@sfondo.jpg" />
       </image>
    </ImageView>
-    <Pane fx:id="land_view" prefHeight="719.0" prefWidth="1080.0">
+    <Pane fx:id="land_view" prefHeight="719.0" prefWidth="1080.0" visible="false">
         <AnchorPane fx:id="land3" layoutX="600.0" layoutY="25.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="218.0" prefWidth="251.0">
             <ImageView fx:id="island3" fitHeight="205.0" fitWidth="227.0" layoutX="25.0" layoutY="10.0" onMouseClicked="#moveto" pickOnBounds="true" preserveRatio="true">
                 <Image url="@wooden_pieces/wooden_pieces/island1.png" />
@@ -869,7 +869,7 @@
             <InnerShadow height="65.0" radius="33.0" width="69.0" />
          </effect>
         </Button>
-      <Label fx:id="state_label" layoutX="330.0" prefHeight="24.0" prefWidth="400.0" text="Tocca a... in fase di..." textAlignment="CENTER">
+      <Label fx:id="state_label" layoutX="248.0" prefHeight="24.0" prefWidth="593.0" text="Tocca a... in fase di..." textAlignment="CENTER">
          <font>
             <Font name="Lucida Calligraphy Italic" size="16.0" />
          </font>
@@ -883,9 +883,9 @@
          </effect>
       </Button>
     </Pane>
-    <Pane fx:id="board_view" prefHeight="720.0" prefWidth="1080.0" visible="false">
+    <Pane fx:id="board_view" prefHeight="720.0" prefWidth="1080.0">
         <AnchorPane layoutX="-121.0" layoutY="92.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="339.0" prefWidth="581.0" rotate="-90.0">
-            <ImageView fx:id="board0" fitHeight="220.0" fitWidth="500.0" layoutX="50.0" layoutY="102.0" onMouseClicked="#moveto" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="board0" fitHeight="220.0" fitWidth="500.0" layoutX="50.0" layoutY="102.0" pickOnBounds="true" preserveRatio="true">
                 <Image url="@Graphical_Assets/Plancia/Plancia_DEF2.png" />
             </ImageView>
             <ImageView fx:id="profgreen0" fitHeight="31.0" fitWidth="30.0" layoutX="401.0" layoutY="125.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
@@ -1182,10 +1182,15 @@
             <font>
                <Font name="Script MT Bold" size="20.0" />
             </font></Label>
-            <ImageView fx:id="wizard0" fitHeight="90.0" fitWidth="85.0" layoutX="455.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="wizard0" fitHeight="90.0" fitWidth="85.0" layoutX="455.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-radius: 20;" />
+         <Button fx:id="tomyboard0" layoutX="171.0" layoutY="34.0" mnemonicParsing="false" onAction="#movetoboard" prefHeight="28.0" prefWidth="90.0" rotate="90.0" text="Metti nella mia plancia">
+            <font>
+               <Font size="6.0" />
+            </font>
+         </Button>
         </AnchorPane>
         <AnchorPane layoutX="199.0" layoutY="92.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="339.0" prefWidth="581.0" rotate="-90.0">
-            <ImageView fx:id="board1" fitHeight="220.0" fitWidth="500.0" layoutX="50.0" layoutY="102.0" onMouseClicked="#moveto" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="board1" fitHeight="220.0" fitWidth="500.0" layoutX="50.0" layoutY="102.0" pickOnBounds="true" preserveRatio="true">
                 <Image url="@Graphical_Assets/Plancia/Plancia_DEF2.png" />
             </ImageView>
             <ImageView fx:id="profgreen1" fitHeight="31.0" fitWidth="30.0" layoutX="401.0" layoutY="125.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
@@ -1482,10 +1487,15 @@
             <font>
                <Font name="Script MT Bold" size="20.0" />
             </font></Label>
-            <ImageView fx:id="wizard1" fitHeight="90.0" fitWidth="88.0" layoutX="458.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="wizard1" fitHeight="90.0" fitWidth="88.0" layoutX="458.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-radius: 20;" />
+         <Button fx:id="tomyboard1" layoutX="175.0" layoutY="41.0" mnemonicParsing="false" onAction="#movetoboard" prefHeight="28.0" prefWidth="86.0" rotate="90.0" text="Metti nella mia plancia">
+            <font>
+               <Font size="6.0" />
+            </font>
+         </Button>
         </AnchorPane>
         <AnchorPane fx:id="two" layoutX="519.0" layoutY="92.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="339.0" prefWidth="581.0" rotate="-90.0">
-            <ImageView fx:id="board2" fitHeight="220.0" fitWidth="500.0" layoutX="50.0" layoutY="102.0" onMouseClicked="#moveto" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="board2" fitHeight="220.0" fitWidth="500.0" layoutX="50.0" layoutY="102.0" pickOnBounds="true" preserveRatio="true">
                 <Image url="@Graphical_Assets/Plancia/Plancia_DEF2.png" />
             </ImageView>
             <ImageView fx:id="profgreen2" fitHeight="31.0" fitWidth="30.0" layoutX="401.0" layoutY="125.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
@@ -1784,7 +1794,11 @@
             <font>
                <Font name="Script MT Bold" size="20.0" />
             </font></Label>
-            <ImageView fx:id="wizard2" fitHeight="90.0" fitWidth="88.0" layoutX="458.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="wizard2" fitHeight="90.0" fitWidth="88.0" layoutX="458.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-radius: 20;" />
+         <Button fx:id="tomyboard2" layoutX="180.0" layoutY="34.0" mnemonicParsing="false" onAction="#movetoboard" prefHeight="28.0" prefWidth="86.0" rotate="90.0" text="Metti nella mia plancia">
+            <font>
+               <Font size="6.0" />
+            </font></Button>
         </AnchorPane>
         <Label layoutX="455.0" layoutY="500.0" text="Il tuo mazzo:">
             <font>

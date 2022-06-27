@@ -7,6 +7,9 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -590,6 +593,14 @@ public class MatchController extends Thread {
     Pane characters;
     @FXML
     Button character_button;
+    @FXML
+    AnchorPane two;
+    @FXML
+    Button tomyboard0;
+    @FXML
+    Button tomyboard1;
+    @FXML
+    Button tomyboard2;
 
     public static void setServer(Message4Server server) {
         MatchController.server = server;
@@ -609,6 +620,9 @@ public class MatchController extends Thread {
 
 
     public void initialize() {
+        tomyboard1.setVisible(false);
+        tomyboard2.setVisible(false);
+        tomyboard0.setVisible(false);
         white0.setVisible(false);
         white1.setVisible(false);
         white2.setVisible(false);
@@ -699,12 +713,21 @@ public class MatchController extends Thread {
             character(ch1, ((Expert_Match) match).getCard()[1]);
             character(ch2, ((Expert_Match) match).getCard()[2]);
         }
+        if(match.getPlayersNum()==2){
+            two.setVisible(false);
+            entry07.setVisible(false);
+            entry08.setVisible(false);
+            entry17.setVisible(false);
+            entry18.setVisible(false);
+        }
         state = "Start";
     }
 
     public void setStateLabel(String s){
         state_label.setText(s);
     }
+
+
 
     @FXML
     /**
@@ -752,18 +775,6 @@ public class MatchController extends Thread {
             case "island11":
                 idland = 11;
                 break;
-            case "board0":
-                if (me == match.getPlayer()[0])
-                    idland = 12;
-                break;
-            case "board1":
-                if (me == match.getPlayer()[1])
-                    idland = 12;
-                break;
-            case "board2":
-                if (me == match.getPlayer()[2])
-                    idland = 12;
-                break;
         }
         if (idland >= 0) {
             if (selectedmn) {
@@ -788,6 +799,9 @@ public class MatchController extends Thread {
                 }
             } else if (selectedstudent) {
                 server.sendMovedStudent(assistantchoosen, idland);
+                /*switch (me.getBoard().getEntrance().indexOf(assistantchoosen)){
+                    case
+                }*/
                 if (idland == 12) {
                     try {
                         action.moveFromIngressToBoard(me, assistantchoosen);
@@ -847,6 +861,35 @@ public class MatchController extends Thread {
                 server.sendChoiceCloud(match.getCloud()[2]);
                 match.getCloud()[2].clearStudents();
             }
+        }
+        entry00.setVisible(true);
+        entry01.setVisible(true);
+        entry02.setVisible(true);
+        entry03.setVisible(true);
+        entry04.setVisible(true);
+        entry05.setVisible(true);
+        entry06.setVisible(true);
+        entry10.setVisible(true);
+        entry11.setVisible(true);
+        entry12.setVisible(true);
+        entry13.setVisible(true);
+        entry14.setVisible(true);
+        entry15.setVisible(true);
+        entry16.setVisible(true);
+        if(match.getPlayersNum()==3){
+            entry07.setVisible(true);
+            entry08.setVisible(true);
+            entry17.setVisible(true);
+            entry18.setVisible(true);
+            entry20.setVisible(true);
+            entry21.setVisible(true);
+            entry22.setVisible(true);
+            entry23.setVisible(true);
+            entry24.setVisible(true);
+            entry25.setVisible(true);
+            entry26.setVisible(true);
+            entry27.setVisible(true);
+            entry28.setVisible(true);
         }
         synchronized (this) {
             notifyAll();
@@ -1099,7 +1142,7 @@ public class MatchController extends Thread {
      * Sets the graphic interface of the board view (board_view)
      * @param actionEvent the click of the specified botton
      */
-    public void show_boards(ActionEvent actionEvent) {
+    public void show_boards(ActionEvent actionEvent) {  /////////////////////////////////////////////////////////
         land_view.setVisible(false);
         board_view.setVisible(true);
         characters.setVisible(false);
@@ -1108,64 +1151,66 @@ public class MatchController extends Thread {
             show_towers(i);
         }
         show_entry();
-        for (AssistantCard a : me.getDeck()) {
-            if (a.getValue() == 1) {
-                assistant0.setVisible(true);
-                break;
+        if(state!="ChooseAssistant") {
+            for (AssistantCard a : me.getDeck()) {
+                if (a.getValue() == 1) {
+                    assistant0.setVisible(true);
+                    break;
+                }
             }
-        }
-        for (AssistantCard a : me.getDeck()) {
-            if (a.getValue() == 2) {
-                assistant1.setVisible(true);
-                break;
+            for (AssistantCard a : me.getDeck()) {
+                if (a.getValue() == 2) {
+                    assistant1.setVisible(true);
+                    break;
+                }
             }
-        }
-        for (AssistantCard a : me.getDeck()) {
-            if (a.getValue() == 3) {
-                assistant2.setVisible(true);
-                break;
+            for (AssistantCard a : me.getDeck()) {
+                if (a.getValue() == 3) {
+                    assistant2.setVisible(true);
+                    break;
+                }
             }
-        }
-        for (AssistantCard a : me.getDeck()) {
-            if (a.getValue() == 4) {
-                assistant3.setVisible(true);
-                break;
+            for (AssistantCard a : me.getDeck()) {
+                if (a.getValue() == 4) {
+                    assistant3.setVisible(true);
+                    break;
+                }
             }
-        }
-        for (AssistantCard a : me.getDeck()) {
-            if (a.getValue() == 5) {
-                assistant4.setVisible(true);
-                break;
+            for (AssistantCard a : me.getDeck()) {
+                if (a.getValue() == 5) {
+                    assistant4.setVisible(true);
+                    break;
+                }
             }
-        }
-        for (AssistantCard a : me.getDeck()) {
-            if (a.getValue() == 6) {
-                assistant5.setVisible(true);
-                break;
+            for (AssistantCard a : me.getDeck()) {
+                if (a.getValue() == 6) {
+                    assistant5.setVisible(true);
+                    break;
+                }
             }
-        }
-        for (AssistantCard a : me.getDeck()) {
-            if (a.getValue() == 7) {
-                assistant6.setVisible(true);
-                break;
+            for (AssistantCard a : me.getDeck()) {
+                if (a.getValue() == 7) {
+                    assistant6.setVisible(true);
+                    break;
+                }
             }
-        }
-        for (AssistantCard a : me.getDeck()) {
-            if (a.getValue() == 8) {
-                assistant7.setVisible(true);
-                break;
+            for (AssistantCard a : me.getDeck()) {
+                if (a.getValue() == 8) {
+                    assistant7.setVisible(true);
+                    break;
+                }
             }
-        }
-        for (AssistantCard a : me.getDeck()) {
-            if (a.getValue() == 9) {
-                assistant8.setVisible(true);
-                break;
+            for (AssistantCard a : me.getDeck()) {
+                if (a.getValue() == 9) {
+                    assistant8.setVisible(true);
+                    break;
+                }
             }
-        }
-        for (AssistantCard a : me.getDeck()) {
-            if (a.getValue() == 10) {
-                assistant9.setVisible(true);
-                break;
+            for (AssistantCard a : me.getDeck()) {
+                if (a.getValue() == 10) {
+                    assistant9.setVisible(true);
+                    break;
+                }
             }
         }
     }
@@ -1280,6 +1325,7 @@ public class MatchController extends Thread {
         }
         synchronized (cg){
             cg.notifyAll();
+            cg.notifyAll();///////////////////////////////////////////////////////////////////////////
         }
 
     }
@@ -1769,6 +1815,13 @@ public class MatchController extends Thread {
             selectedmn = false;
             assistantchoosen = me.getBoard().getEntrance().get(stu);
         }
+        if(pla==0){
+            tomyboard0.setVisible(true);
+        }else if(pla==1){
+            tomyboard1.setVisible(true);
+        }else if(pla==2){
+            tomyboard2.setVisible(true);
+        }
     }
 
     /**
@@ -1780,23 +1833,31 @@ public class MatchController extends Thread {
             switch (i) {
                 case 0: {
                     if (!entrance.isEmpty()) {
-                        show_student(entry00, entrance.get(0));
-                        show_student(entry01, entrance.get(1));
-                        show_student(entry02, entrance.get(2));
-                        show_student(entry03, entrance.get(3));
-                        if (entrance.size() >= 5) {
+                        if (entry00.isVisible()) {
+                            show_student(entry00, entrance.get(0));
+                        }
+                        if (entry01.isVisible()) {
+                            show_student(entry01, entrance.get(1));
+                        }
+                        if (entry02.isVisible()) {
+                            show_student(entry02, entrance.get(2));
+                        }
+                        if (entry03.isVisible()) {
+                            show_student(entry03, entrance.get(3));
+                        }
+                        if (entrance.size() >= 5 ) {
                             show_student(entry04, entrance.get(4));
                         }
-                        if (entrance.size() >= 6) {
+                        if (entrance.size() >= 6 ) {
                             show_student(entry05, entrance.get(5));
                         }
-                        if (entrance.size() >= 7) {
+                        if (entrance.size() >= 7 ) {
                             show_student(entry06, entrance.get(6));
                         }
-                        if (entrance.size() >= 8) {
+                        if (entrance.size() >= 8 ) {
                             show_student(entry07, entrance.get(7));
                         }
-                        if (entrance.size() >= 9) {
+                        if (entrance.size() >= 9 ) {
                             show_student(entry08, entrance.get(8));
                         }
                     } else {
@@ -1813,23 +1874,31 @@ public class MatchController extends Thread {
                 }
                 case 1: {
                     if (!entrance.isEmpty()) {
-                        show_student(entry10, entrance.get(0));
-                        show_student(entry11, entrance.get(1));
-                        show_student(entry12, entrance.get(2));
-                        show_student(entry13, entrance.get(3));
-                        if (entrance.size() >= 5) {
+                        if (entry10.isVisible()) {
+                            show_student(entry10, entrance.get(0));
+                        }
+                        if (entry11.isVisible()) {
+                            show_student(entry11, entrance.get(1));
+                        }
+                        if (entry12.isVisible()) {
+                            show_student(entry12, entrance.get(2));
+                        }
+                        if (entry13.isVisible()) {
+                            show_student(entry13, entrance.get(3));
+                        }
+                        if (entrance.size() >= 5 ) {
                             show_student(entry14, entrance.get(4));
                         }
-                        if (entrance.size() >= 6) {
+                        if (entrance.size() >= 6 ) {
                             show_student(entry15, entrance.get(5));
                         }
-                        if (entrance.size() >= 7) {
+                        if (entrance.size() >= 7 ) {
                             show_student(entry16, entrance.get(6));
                         }
-                        if (entrance.size() >= 8) {
+                        if (entrance.size() >= 8 ) {
                             show_student(entry17, entrance.get(7));
                         }
-                        if (entrance.size() >= 9) {
+                        if (entrance.size() >= 9 ) {
                             show_student(entry18, entrance.get(8));
                         }
                     } else {
@@ -1846,23 +1915,31 @@ public class MatchController extends Thread {
                 }
                 case 2: {
                     if (!entrance.isEmpty()) {
-                        show_student(entry20, entrance.get(0));
-                        show_student(entry21, entrance.get(1));
-                        show_student(entry22, entrance.get(2));
-                        show_student(entry23, entrance.get(3));
-                        if (entrance.size() >= 5) {
+                        if (entry20.isVisible()) {
+                            show_student(entry20, entrance.get(0));
+                        }
+                        if (entry21.isVisible()) {
+                            show_student(entry21, entrance.get(1));
+                        }
+                        if (entry22.isVisible()) {
+                            show_student(entry22, entrance.get(2));
+                        }
+                        if (entry23.isVisible()) {
+                            show_student(entry23, entrance.get(3));
+                        }
+                        if (entrance.size() >= 5 ) {
                             show_student(entry24, entrance.get(4));
                         }
-                        if (entrance.size() >= 6) {
+                        if (entrance.size() >= 6 ) {
                             show_student(entry25, entrance.get(5));
                         }
-                        if (entrance.size() >= 7) {
+                        if (entrance.size() >= 7 ) {
                             show_student(entry26, entrance.get(6));
                         }
-                        if (entrance.size() >= 8) {
+                        if (entrance.size() >= 8 ) {
                             show_student(entry27, entrance.get(7));
                         }
-                        if (entrance.size() >= 9) {
+                        if (entrance.size() >= 9 ) {
                             show_student(entry28, entrance.get(8));
                         }
                     } else {
@@ -1887,6 +1964,7 @@ public class MatchController extends Thread {
      * @param mouseEvent
      */
     public void selectfromentry(MouseEvent mouseEvent) {
+        ((ImageView) mouseEvent.getSource()).setEffect(new Bloom());
         switch (((ImageView) mouseEvent.getSource()).getId()) {
             case "entry00" -> selected(0, 0);
             case "entry01" -> selected(0, 1);
@@ -1897,7 +1975,6 @@ public class MatchController extends Thread {
             case "entry06" -> selected(0, 6);
             case "entry07" -> selected(0, 7);
             case "entry08" -> selected(0, 8);
-            case "entry09" -> selected(0, 9);
             case "entry10" -> selected(1, 0);
             case "entry11" -> selected(1, 1);
             case "entry12" -> selected(1, 2);
@@ -1907,7 +1984,6 @@ public class MatchController extends Thread {
             case "entry16" -> selected(1, 6);
             case "entry17" -> selected(1, 7);
             case "entry18" -> selected(1, 8);
-            case "entry19" -> selected(1, 9);
             case "entry20" -> selected(2, 0);
             case "entry21" -> selected(2, 1);
             case "entry22" -> selected(2, 2);
@@ -1917,14 +1993,16 @@ public class MatchController extends Thread {
             case "entry26" -> selected(2, 6);
             case "entry27" -> selected(2, 7);
             case "entry28" -> selected(2, 8);
-            case "entry29" -> selected(2, 9);
         }
+        setStateLabel("Ora scegli se mettere lo studente nella plancia o in un isola");
         setDisableEntrance(true);
-        setDisableBoards(false);
+        setDisableBoards(true);
         setDisableLands(false);
         setDisableAssistants(true);
         setDisableClouds(true);
         setDisableMN(true);
+        ((ImageView) mouseEvent.getSource()).setEffect(null);
+        ((ImageView) mouseEvent.getSource()).setVisible(false);
     }
 
 
@@ -2037,6 +2115,7 @@ public class MatchController extends Thread {
     }
 
     public void setVisibleAssCards(List<AssistantCard> ass){
+        System.out.println("Sono all'inizio del settaggio delle carte (MatchController)");
         assistant0.setVisible(false);
         assistant1.setVisible(false);
         assistant2.setVisible(false);
@@ -2081,19 +2160,21 @@ public class MatchController extends Thread {
                     break;
             }
         }
+        System.out.println("Ho finito di settare le cards (MatchControler)");
     }
 
 
     @Override
     public void run() {
-        Runnable updater = new Runnable() {
+
+        System.out.println("Sono qui");
+        Runnable updater = new Runnable() { ///Non va
             @Override
             public void run() {
                 System.out.println(state);
                 switch (state) {
                     case "Start":
-
-                        break;
+                        //server.sendACK();
                     case "Next Turn":
                         setDisableAssistants(true);
                         setDisableBoards(true);
@@ -2101,6 +2182,7 @@ public class MatchController extends Thread {
                         setDisableEntrance(true);
                         setDisableLands(true);
                         setDisableMN(true);
+                        break;
                     case "ChooseAssistant":
                         System.out.println("Sono in MatchController ChooseAssistant");
                         setDisableAssistants(false);
@@ -2114,11 +2196,46 @@ public class MatchController extends Thread {
                     case "MoveStudent":
                         setDisableMN(true);
                         setDisableLands(true);
-                        setDisableEntrance(false);
+                        setDisableEntrance(true);
+                        switch(me.getColor()){
+                            case WHITE:
+                                entry00.setDisable(false);
+                                entry01.setDisable(false);
+                                entry02.setDisable(false);
+                                entry03.setDisable(false);
+                                entry04.setDisable(false);
+                                entry15.setDisable(false);
+                                entry06.setDisable(false);
+                                entry07.setDisable(false);
+                                entry08.setDisable(false);
+                                break;
+                            case BLACK:
+                                entry10.setDisable(false);
+                                entry11.setDisable(false);
+                                entry12.setDisable(false);
+                                entry13.setDisable(false);
+                                entry14.setDisable(false);
+                                entry15.setDisable(false);
+                                entry16.setDisable(false);
+                                entry17.setDisable(false);
+                                entry18.setDisable(false);
+                                break;
+                            case GREY:
+                                entry20.setDisable(false);
+                                entry21.setDisable(false);
+                                entry22.setDisable(false);
+                                entry23.setDisable(false);
+                                entry24.setDisable(false);
+                                entry25.setDisable(false);
+                                entry26.setDisable(false);
+                                entry27.setDisable(false);
+                                entry28.setDisable(false);
+                                break;
+                        }
                         setDisableClouds(true);
                         setDisableBoards(true);
                         setDisableAssistants(true);
-                        gui.popUp("Spostare lo studente", "Tocca a te! Scegli lo studente dagli ingressi e poi scegli la isola o plancia in cui piazzarlo");
+                        gui.popUp("Spostare lo studente", "Tocca a te! Scegli lo studente dall'ingresso e poi scegli la isola o la tua plancia in cui piazzarlo");
                         break;
                     case "ChooseMN":
                         setDisableMN(false);
@@ -2138,102 +2255,20 @@ public class MatchController extends Thread {
                         setDisableMN(true);
                         gui.popUp("Scegliere una nuvola", "Ora puoi scegliere una nuvola");
                         break;
-                    case "EndGame":
+                    case "EndGame": //da fare
                         break;
-                    case "Ch":
+                    case "Ch":  //da fare
                         break;
                 }
-                if (land_view.isVisible()) {
-                    for (int i = 0; i < 12; i++) {
-                        show_islands(i);
-                        show_cloud();
-                    }
-                } else {
-                    for (int i = 0; i < match.getPlayer().length; i++) {
-                        show(i);
-                        show_towers(i);
-                    }
-                    show_entry();
-                    if (!state.equals("ChooseAssistant")) {
-                        assistant0.setVisible(false);
-                        assistant1.setVisible(false);
-                        assistant2.setVisible(false);
-                        assistant3.setVisible(false);
-                        assistant4.setVisible(false);
-                        assistant5.setVisible(false);
-                        assistant6.setVisible(false);
-                        assistant7.setVisible(false);
-                        assistant8.setVisible(false);
-                        assistant9.setVisible(false);
-                        for (AssistantCard a : me.getDeck()) {
-                            if (a.getValue() == 1) {
-                                assistant0.setVisible(true);
-                                break;
-                            }
-                        }
-                        for (AssistantCard a : me.getDeck()) {
-                            if (a.getValue() == 2) {
-                                assistant1.setVisible(true);
-                                break;
-                            }
-                        }
-                        for (AssistantCard a : me.getDeck()) {
-                            if (a.getValue() == 3) {
-                                assistant2.setVisible(true);
-                                break;
-                            }
-                        }
-                        for (AssistantCard a : me.getDeck()) {
-                            if (a.getValue() == 4) {
-                                assistant3.setVisible(true);
-                                break;
-                            }
-                        }
-                        for (AssistantCard a : me.getDeck()) {
-                            if (a.getValue() == 5) {
-                                assistant4.setVisible(true);
-                                break;
-                            }
-                        }
-                        for (AssistantCard a : me.getDeck()) {
-                            if (a.getValue() == 6) {
-                                assistant5.setVisible(true);
-                                break;
-                            }
-                        }
-                        for (AssistantCard a : me.getDeck()) {
-                            if (a.getValue() == 7) {
-                                assistant6.setVisible(true);
-                                break;
-                            }
-                        }
-                        for (AssistantCard a : me.getDeck()) {
-                            if (a.getValue() == 8) {
-                                assistant7.setVisible(true);
-                                break;
-                            }
-                        }
-                        for (AssistantCard a : me.getDeck()) {
-                            if (a.getValue() == 9) {
-                                assistant8.setVisible(true);
-                                break;
-                            }
-                        }
-                        for (AssistantCard a : me.getDeck()) {
-                            if (a.getValue() == 10) {
-                                assistant9.setVisible(true);
-                                break;
-                            }
-                        }
-                    }
-                }
+                theIfMethd();
             }
         };
 
         while (true) {
             try {
                 synchronized (this) {
-                    wait();
+                    System.out.println("Sono in wait in Matchcontroller");
+                    this.wait();
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -2242,11 +2277,130 @@ public class MatchController extends Thread {
         }
     }
 
+    public void theIfMethd(){
+        if (land_view.isVisible()) {
+            for (int i = 0; i < 12; i++) {
+                show_islands(i);
+                show_cloud();
+            }
+        } else {
+            for (int i = 0; i < match.getPlayer().length; i++) {
+                show(i);
+                show_towers(i);
+            }
+            show_entry();
+            setDropShadow();
+            if (!state.equals("ChooseAssistant")) {
+                assistant0.setVisible(false);
+                assistant1.setVisible(false);
+                assistant2.setVisible(false);
+                assistant3.setVisible(false);
+                assistant4.setVisible(false);
+                assistant5.setVisible(false);
+                assistant6.setVisible(false);
+                assistant7.setVisible(false);
+                assistant8.setVisible(false);
+                assistant9.setVisible(false);
+                for (AssistantCard a : me.getDeck()) {
+                    if (a.getValue() == 1) {
+                        assistant0.setVisible(true);
+                        break;
+                    }
+                }
+                for (AssistantCard a : me.getDeck()) {
+                    if (a.getValue() == 2) {
+                        assistant1.setVisible(true);
+                        break;
+                    }
+                }
+                for (AssistantCard a : me.getDeck()) {
+                    if (a.getValue() == 3) {
+                        assistant2.setVisible(true);
+                        break;
+                    }
+                }
+                for (AssistantCard a : me.getDeck()) {
+                    if (a.getValue() == 4) {
+                        assistant3.setVisible(true);
+                        break;
+                    }
+                }
+                for (AssistantCard a : me.getDeck()) {
+                    if (a.getValue() == 5) {
+                        assistant4.setVisible(true);
+                        break;
+                    }
+                }
+                for (AssistantCard a : me.getDeck()) {
+                    if (a.getValue() == 6) {
+                        assistant5.setVisible(true);
+                        break;
+                    }
+                }
+                for (AssistantCard a : me.getDeck()) {
+                    if (a.getValue() == 7) {
+                        assistant6.setVisible(true);
+                        break;
+                    }
+                }
+                for (AssistantCard a : me.getDeck()) {
+                    if (a.getValue() == 8) {
+                        assistant7.setVisible(true);
+                        break;
+                    }
+                }
+                for (AssistantCard a : me.getDeck()) {
+                    if (a.getValue() == 9) {
+                        assistant8.setVisible(true);
+                        break;
+                    }
+                }
+                for (AssistantCard a : me.getDeck()) {
+                    if (a.getValue() == 10) {
+                        assistant9.setVisible(true);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    public void setDropShadow(){
+        entry00.setEffect(new DropShadow());
+        entry01.setEffect(new DropShadow());
+        entry02.setEffect(new DropShadow());
+        entry03.setEffect(new DropShadow());
+        entry04.setEffect(new DropShadow());
+        entry15.setEffect(new DropShadow());
+        entry06.setEffect(new DropShadow());
+        entry07.setEffect(new DropShadow());
+        entry08.setEffect(new DropShadow());
+        entry10.setEffect(new DropShadow());
+        entry11.setEffect(new DropShadow());
+        entry12.setEffect(new DropShadow());
+        entry13.setEffect(new DropShadow());
+        entry14.setEffect(new DropShadow());
+        entry15.setEffect(new DropShadow());
+        entry16.setEffect(new DropShadow());
+        entry17.setEffect(new DropShadow());
+        entry18.setEffect(new DropShadow());
+        entry20.setEffect(new DropShadow());
+        entry21.setEffect(new DropShadow());
+        entry22.setEffect(new DropShadow());
+        entry23.setEffect(new DropShadow());
+        entry24.setEffect(new DropShadow());
+        entry25.setEffect(new DropShadow());
+        entry26.setEffect(new DropShadow());
+        entry27.setEffect(new DropShadow());
+        entry28.setEffect(new DropShadow());
+    }
+
 
 
     public synchronized void wakeUp(String state) {
+        System.out.println("Wake up del MatchController");
         this.state=state;
-        notifyAll();
+        this.notifyAll();
     }
 
     public Match getMatch() {
@@ -2455,5 +2609,48 @@ public class MatchController extends Thread {
         land_view.setVisible(false);
         board_view.setVisible(false);
         characters.setVisible(true);
+    }
+
+    /*public void clearStudentFromBoard(Type_Student s, int n){
+        boolean gone=false;
+        if(n==0){
+            if()
+        }
+    }*/
+
+    public void movetoboard(ActionEvent actionEvent) {
+
+        switch (((Button) actionEvent.getSource()).getId()) {
+            case "tomyboard0":
+                tomyboard0.setVisible(false);
+                break;
+            case "tomyboard1":
+                tomyboard1.setVisible(false);
+                break;
+            case "tomyboard2":
+                tomyboard2.setVisible(false);
+                break;
+
+        }
+        if (selectedstudent) {
+            server.sendMovedStudent(assistantchoosen, 12);
+            try {
+                action.moveFromIngressToBoard(me, assistantchoosen);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            action.checkAllProfessors();
+        }
+        selectedstudent = false;
+        selectedmn = false;
+        setDisableMN(true);
+        setDisableClouds(true);
+        setDisableAssistants(true);
+        setDisableLands(true);
+        setDisableEntrance(true);
+        setDisableBoards(true);
+        synchronized (this) {
+            notifyAll();
+        }
     }
 }

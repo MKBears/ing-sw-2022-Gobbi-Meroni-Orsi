@@ -39,6 +39,7 @@ public class Gui extends Application {
     private boolean time;
     private FXMLLoader pup;
     private boolean newgame;
+    private  int whoami;
 
     public Gui() {
         end=false;
@@ -49,6 +50,7 @@ public class Gui extends Application {
         us=null;
         ass=null;
         popup=new Stage();
+        whoami=0;
         game=new FXMLLoader(getClass().getClassLoader().getResource("real_matchh.fxml"));
         pup=new FXMLLoader(getClass().getClassLoader().getResource("popup_notify.fxml"));
         try {
@@ -62,6 +64,12 @@ public class Gui extends Application {
 
     public void setCG(ClientGui cg){
         this.cg=cg;
+    }
+    public void setWhoAmI(int i){
+        this.whoami=i;
+    }
+    public int getWhoAmI(){
+        return whoami;
     }
 
     @Override
@@ -161,28 +169,8 @@ public class Gui extends Application {
     }
     public void popUp(String title, String message){
         System.out.println("In popup di GUI ho: "+message);
-        if(message.contains("carta")){
-            /*message=message.replace("|", "");
-            message=message.replace("_", "");
-            message=message.replace("/", "");
-            message=message.replace("-", "");
-            message=message.replace("\\", "");
-            message=message.replace("1", "");
-            message=message.replace("2", "");
-            message=message.replace("3", "");
-            message=message.replace("4", "");
-            message=message.replace("5", "");
-            message=message.replace("6", "");
-            message=message.replace("7", "");
-            message=message.replace("8", "");
-            message=message.replace("9", "");
-            message=message.replace("0", "");*/
-            synchronized (cg){
-                cg.notifyAll();
-            }
-        }
-        //PopUpController.setNotify(message);
 
+        //PopUpController.setNotify(message);
         //System.out.println(fxmlLoader.getLocation().toString());
         //try {
             //popup.setScene(new Scene(pup.load()));
@@ -203,10 +191,13 @@ public class Gui extends Application {
 
     public void getAssistantCard() {
         System.out.println("Sono in getAssistantCard");
-        synchronized (cg){
-            cg.notifyAll();
-        }
         //printMatch(match); //non lo so...
+        try {
+            sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        ((MatchController)game.getController()).setStateLabel("Scegli una carta assistente");
         ((MatchController)game.getController()).wakeUp("ChooseAssistant");
         stage.show();
         /*synchronized (cg){
@@ -244,18 +235,23 @@ public class Gui extends Application {
                 MatchController.setAction(this.action);
                 MatchController.setServer(this.server);
                 MatchController.setMe(this.me);
-                game=new FXMLLoader(getClass().getClassLoader().getResource("real_matchh.fxml"));
+                MatchController.setClientGui(cg);
+                //game=new FXMLLoader(getClass().getClassLoader().getResource("real_matchh.fxml"));
                 stage.setScene(new Scene(game.load()));
+                ((MatchController)game.getController()).start();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            printmatch=true;
+            //printmatch=true;
         }
         else {
             MatchController.setmatch(this.match);
         }
         ((MatchController)game.getController()).wakeUp("Start");
-        stage.show();
+        if(!printmatch) {
+            printmatch=true;
+            stage.show();
+        }
     }
 
 
@@ -264,9 +260,9 @@ public class Gui extends Application {
         //MatchController.setStateLabel(phase.toString());
         ((MatchController)game.getController()).setStateLabel("E' il turno di "+pl.getUserName()+ " in fase di "+phase.toString());
         ((MatchController)game.getController()).wakeUp("Next Turn");
-        synchronized (cg){
-            cg.notifyAll();
-        }
+        //synchronized (cg){
+        //    cg.notifyAll();
+        //}
     }
 
 
@@ -290,7 +286,7 @@ public class Gui extends Application {
     }
 
     public void wakeUp(String state) {
-        //((MatchController)game.getController()).wakeUp();
+        ((MatchController)game.getController()).wakeUp(state);
     }
 
     public void setMe(Player me) { //Non so a cosa serva
@@ -309,7 +305,7 @@ public class Gui extends Application {
         System.out.println("Sono all'inizio di setCards di Gui");
         this.cards=cards;
         //if(!time && newgame) {
-            ((MatchController) game.getController()).setVisibleAssCards((List<AssistantCard>) cards);////ERRORE QUI
+        ((MatchController) game.getController()).setVisibleAssCards((List<AssistantCard>) cards);
         //}else time=true;
         System.out.println("Sono alla fine di setCards di Gui");
     }
@@ -365,13 +361,19 @@ public class Gui extends Application {
 
 
     public void moveStudent() {
+        ((MatchController)game.getController()).setStateLabel("E' il tuo turno: scegli uno studente dall'ingresso della tua plancia");
         ((MatchController)game.getController()).wakeUp("MoveStudent");
         synchronized (cg){
             cg.notifyAll();
         }
     }
 
+    public void clearStudentFromBoard(Type_Student s, int n_player){
+        //((MatchController)game.getController()).clearStudentFromBoard(s, n_player);
+    }
+
     public void moveMN() {
+        ((MatchController)game.getController()).setStateLabel("E' il tuo turno: scegli un isola in cui spostare madre natura");
         ((MatchController)game.getController()).wakeUp("ChooseMN");
         synchronized (cg){
             cg.notifyAll();

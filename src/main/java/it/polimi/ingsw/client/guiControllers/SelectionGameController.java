@@ -56,6 +56,7 @@ public class SelectionGameController {
     public void gameSelected(){
         System.out.println("Selezionato: una partita iniziata");
         server.sendChoosingGame((String) selectionGames.getValue());
+        //cl.getView().setWhoAmI(1);
         synchronized (cl){
             cl.notifyAll();
         }
@@ -65,6 +66,7 @@ public class SelectionGameController {
     public void newGame(){
         System.out.println("Selezionato: newgame");
         server.sendChoosingGame("NewGame");
+        //cl.getView().setWhoAmI(0);
         TypeMatchController.setCl(cl);
         TypeMatchController.setServer(server);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("typematch.fxml"));

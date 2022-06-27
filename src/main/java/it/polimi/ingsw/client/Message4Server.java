@@ -81,6 +81,7 @@ public class Message4Server {
         synchronized (this) {
             try {
                 name = "ACK";
+                System.out.println("Mando ACK");
                 out.writeObject(name);
             } catch (IOException e) {
                 throw new RuntimeException(e);

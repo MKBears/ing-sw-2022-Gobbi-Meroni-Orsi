@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.client.guiControllers.LoginController;
+import it.polimi.ingsw.client.guiControllers.MatchController;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.characterCards.*;
 import it.polimi.ingsw.serverController.GameRecap;
@@ -90,6 +91,10 @@ public class ClientGui  extends Thread {
         pm = false;
     }
 
+    public Gui getView(){
+        return view;
+    }
+
     public void setUsername(String username) {
         this.username = username;
         System.out.println("Ho aggiornato lo username: " + username);
@@ -162,437 +167,458 @@ public class ClientGui  extends Thread {
                 if(!received.equals("Ping")) {
                     System.out.println("Ricevuto: " + received);
                 }*/
-                switch (received) {
-                    case "base": //login
-                        do {
-                            //sleep(2000);
+                synchronized (in) {
+                    System.out.println(received);
+                    switch (received) {
+                        case "base":
+                            do {
+                                //sleep(2000);
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        view.getUsername();
+                                    }
+                                });
+                                synchronized (this) {
+                                    this.wait();
+                                }
+                                System.out.println("Ho lo username: " + username);
+                                //username= view.getUs();
+                                response = (String) in.readObject();
+                                System.out.println("Ricevuto in CG: " + response);
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        view.printNotification(response);
+                                    }
+                                });
+                                //this.sleep(2000);
+                            } while (response.equals("LoginFailed"));
+                            received = "ok";
+                            mfs = new MessageFromServer(in, server, this);
+                            mfs.start();
+                            break;
+                        case "ListOfGames":
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    view.getUsername();
+                                    view.chooseMatch(join, resume);
                                 }
                             });
                             synchronized (this) {
                                 this.wait();
                             }
-                            System.out.println("Ho lo username: " + username);
-                            //username= view.getUs();
-                            response = (String) in.readObject();
-                            System.out.println("Ricevuto in CG: " + response);
+                        case "ACK":
+                            //view.wakeUp("MoveStudents");
+                            break;
+                        case "NACK":
+                            //view.setNack();
+                            break;
+                        case "Wizard":
+                            System.out.println("Sono in WIZARD");
+                            view.setWilly(willy);  //un po' inutile
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    view.printNotification(response);
+                                    view.getWizard(willy);//manda lui il wizard scelto
                                 }
                             });
-                            //this.sleep(2000);
-                        } while (response.equals("LoginFailed"));
-                        received = "ok";
-                        mfs=new MessageFromServer(in, server, this);
-                        mfs.start();
-                        break;
-                    case "ListOfGames":
-                        Platform.runLater(new Runnable() {
-                            @Override
+                            synchronized (this) {
+                                this.wait();
+                            }
+                            wizard = view.getW();
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.showLoading();
+                                }
+                            });
+                            break;
+                        case "Creation":
+                            action = new Action(match);
+                            for (int i = 0; i < match.getPlayer().length; i++) {
+                                if (match.getPlayer()[i].getUserName().equals(username))
+                                    me = match.getPlayer()[i];
+                            }
+                            view.setMe(me);
+                            view.setMatch(match);
+                            if (match instanceof Expert_Match)
+                                view.setCharacters(((Expert_Match) match).getCard());
+                            server.sendACK();
+                            break;
+                        case "RefillClouds":
+                            //if(!pm){
+                            Platform.runLater(new Runnable() {
+                                @Override
                             public void run() {
-                                view.chooseMatch(join, resume);
+                                    view.printMatch(match);
+                                }
+                            });
+
+                            //synchronized (this) {
+                            //    this.wait();
+                            //}
+                            sleep(3500);
+                            server.sendACK();
+                            //pm=false;
+                            //}
+                            break;
+                        case "ChooseCard":
+                            view.setCards(cards);
+                            System.out.println("Sono in ChooseAssistant");
+                            //synchronized (in) {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Platform.setImplicitExit(false);
+                                        System.out.println("Sono nella run si ChooseCard");
+                                        view.getAssistantCard();
+                                    }
+                                });
+                            //}
+                            synchronized (this) {
+                                this.wait();
                             }
-                        });
-                        synchronized (this) {
-                            this.wait();
-                        }
-                    case "ACK":
-                        //view.wakeUp("MoveStudents");
-                        break;
-                    case "NACK":
-                        //view.setNack();
-                        break;
-                    case "Wizard":
-                        System.out.println("Sono in WIZARD");
-                        view.setWilly(willy);  //un po' inutile
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.getWizard(willy);//manda lui il wizard scelto
+                            ass = view.getAssistant();
+                            break;
+                        case "MoveStudents":
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.moveStudent();
+                                }
+                            });
+                            synchronized (this) {
+                                this.wait();
                             }
-                        });
-                        synchronized (this) {
-                            this.wait();
-                        }
-                        wizard = view.getW();
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.showLoading();
+                            break;
+                        case "MoveMN":
+                            System.out.println("Ricevuto " + received);
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.moveMN();
+                                }
+                            });
+                            synchronized (this) {
+                                this.wait();
                             }
-                        });
-                        break;
-                    case "Creation":
-                        action = new Action(match);
-                        for (int i = 0; i < match.getPlayer().length; i++) {
-                            if (match.getPlayer()[i].getUserName().equals(username))
-                                me = match.getPlayer()[i];
-                        }
-                        view.setMe(me);
-                        view.setMatch(match);
-                        if (match instanceof Expert_Match)
-                            view.setCharacters(((Expert_Match) match).getCard());
-                        server.sendACK();
-                        break;
-                    case "RefillClouds":
-                        server.sendACK();
-                        //if(!pm){
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.printMatch(match);
+                            System.out.println("View svegliata");
+                            break;
+                        //nella nuova versione non è previsto ACK o NACK
+                        case "ChooseCloud":
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.getCloud();
+                                }
+                            });
+                            synchronized (this) {
+                                this.wait();
                             }
-                        });
-                        sleep(3000);
-                        //pm=false;
-                        //}
-                        break;
-                    case "ChooseCard":
-                        view.setCards(cards);
-                        System.out.println("Sono in ChooseAssistant");
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.getAssistantCard();
+                            break;
+                        case "NotifyChosenCard":
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printNotification(pl2.getUserName() +
+                                            " ha giocato la carta:" + card.getValue());
+                                }
+                            });
+                            for (int i = 0; i < match.getPlayer().length; i++) {
+                                if (match.getPlayer()[i].getUserName().equals(pl2.getUserName())) {
+                                    match.getPlayer()[i].draw(card);
+                                }
                             }
-                        });
-                        synchronized (this) {
-                            this.wait();
-                        }
-                        ass = view.getAssistant();
-                        break;
-                    case "MoveStudents":
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.moveStudent();
+                            server.sendACK();
+                            break;
+                        case "NotifyMoveStudents (id)":
+                            for (Land e : match.getLands()) {
+                                if (id == e.getID())
+                                    e.addStudent(stu);
                             }
-                        });
-                        synchronized (this) {
-                            this.wait();
-                        }
-                        break;
-                    case "MoveMN":
-                        System.out.println("Ricevuto " + received);
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.moveMN();
+                            for (int i = 0; i < match.getPlayer().length; i++) {
+                                if (match.getPlayer()[i].getUserName().equals(use)) {
+                                    match.getPlayer()[i].getBoard().removeStudent(stu);
+                                    //view.clearStudentFromBoard(stu.type());
+                                }
                             }
-                        });
-                        synchronized (this) {
-                            this.wait();
-                        }
-                        System.out.println("View svegliata");
-                        break;
-                    //nella nuova versione non è previsto ACK o NACK
-                    case "ChooseCloud":
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.getCloud();
+                            action.checkAllProfessors();
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printNotification(use + " ha spostato uno studente nell'isola " + (id+1));
+                                    view.wakeUp("Start");
+                                }
+                            });
+                            server.sendACK();
+                            break;
+                        case "NotifyMoveStudents (board)":
+                            for (int i = 0; i < match.getPlayer().length; i++) {
+                                if (match.getPlayer()[i].getUserName().equals(usern)) {
+                                    match.getPlayer()[i].getBoard().placeStudent(s);
+                                }
                             }
-                        });
-                        synchronized (this) {
-                            this.wait();
-                        }
-                        break;
-                    case "NotifyChosenCard":
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.printNotification(pl2.getUserName() +
-                                        " ha giocato la carta:" + card.getValue());
+                            action.checkAllProfessors();
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printNotification(usern + " ha spostato uno studente nella sua sala");
+                                    view.wakeUp("Start");
+                                }
+                            });
+                            server.sendACK();
+                            break;
+                        case "NotifyMovementMN":
+                            int idLand;
+                            //System.out.println(lands);
+                            match.moveMotherNature(movement);
+                            match.setLands(lands);
+                            idLand = match.getMotherNature().getPosition().getID();
+                            for (Land l:match.getLands()) {
+                                if(l.getID()==idLand){
+                                    match.getMotherNature().setPosition(l);
+                                }
                             }
-                        });
-                        for (int i = 0; i < match.getPlayer().length; i++) {
-                            if (match.getPlayer()[i].getUserName().equals(pl2.getUserName())) {
-                                match.getPlayer()[i].draw(card);
-                            }
-                        }
-                        server.sendACK();
-                        break;
-                    case "NotifyMoveStudents (id)":
-                        for (Land e : match.getLands()) {
-                            if (id == e.getID())
-                                e.addStudent(stu);
-                        }
-                        for (int i = 0; i < match.getPlayer().length; i++) {
-                            if (match.getPlayer()[i].getUserName().equals(use)) {
-                                match.getPlayer()[i].getBoard().removeStudent(stu);
-                            }
-                        }
-                        action.checkAllProfessors();
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.printNotification(use + " ha spostato lo studente " + stu.toString() + " nell'isola " + id);
-                            }
-                        });
-                        server.sendACK();
-                        break;
-                    case "NotifyMoveStudents (board)":
-                        for (int i = 0; i < match.getPlayer().length; i++) {
-                            if (match.getPlayer()[i].getUserName().equals(usern)) {
-                                match.getPlayer()[i].getBoard().placeStudent(s);
-                            }
-                        }
-                        action.checkAllProfessors();
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.printNotification(usern + " ha spostato lo studente " + s.toString() + " nella sua sala");
-                            }
-                        });
-                        server.sendACK();
-                        break;
-                    case "NotifyMovementMN":
-                        int idLand;
-                        //System.out.println(lands);
-                        match.setLands(lands);
-                        match.moveMotherNature(movement);
-                        idLand = match.getMotherNature().getPosition().getID();
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.printNotification("Madre Natura é stata spostata di " + movement
-                                        + " passi nell'isola " + idLand);
-                            }
-                        });
-                        server.sendACK();
-                        break;
-                    case "NotifyProfessors":
-                        match.setProfessors(prof);
-                        server.sendACK();
-                        break;
-                    case "NotifyChosenCloud":
-                        for (int j = 0; j < match.getPlayersNum(); j++) {
-                            if (match.getPlayer()[j].getUserName().equals(p.getUserName())) {
-                                p.getBoard().importStudents(cl.getStudents());
-                            }
-                        }
-                        for (Cloud e : match.getCloud()) {
-                            if (cl.equals(e)) {
-                                e.clearStudents();
-                                e.choose();
-                                break;
-                            }
-                        }
-                        view.printMatch(match);
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.printNotification(p.getColor().toString() + p.getUserName()
-                                        + "\u001b[0m ha scelto la nuvola:\n" + cl.toString());
-                            }
-                        });
-                        server.sendACK();
-                        break;
-                    case "NotifyTowers (land)":
-                        for (Land e : match.getLands()) {
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printNotification("Madre Natura é stata spostata di " + movement
+                                            + " passi nell'isola " + idLand);
+                                    view.wakeUp("Start");
+                                }
+                            });
+                            server.sendACK();
+                            break;
+                        case "NotifyProfessors":
+                            match.setProfessors(prof);
+                            server.sendACK();
+                            break;
+                        case "NotifyChosenCloud":
                             for (int j = 0; j < match.getPlayersNum(); j++) {
-                                if (e.getID() == land.getID() && towers.get(0).getColor().equals(match.getPlayer()[j].getColor())) {
-                                    ArrayList<Tower> tower = new ArrayList<>();
-                                    for (int i = 0; i < tow; i++) {
-                                        tower.add(match.getPlayer()[j].getBoard().removeTower());
-                                    }
-                                    for (int i = tow; i < e.size(); i++) {
-                                        tower.add(new Tower(match.getPlayer()[j].getColor(), match.getPlayer()[j].getBoard()));
-                                    }
-                                    e.changeTower(tower);
-                                    if (tow < e.size()) {
-                                        for (int z = tow; z < e.size(); z++) {
-                                            match.getPlayer()[j].getBoard().removeTower();
+                                if (match.getPlayer()[j].getUserName().equals(p.getUserName())) {
+                                    p.getBoard().importStudents(cl.getStudents());
+                                }
+                            }
+                            for (Cloud e : match.getCloud()) {
+                                if (cl.equals(e)) {
+                                    e.clearStudents();
+                                    e.choose();
+                                    break;
+                                }
+                            }
+                            view.printMatch(match);
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printNotification(p.getColor().toString() + p.getUserName()
+                                            + "\u001b[0m ha scelto la nuvola:\n" + cl.toString());
+                                }
+                            });
+                            server.sendACK();
+                            break;
+                        case "NotifyTowers (land)":
+                            for (Land e : match.getLands()) {
+                                for (int j = 0; j < match.getPlayersNum(); j++) {
+                                    if (e.getID() == land.getID() && towers.get(0).getColor().equals(match.getPlayer()[j].getColor())) {
+                                        ArrayList<Tower> tower = new ArrayList<>();
+                                        for (int i = 0; i < tow; i++) {
+                                            tower.add(match.getPlayer()[j].getBoard().removeTower());
+                                        }
+                                        for (int i = tow; i < e.size(); i++) {
+                                            tower.add(new Tower(match.getPlayer()[j].getColor(), match.getPlayer()[j].getBoard()));
+                                        }
+                                        e.changeTower(tower);
+                                        if (tow < e.size()) {
+                                            for (int z = tow; z < e.size(); z++) {
+                                                match.getPlayer()[j].getBoard().removeTower();
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
 
-                        action.uniteLands();
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.printMatch(match);
-                            }
-                        });
-                        server.sendACK();
-                        break;
-                    case "NotifyTowers (board)":
-
-                        for (int i = 0; i < match.getPlayer().length; i++) {
-                            if (match.getPlayer()[i].getUserName().equals(u))
-                                match.getPlayer()[i].setBoard(board);
-                        }
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.printMatch(match);
-                            }
-                        });
-                        server.sendACK();
-                        break;
-                    case "EndGame":
-                        Player winner = (Player) in.readObject();
-                        String ex = (String) in.readObject(); //spiegazione di perchè ha vinto
-                        GameRecap recap = (GameRecap) in.readObject();
-                        view.getWinner(winner);
-                        view.printMatch(match);
-                        view.printNotification(recap.toString());
-                        view.wakeUp("EndGame");
-                        end = true;
-                        server.sendACK();
-                        break;
-                    case "LastTower":
-                        Player pl = (Player) in.readObject();
-                        view.getWinner(pl);
-                        view.wakeUp("EndGame");
-                        end = true;
-                        server.sendACK();
-                        break;
-                    case "NoMoreStudents":
-                        view.lastRound();
-                        server.sendACK();
-                        break;
-                    case "NextTurn":
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.printTurn(play, phase);
-                            }
-                        });
-                        server.sendACK();
-                        //System.out.println("Mandato ack");
-                        break;
-                    case "NotifyPlayerConnected":
-                        if (connected) {
+                            action.uniteLands();
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    view.playerConnected(n);
+                                    view.printMatch(match);
                                 }
                             });
-                        } else {
+                            server.sendACK();
+                            break;
+                        case "NotifyTowers (board)":
+
+                            for (int i = 0; i < match.getPlayer().length; i++) {
+                                if (match.getPlayer()[i].getUserName().equals(u))
+                                    match.getPlayer()[i].setBoard(board);
+                            }
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    view.playerDisconnected(n);
+                                    view.printMatch(match);
                                 }
                             });
-                        }
-                        server.sendACK();
-                        break;
-                    case "NotifyAllPlayersDisconnected":
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.playerDisconnectedAll();
+                            server.sendACK();
+                            break;
+                        case "EndGame":
+                            Player winner = (Player) in.readObject();
+                            String ex = (String) in.readObject(); //spiegazione di perchè ha vinto
+                            GameRecap recap = (GameRecap) in.readObject();
+                            view.getWinner(winner);
+                            view.printMatch(match);
+                            view.printNotification(recap.toString());
+                            view.wakeUp("EndGame");
+                            end = true;
+                            server.sendACK();
+                            break;
+                        case "LastTower":
+                            Player pl = (Player) in.readObject();
+                            view.getWinner(pl);
+                            view.wakeUp("EndGame");
+                            end = true;
+                            server.sendACK();
+                            break;
+                        case "NoMoreStudents":
+                            view.lastRound();
+                            server.sendACK();
+                            break;
+                        case "NextTurn":
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printTurn(play, phase);
+                                }
+                            });
+                            server.sendACK();
+                            //System.out.println("Mandato ack");
+                            break;
+                        case "NotifyPlayerConnected":
+                            if (connected) {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        view.playerConnected(n);
+                                    }
+                                });
+                            } else {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        view.playerDisconnected(n);
+                                    }
+                                });
                             }
-                        });
-                        server.sendACK();
-                        break;
-                    case "FinishedAssistants": //da mettere a posto
-                        Player who = (Player) in.readObject();
-                        view.finishedAC(who);
-                        server.sendACK();
-                        break;
-                    case "GenericError":  //da mettere a posto
-                        String error = (String) in.readObject();
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.printNotification(error);
+                            server.sendACK();
+                            break;
+                        case "NotifyAllPlayersDisconnected":
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.playerDisconnectedAll();
+                                }
+                            });
+                            server.sendACK();
+                            break;
+                        case "FinishedAssistants": //da mettere a posto
+                            Player who = (Player) in.readObject();
+                            view.finishedAC(who);
+                            server.sendACK();
+                            break;
+                        case "GenericError":  //da mettere a posto
+                            String error = (String) in.readObject();
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printNotification(error);
+                                }
+                            });
+                            server.sendACK();
+                            break;
+                        case "Ch": //da mettere a posto
+                            CharacterCard[] ch = (CharacterCard[]) in.readObject();
+                            view.setCharacters(ch);
+                            view.wakeUp("Ch");
+                            break;
+                        case "NotifyCh_1": //da mettere a posto
+                            ArrayList<Land> lan = (ArrayList<Land>) in.readObject();
+                            CharacterCard c1 = (CharacterCard) in.readObject();
+                            for (int i = 0; i < ((Expert_Match) match).getCard().length; i++) {
+                                if (((Expert_Match) match).getCard()[i] instanceof Ch_1)
+                                    ((Expert_Match) match).getCard()[i] = c1;
                             }
-                        });
-                        server.sendACK();
-                        break;
-                    case "Ch": //da mettere a posto
-                        CharacterCard[] ch = (CharacterCard[]) in.readObject();
-                        view.setCharacters(ch);
-                        view.wakeUp("Ch");
-                        break;
-                    case "NotifyCh_1": //da mettere a posto
-                        ArrayList<Land> lan = (ArrayList<Land>) in.readObject();
-                        CharacterCard c1 = (CharacterCard) in.readObject();
-                        for (int i = 0; i < ((Expert_Match) match).getCard().length; i++) {
-                            if (((Expert_Match) match).getCard()[i] instanceof Ch_1)
-                                ((Expert_Match) match).getCard()[i] = c1;
-                        }
-                        match.setLands(lan);
-                        view.printMatch(match);
-                        view.printNotification("");
-                        server.sendACK();
-                        break;
-                    case "NotifyCh_2": //da mettere a posto
-                        Map<Type_Student, Player> pro = (Map<Type_Student, Player>) in.readObject();
-                        match.setProfessors(pro);
-                        view.printMatch(match);
-                        server.sendACK();
-                        break;
-                    case "NotifyCh_4": //da mettere a posto
-                        String userna = (String) in.readObject();
-                        for (int i = 0; i < 3; i++) {
-                            if (((Expert_Match) match).getCard()[i] instanceof Ch_4)
-                                view.printNotification("giocatore " + userna + " ha giocato la carta personaggio\n" + ((Expert_Match) match).getCard()[i].toString());
-                        }
-                        server.sendACK();
-                        break;
-                    case "NotifyCh_5": //da mettere a posto
-                        ArrayList<Land> lands2 = (ArrayList<Land>) in.readObject();
-                        match.setLands(lands2);
-                        view.printMatch(match);
-                        server.sendACK();
-                        break;
-                    case "NotifyCh_10": //da mettere a posto
-                        Board boa = (Board) in.readObject();
-                        String usa = (String) in.readObject();
-                        for (Player player : match.getPlayer()) {
-                            if (player.getUserName().equals(usa)) {
-                                player.setBoard(boa);
+                            match.setLands(lan);
+                            view.printMatch(match);
+                            view.printNotification("");
+                            server.sendACK();
+                            break;
+                        case "NotifyCh_2": //da mettere a posto
+                            Map<Type_Student, Player> pro = (Map<Type_Student, Player>) in.readObject();
+                            match.setProfessors(pro);
+                            view.printMatch(match);
+                            server.sendACK();
+                            break;
+                        case "NotifyCh_4": //da mettere a posto
+                            String userna = (String) in.readObject();
+                            for (int i = 0; i < 3; i++) {
+                                if (((Expert_Match) match).getCard()[i] instanceof Ch_4)
+                                    view.printNotification("giocatore " + userna + " ha giocato la carta personaggio\n" + ((Expert_Match) match).getCard()[i].toString());
                             }
-                        }
-                        view.printMatch(match);
-                        for (int i = 0; i < 3; i++) {
-                            if (((Expert_Match) match).getCard()[i] instanceof Ch_4)
-                                view.printNotification("giocatore " + usa + " ha giocato la carta personaggio\n" + ((Expert_Match) match).getCard()[i].toString());
-                        }
-                        server.sendACK();
-                        break;
-                    case "NotifyCh_11": //da mettere a posto
-                        CharacterCard ch11 = (CharacterCard) in.readObject();
-                        String usernam = (String) in.readObject();
-                        Board board2 = (Board) in.readObject();
-                        for (Player player : match.getPlayer()) {
-                            if (player.getUserName().equals(usernam)) {
-                                player.setBoard(board2);
+                            server.sendACK();
+                            break;
+                        case "NotifyCh_5": //da mettere a posto
+                            ArrayList<Land> lands2 = (ArrayList<Land>) in.readObject();
+                            match.setLands(lands2);
+                            view.printMatch(match);
+                            server.sendACK();
+                            break;
+                        case "NotifyCh_10": //da mettere a posto
+                            Board boa = (Board) in.readObject();
+                            String usa = (String) in.readObject();
+                            for (Player player : match.getPlayer()) {
+                                if (player.getUserName().equals(usa)) {
+                                    player.setBoard(boa);
+                                }
                             }
-                        }
-                        for (int i = 0; i < 3; i++) {
-                            ((Expert_Match) match).getCard()[i] = ch11;
-                        }
-                        view.printMatch(match);
-                        server.sendACK();
-                        break;
-                    case "NotifyCh_12": //da mettere a posto
-                        ArrayList<Board> boards2 = (ArrayList<Board>) in.readObject();
-                        for (int i = 0; i < match.getPlayer().length; i++) {
-                            match.getPlayer()[i].setBoard(boards2.get(i));
-                        }
-                        view.printMatch(match);
-                        server.sendACK();
-                        break;
-                    case "NotifyCh_8": //da mettere a posto
-                        server.sendACK();
-                        break;
-                    //:
+                            view.printMatch(match);
+                            for (int i = 0; i < 3; i++) {
+                                if (((Expert_Match) match).getCard()[i] instanceof Ch_4)
+                                    view.printNotification("giocatore " + usa + " ha giocato la carta personaggio\n" + ((Expert_Match) match).getCard()[i].toString());
+                            }
+                            server.sendACK();
+                            break;
+                        case "NotifyCh_11": //da mettere a posto
+                            CharacterCard ch11 = (CharacterCard) in.readObject();
+                            String usernam = (String) in.readObject();
+                            Board board2 = (Board) in.readObject();
+                            for (Player player : match.getPlayer()) {
+                                if (player.getUserName().equals(usernam)) {
+                                    player.setBoard(board2);
+                                }
+                            }
+                            for (int i = 0; i < 3; i++) {
+                                ((Expert_Match) match).getCard()[i] = ch11;
+                            }
+                            view.printMatch(match);
+                            server.sendACK();
+                            break;
+                        case "NotifyCh_12": //da mettere a posto
+                            ArrayList<Board> boards2 = (ArrayList<Board>) in.readObject();
+                            for (int i = 0; i < match.getPlayer().length; i++) {
+                                match.getPlayer()[i].setBoard(boards2.get(i));
+                            }
+                            view.printMatch(match);
+                            server.sendACK();
+                            break;
+                        case "NotifyCh_8": //da mettere a posto
+                            server.sendACK();
+                            break;
+                        //:
                         //server.sendNACK();
+                    }
                 }
                 synchronized (this) {
+                    System.out.println("In wait CG");
                     wait();
                 }
                 if (end)
@@ -603,7 +629,12 @@ public class ClientGui  extends Thread {
         } catch (ClassNotFoundException e) {
             //server.sendNACK();
         } catch (Exception e) {
-            view.printNotification("Errore interno: ");
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    view.printNotification("Errore interno: ");
+                }
+            });
             e.printStackTrace();
         }
         try {
@@ -706,5 +737,9 @@ public class ClientGui  extends Thread {
     public void setNotifyPlayerConnected(String n, boolean connected){
         this.n=n;
         this.connected=connected;
+    }
+
+    public String getReceived(){
+        return received;
     }
 }
