@@ -102,7 +102,7 @@ public class Controller extends Thread{
                 }
             }
         }
-        while (!paused && state!=6) {
+        while (!paused && state<5) {
             try {
                 changeState();
             } catch (InterruptedException e) {
@@ -171,6 +171,7 @@ public class Controller extends Thread{
                     }
                     moveCurrentPlayer();
                 } while (currentPlayer != firstPlayer);
+
                 state = 2;
                 save();
             }
@@ -223,6 +224,7 @@ public class Controller extends Thread{
                                 break;
                     } while (currentPlayer != firstPlayer);
                 }
+
                 if (playing) {
                     state = 1;
                     save();
@@ -716,7 +718,7 @@ public class Controller extends Thread{
                 synchronized (p) {
                     if (position == 12) {
                         do {
-                            p.getOutputStream().sendNotifyMoveStudent(student, player.getAvatar().getBoard(), player.getUserName());
+                            p.getOutputStream().sendNotifyMoveStudent(student,  player.getUserName());
                             p.wait();
                         } while (player.getNack());
                     } else {

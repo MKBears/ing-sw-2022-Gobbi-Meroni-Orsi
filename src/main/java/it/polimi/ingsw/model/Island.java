@@ -178,7 +178,7 @@ public class Island implements Land, Serializable {
      * @param noEntry change te state of "noEntry"
      * @throws Exception
      */
-    public void setNoEntry(boolean noEntry) throws Exception{  //vedi bene cosa deve fare
+    public void setNoEntry(boolean noEntry) throws Exception{
         if (noEntry == this.noEntry){
             throw new Exception("C'é già una tessera divieto su quest'isola, sceglierne un'altra");
         }

@@ -429,9 +429,11 @@ public class Client  extends Thread{
                     case "NotifyCh_5":
                         Land land2 = (Land) in.readObject();
                         String us5=(String) in.readObject();
-                        for (Land l : match.getLands()) {
-                            if (l.getID() == land2.getID()) {
-                                l.setNoEntry(true);
+                        if (!me.getUserName().equals(us5)) {
+                            for (Land l : match.getLands()) {
+                                if (l.getID() == land2.getID()) {
+                                    l.setNoEntry(true);
+                                }
                             }
                         }
                         for (CharacterCard c:((Expert_Match)match).getCard()) {

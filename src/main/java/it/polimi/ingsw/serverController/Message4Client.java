@@ -259,13 +259,12 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
      * @param board    the board of the player
      * @param username the username of the player that moves the students
      */
-    public void sendNotifyMoveStudent(Student student, Board board, String username) {
+    public void sendNotifyMoveStudent(Student student, String username) {
         synchronized (this) {
             name = "NotifyMoveStudents (board)";
             try {
                 out.writeObject(name);
                 out.writeObject(student);
-                out.writeObject(board);
                 out.writeObject(username);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -438,6 +437,7 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
 
     public void run() {
         condition = true;
+
         while (condition) {
             try {
                 sleep(4000);
