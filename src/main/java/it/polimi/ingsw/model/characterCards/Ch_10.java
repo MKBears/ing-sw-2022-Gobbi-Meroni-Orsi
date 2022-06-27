@@ -19,8 +19,7 @@ public class Ch_10 implements CharacterCard, Serializable {
     public Ch_10(){
         price=1;
         activated=false;
-        powerUp="You may excange up to 2 Students between your "+
-                "Entrance and your Dining Room.";
+        powerUp="Puoi scambiare fra loro fino a 2 studenti presenti nella tua sala e nel tuo ingresso.";
     }
 
 

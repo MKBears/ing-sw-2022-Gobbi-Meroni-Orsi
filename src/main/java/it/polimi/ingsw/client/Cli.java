@@ -565,8 +565,21 @@ public class Cli extends Thread implements View {
                                         server.sendChooseCh4();
                                     } else if (character instanceof Ch_5) {
                                         System.out.println("scegli l'isola su cui mettere il divieto\n");
-                                        Land land = chooseLand(match.getLands());
-                                        server.sendChooseCh5(land);
+                                        Land land;
+                                        do {
+                                            land = chooseLand(match.getLands());
+                                            try {
+                                                ((Ch_5) character).setLand(land);
+                                                character.activatePowerUp();
+                                                server.sendChooseCh5(land);
+                                            }catch (Exception e) {
+                                                System.out.println(e.getMessage());
+                                                if (e.getMessage().contains("isola"))
+                                                    land = null;
+                                                else
+                                                    server.sendNoCh();
+                                            }
+                                        } while (land == null);
                                     } else if (character instanceof Ch_10) {
                                         ArrayList<Student> students = new ArrayList<>();
                                         ArrayList<Type_Student> type_students = new ArrayList<>();
@@ -744,7 +757,7 @@ public class Cli extends Thread implements View {
                         c += l.size();
 
                         if (c >= i)
-                            return l.getIslands().get(c - i);
+                            return l;
                     }
                 }
             } catch (Exception e) {

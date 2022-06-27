@@ -170,7 +170,7 @@ public class Island implements Land, Serializable {
             return tower.getColor();
         }
         else
-            throw new Exception("There are currently no Towers here");
+            throw new Exception("Non ci sono ancora torri su quest'isola");
     }
 
     /**
@@ -180,7 +180,7 @@ public class Island implements Land, Serializable {
      */
     public void setNoEntry(boolean noEntry) throws Exception{  //vedi bene cosa deve fare
         if (noEntry == this.noEntry){
-            throw new Exception("A No Entry tile has already been set on this island");
+            throw new Exception("C'é già una tessera divieto su quest'isola, sceglierne un'altra");
         }
         this.noEntry = noEntry;
     }

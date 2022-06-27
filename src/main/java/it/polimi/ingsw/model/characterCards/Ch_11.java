@@ -29,8 +29,8 @@ public class Ch_11 implements CharacterCard, Serializable {
     public Ch_11(Bag bag) throws Exception {
         price=2;
         activated=false;
-        powerUp="Take 1 Student from this card and place it in your Dining Room. " +
-                "Then, draw a new Student from the Bag and place it on this card.";
+        powerUp="Prendi 1 studente da questa carta e piazzalo nella tua sala. " +
+                "Poi pesca un nuovo studente dal sacchetto e posizionalo su questa carta.";
         students = new ArrayList<>(4);
         this.bag = bag;
 
@@ -71,7 +71,18 @@ public class Ch_11 implements CharacterCard, Serializable {
 
     @Override
     public String getPowerUp() {
-        return powerUp;
+        StringBuilder pu = new StringBuilder(powerUp);
+        pu.append("\n");
+
+        if (students.isEmpty())
+            pu.append("\tNon ci sono studenti su questa carta.");
+        else {
+
+            for (Student value : students)
+                pu.append("    ").append(value.toString());
+        }
+
+        return pu.toString();
     }
 
     public ArrayList<Student> getStudents() {

@@ -20,10 +20,9 @@ public class Ch_12 implements CharacterCard, Serializable {
         this.match=match;
         price=3;
         activated=false;
-        powerUp="Choose a type of Student: every player (including yourself) must" +
-                "return 3 Students of that type from their Dining Room to the bag." +
-                " If any player has fewer than 3 Students of that type, return has many " +
-                "Students as they have.";
+        powerUp="Scegli un colore di studente; ogni giocatore (incluso te)" +
+                "deve rimettere nel sacchetto 3 studenti di quel colore presenti nella sua sala." +
+                "Chi avesse meno di 3 studenti di quel colore, rimetterà quelli che ha.";
     }
 
     @Override

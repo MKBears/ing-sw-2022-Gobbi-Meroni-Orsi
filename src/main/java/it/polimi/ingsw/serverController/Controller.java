@@ -29,6 +29,13 @@ public class Controller extends Thread{
     private GameRecap gameRecap;
     private String endExplanation;
 
+    /**
+     * Constructor of class Controller:
+     * is sets the creator, the number of players there will be in the match and if is an expert match or not
+     * @param creator the player who set the match
+     * @param playersNum the number of players which will connect to the match
+     * @param expertMatch tells whether this is an expert match or not
+     */
     public Controller (ClientHandler creator, int playersNum, boolean expertMatch){
         state = 0;
         this.playersNum = playersNum;
@@ -45,12 +52,10 @@ public class Controller extends Thread{
     }
 
     public void run() throws IllegalArgumentException {
-        System.out.println("Controller partito");
         //Start match
         while (!paused && state!=6) {
             try {
                 changeState();
-                System.out.println("State = "+state);
             } catch (InterruptedException e) {
                 notifyDeletion("Qualcosa non ha funzionato aspettando che un giocatore muovesse ("+e.getMessage()+")");
             } catch (Exception e) {
@@ -64,13 +69,18 @@ public class Controller extends Thread{
             try {
                 p.closeConnection();
             } catch (Exception e) {
-                System.out.println("Closing client socket error. Shutting down...");
+                System.out.println("Closing client socket error. Ending match...");
                 throw new RuntimeException(e);
             }
         }
         //End connection closure
     }
 
+    /**
+     * Is the finite state machine that controls the whole match.
+     * It is made of cases that simulate the states of the ideal machine
+     * @throws Exception if something goes wrong when performing some actions
+     */
     private void changeState() throws Exception {
         switch (state) {
             case 0 -> {
@@ -86,12 +96,10 @@ public class Controller extends Thread{
                     players[i].setMatch(match);
 
                     synchronized (players[i]) {
-                        System.out.println("Contoller: faccio mandare il match al player "+players[i].getUserName());
                         players[i].notifyAll();
                     }
                     entrance.clear();
                 }
-                System.out.println("Match impostato a tutti i player");
                 //sleep(1000);
                 state = 1;
             }
@@ -102,21 +110,17 @@ public class Controller extends Thread{
                 } catch (Exception e) {
                     notifyFinishedStudents();
                 }
-                System.out.println("Nuvole riempite");
                 currentPlayer = firstPlayer;
 
                 do {
                     synchronized (players[currentPlayer]) {
                         players[currentPlayer].notifyAll();
-                        System.out.println("Controller: sveglio player "+players[currentPlayer].getUserName());
                     }
                     synchronized (this) {
                         wait();
                     }
-                    System.out.println("muovo il giocatore");
                     moveCurrentPlayer();
                 } while (currentPlayer != firstPlayer);
-                System.out.println("uscito dal while");
                 state = 2;
             }
             case 2 -> {
@@ -125,15 +129,12 @@ public class Controller extends Thread{
 
                 do {
                     notifyTurn("pianificazione");
-                    System.out.println("Player "+players[currentPlayer].getUserName()+" in pianificazione");
                     synchronized (players[currentPlayer]) {
                         players[currentPlayer].notify();
-                        System.out.println("Player "+players[currentPlayer].getUserName()+" svegliato");
                     }
 
                     synchronized (this) {
                         wait();
-                        System.out.println("So sveglio");
                     }
                     moveCurrentPlayer();
                 } while (currentPlayer != firstPlayer);
@@ -152,19 +153,13 @@ public class Controller extends Thread{
             case 4 -> {
                 //ACTION phase
                 currentPlayer = firstPlayer;
-                /*synchronized (players[firstPlayer]){
-                    if(currentPlayer!=firstPlayer) {
-                        wait();
-                        System.out.println(players[currentPlayer].getAvatar().getUserName()+": uscito dalla wait che ho costruito io");
-                    }
-                }*/
+
                 synchronized (this) {
                     do {
                         notifyTurn("azione");
 
                         synchronized (players[currentPlayer]) {
                             players[currentPlayer].notifyAll();
-                            System.out.println("Controller: "+players[currentPlayer]+" in fase di azione");
                         }
                         sleep(100);
                         go = false;
@@ -188,11 +183,6 @@ public class Controller extends Thread{
                     c.clearStudents();
                     c.reset();
                 }
-
-                /*synchronized (players[firstPlayer]) {
-                    System.out.println("didididididididi");
-                    players[firstPlayer].wait();
-                }*/
             }
             case 5 -> {
                 //Match END: determine the winner
@@ -215,14 +205,27 @@ public class Controller extends Thread{
         }
     }
 
+    /**
+     *
+     * @return the number of players in the match
+     */
     public int getPlayersNum() {
         return playersNum;
     }
 
+    /**
+     *
+     * @return the name of the player who created the match
+     */
     public String getCreator(){
         return players[0].getUserName();
     }
 
+    /**
+     *
+     * @param username the username of the player you want to get the ClientHandler
+     * @return the ClientHandler instance associated to the specified username
+     */
     public ClientHandler getPlayer (String username) {
         for (ClientHandler player : players) {
             if (player.getUserName().equals(username)) {
@@ -232,14 +235,35 @@ public class Controller extends Thread{
         return null;
     }
 
+    /**
+     *
+     * @return true if there aren't enough players to start the match
+     */
     public boolean isNotFull(){
-        return connectedPlayers != playersNum;
+        int i = 0;
+
+        if (connectedPlayers == playersNum)
+            return true;
+        else {
+            for (ClientHandler player : players)
+                i++;
+
+            return i == playersNum;
+        }
     }
 
+    /**
+     *
+     * @return true if the match has been paused
+     */
     public boolean isPaused(){
         return paused;
     }
 
+    /**
+     *
+     * @return the list containing all the ClientHandler instances associated with the remote players
+     */
     public ArrayList<String> getPlayers(){
         ArrayList<String> userNames = new ArrayList<>();
         for (ClientHandler player : players){
@@ -250,14 +274,11 @@ public class Controller extends Thread{
         return userNames;
     }
 
-    public int getCurrentPlayer(){
-        return this.currentPlayer;
-    }
-
-    public int getFirstPlayer(){
-        return this.firstPlayer;
-    }
-
+    /**
+     * Adds a player to the match if it isn't full yet
+     * @param player the player to add
+     * @throws Exception if the match is already full
+     */
     public synchronized void addPlayer (ClientHandler player) throws Exception{
         Colors color;
         if (connectedPlayers < playersNum) {
@@ -290,10 +311,18 @@ public class Controller extends Thread{
         sleep (500);
     }
 
+    /**
+     *
+     * @return true if the match is ready to start
+     */
     public boolean readyToStart() {
         return connectedPlayers==playersNum && match!=null;
     }
 
+    /**
+     * Connects a player to the match
+     * @param player the player to connect
+     */
     public synchronized void connectPlayer(ClientHandler player) {
         int index;
         state = 0;
@@ -343,6 +372,11 @@ public class Controller extends Thread{
         }
     }
 
+    /**
+     * Reorders the players when a disconnected player reconnects to the match
+     * @param player the reconnected player
+     * @param endPosition the position before the player connected
+     */
     private void reorderPlayers (ClientHandler player, int endPosition) {
         int position = firstPlayer;
         ClientHandler removed = players[firstPlayer];
@@ -369,6 +403,10 @@ public class Controller extends Thread{
         }
     }
 
+    /**
+     * Creates the match
+     * @throws Exception if there is a suspicious number of players
+     */
     public void createMatch() throws Exception{
         for (int i=0; i<playersNum; i++) {
             if (players[i] == null) {
@@ -408,15 +446,22 @@ public class Controller extends Thread{
             default:
                 throw new IllegalArgumentException("Numero di giocatori anomalo");
         }
-        System.out.println("Controller: match creato");
-        System.out.println("Faccio partire la partita");
         start();
     }
 
+    /**
+     *
+     * @return the match
+     */
     public Match getMatch() {
         return match;
     }
 
+    /**
+     * Notifies alla the connected players when a player disconnects from the match
+     * @param player the disconnected player
+     * @throws InterruptedException if a wait is interrupted
+     */
     public synchronized void notifyPlayerDisconnected(ClientHandler player) throws InterruptedException {
         connectedPlayers--;
 
@@ -426,19 +471,22 @@ public class Controller extends Thread{
 
                 if (connectedPlayers == 1) {
                     p.getOutputStream().sendNotifyAllPlayersDisconnected();
-                    sleep (Timer.ONE_MINUTE);
+                    sleep (Timer.ONE_MINUTE/2);
                     switch (connectedPlayers) {
                         case 0:
                             paused = true;
-                            //salva la partita in memoria
+                            //salva la partita in memoria e chiude tutto
                             break;
                         case 1:
                             if (p.isConnected()){
                                 p.setState(6);
+                                endExplanation = "Tutti i giocatori sono stati disconnessi per 30 secondi";
+                                gameRecap = new GameRecap(players, match);
 
-                                synchronized (p) {
-                                    p.notify();
-                                }
+                                if (!players[currentPlayer].equals(p))
+                                    synchronized (p) {
+                                        p.notify();
+                                    }
                             }
                             break;
                         default:
@@ -452,6 +500,9 @@ public class Controller extends Thread{
         }
     }
 
+    /**
+     * Moves the reference to the current player to one position forward
+     */
     private void moveCurrentPlayer() {
         if (currentPlayer < playersNum-1) {
             currentPlayer++;
@@ -461,6 +512,11 @@ public class Controller extends Thread{
         }
     }
 
+    /**
+     *
+     * @param player the player who wants to know if it's their turn
+     * @return true if the match has started and it's the player's turn
+     */
     public boolean isMyTurn(ClientHandler player) {
         for (int i=0; i<playersNum; i++) {
             if (players[i] == null) {
@@ -470,12 +526,18 @@ public class Controller extends Thread{
         return players[currentPlayer].equals(player) && go;
     }
 
+    /**
+     * Notifies all the connected players (and not the one currently moving)
+     * which player is moving and the phase
+     * @param phase the current phase of the match
+     * @throws InterruptedException if a wait interrupts
+     */
     private void notifyTurn (String phase) throws InterruptedException {
         for (ClientHandler player : players) {
-            if (player != players[currentPlayer]) {
+            if (player != players[currentPlayer] && player.isConnected()) {
                 synchronized (player) {
                     do {
-                        player.getOutputStream().sendNextTurn(players[currentPlayer].getAvatar(), phase, this);
+                        player.getOutputStream().sendNextTurn(players[currentPlayer].getAvatar(), phase);
                         player.wait();
                     } while (player.getNack());
                 }
@@ -483,6 +545,10 @@ public class Controller extends Thread{
         }
     }
 
+    /**
+     * Notifies all the connected players if the match has been deleted
+     * @param cause the cause of the deletion
+     */
     public void notifyDeletion(String cause) {
         for (ClientHandler player : players){
             if (player.isConnected()){
@@ -491,46 +557,65 @@ public class Controller extends Thread{
         }
     }
 
+    /**
+     *
+     * @return the list of available wizards
+     */
     public ArrayList<Wizards> getWizards() {
         return wizards;
     }
 
+    /**
+     * Removes the chosen wizard from the list of available ones
+     * @param wizard the chosen wizard
+     */
     public synchronized void chooseWizard (Wizards wizard) {
         wizards.remove(wizard);
-        System.out.println("Rimosso "+wizard.toString());
     }
 
+    /**
+     *
+     * @return the list of the played assistants in the current round
+     */
     public ArrayList<AssistantCard> getPlayedAssistants(){
         return (ArrayList<AssistantCard>) playedAssistants.clone();
     }
 
+    /**
+     * Plays an assistant card and adds it to the list of the played ones
+     * @param assistant the played assistant
+     * @param player the player who draw the assistant
+     * @throws InterruptedException if a wait interrupts
+     */
     public void playAssistantCard (AssistantCard assistant, ClientHandler player) throws InterruptedException {
         playedAssistants.add(assistant);
 
         for (ClientHandler p : players) {
-            if (p != player) {
+            if (p != player && p.isConnected()) {
                 do {
                     synchronized (p) {
                         p.getOutputStream().sendNotifyChosenCard(assistant, player.getAvatar());
-                        System.out.println("Aspetto "+p.getUserName());
                         p.wait();
-                        System.out.println("Bellaaaaa");
                     }
                 } while (p.getNack());
             }
         }
 
         synchronized (this) {
-            System.out.println("Mi sveglio");
             notify();
         }
     }
 
+    /**
+     * Chooses the cloud and notifies to all players
+     * @param cloud
+     * @param player
+     * @throws InterruptedException if a wait is interrupted
+     */
     public void chooseCloud (Cloud cloud, ClientHandler player) throws InterruptedException {
         cloud.choose();
-        System.out.println("Mando notifychosenCloud dicendo che "+player.getUserName()+" ha seclto la nuvola: "+cloud.toString());
         for (ClientHandler p : players) {
-            if (p != player) {
+            if (p != player && p.isConnected()) {
                 synchronized (p) {
                     do {
                         p.getOutputStream().sendNotifyChosenCloud(player.getAvatar(), cloud);
@@ -565,11 +650,17 @@ public class Controller extends Thread{
         }
     }
 
+    /**
+     * Notifies all players when one of them moves a student from the entrance of their board
+     * @param player the player who moved the student
+     * @param student the moved student
+     * @param position where the player moved the student (the player's board or an island)
+     * @throws InterruptedException if a wait is interrupted
+     */
     public void notifyMovedStudent(ClientHandler player, Student student, int position) throws InterruptedException {
         for (ClientHandler p: players){
-            if (p != player){
+            if (p != player && p.isConnected()){
                 synchronized (p) {
-                    System.out.println("mando notifymovedstudents");
                     if (position == 12) {
                         do {
                             p.getOutputStream().sendNotifyMoveStudent(student, player.getAvatar().getBoard(), player.getUserName());
@@ -586,19 +677,30 @@ public class Controller extends Thread{
         }
     }
 
-    public void notifyMovedMN (ClientHandler player, int steps) throws InterruptedException {
+    /**
+     * Notifies all the players when one of them moves mn
+     * @param steps the number of steps the player moved mn
+     * @throws InterruptedException if a wait is interrupted
+     */
+    public void notifyMovedMN (int steps) throws InterruptedException {
         ArrayList<Land> lands = match.getLands();
-        System.out.println("notifico lo spostamento\n"+lands.toString());
         for (ClientHandler p: players){
-            synchronized (p) {
-                do {
-                    p.getOutputStream().sendNotifyMovementMN(steps, lands);
-                    p.wait();
-                } while (p.getNack());
+            if (p.isConnected()) {
+                synchronized (p) {
+                    do {
+                        p.getOutputStream().sendNotifyMovementMN(steps, lands);
+                        p.wait();
+                    } while (p.getNack());
+                }
             }
         }
     }
 
+    /**
+     * Finds out which player has more influence
+     * on the island on which mn is and performs all the necessary changes on that island
+     * @throws Exception if something goes wrong when changing the towers
+     */
     public void controlLand() throws Exception {
         Land land;
         Player owner, player, dominant;
@@ -656,6 +758,7 @@ public class Controller extends Thread{
                                             winner.wait();
                                         } while (winner.getNack());
                                     }
+
                     } catch (Exception e) {
                         for (ClientHandler p : players) {
                             if (p.getAvatar().equals(dominant)) {
@@ -705,9 +808,13 @@ public class Controller extends Thread{
         }
     }
 
+    /**
+     *
+     * @param player the player to check which professors they control
+     * @return which professors the specified player controls
+     */
     private ArrayList<Type_Student> getControlledProfessors  (Player player) {
         ArrayList<Type_Student> professors = new ArrayList<>();
-        //System.out.println(match.getProfessors());
         for (Type_Student t : match.getProfessors().keySet()) {
             if (match.getProfessors().get(t).equals(player)) {
                 professors.add(t);
@@ -716,17 +823,27 @@ public class Controller extends Thread{
         return professors;
     }
 
+    /**
+     * Notifies all the connected players when someone controls a new professor
+     * @throws InterruptedException if a wait is interrupted
+     */
     public void notifyProfessors () throws InterruptedException {
         for (ClientHandler player : players) {
-            do {
-                player.getOutputStream().sendNotifyProfessors(match.getProfessors());
-                synchronized (player) {
-                    player.wait();
-                }
-            } while (player.getNack());
+            if (player.isConnected()) {
+                do {
+                    player.getOutputStream().sendNotifyProfessors(match.getProfessors());
+                    synchronized (player) {
+                        player.wait();
+                    }
+                } while (player.getNack());
+            }
         }
     }
 
+    /**
+     * Notifies all the connected players the changes happened when a player conquered a land
+     * @throws Exception if there wasn't any tower on the island which changed before the changes happened
+     */
     public void notifyChanges () throws Exception {
         Land position = match.getMotherNature().getPosition();
         ArrayList<Tower> previousTowers = null;
@@ -753,30 +870,41 @@ public class Controller extends Thread{
         }
 
         for (ClientHandler p : players) {
-            synchronized (p) {
-                do {
-                    p.getOutputStream().sendNotifyTowers(position.getAllTowers(), position, player1);
-                    p.wait();
-                } while (p.getNack());
-                if(previousTowers!=null) {
+            if (p.isConnected()) {
+                synchronized (p) {
                     do {
-                        p.getOutputStream().sendNotifyTowers(position.getAllTowers(), player2.getAvatar().getBoard(), player2.getUserName());
+                        p.getOutputStream().sendNotifyTowers(position.getAllTowers(), position, player1);
                         p.wait();
                     } while (p.getNack());
+                    if (previousTowers != null) {
+                        do {
+                            p.getOutputStream().sendNotifyTowers(player2.getUserName());
+                            p.wait();
+                        } while (p.getNack());
+                    }
                 }
             }
         }
     }
 
+    /**
+     * Notifies all the connected players when there are no more students in the bag
+     */
     public void notifyFinishedStudents() {
-        for (ClientHandler player: players){
-            player.getOutputStream().sendNoMoreStudents();
-            player.endMatch();
+        if (playing) {
+            for (ClientHandler player : players) {
+                player.getOutputStream().sendNoMoreStudents();
+                player.endMatch();
+            }
+            endExplanation = "sono finiti gli studenti del sacchetto";
+            playing = false;
         }
-        endExplanation = "sono finiti gli studenti del sacchetto";
-        playing = false;
     }
 
+    /**
+     * Notifies all the connected players when one of them finishes the assistant cards
+     * @param player the player who finished the assistant cards
+     */
     public void notifyEndedAssistants (ClientHandler player) {
         for (ClientHandler p: players){
             if (p != player){
@@ -788,6 +916,10 @@ public class Controller extends Thread{
         playing = false;
     }
 
+    /**
+     * Notifies all the connected players when one of them builds their last tower
+     * @param player the player who built their last tower
+     */
     public void notifyBuiltLastTower (ClientHandler player) {
         for (ClientHandler p: players){
             if (p != player){
@@ -800,6 +932,11 @@ public class Controller extends Thread{
         playing = false;
     }
 
+    /**
+     *
+     * @return the winner of the match
+     * @throws Exception if the match hasn't ended yer
+     */
     public Player getWinner() throws Exception {
         if (playing){
             throw new Exception("Partita ancora in corso");
@@ -807,10 +944,18 @@ public class Controller extends Thread{
         return winner.getAvatar();
     }
 
+    /**
+     *
+     * @return the reason why the match ended
+     */
     public String getEndExplanation() {
         return endExplanation;
     }
 
+    /**
+     *
+     * @return the recap of the ended match
+     */
     public GameRecap getGameRecap() {
         return gameRecap;
     }
@@ -819,49 +964,46 @@ public class Controller extends Thread{
 
     }
 
+    /**
+     * Notifies all the connected players the effect of a ch card
+     * @throws InterruptedException if a wait is interrupted
+     */
     public void notifyCh() throws InterruptedException {
         for (ClientHandler player : players) {
-            do {
-                switch (players[currentPlayer].getChosenCh()) {
-                    case "Ch_1" -> {
-                        for (int i = 0; i < 3; i++) {
-                            if (((Expert_Match) match).getCard()[i] instanceof Ch_1){
-                                player.getOutputStream().sendNotifyCh_1(players[currentPlayer].getCh_1_land(),((Ch_1)(((Expert_Match) match).getCard()[i])).copy(),
-                                        players[currentPlayer].getCh_1_Student(),players[currentPlayer].getAvatar().getUserName());
+            if (player.isConnected()) {
+                do {
+                    switch (players[currentPlayer].getChosenCh()) {
+                        case "Ch_1" -> {
+                            for (int i = 0; i < 3; i++) {
+                                if (((Expert_Match) match).getCard()[i] instanceof Ch_1) {
+                                    player.getOutputStream().sendNotifyCh_1(players[currentPlayer].getCh_1_land(), ((Ch_1) (((Expert_Match) match).getCard()[i])).copy(),
+                                            players[currentPlayer].getCh_1_Student(), players[currentPlayer].getAvatar().getUserName());
+                                }
                             }
                         }
-                    }
-                    case "Ch_2" -> {
-                        player.getOutputStream().sendNotifyCh_2(match.getProfessors(),players[currentPlayer].getAvatar().getUserName());
-                    }
-                    case "Ch_8" -> {
-                        player.getOutputStream().sendNotifyCh_8(players[currentPlayer].getAvatar().getUserName());
-                    }
-                    case "Ch_4" -> {
-                        player.getOutputStream().sendNotifyCh_4(players[currentPlayer].getAvatar().getUserName());
-                    }
-                    case "Ch_5" -> {
-                        player.getOutputStream().sendNotifyCh_5(players[currentPlayer].getCh_5_land(),players[currentPlayer].getAvatar().getUserName());
-                    }
-                    case "Ch_10" -> {
-                        player.getOutputStream().sendNotifyCh_10(players[currentPlayer].getAvatar().getUserName(),
-                                players[currentPlayer].getCh_10_students(),players[currentPlayer].getCh_10_types());
-                    }
-                    case "Ch_11" -> {
-                        for (int i = 0; i < 3; i++) {
-                            if (((Expert_Match) match).getCard()[i] instanceof Ch_11)
-                                player.getOutputStream().sendNotifyCh_11(((Ch_11)((Expert_Match) match).getCard()[i]).copy(),
-                                        players[currentPlayer].getCh_11_student(), players[currentPlayer].getAvatar().getUserName());
+                        case "Ch_2" -> player.getOutputStream().sendNotifyCh_2(match.getProfessors(), players[currentPlayer].getAvatar().getUserName());
+                        case "Ch_8" -> player.getOutputStream().sendNotifyCh_8(players[currentPlayer].getAvatar().getUserName());
+                        case "Ch_4" -> player.getOutputStream().sendNotifyCh_4(players[currentPlayer].getAvatar().getUserName());
+                        case "Ch_5" ->
+                                player.getOutputStream().sendNotifyCh_5(players[currentPlayer].getCh_5_land(), players[currentPlayer].getAvatar().getUserName());
+                        case "Ch_10" -> player.getOutputStream().sendNotifyCh_10(players[currentPlayer].getAvatar().getUserName(),
+                                players[currentPlayer].getCh_10_students(), players[currentPlayer].getCh_10_types());
+                        case "Ch_11" -> {
+                            for (int i = 0; i < 3; i++) {
+                                if (((Expert_Match) match).getCard()[i] instanceof Ch_11)
+                                    player.getOutputStream().sendNotifyCh_11(((Ch_11) ((Expert_Match) match).getCard()[i]).copy(),
+                                            players[currentPlayer].getCh_11_student(), players[currentPlayer].getAvatar().getUserName());
+                            }
                         }
+                        case "Ch_12" ->
+                                player.getOutputStream().sendNotifyCh_12(players[currentPlayer].getCh_12_type(), players[currentPlayer].getAvatar().getUserName());
                     }
-                    case "Ch_12" -> {
-                        player.getOutputStream().sendNotifyCh_12(players[currentPlayer].getCh_12_type(),players[currentPlayer].getAvatar().getUserName());
+                    synchronized (player) {
+                        player.wait();
                     }
-                }
-                synchronized (player) {
-                    player.wait();
-                }
-            } while (player.getNack());
+                } while (player.getNack());
+            }
         }
     }
+
 }
