@@ -362,6 +362,7 @@ public class Gui extends Application {
 
     public void moveStudent() {
         ((MatchController)game.getController()).setStateLabel("E' il tuo turno: scegli uno studente dall'ingresso della tua plancia");
+        ((MatchController) game.getController()).refreshEntry();
         ((MatchController)game.getController()).wakeUp("MoveStudent");
         synchronized (cg){
             cg.notifyAll();

@@ -411,8 +411,8 @@ public class ClientGui  extends Thread {
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    view.printNotification(p.getColor().toString() + p.getUserName()
-                                            + "\u001b[0m ha scelto la nuvola:\n" + cl.toString());
+                                    view.printNotification(p.getUserName()
+                                            + " ha scelto la nuvola");
                                 }
                             });
                             server.sendACK();

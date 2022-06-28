@@ -802,21 +802,14 @@ public class MatchController extends Thread {
                 /*switch (me.getBoard().getEntrance().indexOf(assistantchoosen)){
                     case
                 }*/
-                if (idland == 12) {
-                    try {
-                        action.moveFromIngressToBoard(me, assistantchoosen);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    for (Land l : match.getLands()) {
-                        if (l.getID() == idland)
-                            action.moveFromIngressToLand(me, assistantchoosen, l);
-                    }
+                for (Land l : match.getLands()) {
+                    if (l.getID() == idland)
+                        action.moveFromIngressToLand(me, assistantchoosen, l);
                 }
                 action.checkAllProfessors();
             }
         }
+        refreshEntry();
         selectedstudent = false;
         selectedmn = false;
         setDisableMN(true);
@@ -825,8 +818,312 @@ public class MatchController extends Thread {
         setDisableLands(true);
         setDisableEntrance(true);
         setDisableBoards(true);
+        tomyboard2.setVisible(false);
+        tomyboard1.setVisible(false);
+        tomyboard0.setVisible(false);
         synchronized (this) {
             notifyAll();
+        }
+    }
+
+    public void refreshEntry(){
+        for(Player p: match.getPlayer())
+        switch (p.getColor()) {
+            case WHITE:
+                switch (p.getBoard().getEntrance().size()) {
+                    case 1:
+                        entry01.setVisible(false);
+                        entry02.setVisible(false);
+                        entry03.setVisible(false);
+                        entry04.setVisible(false);
+                        entry05.setVisible(false);
+                        entry06.setVisible(false);
+                        entry07.setVisible(false);
+                        entry08.setVisible(false);
+                        entry00.setEffect(new DropShadow());
+                        break;
+                    case 2:
+                        entry02.setVisible(false);
+                        entry03.setVisible(false);
+                        entry04.setVisible(false);
+                        entry05.setVisible(false);
+                        entry06.setVisible(false);
+                        entry07.setVisible(false);
+                        entry08.setVisible(false);
+                        entry00.setEffect(new DropShadow());
+                        entry01.setEffect(new DropShadow());
+                        break;
+                    case 3:
+                        entry03.setVisible(false);
+                        entry04.setVisible(false);
+                        entry05.setVisible(false);
+                        entry06.setVisible(false);
+                        entry07.setVisible(false);
+                        entry08.setVisible(false);
+                        entry00.setEffect(new DropShadow());
+                        entry01.setEffect(new DropShadow());
+                        entry02.setEffect(new DropShadow());
+                        break;
+                    case 4:
+                        entry04.setVisible(false);
+                        entry05.setVisible(false);
+                        entry06.setVisible(false);
+                        entry07.setVisible(false);
+                        entry08.setVisible(false);
+                        entry00.setEffect(new DropShadow());
+                        entry01.setEffect(new DropShadow());
+                        entry02.setEffect(new DropShadow());
+                        entry03.setEffect(new DropShadow());
+                        break;
+                    case 5:
+                        entry05.setVisible(false);
+                        entry06.setVisible(false);
+                        entry07.setVisible(false);
+                        entry08.setVisible(false);
+                        entry00.setEffect(new DropShadow());
+                        entry01.setEffect(new DropShadow());
+                        entry02.setEffect(new DropShadow());
+                        entry03.setEffect(new DropShadow());
+                        entry04.setEffect(new DropShadow());
+                        break;
+                    case 6:
+                        entry06.setVisible(false);
+                        entry07.setVisible(false);
+                        entry08.setVisible(false);
+                        entry00.setEffect(new DropShadow());
+                        entry01.setEffect(new DropShadow());
+                        entry02.setEffect(new DropShadow());
+                        entry03.setEffect(new DropShadow());
+                        entry04.setEffect(new DropShadow());
+                        entry05.setEffect(new DropShadow());
+                        break;
+                    case 7:
+                        entry07.setVisible(false);
+                        entry08.setVisible(false);
+                        entry00.setEffect(new DropShadow());
+                        entry01.setEffect(new DropShadow());
+                        entry02.setEffect(new DropShadow());
+                        entry03.setEffect(new DropShadow());
+                        entry04.setEffect(new DropShadow());
+                        entry05.setEffect(new DropShadow());
+                        entry06.setEffect(new DropShadow());
+                        break;
+                    case 8:
+                        entry08.setVisible(false);
+                        entry00.setEffect(new DropShadow());
+                        entry01.setEffect(new DropShadow());
+                        entry02.setEffect(new DropShadow());
+                        entry03.setEffect(new DropShadow());
+                        entry04.setEffect(new DropShadow());
+                        entry05.setEffect(new DropShadow());
+                        entry06.setEffect(new DropShadow());
+                        entry07.setEffect(new DropShadow());
+                        break;
+                    default:
+                        entry00.setEffect(new DropShadow());
+                        entry01.setEffect(new DropShadow());
+                        entry02.setEffect(new DropShadow());
+                        entry03.setEffect(new DropShadow());
+                        entry04.setEffect(new DropShadow());
+                        entry05.setEffect(new DropShadow());
+                        entry06.setEffect(new DropShadow());
+                        entry07.setEffect(new DropShadow());
+                        entry08.setEffect(new DropShadow());
+                }
+                break;
+            case BLACK:
+                switch (me.getBoard().getEntrance().size()) {
+                    case 1:
+                        entry11.setVisible(false);
+                        entry12.setVisible(false);
+                        entry13.setVisible(false);
+                        entry14.setVisible(false);
+                        entry15.setVisible(false);
+                        entry16.setVisible(false);
+                        entry17.setVisible(false);
+                        entry18.setVisible(false);
+                        entry10.setEffect(new DropShadow());
+                        break;
+                    case 2:
+                        entry12.setVisible(false);
+                        entry13.setVisible(false);
+                        entry14.setVisible(false);
+                        entry15.setVisible(false);
+                        entry16.setVisible(false);
+                        entry17.setVisible(false);
+                        entry18.setVisible(false);
+                        entry10.setEffect(new DropShadow());
+                        entry11.setEffect(new DropShadow());
+                        break;
+                    case 3:
+                        entry13.setVisible(false);
+                        entry14.setVisible(false);
+                        entry15.setVisible(false);
+                        entry16.setVisible(false);
+                        entry17.setVisible(false);
+                        entry18.setVisible(false);
+                        entry10.setEffect(new DropShadow());
+                        entry11.setEffect(new DropShadow());
+                        entry12.setEffect(new DropShadow());
+                        break;
+                    case 4:
+                        entry14.setVisible(false);
+                        entry15.setVisible(false);
+                        entry16.setVisible(false);
+                        entry17.setVisible(false);
+                        entry18.setVisible(false);
+                        entry10.setEffect(new DropShadow());
+                        entry11.setEffect(new DropShadow());
+                        entry12.setEffect(new DropShadow());
+                        entry13.setEffect(new DropShadow());
+                        break;
+                    case 5:
+                        entry15.setVisible(false);
+                        entry16.setVisible(false);
+                        entry17.setVisible(false);
+                        entry18.setVisible(false);
+                        entry10.setEffect(new DropShadow());
+                        entry11.setEffect(new DropShadow());
+                        entry12.setEffect(new DropShadow());
+                        entry13.setEffect(new DropShadow());
+                        entry14.setEffect(new DropShadow());
+                        break;
+                    case 6:
+                        entry16.setVisible(false);
+                        entry17.setVisible(false);
+                        entry18.setVisible(false);
+                        entry10.setEffect(new DropShadow());
+                        entry11.setEffect(new DropShadow());
+                        entry12.setEffect(new DropShadow());
+                        entry13.setEffect(new DropShadow());
+                        entry14.setEffect(new DropShadow());
+                        entry15.setEffect(new DropShadow());
+                        break;
+                    case 7:
+                        entry17.setVisible(false);
+                        entry18.setVisible(false);
+                        entry10.setEffect(new DropShadow());
+                        entry11.setEffect(new DropShadow());
+                        entry12.setEffect(new DropShadow());
+                        entry13.setEffect(new DropShadow());
+                        entry14.setEffect(new DropShadow());
+                        entry15.setEffect(new DropShadow());
+                        entry16.setEffect(new DropShadow());
+                        break;
+                    case 8:
+                        entry18.setVisible(false);
+                        entry10.setEffect(new DropShadow());
+                        entry11.setEffect(new DropShadow());
+                        entry12.setEffect(new DropShadow());
+                        entry13.setEffect(new DropShadow());
+                        entry14.setEffect(new DropShadow());
+                        entry15.setEffect(new DropShadow());
+                        entry16.setEffect(new DropShadow());
+                        entry17.setEffect(new DropShadow());
+                        break;
+                    default:
+                        entry10.setEffect(new DropShadow());
+                        entry11.setEffect(new DropShadow());
+                        entry12.setEffect(new DropShadow());
+                        entry13.setEffect(new DropShadow());
+                        entry14.setEffect(new DropShadow());
+                        entry15.setEffect(new DropShadow());
+                        entry16.setEffect(new DropShadow());
+                        entry17.setEffect(new DropShadow());
+                        entry18.setEffect(new DropShadow());
+                }
+                break;
+            case GREY:
+                switch (me.getBoard().getEntrance().size()) {
+                    case 1:
+                        entry21.setVisible(false);
+                        entry22.setVisible(false);
+                        entry23.setVisible(false);
+                        entry24.setVisible(false);
+                        entry25.setVisible(false);
+                        entry26.setVisible(false);
+                        entry27.setVisible(false);
+                        entry28.setVisible(false);
+                        entry20.setEffect(new DropShadow());
+                        break;
+                    case 2:
+                        entry22.setVisible(false);
+                        entry23.setVisible(false);
+                        entry24.setVisible(false);
+                        entry25.setVisible(false);
+                        entry26.setVisible(false);
+                        entry27.setVisible(false);
+                        entry28.setVisible(false);
+                        entry20.setEffect(new DropShadow());
+                        entry21.setEffect(new DropShadow());
+                        break;
+                    case 3:
+                        entry23.setVisible(false);
+                        entry24.setVisible(false);
+                        entry25.setVisible(false);
+                        entry26.setVisible(false);
+                        entry27.setVisible(false);
+                        entry28.setVisible(false);
+                        entry20.setEffect(new DropShadow());
+                        entry21.setEffect(new DropShadow());
+                        entry22.setEffect(new DropShadow());
+                        break;
+                    case 4:
+                        entry24.setVisible(false);
+                        entry25.setVisible(false);
+                        entry26.setVisible(false);
+                        entry27.setVisible(false);
+                        entry28.setVisible(false);
+                        entry20.setEffect(new DropShadow());
+                        entry21.setEffect(new DropShadow());
+                        entry22.setEffect(new DropShadow());
+                        entry23.setEffect(new DropShadow());
+                        break;
+                    case 5:
+                        entry25.setVisible(false);
+                        entry26.setVisible(false);
+                        entry27.setVisible(false);
+                        entry28.setVisible(false);
+                        entry20.setEffect(new DropShadow());
+                        entry21.setEffect(new DropShadow());
+                        entry22.setEffect(new DropShadow());
+                        entry23.setEffect(new DropShadow());
+                        entry24.setEffect(new DropShadow());
+                        break;
+                    case 6:
+                        entry26.setVisible(false);
+                        entry27.setVisible(false);
+                        entry28.setVisible(false);
+                        entry20.setEffect(new DropShadow());
+                        entry21.setEffect(new DropShadow());
+                        entry22.setEffect(new DropShadow());
+                        entry23.setEffect(new DropShadow());
+                        entry24.setEffect(new DropShadow());
+                        entry25.setEffect(new DropShadow());
+                        break;
+                    case 7:
+                        entry27.setVisible(false);
+                        entry28.setVisible(false);
+                        entry20.setEffect(new DropShadow());
+                        entry21.setEffect(new DropShadow());
+                        entry22.setEffect(new DropShadow());
+                        entry23.setEffect(new DropShadow());
+                        entry24.setEffect(new DropShadow());
+                        entry25.setEffect(new DropShadow());
+                        entry26.setEffect(new DropShadow());
+                        break;
+                    case 8:
+                        entry28.setVisible(false);
+                        entry20.setEffect(new DropShadow());
+                        entry21.setEffect(new DropShadow());
+                        entry22.setEffect(new DropShadow());
+                        entry23.setEffect(new DropShadow());
+                        entry24.setEffect(new DropShadow());
+                        entry25.setEffect(new DropShadow());
+                        entry26.setEffect(new DropShadow());
+                        entry27.setEffect(new DropShadow());
+                        break;
+                }
         }
     }
 
@@ -1828,133 +2125,136 @@ public class MatchController extends Thread {
      * Sets the entry of the boards
      */
     private void show_entry() {
-        for (int i = 0; i < match.getPlayer().length; i++) {
-            ArrayList<Student> entrance = match.getPlayer()[i].getBoard().getEntrance();
-            switch (i) {
-                case 0: {
-                    if (!entrance.isEmpty()) {
-                        if (entry00.isVisible()) {
-                            show_student(entry00, entrance.get(0));
+            for (int i = 0; i < match.getPlayer().length; i++) {
+                ArrayList<Student> entrance = match.getPlayer()[i].getBoard().getEntrance();
+                switch (i) {
+                    case 0: {
+                        if (!entrance.isEmpty()) {
+                            if (entry00.isVisible()) {
+                                show_student(entry00, entrance.get(0));
+                            }
+                            if (entry01.isVisible()) {
+                                show_student(entry01, entrance.get(1));
+                            }
+                            if (entry02.isVisible()) {
+                                show_student(entry02, entrance.get(2));
+                            }
+                            if (entry03.isVisible()) {
+                                show_student(entry03, entrance.get(3));
+                            }
+                            if (entrance.size() >= 5) {
+                                show_student(entry04, entrance.get(4));
+                            }
+                            if (entrance.size() >= 6) {
+                                show_student(entry05, entrance.get(5));
+                            }
+                            if (entrance.size() >= 7) {
+                                show_student(entry06, entrance.get(6));
+                            }
+                            if (entrance.size() >= 8) {
+                                show_student(entry07, entrance.get(7));
+                            }
+                            if (entrance.size() >= 9) {
+                                show_student(entry08, entrance.get(8));
+                            }
+                        } else {
+                            entry00.setVisible(false);
+                            entry01.setVisible(false);
+                            entry02.setVisible(false);
+                            entry03.setVisible(false);
+                            entry04.setVisible(false);
+                            entry05.setVisible(false);
+                            entry06.setVisible(false);
+                            entry07.setVisible(false);
+                            entry08.setVisible(false);
                         }
-                        if (entry01.isVisible()) {
-                            show_student(entry01, entrance.get(1));
-                        }
-                        if (entry02.isVisible()) {
-                            show_student(entry02, entrance.get(2));
-                        }
-                        if (entry03.isVisible()) {
-                            show_student(entry03, entrance.get(3));
-                        }
-                        if (entrance.size() >= 5 ) {
-                            show_student(entry04, entrance.get(4));
-                        }
-                        if (entrance.size() >= 6 ) {
-                            show_student(entry05, entrance.get(5));
-                        }
-                        if (entrance.size() >= 7 ) {
-                            show_student(entry06, entrance.get(6));
-                        }
-                        if (entrance.size() >= 8 ) {
-                            show_student(entry07, entrance.get(7));
-                        }
-                        if (entrance.size() >= 9 ) {
-                            show_student(entry08, entrance.get(8));
-                        }
-                    } else {
-                        entry00.setVisible(false);
-                        entry01.setVisible(false);
-                        entry02.setVisible(false);
-                        entry03.setVisible(false);
-                        entry04.setVisible(false);
-                        entry05.setVisible(false);
-                        entry06.setVisible(false);
-                        entry07.setVisible(false);
-                        entry08.setVisible(false);
                     }
-                }
-                case 1: {
-                    if (!entrance.isEmpty()) {
-                        if (entry10.isVisible()) {
-                            show_student(entry10, entrance.get(0));
+                    case 1: {
+                        if (!entrance.isEmpty()) {
+                            if (entry10.isVisible()) {
+                                show_student(entry10, entrance.get(0));
+                            }
+                            if (entry11.isVisible()) {
+                                show_student(entry11, entrance.get(1));
+                            }
+                            if (entry12.isVisible()) {
+                                show_student(entry12, entrance.get(2));
+                            }
+                            if (entry13.isVisible()) {
+                                show_student(entry13, entrance.get(3));
+                            }
+                            if (entrance.size() >= 5) {
+                                show_student(entry14, entrance.get(4));
+                            }
+                            if (entrance.size() >= 6) {
+                                show_student(entry15, entrance.get(5));
+                            }
+                            if (entrance.size() >= 7) {
+                                show_student(entry16, entrance.get(6));
+                            }
+                            if (entrance.size() >= 8) {
+                                show_student(entry17, entrance.get(7));
+                            }
+                            if (entrance.size() >= 9) {
+                                show_student(entry18, entrance.get(8));
+                            }
+                        } else {
+                            entry10.setVisible(false);
+                            entry11.setVisible(false);
+                            entry12.setVisible(false);
+                            entry13.setVisible(false);
+                            entry14.setVisible(false);
+                            entry15.setVisible(false);
+                            entry16.setVisible(false);
+                            entry17.setVisible(false);
+                            entry18.setVisible(false);
                         }
-                        if (entry11.isVisible()) {
-                            show_student(entry11, entrance.get(1));
-                        }
-                        if (entry12.isVisible()) {
-                            show_student(entry12, entrance.get(2));
-                        }
-                        if (entry13.isVisible()) {
-                            show_student(entry13, entrance.get(3));
-                        }
-                        if (entrance.size() >= 5 ) {
-                            show_student(entry14, entrance.get(4));
-                        }
-                        if (entrance.size() >= 6 ) {
-                            show_student(entry15, entrance.get(5));
-                        }
-                        if (entrance.size() >= 7 ) {
-                            show_student(entry16, entrance.get(6));
-                        }
-                        if (entrance.size() >= 8 ) {
-                            show_student(entry17, entrance.get(7));
-                        }
-                        if (entrance.size() >= 9 ) {
-                            show_student(entry18, entrance.get(8));
-                        }
-                    } else {
-                        entry10.setVisible(false);
-                        entry11.setVisible(false);
-                        entry12.setVisible(false);
-                        entry13.setVisible(false);
-                        entry14.setVisible(false);
-                        entry15.setVisible(false);
-                        entry16.setVisible(false);
-                        entry17.setVisible(false);
-                        entry18.setVisible(false);
                     }
-                }
-                case 2: {
-                    if (!entrance.isEmpty()) {
-                        if (entry20.isVisible()) {
-                            show_student(entry20, entrance.get(0));
+                    case 2: {
+                        if (!entrance.isEmpty()) {
+                            if (entry20.isVisible()) {
+                                show_student(entry20, entrance.get(0));
+                            }
+                            if (entry21.isVisible()) {
+                                show_student(entry21, entrance.get(1));
+                            }
+                            if (entry22.isVisible()) {
+                                show_student(entry22, entrance.get(2));
+                            }
+                            if (entry23.isVisible()) {
+                                show_student(entry23, entrance.get(3));
+                            }
+                            if (entrance.size() >= 5) {
+                                show_student(entry24, entrance.get(4));
+                            }
+                            if (entrance.size() >= 6) {
+                                show_student(entry25, entrance.get(5));
+                            }
+                            if (entrance.size() >= 7) {
+                                show_student(entry26, entrance.get(6));
+                            }
+                            if (entrance.size() >= 8) {
+                                show_student(entry27, entrance.get(7));
+                            }
+                            if (entrance.size() >= 9) {
+                                show_student(entry28, entrance.get(8));
+                            }
+                        } else {
+                            entry20.setVisible(false);
+                            entry21.setVisible(false);
+                            entry22.setVisible(false);
+                            entry23.setVisible(false);
+                            entry24.setVisible(false);
+                            entry25.setVisible(false);
+                            entry26.setVisible(false);
+                            entry27.setVisible(false);
+                            entry28.setVisible(false);
                         }
-                        if (entry21.isVisible()) {
-                            show_student(entry21, entrance.get(1));
-                        }
-                        if (entry22.isVisible()) {
-                            show_student(entry22, entrance.get(2));
-                        }
-                        if (entry23.isVisible()) {
-                            show_student(entry23, entrance.get(3));
-                        }
-                        if (entrance.size() >= 5 ) {
-                            show_student(entry24, entrance.get(4));
-                        }
-                        if (entrance.size() >= 6 ) {
-                            show_student(entry25, entrance.get(5));
-                        }
-                        if (entrance.size() >= 7 ) {
-                            show_student(entry26, entrance.get(6));
-                        }
-                        if (entrance.size() >= 8 ) {
-                            show_student(entry27, entrance.get(7));
-                        }
-                        if (entrance.size() >= 9 ) {
-                            show_student(entry28, entrance.get(8));
-                        }
-                    } else {
-                        entry20.setVisible(false);
-                        entry21.setVisible(false);
-                        entry22.setVisible(false);
-                        entry23.setVisible(false);
-                        entry24.setVisible(false);
-                        entry25.setVisible(false);
-                        entry26.setVisible(false);
-                        entry27.setVisible(false);
-                        entry28.setVisible(false);
                     }
                 }
             }
+        if(state.equals("MoveStudent") || state.equals("ChooseMN") || state.equals("ChooseCloud")) {
+            refreshEntry();
         }
     }
 
@@ -2002,7 +2302,7 @@ public class MatchController extends Thread {
         setDisableClouds(true);
         setDisableMN(true);
         ((ImageView) mouseEvent.getSource()).setEffect(null);
-        ((ImageView) mouseEvent.getSource()).setVisible(false);
+        //((ImageView) mouseEvent.getSource()).setVisible(false);
     }
 
 
@@ -2641,6 +2941,7 @@ public class MatchController extends Thread {
             }
             action.checkAllProfessors();
         }
+        refreshEntry();
         selectedstudent = false;
         selectedmn = false;
         setDisableMN(true);
@@ -2649,6 +2950,9 @@ public class MatchController extends Thread {
         setDisableLands(true);
         setDisableEntrance(true);
         setDisableBoards(true);
+        tomyboard2.setVisible(false);
+        tomyboard1.setVisible(false);
+        tomyboard0.setVisible(false);
         synchronized (this) {
             notifyAll();
         }
