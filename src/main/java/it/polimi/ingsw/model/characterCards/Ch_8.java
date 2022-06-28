@@ -15,8 +15,7 @@ public class Ch_8 implements CharacterCard, Serializable {
     public Ch_8(){
         price=2;
         activated=false;
-        powerUp="During this turn, you count as "+
-                "having 2 more influence.";
+        powerUp="In questo turno, durante il calcolo dell'influenza hai due punti d'influenza addizionali.";
     }
 
     @Override
@@ -51,5 +50,13 @@ public class Ch_8 implements CharacterCard, Serializable {
     public void setPlayer(Player player) {
         this.player = player;
     }
+
+    @Override
+    public int getNumber() {
+        return 8;
+    }
+
+    public void setActivated(){activated=true;}
+
 }
 

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.characterCards;
 
-import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
@@ -13,8 +12,7 @@ public class Ch_12 implements CharacterCard, Serializable {
     private final short price;
     private boolean activated;
     private final String powerUp;
-    private Player player;
-    private Match match;
+    private final Match match;
     private Type_Student type;
 
 
@@ -22,10 +20,9 @@ public class Ch_12 implements CharacterCard, Serializable {
         this.match=match;
         price=3;
         activated=false;
-        powerUp="Choose a type of Student: every player (including yourself) must" +
-                "return 3 Students of that type from their Dining Room to the bag." +
-                " If any player has fewer than 3 Students of that type, return has many " +
-                "Students as they have.";
+        powerUp="Scegli un colore di studente; ogni giocatore (incluso te)" +
+                "deve rimettere nel sacchetto 3 studenti di quel colore presenti nella sua sala." +
+                "Chi avesse meno di 3 studenti di quel colore, rimetterà quelli che ha.";
     }
 
     @Override
@@ -61,10 +58,20 @@ public class Ch_12 implements CharacterCard, Serializable {
 
     @Override
     public void setPlayer(Player player) {
-        this.player = player;
     }
 
+    /**
+     *
+     * @param type of the student to be removed from the dinning room
+     */
     public void setType(Type_Student type) {
         this.type = type;
     }
+
+    @Override
+    public int getNumber() {
+        return 12;
+    }
+
+    public void setActivated(){activated=true;}
 }

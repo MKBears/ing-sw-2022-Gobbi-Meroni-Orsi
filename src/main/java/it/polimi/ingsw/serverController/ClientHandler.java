@@ -71,7 +71,6 @@ public class ClientHandler extends Thread{
      */
     public void run(){
         in.start();
-        //System.out.println("Stream in ingresso partito");
 
         do {
             try {
@@ -79,35 +78,37 @@ public class ClientHandler extends Thread{
 
                 synchronized (this) {
                     do {
-                        System.out.println("Player " + userName + ": dormo");
                         this.wait();
-                        System.out.println("Player " + userName + ": sveglio");
                     } while (!controller.isMyTurn(this));
                 }
-            } catch (InterruptedException | SocketException e) {
+            } catch (Exception e) {
                 out.sendGenericError("Internal server error ("+e.getMessage()+")");
-                state = 8;
+                ongoingMatch = false;
             }
         } while (ongoingMatch);
+
+        try {
+            closeConnection();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
-     * Is the finite state machine thart controls the single client (therefore the single player). It is made of cases that simulate the states of the ideal machine
+     * Is the finite state machine that controls the single client (therefore the single player).
+     * It is made of cases that simulate the states of the ideal machine
      * @throws InterruptedException if a wait is interrupted
      * @throws SocketException if the socket goes down unexpectedly
      */
-    private void changeState() throws InterruptedException, SocketException {
+    private void changeState() throws Exception {
         synchronized (this) {
             switch (state) {
                 case 0:
                     //LogIn/Registration, match preparation (create/join match, choose the wizard)
                     do {
-                        //System.out.println("Aspetto il client");
                         wait();
-                        //System.out.println("Let's-a goooo!");
 
                         if (serve.getUserNames().contains(userName) && serve.inactivePlayer(this)) {
-                            //System.out.println("Okie-dokie!");
                             out.sendLoginSucceeded();
                             System.out.println("Login avvenuto con successo: "+userName);
                             nack = false;
@@ -126,95 +127,81 @@ public class ClientHandler extends Thread{
                     }
                     else {
                         out.sendListOfGames(serve.getJoinableMatches(), serve.getPausedMatches(userName));
-                        //System.out.println("Dopo listOfGames");
 
                         do {
                             wait();
                         } while (nack);
-                        //System.out.println("Mando maghi");
+                        if(!controller.isGame_from_memory()) {
+                            do {
+                                out.sendWizard(controller.getWizards());
+                                wait();
+                            } while (nack);
+                            out.sendACK();
+                            controller.chooseWizard(wizard);
+                            createAvatar(color, controller.getPlayersNum(), expertMatch);
 
-                        do {
-                            out.sendWizard(controller.getWizards());
-                            wait();
-                        } while (nack);
-                        out.sendACK();
-                        controller.chooseWizard(wizard);
-                        //System.out.println("helooo");
-                        createAvatar(color, controller.getPlayersNum(), expertMatch);
-
-                        controller.createMatch();
-                        //wait();
+                            controller.createMatch();
+                        }
                     }
-
-                    do {
-                        System.out.println("Player "+userName+": aspetto la creazione del match");
-                        this.wait();
-                    } while (!controller.readyToStart());
-
+                    if(!controller.isGame_from_memory()) {
+                        do {
+                            System.out.println("Player " + userName + ": aspetto la creazione del match");
+                            this.wait();
+                        } while (!controller.readyToStart());
+                    }
                     do {
                         out.sendCreation(controller.getMatch());
-                        System.out.println("Mandata creation");
                         wait();
                     } while (nack);
                     out.start();
                     socket.setSoTimeout(5000);
-                    state = 1;
-                    break;
+                    if(!controller.isGame_from_memory() && state!=6) {
+                        state = 1;
+                    }
                 case 1:
                     //PLANNING phase: notify refilled clouds
                     do {
                         out.sendRefillClouds(match.getCloud());
-                        System.out.println("Player "+userName+": mando le nuvole riempite");
                         wait();
                     } while (nack);
 
                     synchronized (controller) {
-                        System.out.println("notificato");
                         controller.notify();
                     }
-                    state = 2;
+
+                    if (state != 6)
+                        state = 2;
                     break;
                 case 2:
                     //PLANNING phase: play an assistant card
                     do {
                         out.sendChooseCard(playableAssistants(controller.getPlayedAssistants()));
                         wait();
-                        System.out.println("Player "+userName+": ricevuto assistente");
                     } while (nack);
-                    System.out.println("Player "+userName+" dopo while");
                     avatar.draw(playedAssistant);
-                    System.out.println("Player "+userName+": gioco assistente");
                     controller.playAssistantCard(playedAssistant, this);
 
                     if (avatar.hasNoCardsLeft()) {
                         controller.notifyEndedAssistants(this);
                     }
-                    state = 3;
+
+                    if (state != 6)
+                        state = 3;
                     break;
                 case 3:
-
-
                     //ACTION phase: moving students from the entrance
                     //check if they can control any professor
                     do {
                         out.sendMoveStudents();
-                        /*if(controller.getCurrentPlayer()!=controller.getFirstPlayer()){
-                            wait();
-                        }*/
-                        System.out.println(this.avatar.getUserName()+": sto aspettando");
                         wait();
                     } while (nack);
-                    System.out.println(this.avatar.getUserName()+": uscito dal wait");//////
 
                     for (int i=0; i<movedStudentsNumber; i++) {
-                        System.out.println(this.avatar.getUserName()+": sono dentro al for");
                         if (movedStudentPosition == 12) {
                             try {
                                 avatar.getBoard().placeStudent(movedStudent);
-                                System.out.println(this.avatar.getUserName()+": situa 1");
                             }
                             catch (Exception e) {
-                                out.sendGenericError("Desynchronized ("+e.getMessage()+")");
                                 out.sendCreation(match);
                                 i--;
                             }
@@ -222,40 +209,31 @@ public class ClientHandler extends Thread{
                             for (Land land : match.getLands()) {
                                 if (land.getID() == movedStudentPosition) {
                                     land.addStudent(avatar.getBoard().removeStudent(movedStudent));
-                                    System.out.println(this.avatar.getUserName()+": situa 2");
                                 }
                             }
                         }
-                        System.out.println("sono QUIIIII");
                         controller.notifyMovedStudent(this, movedStudent, movedStudentPosition);
 
                         if (i < movedStudentsNumber-1) {
-                            System.out.println(this.avatar.getUserName()+": altra wait");
                             wait();
                         }
                     }
                     checkAllProfessors();
                     controller.notifyProfessors();
-                    System.out.println("carte personaggio");
+
                     if(expertMatch){
-                        do{
-                            out.sendCh(((Expert_Match)match).getCard());
-                            wait();
-                        }while(nack);
+                        state = 7;
+                        changeState();
                     }
-                    if (expertMatch){
-                        if (useCh) {
-                            effectCh();
-                            controller.notifyCh();
-                        }
+                    else {
+                        if (state != 6)
+                            state = 4;
                     }
-                    state=4;
                 case 4:
                     ///ACTION phase: moving Mother Nature
                     //calculate the influence in that Land and verify if it joins other lands
                     do {
                         out.sendMoveMN();
-                        System.out.println("Mandato muovi mn");
                         wait();
                     } while (nack);
                     match.moveMotherNature(motherNatureSteps);
@@ -267,8 +245,7 @@ public class ClientHandler extends Thread{
                             out.sendCreation(match);
                         }
                         uniteLands();
-                        //System.out.println(match);
-                        controller.notifyMovedMN(this, motherNatureSteps);
+                        controller.notifyMovedMN(motherNatureSteps);
 
                         if (match.getMotherNature().getPosition().hasChanged()) {
                             try {
@@ -281,6 +258,11 @@ public class ClientHandler extends Thread{
                     }else{
                         try {
                             match.getMotherNature().getPosition().setNoEntry(false);
+
+                            for (CharacterCard ch : ((Expert_Match)match).getCard())
+                                if (ch instanceof Ch_5)
+                                    ((Ch_5) ch).returnNoEntryTile();
+                            controller.notifyMovedMN(motherNatureSteps);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -292,7 +274,6 @@ public class ClientHandler extends Thread{
                         break;
                     }
                 case 5:
-                    System.out.println("Dentro alla fase 5");
                     //ACTION phase: choose a cloud and import students to the entrance
                     ArrayList<Cloud> clouds = new ArrayList<>();
 
@@ -300,28 +281,20 @@ public class ClientHandler extends Thread{
                         clouds.addAll(Arrays.asList(match.getCloud()));
                         out.sendChooseCloud(clouds);
                         clouds.clear();
-                        System.out.println("Mandato chooseCloud");
                         this.wait();
                     } while (nack);
-                    System.out.println("sono qui");
                     do {
-                        System.out.println(userName+": altra wait");
-
                         if (chosenCloud != null) {
                             for (Cloud clou : match.getCloud()) {
-                                System.out.println("Tra i due fuochi");
                                 if (chosenCloud.equals(clou)) {
-                                    System.out.println("sono qua");
                                     avatar.getBoard().importStudents(clou.getStudents());
                                 }
                             }
                         }
                     }while (chosenCloud==null);
-                    System.out.println(chosenCloud);
-                    System.out.println(this.avatar.getUserName()+": sono uscito");
                     controller.chooseCloud(chosenCloud, this);
-                    System.out.println(controller.getCurrentPlayer());
-                    state = 1;
+                    if (state != 6)
+                        state = 1;
                     break;
                 case 6:
                     //END phase: sending winner and GameRecap
@@ -335,28 +308,31 @@ public class ClientHandler extends Thread{
                     }
                     break;
                 case 7:
-                    System.out.println("carte personaggio");
-                    if(expertMatch){
-                        do{
-                            out.sendCh(((Expert_Match)match).getCard());
-                            wait();
-                        }while(nack);
-                    }
-                    if (expertMatch){
-                        if (useCh) {
+                    //ACTION phase: playing a character card
+                    do{
+                        out.sendCh(((Expert_Match)match).getCard());
+                        wait();
+                    }while(nack);
+
+                    if (useCh) {
+                        try {
                             effectCh();
+                        } catch (Exception e) {
+                            controller.notifyFinishedStudents();
                         }
+                        controller.notifyCh();
                     }
-                    controller.notifyCh();
-                    state=4;
-                    //Fase AZIONE: gioca una carta personaggio
+
+                    if (state != 6)
+                        state = 4;
+                    break;
             }
         }
     }
 
     /**
      * If in input is false it sends a nack message to the client, if the counter of NACK is equal to 3 it sends creation.
-     * If the input is true is all ok and it wakes up himself to continue the game
+     * If the input is true is all ok, and it wakes up himself to continue the game
      * @param ack
      * @throws Exception if closeConnection throws Exception
      */
@@ -366,11 +342,9 @@ public class ClientHandler extends Thread{
             //out.sendACK();
             nackCounter = 0;
             notifyAll();
-            System.out.println("Player "+userName+": ack");
         }
         else {
             if (nackCounter < 3) {
-                System.out.println("Mando nack");
                 out.sendNACK();
                 nackCounter++;
             } else if (nackCounter == 3) {
@@ -414,7 +388,6 @@ public class ClientHandler extends Thread{
      */
     public synchronized void setUserName(String userName) {
         this.userName = userName;
-        //System.out.println("Username impostato");
         notify();
     }
 
@@ -425,7 +398,6 @@ public class ClientHandler extends Thread{
     public synchronized void register (String userName) {
         this.serve.addUserName(userName);
         setUserName(userName);
-        //System.out.println("Registrato");
     }
 
     /**
@@ -466,13 +438,12 @@ public class ClientHandler extends Thread{
      * @param expert
      */
     public synchronized void createMatch (int playersNum, boolean expert) {
-        //System.out.println("Inizio a creare la partita");
         expertMatch = expert;
         controller = serve.createMatch(this, playersNum, expertMatch);
     }
 
     /**
-     * Sends the server the match chose by the palyer
+     * Sends the server the match chose by the player
      * @param creator
      */
     public synchronized void joinMatch (String creator) {
@@ -517,7 +488,6 @@ public class ClientHandler extends Thread{
      */
     private void createAvatar(Colors color, int playersNum, boolean expert){
         int towersNum;
-        System.out.println("Creo avatar");
 
         if (playersNum==2 || playersNum==4){
             towersNum = 8;
@@ -601,49 +571,60 @@ public class ClientHandler extends Thread{
                 if (match.getMotherNature().getPosition().getTowerColor().equals(
                         match.getLands().get((match.getLands().indexOf(match.getMotherNature().getPosition()) + 1) % match.getLands().size()).getTowerColor())) {
                     match.uniteLandAfter(match.getLands().indexOf(match.getMotherNature().getPosition()));
-                    System.out.println(match.getLands());
                 }
             }else if (match.getLands().get(0).getTowerColor().equals(match.getLands().get(match.getLands().size()-1).getTowerColor())){
                 match.uniteLandAfter(match.getLands().indexOf(match.getMotherNature().getPosition()));
-                System.out.println(match.getLands());
             }
-        }catch (Exception e){
-            System.out.println("isola dopo senza torre");
-        }
+        }catch (Exception e){}
         try{
             if(match.getLands().indexOf(match.getMotherNature().getPosition())!=0){
                 if(match.getMotherNature().getPosition().getTowerColor().equals(
                         match.getLands().get(match.getLands().indexOf(match.getMotherNature().getPosition())-1).getTowerColor())){
                     match.uniteLandBefore(match.getLands().indexOf(match.getMotherNature().getPosition()));
-                    System.out.println(match.getLands());
                 }
             }else if(match.getLands().get(0).getTowerColor().equals(match.getLands().get(match.getLands().size()-1).getTowerColor())){
                 match.uniteLandBefore(match.getLands().indexOf(match.getMotherNature().getPosition()));
-                System.out.println(match.getLands());
             }
-        }catch(Exception e){
-            System.out.println("isola prima senza torri");
-        }
+        }catch(Exception e){}
     }
 
+    /**
+     * Sets the student moved by the remote player and its position (board/an island)
+     * @param student the moved student
+     * @param position an island's id or 12 if it is the player's board
+     */
     public synchronized void moveStudent (Student student, Integer position) {
         movedStudent = student;
         movedStudentPosition = position;
     }
 
+    /**
+     * Sets the cloud chosen by the remote player
+     * @param cloud
+     */
     public synchronized void chooseCloud (Cloud cloud) {
-        System.out.println("Ho ricevuto la nuvola scelta, che è la seguente: "+ cloud.toString());
         chosenCloud = cloud;
     }
 
+    /**
+     * Sets ongoingMatch attribute on false
+     */
     public synchronized void endMatch() {
         ongoingMatch = false;
     }
 
+    /**
+     *
+     * @return true if the remote player is still connected
+     */
     public boolean isConnected() {
         return connected;
     }
 
+    /**
+     * Sets the status to disconnected and closes the socket
+     * @throws Exception if it cannot close the connection
+     */
     public synchronized void setDisconnected() throws Exception {
         connected = false;
         closeConnection();
@@ -653,15 +634,26 @@ public class ClientHandler extends Thread{
         }
     }
 
+    /**
+     * Sets the status to connected
+     */
     public synchronized void setConnected() {
         connected = true;
         controller.connectPlayer(this);
     }
 
+    /**
+     *
+     * @return the current state of the player (a number from 0 to 7 depending on what is the ongoing phase)
+     */
     public int seeState() {
         return state;
     }
 
+    /**
+     * Sets the state of the player
+     * @param state
+     */
     public synchronized void setState(int state) {
         this.state = state;
     }
@@ -672,7 +664,8 @@ public class ClientHandler extends Thread{
      */
     public synchronized void closeConnection() throws Exception{
         in.halt();
-        out.close();
+        out.halt();
+        sleep (500);
         socket.close();
     }
 
@@ -692,27 +685,43 @@ public class ClientHandler extends Thread{
         this.chosenCh = chosenCh;
     }
 
+    /**
+     * Sets the student moved from ch card 1
+     * @param ch_1_Student
+     */
     public void setCh_1_Student(Student ch_1_Student) {
         this.ch_1_Student = ch_1_Student;
     }
 
+    /**
+     * Sets the land on which the student moved from ch card 1 has been placed on
+     * @param ch_1_land
+     */
     public void setCh_1_land(Land ch_1_land) {
         this.ch_1_land = ch_1_land;
     }
 
+    /**
+     * Sets the land on which has been placed a no-entry tile
+     * @param ch_5_land
+     */
     public void setCh_5_land(Land ch_5_land) {
         this.ch_5_land = ch_5_land;
     }
 
-    public void effectCh(){
+    /**
+     * does the effect of the character card if the player has played one
+     * @throws Exception if the bag is empty
+     */
+    public void effectCh() throws Exception{
         switch (chosenCh) {
             case "Ch_1" -> {
-                for (CharacterCard c : ((Expert_Match) match).getCard()) {
-                    if (c instanceof Ch_1) {
-                        ((Ch_1) c).setStudent(ch_1_Student);
+                for (int i=0;i<3;i++) {
+                    if (((Expert_Match) match).getCard()[i] instanceof Ch_1 c) {
+                        c.setStudent(ch_1_Student);
                         for (Land land : match.getLands()) {
                             if (ch_1_land.getID() == land.getID()) {
-                                ((Ch_1) c).setLand(land);
+                                c.setLand(land);
                             }
                         }
                         c.setPlayer(avatar);
@@ -786,31 +795,114 @@ public class ClientHandler extends Thread{
             }
         }
     }
+
+    /**
+     * Sets the students removed from this players board
+     * @param ch_10_students
+     */
     public void setCh_10_students(ArrayList<Student> ch_10_students) {
         this.ch_10_students = ch_10_students;
     }
 
+    /**
+     * Sets the tables of which the player decided to switch students with the entrance
+     * @param ch_10_types
+     */
     public void setCh_10_types(ArrayList<Type_Student> ch_10_types) {
         this.ch_10_types = ch_10_types;
     }
 
+    /**
+     * Sets the student the player decided to place on their board
+     * @param ch_11_student
+     */
     public void setCh_11_student(Student ch_11_student) {
         this.ch_11_student = ch_11_student;
     }
 
+    /**
+     * Sets the type the player decided every player must return three students to the bag
+     * @param ch_12_type
+     */
     public void setCh_12_type(Type_Student ch_12_type) {
         this.ch_12_type = ch_12_type;
     }
 
+    /**
+     *
+     * @return the ch card the player chose last time
+     */
     public String getChosenCh() {
         return chosenCh;
     }
 
+    /**
+     *
+     * @return the chosen land when activating 5th ch card's power
+     */
     public Land getCh_5_land() {
         return ch_5_land;
     }
 
+    /**
+     * Sets the match status to expert
+     * @param expertMatch
+     */
     public void setExpertMatch(boolean expertMatch) {
         this.expertMatch = expertMatch;
     }
+
+    /**
+     *
+     * @return the chosen student when activating 12th ch card's power
+     */
+    public Type_Student getCh_12_type() {
+        return ch_12_type;
+    }
+
+    /**
+     *
+     * @return the chosen students when activating 10th ch card's power
+     */
+    public ArrayList<Student> getCh_10_students() {
+        return ch_10_students;
+    }
+
+    /**
+     *
+     * @return the chosen tables when activating 10th ch card's power
+     */
+    public ArrayList<Type_Student> getCh_10_types() {
+        return ch_10_types;
+    }
+
+    /**
+     *
+     * @return the chosen land when activating 1st ch card's power
+     */
+    public Land getCh_1_land() {
+        return ch_1_land;
+    }
+
+    /**
+     *
+     * @return the chosen students when activating 1st ch card's power
+     */
+    public Student getCh_1_Student() {
+        return ch_1_Student;
+    }
+
+    /**
+     *
+     * @return the chosen student when activating 11th ch card's power
+     */
+    public Student getCh_11_student() {return ch_11_student;}
+
+    public void setController(Controller controller) {this.controller = controller;}
+
+    public void setAvatar(Player avatar){this.avatar=avatar;}
+
+    public void setmatch(Match match){this.match=match;}
+
+
 }

@@ -23,8 +23,8 @@ public class Ch_4 implements CharacterCard, Serializable {
     public Ch_4(){
         price=1;
         activated=false;
-        powerUp="You may move Mother Naure up to 2 additional Islands"+
-                " than is indicated by the Assistant card you've played.";
+        powerUp="Puoi muovere Madre Natura fino a 2 isole addizionali " +
+                "rispetto a quanto indicato sulla carta assistente che hai giocato.";
     }
 
     @Override
@@ -55,5 +55,10 @@ public class Ch_4 implements CharacterCard, Serializable {
         return powerUp;
     }
 
+    @Override
+    public int getNumber() {
+        return 4;
+    }
 
+    public void setActivated(){activated=true;}
 }

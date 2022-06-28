@@ -8,11 +8,10 @@ import it.polimi.ingsw.model.Type_Student;
 import java.io.Serializable;
 
 public class Ch_2 implements CharacterCard, Serializable {
-    private final short price = 2;
     private boolean activated;
     private final String powerUp;
     private Player player;
-    private Match match;
+    private final Match match;
     @Override
     public void setPlayer(Player player) {
         this.player = player;
@@ -23,9 +22,9 @@ public class Ch_2 implements CharacterCard, Serializable {
     public Ch_2(Match match){
         this.match=match;
         activated = false;
-        powerUp = "During this turn you take control of any number " +
-                "of Professors even if you have the same number of Students " +
-                "as the player who currently controls them.";
+        powerUp = "Durate questo turno, prendi il controllo dei professori " +
+                "anche se nella tua sala hai lo stesso numero di studenti del giocatore" +
+                "che li controlla in quel momento.";
     }
 
     @Override
@@ -35,12 +34,14 @@ public class Ch_2 implements CharacterCard, Serializable {
                 match.getProfessors().replace(e,player);
             }
         }
+        activated = true;
     }
 
     @Override
     public short getPrice() {
+        short price = 2;
         if (activated){
-            return (short) (price+1);
+            return (short) (price +1);
         }
         else {
             return price;
@@ -56,4 +57,11 @@ public class Ch_2 implements CharacterCard, Serializable {
     public String getPowerUp() {
         return powerUp;
     }
+    @Override
+    public int getNumber() {
+        return 2;
+    }
+
+    public void setActivated(){activated=true;}
+
 }

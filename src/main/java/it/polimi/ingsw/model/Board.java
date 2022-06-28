@@ -366,12 +366,16 @@ public class Board implements Serializable {
      * @param type the type of student to take from a table
      */
     public void ch_10_effect(Student st,Type_Student type){
-        try {
-            this.placeStudent(st);
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (Student s:entrance) {
+           if(s.type().equals(st.type())){
+               try {
+                   this.placeStudent(s);
+               } catch (Exception e) {
+                   e.printStackTrace();
+               }
+               break;
+           }
         }
-        entrance.remove(st);
         switch (type) {
             case DRAGON -> entrance.add(dragons.remove(0));
             case GNOME -> entrance.add(gnomes.remove(0));

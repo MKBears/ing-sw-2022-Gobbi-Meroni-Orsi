@@ -159,4 +159,5 @@ class MatchTest {
         assertSame(pl1, a.getProfessors().get(Type_Student.DRAGON));
         System.out.println(a);
     }
+
 }

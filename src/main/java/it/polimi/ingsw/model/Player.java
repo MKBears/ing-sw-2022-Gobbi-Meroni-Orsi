@@ -78,7 +78,7 @@ public class Player implements Serializable {
      * @return the player's board
      */
     public Board getBoard() {
-        return board;
+        return  board;
     }
 
     /**
@@ -239,10 +239,18 @@ public class Player implements Serializable {
         this.board = board;
     }
 
+    /**
+     * effect of the card
+     * @param two_more_influence true if the player has played the character card
+     */
     public void setTwo_more_influence(boolean two_more_influence) {
         this.two_more_influence = two_more_influence;
     }
 
+    /**
+     *
+     * @return true if this turn he has two more influence
+     */
     public boolean isTwo_more_influence() {
         return two_more_influence;
     }

@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Representation of the game via command line
  */
-public class Cli extends Thread implements View{
+public class Cli extends Thread implements View {
     private final Scanner input;
     private String state;
     private Boolean end;
@@ -30,12 +30,12 @@ public class Cli extends Thread implements View{
     /**
      * Constructor of class Cli: initializes the input Scanner and sets the state to "Start"
      */
-    public Cli(){
-       input=new Scanner(System.in);
-       end=false;
-       nack=false;
-       state="Start";
-       svnProcessBuilder = new ProcessBuilder("PowerShell", "/c", "clear");
+    public Cli() {
+        input = new Scanner(System.in);
+        end = false;
+        nack = false;
+        state = "Start";
+        svnProcessBuilder = new ProcessBuilder("PowerShell", "/c", "clear");
     }
 
     public static void main(String[] args) {
@@ -58,11 +58,11 @@ public class Cli extends Thread implements View{
     @Override
     public void setMatch(Match match) {
         this.match = match;
-        action=new Action(match);
+        action = new Action(match);
     }
 
     @Override
-    public String getUsername(){
+    public String getUsername() {
         String user;
         while (true) {
             System.out.println("\nInserire username: ");
@@ -73,7 +73,7 @@ public class Cli extends Thread implements View{
     }
 
     @Override
-    public Wizards getWizard(List<Wizards> wizards){
+    public Wizards getWizard(List<Wizards> wizards) {
         int choose;
 
         System.out.println("\nScegli il mago tra:");
@@ -100,7 +100,7 @@ public class Cli extends Thread implements View{
      */
     private void printWizards() {
         StringBuilder wizards = new StringBuilder();
-        for (int i=0; i<5; i++) {
+        for (int i = 0; i < 5; i++) {
             for (Wizards w : willy) {
                 switch (i) {
                     case 0 -> wizards.append(" _____       ");
@@ -138,7 +138,7 @@ public class Cli extends Thread implements View{
     }
 
     @Override
-    public Cloud getCloud(List<Cloud> clouds){
+    public Cloud getCloud(List<Cloud> clouds) {
         while (true) {
             Cloud[] c = match.getCloud();
             System.out.println("\nScegli una nuvola");
@@ -149,12 +149,11 @@ public class Cli extends Thread implements View{
                     System.out.println("Scegli un numero tra 1 e " + c.length + ":");
                     choose = input.nextInt();
                 }
-                if (!c[choose-1].hasBeenChosen())
+                if (!c[choose - 1].hasBeenChosen())
                     return c[choose - 1];
                 else
                     System.out.println("Questa nuvola é già stata scelta da un altro giocatore in questo  round");
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 System.out.println("Inserire un valore numerico");
                 input.nextLine();
             }
@@ -162,7 +161,7 @@ public class Cli extends Thread implements View{
     }
 
     @Override
-    public AssistantCard getAssistantCard(List<AssistantCard> cards){
+    public AssistantCard getAssistantCard(List<AssistantCard> cards) {
         int choose;
         ArrayList<AssistantCard> deck = me.getDeck();
         AssistantCard card;
@@ -186,8 +185,7 @@ public class Cli extends Thread implements View{
                         System.out.println("Questa carta é già stata scelta da un altro giocatore in questo round");
                         correctChoice = false;
                     }
-                }
-                else {
+                } else {
                     System.out.println("Non hai in mano questa carta");
                     correctChoice = false;
                 }
@@ -202,9 +200,9 @@ public class Cli extends Thread implements View{
     }
 
     @Override
-    public int getNumStep(Player pl){
+    public int getNumStep(Player pl) {
         System.out.println("\nScegli di spostare Madre Natura di? (deve " +
-                "essere un numero compreso tra 0 e "+pl.getPlayedCard().getMNSteps());
+                "essere un numero compreso tra 0 e " + pl.getPlayedCard().getMNSteps());
 
         while (true) {
             try {
@@ -223,12 +221,12 @@ public class Cli extends Thread implements View{
     }
 
     @Override
-    public void getWinner(Player pl){
-        System.out.println("Il vincitore della partita è: "+pl.getUserName());
+    public void getWinner(Player pl) {
+        System.out.println("Il vincitore della partita è: " + pl.getUserName());
     }
 
     @Override
-    public Student getStudent(Player pl){
+    public Student getStudent(Player pl) {
         int size = me.getBoard().getEntrance().size();
         int choose;
 
@@ -264,11 +262,11 @@ public class Cli extends Thread implements View{
                         value = input.nextLine().toLowerCase();
 
                     if (value.equals("sala"))
-                        return 12;
+                        return 13;
                     choose = Integer.parseInt(value);
                 } while (choose < 0 || choose > 12);
                 if (choose >= match.getLands().size())
-                    return 12;
+                    System.out.println("Scegli un'isola tra quelle che vedi");
                 else
                     return choose;
             } catch (Exception e) {
@@ -278,28 +276,30 @@ public class Cli extends Thread implements View{
     }
 
     @Override
-    public void printMatch(Match match){
+    public void printMatch(Match match) {
         //clearConsole();
         getTitolo();
+        System.out.print(match.toString());
+
         if (match instanceof Expert_Match)
             System.out.println(printCharacters());
-        System.out.println(match.toString()+printAssistants());
+        System.out.println(printAssistants());
     }
 
     @Override
-    public void printTurn(Player pl,String phase){
-        System.out.println("Tocca a "+pl.getColor().toString()+pl.getUserName()+"\u001b[0m in fase di "+phase);
+    public void printTurn(Player pl, String phase) {
+        System.out.println("Tocca a " + pl.getColor().toString() + pl.getUserName() + "\u001b[0m in fase di " + phase);
     }
 
     @Override
-    public void lastRound(){
+    public void lastRound() {
         System.out.println("Sono finiti gli studenti nel sacchetto! Questo sarà l'ultimo round\n");
     }
 
     @Override
-    public void getTitolo(){
+    public void getTitolo() {
         System.out.println("""
-                
+                                
                 \u001B[36m         ___________ ________  ___ __________ ______    _________________    ___ ___________
                         /__________//_______/\\/__//_________//_____/\\  /________________/|  /__//__________/|
                         |__________||   __  \\/|__||   ___   ||     \\ \\ |   ___    ___   ||__|  ||   _______/
@@ -313,39 +313,51 @@ public class Cli extends Thread implements View{
     private String printCharacters() {
         StringBuilder chCards = new StringBuilder();
 
-        for (int j=0; j<6; j++) {
-            for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 7; j++) {
+            for (int i = 0; i < 3; i++) {
+
+                if (((Board_Experts) me.getBoard()).getCoinsNumber() < characters[i].getPrice())
+                    chCards.append("\u001b[30;1m");
                 switch (j) {
-                    case 0 -> chCards.append("       _______ ");
-                    case 1 -> chCards.append("      | |‾‾‾| |");
-                    case 2 -> chCards.append("      | |___| |");
-                    case 3 -> chCards.append("      | |     |");
+                    case 0 -> chCards.append("           _______ ");
+                    case 1 -> chCards.append("          |  ___  |");
+                    case 2 -> chCards.append("          | ||‾\\\\ |");
+                    case 3 -> chCards.append("          | ||_// |");
                     case 4 -> {
-                        chCards.append("      | |  ").append(characters[i].getPrice());
+                        chCards.append("          | ||‾‾").append(characters[i].getNumber());
+
+                        if (characters[i].getNumber() < 10)
+                            chCards.append(" ");
+                        chCards.append("|");
+                    }
+                    case 5 -> {
+                        chCards.append("          | ||  ").append(characters[i].getPrice());
 
                         if (characters[i].getPrice() < 10)
                             chCards.append(" ");
-                        chCards.append(" |");
+                        chCards.append("|");
                     }
-                    default -> chCards.append("      |_______|");
+                    default -> chCards.append("          |_______|");
                 }
-                chCards.append('\n');
+                chCards.append("\u001b[0m");
             }
+            chCards.append('\n');
         }
 
-        return chCards.toString().indent(20);
+        return chCards.toString().indent(26);
     }
 
     /**
      * Auxiliary method used in order to get the String for of the available cards too play
+     *
      * @return all the available assistant cards in a human-readable form
      */
     private String printAssistants() {
         StringBuilder c = new StringBuilder();
-        ArrayList<AssistantCard> deck = me. getDeck();
+        ArrayList<AssistantCard> deck = me.getDeck();
         Wizards gandalf = me.getWizard();
 
-        for (int i=0; i<6; i++) {
+        for (int i = 0; i < 6; i++) {
             switch (i) {
                 case 0 -> c.append("    _______ ");
                 case 1, 4 -> c.append("   |   ").append(gandalf.getOrder()).append("   |");
@@ -428,6 +440,7 @@ public class Cli extends Thread implements View{
                             nack = false;
                             this.wait();
                         }
+                        break;
                     case ("Wizard"):
                         Wizards choose = this.getWizard(willy);
                         do {
@@ -490,7 +503,7 @@ public class Cli extends Thread implements View{
                         for (int i = 0; i < match.getPlayer().length + 1; i++) {
                             st = this.getStudent(me);
                             move = this.getDestination(match);
-                            if (move == 12) {
+                            if (move == 13) {
                                 try {
                                     action.moveFromIngressToBoard(me, st);
                                     server.sendMovedStudent(st, 12);
@@ -526,13 +539,13 @@ public class Cli extends Thread implements View{
                         break;
                     case ("Ch"):
                         Board_Experts me_ex = (Board_Experts) me.getBoard();
-                        boolean enough_money=false;
-                        for (CharacterCard c:characters) {
-                            if(c.getPrice()<=me_ex.getCoinsNumber()){
-                                enough_money=true;
+                        boolean enough_money = false;
+                        for (CharacterCard c : characters) {
+                            if (c.getPrice() <= me_ex.getCoinsNumber()) {
+                                enough_money = true;
                             }
                         }
-                        CharacterCard character=chooseChCard(characters);
+                        CharacterCard character = chooseChCard(characters);
                         if (enough_money) {
                             if (character == null) {
                                 server.sendNoCh();
@@ -543,7 +556,7 @@ public class Cli extends Thread implements View{
                                 } else {
                                     if (character instanceof Ch_1) {
                                         System.out.println("scegli uno studente da mettere in un'isola\n");
-                                        Student student = chooseStudent(((Ch_1) character).getStudents());
+                                        Student student = chooseStudentCh1(((Ch_1) character).getStudents());
                                         Land land = chooseLand(match.getLands());
                                         server.sendChooseCh1(student, land);
                                     } else if (character instanceof Ch_2) {
@@ -553,8 +566,21 @@ public class Cli extends Thread implements View{
                                         server.sendChooseCh4();
                                     } else if (character instanceof Ch_5) {
                                         System.out.println("scegli l'isola su cui mettere il divieto\n");
-                                        Land land = chooseLand(match.getLands());
-                                        server.sendChooseCh5(land);
+                                        Land land;
+                                        do {
+                                            land = chooseLand(match.getLands());
+                                            try {
+                                                ((Ch_5) character).setLand(land);
+                                                character.activatePowerUp();
+                                                server.sendChooseCh5(land);
+                                            }catch (Exception e) {
+                                                System.out.println(e.getMessage());
+                                                if (e.getMessage().contains("isola"))
+                                                    land = null;
+                                                else
+                                                    server.sendNoCh();
+                                            }
+                                        } while (land == null);
                                     } else if (character instanceof Ch_10) {
                                         ArrayList<Student> students = new ArrayList<>();
                                         ArrayList<Type_Student> type_students = new ArrayList<>();
@@ -567,7 +593,7 @@ public class Cli extends Thread implements View{
                                         server.sendChooseCh10(students, type_students);
                                     } else if (character instanceof Ch_11) {
                                         System.out.println("scegli uno studente dalla carta da piazzare nella tua sala da pranzo\n");
-                                        Student student = chooseStudent(((Ch_11) character).getStudents());
+                                        Student student = chooseStudentCh1(((Ch_11) character).getStudents());
                                         server.sendChooseCh11(student);
                                     } else if (character instanceof Ch_12) {
                                         card = "Ch_12";
@@ -587,285 +613,317 @@ public class Cli extends Thread implements View{
                             this.wait();
                         }
                         break;
-                    }
                 }
+            }
 
 
-        }catch(InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
-        } catch(IOException e){
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-                 @Override
-                 public synchronized void wakeUp (String state){
-                     this.state = state;
-                     this.nack = false;
-                     this.notifyAll();
-                 }
 
-                 @Override
-                 public synchronized void setNack () {
-                     nack = true;
-                     this.notifyAll();
-                 }
+    @Override
+    public synchronized void wakeUp(String state) {
+        this.state = state;
+        this.nack = false;
+        this.notifyAll();
+    }
 
-                 @Override
-                 public void setWilly (List < Wizards > willy) {
-                     this.willy = willy;
-                 }
+    @Override
+    public synchronized void setNack() {
+        nack = true;
+        this.notifyAll();
+    }
 
-                 @Override
-                 public void setCards (List < AssistantCard > cards) {
-                     this.cards = cards;
-                 }
+    @Override
+    public void setWilly(List<Wizards> willy) {
+        this.willy = willy;
+    }
 
-                 @Override
-                 public void setClouds (List < Cloud > clouds) {
-                     this.clouds = clouds;
-                 }
+    @Override
+    public void setCards(List<AssistantCard> cards) {
+        this.cards = cards;
+    }
 
-                 @Override
-                 public void chooseMatch (List < String > join, List < String > resume){
-                     String choose;
+    @Override
+    public void setClouds(List<Cloud> clouds) {
+        this.clouds = clouds;
+    }
 
-                     if (join.isEmpty()) {
-                         System.out.println("\n    Non ci sono partite a cui unirsi");
-                     } else {
-                         System.out.println("\nPuoi unirti alle partite create da: ");
-                         for (String e : join) {
-                             System.out.println(">    " + e);
-                         }
-                     }
+    @Override
+    public void chooseMatch(List<String> join, List<String> resume) {
+        String choose;
 
-                     if (resume.isEmpty()) {
-                         System.out.println("\n    Non ci sono partite da riprendere");
-                     } else {
-                         System.out.println("\nPuoi riunirti alle partite create da:");
-                         for (String e : resume) {
-                             System.out.println(">    " + e);
-                         }
-                     }
+        if (join.isEmpty()) {
+            System.out.println("\n    Non ci sono partite a cui unirsi");
+        } else {
+            System.out.println("\nPuoi unirti alle partite create da: ");
+            for (String e : join) {
+                System.out.println(">    " + e);
+            }
+        }
 
-                     do {
-                         System.out.println("\nScegli la partita (oppure per creare una nuova partita scrivi NewGame):");
-                         choose = input.nextLine();
+        if (resume.isEmpty()) {
+            System.out.println("\n    Non ci sono partite da riprendere");
+        } else {
+            System.out.println("\nPuoi riunirti alle partite create da:");
+            for (String e : resume) {
+                System.out.println(">    " + e);
+            }
+        }
 
-                         if (choose.equalsIgnoreCase("newgame")) {
-                             server.sendChoosingGame("NewGame");
-                             createMatch();
-                         } else {
-                             if (join.contains(choose) || resume.contains(choose))
-                                 server.sendChoosingGame(choose);
-                             else
-                                 System.out.println("Non ci sono partite create da " + choose);
-                         }
-                     } while (!join.contains(choose) && !resume.contains(choose) && !choose.equalsIgnoreCase("newgame"));
-                 }
+        do {
+            System.out.println("\nScegli la partita (oppure per creare una nuova partita scrivi NewGame):");
+            choose = input.nextLine();
 
-                 /**
-                  * If the player chooses to create a match this method asks them how many players there will be
-                  * and if they want to create an expert match
-                  */
-                 public void createMatch () {
-                     int playersNum = 0;
-                     String expert;
-                     while (playersNum == 0) {
-                         try {
-                             do {
-                                 System.out.println("\nDa quanti giocatori sara' formata la partita? [2/3]");
-                                 playersNum = input.nextInt();
-                             } while (playersNum < 2 || playersNum > 3);
-                         } catch (Exception e) {
-                             System.out.println("Inserire un valore numerico");
-                             input.nextLine();
-                         }
-                     }
+            if (choose.equalsIgnoreCase("newgame")) {
+                server.sendChoosingGame("NewGame");
+                createMatch();
+            } else {
+                if (join.contains(choose) || resume.contains(choose))
+                    server.sendChoosingGame(choose);
+                else
+                    System.out.println("Non ci sono partite create da " + choose);
+            }
+        } while (!join.contains(choose) && !resume.contains(choose) && !choose.equalsIgnoreCase("newgame"));
+    }
 
-                     do {
-                         System.out.println("\nCreare una partita per esperti? [si/no]");
-                         expert = input.next();
-                     } while (!expert.equalsIgnoreCase("si") && !expert.equalsIgnoreCase("no"));
-                     server.sendNumPlayers(playersNum);
-                     server.sendExpertMatch(expert.equalsIgnoreCase("si"));
-                 }
+    /**
+     * If the player chooses to create a match this method asks them how many players there will be
+     * and if they want to create an expert match
+     */
+    public void createMatch() {
+        int playersNum = 0;
+        String expert;
+        while (playersNum == 0) {
+            try {
+                do {
+                    System.out.println("\nDa quanti giocatori sara' formata la partita? [2/3]");
+                    playersNum = input.nextInt();
+                } while (playersNum < 2 || playersNum > 3);
+            } catch (Exception e) {
+                System.out.println("Inserire un valore numerico");
+                input.nextLine();
+            }
+        }
 
-                 @Override
-                 public String chooseLogin () {
-                     String choose;
-                     do {
-                         System.out.println("Vuoi registrarti?");
-                         choose = input.nextLine();
-                     } while (!choose.equals("si") && !choose.equals("no"));
-                     return choose.toLowerCase();
-                 }
+        do {
+            System.out.println("\nCreare una partita per esperti? [si/no]");
+            expert = input.next();
+        } while (!expert.equalsIgnoreCase("si") && !expert.equalsIgnoreCase("no"));
+        server.sendNumPlayers(playersNum);
+        server.sendExpertMatch(expert.equalsIgnoreCase("si"));
+    }
 
-                 @Override
-                 public Student chooseStudent (List < Student > student) {
-                     int i;
+    @Override
+    public String chooseLogin() {
+        String choose;
+        do {
+            System.out.println("Vuoi registrarti?");
+            choose = input.nextLine();
+        } while (!choose.equals("si") && !choose.equals("no"));
+        return choose.toLowerCase();
+    }
 
-                     while (true) {
-                         try {
-                             i = input.nextInt();
-                             System.out.println("Scegli uno studente dall'ingresso");
-                             return student.remove(i - 1);
-                         } catch (Exception e) {
-                             System.out.println("Inserire un valore numerico");
-                             input.nextLine();
-                         }
-                     }
-                 }
+    @Override
+    public Student chooseStudent(List<Student> student) {
+        int i;
 
-                 @Override
-                 public Land chooseLand (List < Land > lands) {
-                     int i, c;
-                     System.out.println("Scegli un'isola");
-                     while (true) {
-                         try {
-                             i = input.nextInt();
-                             if (i <= 0 || i > 11)
-                                 System.out.println("Inserire un numero tra 1 e 12");
-                             else {
-                                 c = 0;
-                                 for (Land l : lands) {
-                                     c += l.size();
+        while (true) {
+            try {
+                i = input.nextInt();
+                System.out.println("Scegli uno studente dall'ingresso");
+                return student.remove(i - 1);
+            } catch (Exception e) {
+                System.out.println("Inserire un valore numerico");
+                input.nextLine();
+            }
+        }
+    }
 
-                                     if (c >= i)
-                                         return l.getIslands().get(c - i);
-                                 }
-                             }
-                         } catch (Exception e) {
-                             System.out.println("Inserire un valore numerico");
-                             input.nextLine();
-                         }
-                     }
-                 }
+    @Override
+    public Land chooseLand(List<Land> lands) {
+        int i, c;
+        System.out.println("Scegli un'isola");
+        while (true) {
+            try {
+                i = input.nextInt();
+                if (i <= 0 || i > 11)
+                    System.out.println("Inserire un numero tra 1 e 12");
+                else {
+                    c = 0;
+                    for (Land l : lands) {
+                        c += l.size();
 
-                 @Override
-                 public Type_Student chooseColorStudent () {
-                     if (card.equals("Ch_10")) {
-                         System.out.println("Scegli un colore da sostituire con lo studente dell'entrata\n");
-                         while (true) {
-                             String choose = input.nextLine();
-                             switch (choose.toLowerCase()) {
-                                 case ("rosso"):
-                                     if (me.getBoard().getStudentsOfType(Type_Student.DRAGON) > 0)
-                                         return Type_Student.DRAGON;
-                                     break;
-                                 case ("verde"):
-                                     if (me.getBoard().getStudentsOfType(Type_Student.FROG) > 0)
-                                         return Type_Student.FROG;
-                                     break;
-                                 case ("blu"):
-                                     if (me.getBoard().getStudentsOfType(Type_Student.UNICORN) > 0)
-                                         return Type_Student.UNICORN;
-                                     break;
-                                 case ("giallo"):
-                                     if (me.getBoard().getStudentsOfType(Type_Student.GNOME) > 0)
-                                         return Type_Student.GNOME;
-                                     break;
-                                 case ("rosa"):
-                                     if (me.getBoard().getStudentsOfType(Type_Student.FAIRY) > 0)
-                                         return Type_Student.FAIRY;
-                                     break;
-                             }
-                         }
-                     } else {
-                         System.out.println("Scegli un colore a cui togliere a tutti tre studenti\n");
-                         while (true) {
-                             String choose = input.nextLine();
-                             switch (choose.toLowerCase()) {
-                                 case ("rosso"):
-                                     return Type_Student.DRAGON;
-                                 case ("verde"):
-                                     return Type_Student.FROG;
-                                 case ("blu"):
-                                     return Type_Student.UNICORN;
-                                 case ("giallo"):
-                                     return Type_Student.GNOME;
-                                 case ("rosa"):
-                                     return Type_Student.FAIRY;
-                             }
-                         }
-                     }
-                 }
+                        if (c >= i)
+                            return l;
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Inserire un valore numerico");
+                input.nextLine();
+            }
+        }
+    }
 
-                 @Override
-                 public void playerConnected (String username){
-                     System.out.println("Si e' connesso " + username);
-                 }
+    @Override
+    public Type_Student chooseColorStudent() {
+        if (card.equals("Ch_10")) {
+            System.out.println("Scegli un colore da sostituire con lo studente dell'entrata\n");
+            while (true) {
+                String choose = input.nextLine();
+                switch (choose.toLowerCase()) {
+                    case ("rosso"):
+                        if (me.getBoard().getStudentsOfType(Type_Student.DRAGON) > 0)
+                            return Type_Student.DRAGON;
+                        break;
+                    case ("verde"):
+                        if (me.getBoard().getStudentsOfType(Type_Student.FROG) > 0)
+                            return Type_Student.FROG;
+                        break;
+                    case ("blu"):
+                        if (me.getBoard().getStudentsOfType(Type_Student.UNICORN) > 0)
+                            return Type_Student.UNICORN;
+                        break;
+                    case ("giallo"):
+                        if (me.getBoard().getStudentsOfType(Type_Student.GNOME) > 0)
+                            return Type_Student.GNOME;
+                        break;
+                    case ("rosa"):
+                        if (me.getBoard().getStudentsOfType(Type_Student.FAIRY) > 0)
+                            return Type_Student.FAIRY;
+                        break;
+                }
+            }
+        } else {
+            System.out.println("Scegli un colore a cui togliere a tutti tre studenti\n");
+            while (true) {
+                String choose = input.nextLine();
+                switch (choose.toLowerCase()) {
+                    case ("rosso"):
+                        return Type_Student.DRAGON;
+                    case ("verde"):
+                        return Type_Student.FROG;
+                    case ("blu"):
+                        return Type_Student.UNICORN;
+                    case ("giallo"):
+                        return Type_Student.GNOME;
+                    case ("rosa"):
+                        return Type_Student.FAIRY;
+                }
+            }
+        }
+    }
 
-                 @Override
-                 public void playerDisconnected (String username){
-                     System.out.println("Si e' disconnesso " + username);
-                 }
+    @Override
+    public void playerConnected(String username) {
+        System.out.println("Si e' connesso " + username);
+    }
 
-                 @Override
-                 public void playerDisconnectedAll () {
-                     System.out.println("Tutti gli altri giocatori si sono disconnessi");
-                 }
+    @Override
+    public void playerDisconnected(String username) {
+        System.out.println("Si e' disconnesso " + username);
+    }
 
-                 @Override
-                 public void finishedAC (Player p){
-                     System.out.println(p + " ha finito le carte assistente: ultimo turno!");
-                 }
+    @Override
+    public void playerDisconnectedAll() {
+        System.out.println("Tutti gli altri giocatori si sono disconnessi");
+    }
 
-                 @Override
-                 public CharacterCard chooseChCard (CharacterCard[]cards){
-                     System.out.println("\nVuoi giocare una carta personaggio? [si/no]");
-                     System.out.println("Per visualizzare la descrizione dell'effetto della carta scrivi 'info'");
-                     for (int i = 0; i < 3; i++) {
-                         System.out.println(i + ")  " + characters[i].toString() + '\n');
-                     }
-                     System.out.println("Vuoi giocare una carta personaggio? [si/no] il tio numero di monete è " + ((Board_Experts) me.getBoard()).getCoinsNumber());
-                     String choose = input.next();
-                     int chosen;
-                     while (true) {
-                         switch (choose.toLowerCase()) {
-                             case "si" -> {
-                                 do {
-                                     System.out.println("\nQuale delle tre?");
-                                     chosen = input.nextInt();
-                                 } while (chosen < 0 || chosen > 2);
-                                 return cards[chosen];
-                             }
-                             case "no" -> {
-                                 return null;
-                             }
-                             case "info" -> {
-                                 for (CharacterCard card : cards) {
-                                     System.out.println("\nPersonaggio 1 :\n\t" + card.getPowerUp());
-                                 }
-                             }
-                             default -> System.out.println("Inserisci si/no oppure info");
-                         }
-                     }
-                 }
+    @Override
+    public void finishedAC(Player p) {
+        System.out.println(p + " ha finito le carte assistente: ultimo turno!");
+    }
 
-                 @Override
-                 public void setCharacters (CharacterCard[]characters){
-                     this.characters = characters;
-                 }
+    @Override
+    public CharacterCard chooseChCard(CharacterCard[] cards) {
+        int chosen;
+        System.out.println("\nVuoi giocare una carta personaggio? [si/no]");
+        System.out.println("Per visualizzare la descrizione dell'effetto della carta scrivi 'info'");
 
-                 /**
-                  * Clears the console screen
-                  */
-                 private void clearConsole () {
-                     if (System.getProperty("os.name").contains("Windows")) {
-                         try {
-                             svnProcessBuilder.inheritIO().start().waitFor();
-                         } catch (IOException | InterruptedException e) {
-                             throw new RuntimeException(e);
-                         }
-                     } else {
-                         System.out.println("\033[H\033[2J");
-                         System.out.flush();
-                     }
-                 }
+        while (true) {
+            String choose = input.next();
 
-                 @Override
-                 public void printNotification (String message){
-                     System.out.println('\n' + message);
-                 }
+            switch (choose.toLowerCase()) {
+                case "si" -> {
+                    while (true) {
+                        do {
+                            System.out.println("\nQuale delle tre?");
+                            chosen = input.nextInt();
+                        } while (chosen <= 0 || chosen > 12);
 
-             }
+                        for (int i = 0; i < 3; i++)
+                            if (characters[i].getNumber() == chosen)
+                                return cards[i];
+                        System.out.println("Scegli una tra le carte che vedi e inserisci" +
+                                " il valore (il primo numero che vedi)");
+                    }
+                }
+                case "no" -> {
+                    return null;
+                }
+                case "info" -> {
+                    for (CharacterCard card : cards) {
+                        System.out.println("\nPersonaggio " + card.getNumber() + ":\n" + card.getPowerUp() + "\n");
+                    }
+                }
+                default -> System.out.println("Inserisci si/no oppure info");
+            }
+        }
+    }
+
+    @Override
+    public void setCharacters(CharacterCard[] characters) {
+        this.characters = characters;
+    }
+
+    /**
+     * Clears the console screen
+     */
+    private void clearConsole() {
+        if (System.getProperty("os.name").contains("Windows")) {
+            try {
+                svnProcessBuilder.inheritIO().start().waitFor();
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            System.out.println("\033[H\033[2J");
+            System.out.flush();
+        }
+    }
+
+    @Override
+    public void printNotification(String message) {
+        System.out.println('\n' + message);
+    }
+
+
+    /**
+     * Asks the user to choose a student for the activation of 1st ch card's power
+     * @param students the students to choose between
+     * @return the chosen student
+     */
+    public Student chooseStudentCh1(List<Student> students) {
+        System.out.println("scegli uno studente da mettere in un'isola a tua scelta tra:");
+        for (int i = 0; i < 4; i++) {
+            System.out.println((i+1)+") "+students.get(i));
+        }
+        String choice= input.nextLine();
+        while(true){
+           switch (choice){
+               case "1" -> {return students.get(0);}
+               case "2" -> {return students.get(1);}
+               case "3" -> {return students.get(2);}
+               case "4" -> {return students.get(3);}
+               default -> {
+                   System.out.println("inserire valore numerico");
+                   choice= input.nextLine();
+               }
+           }
+        }
+    }
+
+}

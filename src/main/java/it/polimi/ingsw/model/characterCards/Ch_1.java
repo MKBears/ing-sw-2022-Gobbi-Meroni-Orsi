@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.characterCards;
 
-import it.polimi.ingsw.client.Action;
-import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.model.*;
 
 import java.io.Serializable;
@@ -13,8 +11,7 @@ public class Ch_1 implements CharacterCard, Serializable {
     private boolean activated;
     private final String powerUp;
     private final Match match;
-    private Player player;
-    private List<Student> students;
+    private ArrayList<Student> students;
     private Student student;
     private Land land;
 
@@ -22,8 +19,8 @@ public class Ch_1 implements CharacterCard, Serializable {
         students = new ArrayList<>();
         price = 1;
         activated = false;
-        powerUp = "Choose between the four Students on this card and place it on an " +
-                "Island of your choice.";
+        powerUp = "Prendi 1 studente dalla carta e piazzalo su un'isola a scelta." +
+                " Poi, pesca 1 studente dal sacchetto e mettilo su questa carta.";
         this.match = match;
         for (int i=0; i<4; i++){
             try {
@@ -35,19 +32,16 @@ public class Ch_1 implements CharacterCard, Serializable {
     }
 
     @Override
-    public void activatePowerUp() {
+    public void activatePowerUp() throws Exception {
         land.addStudent(student);
-        for (Student s:students) {
-            if(s.type().equals(student.type()))   {
-                students.remove(s);
+        for (int i = 0; i < 4; i++) {
+            if(students.get(i).type()==student.type()){
+                students.remove(i);
                 break;
             }
         }
-        try {
-            students.add(match.getBag().getRandomStudent());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        students.add(match.getBag().getRandomStudent());
+        activated = true;
     }
 
     @Override
@@ -67,7 +61,13 @@ public class Ch_1 implements CharacterCard, Serializable {
 
     @Override
     public String getPowerUp() {
-        return powerUp;
+        StringBuilder pu = new StringBuilder(powerUp);
+        pu.append("\nStudenti sulla carta :  ");
+
+        for (int i=0; i<students.size(); i++)
+            pu.append("  ").append(i+1).append(".").append(students.get(i));
+
+        return pu.toString();
     }
 
     public List<Student> getStudents() {
@@ -76,14 +76,44 @@ public class Ch_1 implements CharacterCard, Serializable {
 
     @Override
     public void setPlayer(Player player) {
-        this.player = player;
     }
 
+    /**
+     *
+     * @param student student to be moved
+     */
     public void setStudent(Student student) {
         this.student = student;
     }
 
+    /**
+     *
+     * @param land where put the student
+     */
     public void setLand(Land land) {
         this.land = land;
     }
+
+    @Override
+    public int getNumber() {
+        return 1;
+    }
+
+    /**
+     * student update for the client
+     * @param students new students of the card
+     */
+    public void setStudents(ArrayList<Student> students) {
+        this.students = students;
+    }
+
+    public ArrayList<Student> copy(){
+        ArrayList<Student> result=new ArrayList<>();
+        for (Student s:students) {
+           result.add(new Student(s.type()));
+        }
+        return result;
+    }
+
+    public void setActivated(){activated=true;}
 }

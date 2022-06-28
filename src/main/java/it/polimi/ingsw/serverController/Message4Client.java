@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -257,16 +256,14 @@ public class Message4Client extends Thread {
      * The server notifies to all the clients the movement of someone's students, we have to call it for every student moved
      *
      * @param student  the single student
-     * @param board    the board of the player
      * @param username the username of the player that moves the students
      */
-    public void sendNotifyMoveStudent(Student student, Board board, String username) {
+    public void sendNotifyMoveStudent(Student student, String username) {
         synchronized (this) {
             name = "NotifyMoveStudents (board)";
             try {
                 out.writeObject(name);
                 out.writeObject(student);
-                out.writeObject(board);
                 out.writeObject(username);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -352,17 +349,12 @@ public class Message4Client extends Thread {
 
     /**
      * The server notifies the clients the situation of the towers in the game
-     *
-     * @param towers
-     * @param board  the board involved
      */
-    public void sendNotifyTowers(ArrayList<Tower> towers, Board board, String username) {
+    public void sendNotifyTowers(String username) {
         synchronized (this) {
             name = "NotifyTowers (board)";
             try {
                 out.writeObject(name);
-                out.writeObject(towers);
-                out.writeObject(board);
                 out.writeObject(username);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -424,27 +416,12 @@ public class Message4Client extends Thread {
     }
 
     /**
-     * @deprecated
-     */
-    public void sendChanges() {//DA MODIFICARE----------
-        synchronized (this) {
-            name = "Changes";
-            try {
-                out.writeObject(name);
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    /**
      * The server notifies the players the one ho has to begin his turn
      *
      * @param player the palyer that begins the turn
      * @param turn
      */
-    public void sendNextTurn(Player player, String turn, Controller co) {
+    public void sendNextTurn(Player player, String turn) {
         synchronized (this) {
             name = "NextTurn";
             try {
@@ -455,19 +432,11 @@ public class Message4Client extends Thread {
                 throw new RuntimeException(e);
             }
         }
-        /*if(co.getCurrentPlayer()>0) {
-            synchronized (co) {
-                try {
-                    co.wait();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }*/
     }
 
     public void run() {
         condition = true;
+
         while (condition) {
             try {
                 sleep(4000);
@@ -481,9 +450,12 @@ public class Message4Client extends Thread {
             } catch (IOException e) {
                     sendGenericError("Internal server error");
             }
-
         }
-
+        try {
+            out.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -558,7 +530,7 @@ public class Message4Client extends Thread {
     public void sendCh(CharacterCard[] ch){
         try {
             out.writeObject("Ch");
-            out.writeObject(ch);
+            out.writeObject(ch.clone());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -568,52 +540,54 @@ public class Message4Client extends Thread {
     /**
      * Closes the connection with the client
      */
-    public void close() {
-        try {
-            condition = false;
-            out.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void halt() {
+        condition = false;
     }
 
-    public void sendNotifyCh_1(ArrayList<Land> lands,CharacterCard card) {
+    /**
+     * notification of played character card 1
+     * @param land land to move the student
+     * @param students new students of the card
+     * @param student student moved
+     * @param username who moved the student
+     */
+    public void sendNotifyCh_1(Land land,List<Student> students, Student student,String username) {
         synchronized (this) {
             name = "NotifyCh_1";
             try {
                 out.writeObject(name);
-                out.writeObject(lands);
-                out.writeObject(card);
+                out.writeObject(land);
+                out.writeObject(students);
+                out.writeObject(student);
+                out.writeObject(username);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public void sendNotifyCh_2(Map<Type_Student,Player> professors) {
+    /**
+     * notify changes of the card 2
+     * @param professors change on the professors
+     * @param username who played the card
+     */
+    public void sendNotifyCh_2(Map<Type_Student,Player> professors,String username) {
         synchronized (this) {
             name = "NotifyCh_2";
             try {
                 out.writeObject(name);
                 out.writeObject(professors);
+                out.writeObject(username);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public void sendNotifyCh_3(ArrayList<Land> lands) {
-        synchronized (this) {
-            name = "NotifyCh_3";
-            try {
-                out.writeObject(name);
-                out.writeObject(lands);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
+    /**
+     * notify played the card 4
+     * @param username who played the card
+     */
     public void sendNotifyCh_4(String username) {
         synchronized (this) {
             name = "NotifyCh_4";
@@ -626,24 +600,17 @@ public class Message4Client extends Thread {
         }
     }
 
-    public void sendNotifyCh_5(Land land) {
+    /**
+     * notify played the card number 5
+     * @param land land to put the no_entry
+     * @param username who played the card
+     */
+    public void sendNotifyCh_5(Land land,String username) {
         synchronized (this) {
             name = "NotifyCh_5";
             try {
                 out.writeObject(name);
                 out.writeObject(land);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    public void sendNotifyCh_10(Board board,String username) {
-        synchronized (this) {
-            name = "NotifyCh_10";
-            try {
-                out.writeObject(name);
-                out.writeObject(board);
                 out.writeObject(username);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -651,37 +618,74 @@ public class Message4Client extends Thread {
         }
     }
 
-    public void sendNotifyCh_11(CharacterCard card,Board board,String username) {
+    /**
+     * notify played the card number 10
+     * @param username who played the card
+     * @param students student moved from the entry to the dining room
+     * @param type_students type of student moved from dining room to entrance
+     */
+    public void sendNotifyCh_10(String username,ArrayList<Student> students,ArrayList<Type_Student> type_students) {
+        synchronized (this) {
+            name = "NotifyCh_10";
+            try {
+                out.writeObject(name);
+                out.writeObject(username);
+                out.writeObject(students);
+                out.writeObject(type_students);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    /**
+     * notify played card 11
+     * @param card new students on the card
+     * @param student chosen to be placed in the dining room
+     * @param username who played the card
+     */
+    public void sendNotifyCh_11(ArrayList<Student> card,Student student,String username) {
         synchronized (this) {
             name = "NotifyCh_11";
             try {
                 out.writeObject(name);
                 out.writeObject(card);
                 out.writeObject(username);
-                out.writeObject(board);
+                out.writeObject(student);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public void sendNotifyCh_12(ArrayList<Board> boards) {
+    /**
+     * notify used card number 12
+     * @param type_student type of the student to be sub in the dinning room
+     * @param username who played the card
+     */
+    public void sendNotifyCh_12(Type_Student type_student,String username) {
         synchronized (this) {
             name = "NotifyCh_12";
             try {
                 out.writeObject(name);
-                out.writeObject(boards);
+                out.writeObject(type_student);
+                out.writeObject(username);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public void sendNotifyCh_8(){
+    /**
+     * notify used card 8
+     * @param username  who played the card
+     */
+    public void sendNotifyCh_8(String username){
         synchronized (this) {
             name = "NotifyCh_8";
             try {
                 out.writeObject(name);
+                out.writeObject(username);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
