@@ -8,4 +8,5 @@ module gui {
     opens it.polimi.ingsw.client.guiControllers to javafx.fxml;
     exports it.polimi.ingsw.client;
     exports it.polimi.ingsw.client.guiControllers;
+    exports it.polimi.ingsw.model;
 }

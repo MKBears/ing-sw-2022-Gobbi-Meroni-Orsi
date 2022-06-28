@@ -539,6 +539,8 @@ public class Client  extends Thread{
                         view.printNotification("Il player "+us1+" ha giocato la carta personaggio 12");
                         server.sendACK();
                         break;
+                    case "NotifyThreeArchipelagos":
+                        view.printNotification("Si sono formati tre gruppi di isole");
                     default: server.sendNACK();
                 }
             }

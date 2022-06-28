@@ -86,7 +86,6 @@ public class Controller extends Thread{
         this.firstPlayer=gameSaved.firstPlayer();
         game_from_memory=true;
         paused=false;
-        playing=true;
         go=true;
     }
 
@@ -222,7 +221,7 @@ public class Controller extends Thread{
                         if (!playing)
                             if (endExplanation.equals("Ha costruito tutte le torri"))
                                 break;
-                    } while (currentPlayer != firstPlayer);
+                    } while (currentPlayer!=firstPlayer && playing);
                 }
 
                 if (playing) {
@@ -300,8 +299,9 @@ public class Controller extends Thread{
         if (connectedPlayers == playersNum)
             return true;
         else {
-            for (ClientHandler player : players)
-                i++;
+            while (i<playersNum)
+                if (players[i] != null)
+                    i++;
 
             return i == playersNum;
         }
@@ -977,12 +977,27 @@ public class Controller extends Thread{
      */
     public void notifyBuiltLastTower (ClientHandler player) {
         for (ClientHandler p: players){
-            if (p != player){
+            if (p!=player && p.isConnected()){
                 p.getOutputStream().sendLastTower(player.getAvatar());
             }
             p.endMatch();
         }
-        endExplanation = "Ha costruito tutte le torri";
+        endExplanation = "ha costruito tutte le torri";
+        state = 5;
+        playing = false;
+    }
+
+    /**
+     * Notifies all the connected players when there are only three archipelagos
+     */
+    public void notifyThreeArchipelagos () {
+        for (ClientHandler p: players){
+            if (p.isConnected()){
+                p.getOutputStream().sendThreeArchipelagos();
+            }
+            p.endMatch();
+        }
+        endExplanation = "si sono formati " + match.getLands().size() + " gruppi di isole";
         state = 5;
         playing = false;
     }
@@ -994,7 +1009,7 @@ public class Controller extends Thread{
      */
     public Player getWinner() throws Exception {
         if (playing){
-            throw new Exception("Partita ancora in corso");
+            throw new Exception("partita ancora in corso");
         }
         return winner.getAvatar();
     }

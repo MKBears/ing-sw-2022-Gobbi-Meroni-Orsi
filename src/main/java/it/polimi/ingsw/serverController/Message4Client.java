@@ -691,4 +691,18 @@ public class Message4Client extends Thread {
             }
         }
     }
+
+    /**
+     * Notifies a player when there are only three groups of islands
+     */
+    public void sendThreeArchipelagos() {
+        synchronized (this) {
+            name = "NotifyThreeArchipelagos";
+            try {
+                out.writeObject(name);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }
