@@ -1059,11 +1059,19 @@ public class Controller extends Thread{
 
     public void save(){
         File file=new File("matches/"+match.getPlayer()[0].getUserName()+".txt");
-        file.delete();
+        File directory = new File("matches");
         FileOutputStream f;
         ObjectOutputStream out;
+        file.delete();
+
+        if (! directory.exists()){
+            directory.mkdir();
+        }
+
         try {
-            file.createNewFile();
+            if(!file.exists()) {
+                file.createNewFile();
+            }
             file.setWritable(true);
             f=new FileOutputStream(file);
             out=new ObjectOutputStream(f);

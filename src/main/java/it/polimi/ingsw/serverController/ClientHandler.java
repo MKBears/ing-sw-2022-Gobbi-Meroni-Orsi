@@ -225,9 +225,10 @@ public class ClientHandler extends Thread{
                         state = 7;
                         changeState();
                     }
-
-                    if (state != 6)
-                        state=4;
+                    else {
+                        if (state != 6)
+                            state = 4;
+                    }
                 case 4:
                     ///ACTION phase: moving Mother Nature
                     //calculate the influence in that Land and verify if it joins other lands
@@ -323,7 +324,7 @@ public class ClientHandler extends Thread{
                     }
 
                     if (state != 6)
-                        state = 3;
+                        state = 4;
                     break;
             }
         }

@@ -203,7 +203,7 @@ $RECYCLE.BIN/
 
 # Ignores the whole idea folder
 # See https://github.com/joeblau/gitignore.io/issues/186 and https://github.com/joeblau/gitignore.io/issues/360
-.idea/
+.idea
 
 # SonarQube ignore files.
 #
@@ -215,3 +215,7 @@ $RECYCLE.BIN/
 # http://www.sonarlint.org/commandline/
 # SonarLint working directories, configuration files (including credentials)
 .sonarlint/
+
+#Ignores saved data
+matches/
+username.txt
