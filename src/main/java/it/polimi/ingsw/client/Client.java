@@ -3,6 +3,7 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.characterCards.*;
 import it.polimi.ingsw.serverController.GameRecap;
+import javafx.application.Platform;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -93,6 +94,7 @@ public class Client  extends Thread{
             view.setServer(server);
             received="base";
             dSokk.close();
+            //sleep(2000);
             view.getTitolo();
             while (true){
                 if(!received.equals("base")) {
@@ -110,8 +112,7 @@ public class Client  extends Thread{
                             } else {
                                 username = view.getUsername();
                                 server.sendLogin(username);
-                            }//Nella view facciamo due pulsanti: nuovo account o accedi al tuo account, in base a ciò decide il server se la login è succeeded o failed
-
+                            }
                             response = (String) in.readObject();
                             view.printNotification(response);
                         } while(response.equals("LoginFailed"));
@@ -225,11 +226,17 @@ public class Client  extends Thread{
                     case "NotifyMovementMN":
                         int movement=(int)in.readObject();
                         int idLand;
+                        match.moveMotherNature(movement);
                         ArrayList<Land> lands=(ArrayList<Land>) in.readObject();
                         //System.out.println(lands);
                         match.setLands(lands);
-                        match.moveMotherNature(movement);
+                        //match.moveMotherNature(movement);
                         idLand=match.getMotherNature().getPosition().getID();
+                        for (Land l:match.getLands()) {
+                            if(l.getID()==idLand){
+                                match.getMotherNature().setPosition(l);
+                            }
+                        }
                         view.printNotification("Madre Natura é stata spostata di " + movement
                                 + " passi nell'isola "+idLand);
                         server.sendACK();

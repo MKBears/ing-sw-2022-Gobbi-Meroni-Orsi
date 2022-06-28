@@ -2,7 +2,7 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.characterCards.*;
-import org.jetbrains.annotations.NotNull;
+
 
 import java.io.IOException;
 import java.util.*;
@@ -310,7 +310,7 @@ public class Cli extends Thread implements View{
                 \u001B[0m""".indent(18));
     }
 
-    private @NotNull String printCharacters() {
+    private String printCharacters() {
         StringBuilder chCards = new StringBuilder();
 
         for (int j=0; j<6; j++) {
@@ -340,7 +340,7 @@ public class Cli extends Thread implements View{
      * Auxiliary method used in order to get the String for of the available cards too play
      * @return all the available assistant cards in a human-readable form
      */
-    private @NotNull String printAssistants() {
+    private String printAssistants() {
         StringBuilder c = new StringBuilder();
         ArrayList<AssistantCard> deck = me. getDeck();
         Wizards gandalf = me.getWizard();

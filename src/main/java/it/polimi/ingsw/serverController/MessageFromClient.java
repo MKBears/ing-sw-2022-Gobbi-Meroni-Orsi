@@ -42,13 +42,13 @@ public class MessageFromClient extends Thread{
                         message = (String) in.readObject();
 
                         if (message.equals("NewGame")) {
-                            //System.out.println("Ricevuto: "+message);
+                            System.out.println("Ricevuto: "+message);
                             Integer playersNum = (Integer) in.readObject();
-                            //System.out.println("Ricevuto: "+playersNum);
+                            System.out.println("Ricevuto: "+playersNum);
                             Boolean expert = (Boolean) in.readObject();
-                            //System.out.println("Ricevuto: "+expert);
+                            System.out.println("Ricevuto: "+expert);
                             ch.createMatch(playersNum, expert);
-                            //System.out.println("Ricevuto num giocatori e expert");
+                            System.out.println("Ricevuto num giocatori e expert");
                             ch.setAck(true);
                         }
                         else {

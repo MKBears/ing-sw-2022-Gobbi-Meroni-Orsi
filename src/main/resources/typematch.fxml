@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.guiControllers.TypeMatchController">
+   <children>
+      <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@sfondo.jpg" />
+         </image>
+      </ImageView>
+      <Label layoutX="217.0" layoutY="65.0" prefHeight="35.0" prefWidth="179.0" text="scegli il tipo di partita">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <ChoiceBox fx:id="playernum" layoutX="225.0" layoutY="143.0" prefWidth="150.0" />
+      <Label layoutX="246.0" layoutY="107.0" text="numero giocatori">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="225.0" layoutY="190.0" prefHeight="20.0" prefWidth="115.0">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <CheckBox fx:id="expert" layoutX="242.0" layoutY="191.0" mnemonicParsing="false" text="modalità esperto">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </CheckBox>
+      <Button fx:id="typematch" layoutX="280.0" layoutY="231.0" mnemonicParsing="false" onAction="#choosetypematch" prefHeight="26.0" prefWidth="54.0" text="ok" />
+      <Label fx:id="error" layoutX="173.0" layoutY="271.0" text="Inserire il numero di giocatori prima di premere ok" />
+   </children>
+</AnchorPane>
