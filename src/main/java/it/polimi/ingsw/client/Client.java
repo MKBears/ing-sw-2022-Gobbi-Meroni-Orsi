@@ -213,6 +213,7 @@ public class Client  extends Thread{
                         int idLand;
                         match.moveMotherNature(movement);
                         idLand = match.getMotherNature().getPosition().getID();
+                        tow=match.getMotherNature().getPosition().size();
                         ArrayList<Land> lands = (ArrayList<Land>) in.readObject();
                         match.setLands(lands);
                         for (Land l : match.getLands()) {
