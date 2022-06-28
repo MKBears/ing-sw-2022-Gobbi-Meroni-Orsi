@@ -58,22 +58,22 @@ public class Controller extends Thread{
 
     public Controller (ClientHandler first,GameSaved gamesaved){
         this.gameSaved=gamesaved;
-        state = gameSaved.getState();
-        this.playersNum = gameSaved.getPlayers_num();
-        this.expertMatch = gameSaved.isExpert_match();
-        players = new ClientHandler[gameSaved.getPlayers_num()];
+        state = gameSaved.state();
+        this.playersNum = gameSaved.players_num();
+        this.expertMatch = gameSaved.expert_match();
+        players = new ClientHandler[gameSaved.players_num()];
         int i=0;
-        for (String u: gameSaved.getUsernames()) {
+        for (String u: gameSaved.usernames()) {
            if(u.equals(first.getUserName())){
               players[i]=first;
               first.setController(this);
-              players[i].setMatch(gameSaved.getMatch());
-              players[i].setAvatar(gameSaved.getMatch().getPlayer()[i]);
-              players[i].setPlayedAssistant(gameSaved.getMatch().getPlayer()[i].getPlayedCard());
+              players[i].setMatch(gameSaved.match());
+              players[i].setAvatar(gameSaved.match().getPlayer()[i]);
+              players[i].setPlayedAssistant(gameSaved.match().getPlayer()[i].getPlayedCard());
            }
            i++;
         }
-        switch (gameSaved.getState()){
+        switch (gameSaved.state()){
             case 1 -> first.setState(1);
             case 2 -> first.setState(2);
             case 4 -> first.setState(3);
@@ -82,8 +82,8 @@ public class Controller extends Thread{
         playing = true;
         paused = false;
         connectedPlayers=1;
-        match=gameSaved.getMatch();
-        this.firstPlayer=gameSaved.getFirstPlayer();
+        match=gameSaved.match();
+        this.firstPlayer=gameSaved.firstPlayer();
         game_from_memory=true;
         paused=false;
         playing=true;
@@ -102,7 +102,7 @@ public class Controller extends Thread{
                 }
             }
         }
-        while (!paused && state<5) {
+        while (!paused && state<6) {
             try {
                 changeState();
             } catch (InterruptedException e) {
@@ -530,7 +530,7 @@ public class Controller extends Thread{
                     switch (connectedPlayers) {
                         case 0:
                             paused = true;
-                            //salva la partita in memoria e chiude tutto
+                            state = 6;
                             break;
                         case 1:
                             if (p.isConnected()){
@@ -1015,10 +1015,6 @@ public class Controller extends Thread{
         return gameRecap;
     }
 
-    public void resumeMatch () {
-
-    }
-
     /**
      * notify to the players the character card played to update the client
      * @throws InterruptedException
@@ -1103,16 +1099,16 @@ public class Controller extends Thread{
             }
         }
         player.setController(this);
-        player.setMatch(gameSaved.getMatch());
-        player.setExpertMatch(gameSaved.isExpert_match());
-        player.setAvatar(gameSaved.getMatch().getPlayer()[j]);
-        player.setPlayedAssistant(gameSaved.getMatch().getPlayer()[j].getPlayedCard());
+        player.setMatch(gameSaved.match());
+        player.setExpertMatch(gameSaved.expert_match());
+        player.setAvatar(gameSaved.match().getPlayer()[j]);
+        player.setPlayedAssistant(gameSaved.match().getPlayer()[j].getPlayedCard());
         switch (this.state){
             case 1 -> player.setState(1);
             case 2 -> player.setState(2);
             case 4 -> player.setState(3);
         }
-        if(connectedPlayers==gameSaved.getPlayers_num()){
+        if(connectedPlayers==gameSaved.players_num()){
             this.start();
         }
         System.out.println(players[0].getAvatar().getUserName()+" "+players[1].getAvatar().getUserName());

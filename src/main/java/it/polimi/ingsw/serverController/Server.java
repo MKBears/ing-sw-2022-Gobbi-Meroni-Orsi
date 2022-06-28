@@ -168,19 +168,13 @@ public class Server extends Thread{
         for (Controller match : matches){
             if (creator != null) {
                 if (match.getCreator().equals(creator)) {
-                    if (match.isPaused() || match.getPlayers().contains(player.getUserName())) {
+                    if (!match.isPaused() && match.getPlayers().contains(player.getUserName())) {
                         match.connectPlayer(player);
-
-                        if (match.readyToStart()) {
-                            match.resumeMatch();
-                        }
                     } else {
                         if(!match.isGame_from_memory()) {
                             match.addPlayer(player);
                         }else{
-                            if(match!=null) {
-                                match.restartMatch(player);
-                            }
+                            match.restartMatch(player);
                         }
                     }
                     return match;
@@ -196,7 +190,7 @@ public class Server extends Thread{
             }
         }
         for (GameSaved g:interrupt_matches) {
-            if(g.getUsernames().get(0).equals(creator)){
+            if(g.usernames().get(0).equals(creator)){
                 Controller game=new Controller(player,g);
                 matches.add(game);
                 return  game;
@@ -212,14 +206,10 @@ public class Server extends Thread{
      */
     public ArrayList<String> getPausedMatches(String userName){
         ArrayList<String> creators = new ArrayList<>();
-        for (Controller match : matches){
-            if (match.isPaused() && match.getPlayers().contains(userName)) {
-                creators.add(match.getCreator());
-            }
-        }
+
         for (GameSaved g:interrupt_matches) {
-            if(g.getUsernames().contains(userName)){
-                creators.add(g.getUsernames().get(0));
+            if(g.usernames().contains(userName)){
+                creators.add(g.usernames().get(0));
             }
         }
         return creators;
