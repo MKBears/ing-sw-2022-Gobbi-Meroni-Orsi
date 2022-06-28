@@ -218,7 +218,11 @@ public class ClientHandler extends Thread{
                             wait();
                         }
                     }
-                    checkAllProfessors();
+                    try {
+                        checkAllProfessors();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                     controller.notifyProfessors();
 
                     if(expertMatch){
@@ -313,7 +317,6 @@ public class ClientHandler extends Thread{
                     break;
                 case 7:
                     //ACTION phase: playing a character card
-                    System.out.println("Nella fase 7");
                     do{
                         out.sendCh(((Expert_Match)match).getCard());
                         wait();
