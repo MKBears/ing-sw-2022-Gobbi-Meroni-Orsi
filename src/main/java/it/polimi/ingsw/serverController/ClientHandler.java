@@ -256,6 +256,9 @@ public class ClientHandler extends Thread{
                                 out.sendCreation(match);
                             }
                         }
+
+                        if (match.getLands().size() <= 3)
+                            controller.notifyThreeArchipelagos();
                     }else{
                         try {
                             match.getMotherNature().getPosition().setNoEntry(false);
@@ -902,8 +905,5 @@ public class ClientHandler extends Thread{
     public void setController(Controller controller) {this.controller = controller;}
 
     public void setAvatar(Player avatar){this.avatar=avatar;}
-
-    public void setmatch(Match match){this.match=match;}
-
 
 }

@@ -189,12 +189,16 @@ public class Server extends Thread{
                 }
             }
         }
+        GameSaved load=null;
         for (GameSaved g:interrupt_matches) {
             if(g.usernames().get(0).equals(creator)){
                 Controller game=new Controller(player,g);
                 matches.add(game);
-                return  game;
+                load=g;
             }
+        }
+        if(load!=null){
+            interrupt_matches.remove(load);
         }
         return null;
     }
