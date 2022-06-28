@@ -40,6 +40,7 @@ public class Gui extends Application {
     private FXMLLoader pup;
     private boolean newgame;
     private  int whoami;
+    private CharacterCard[]ch;
 
     public Gui() {
         end=false;
@@ -395,21 +396,15 @@ public class Gui extends Application {
         popUp("Si sono tutti disconnessi", "Tutti i giocatori si sono disconnessi...");
     }
 
-
-    public void finishedAC(Player p) { //da fare
-
+    public void getCharacter(CharacterCard[] cards) {
+        this.ch=ch;
+        ((MatchController)game.getController()).wakeUp("Ch");
     }
 
-
-    public CharacterCard chooseChCard(CharacterCard[] cards) { //da fare
-        return null;
+    public void setCharacters(CharacterCard[] ch){
+        this.ch=ch;
+        ((MatchController)game.getController()).setCharacters(ch);
     }
-
-
-    public void setCharacters(CharacterCard[] characters) { //da fare
-
-    }
-
 
     public void printNotification(String message) {
         popUp("Notifica", message);

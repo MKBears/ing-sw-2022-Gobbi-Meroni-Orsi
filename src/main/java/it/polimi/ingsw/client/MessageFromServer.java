@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.serverController.GameRecap;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -110,9 +111,13 @@ public class MessageFromServer extends Thread{
                         }
                         break;
                     case "EndGame":
+                        Player winner=(Player) in.readObject();
+                        String explanation=(String) in.readObject();
+                        GameRecap gameRecap=(GameRecap) in.readObject();
                         //qualcosa
                         break;
                     case "LastTower":
+                        Player player=(Player) in.readObject();
                         //qualcosa
                         break;
                     case "NoMoreStudents":
@@ -127,9 +132,61 @@ public class MessageFromServer extends Thread{
                             cg.setNotifyPlayerConnected((String) in.readObject(), (boolean) in.readObject());
                         break;
                     case "FinishedAssistants":
-                        //qualcosa
+                        synchronized (in) {
+                            cg.setFinish((Player) in.readObject());
+                        }
                         break;
                     case "GenericError":
+                            cg.setError((String) in.readObject());
+                        break;
+                    case "Ch":
+                        synchronized (in) {
+                            cg.setCh((CharacterCard[]) in.readObject());
+                        }
+                        break;
+                    case "NotifyCh_1":
+                        Land l=(Land) in.readObject();
+                        List<Student> s=(List<Student>) in.readObject();
+                        Student stu=(Student) in.readObject();
+                        String user=(String) in.readObject();
+                        //qualcosa
+                        break;
+                    case "NotifyCh_2":
+                        Map<Type_Student,Player>profs=(Map<Type_Student, Player>) in.readObject();
+                        String u=(String) in.readObject();
+                        //qualcosa
+                        break;
+                    case "NotifyCh_4":
+                        String use=(String) in.readObject();
+                        //qualcosa
+                        break;
+                    case "NotifyCh_5":
+                        Land lala=(Land) in.readObject();
+                        String name=(String) in.readObject();
+                        //qualcosa
+                        break;
+                    case "NotifyCh_10":
+                        String neim=(String) in.readObject();
+                        ArrayList<Student> classroom=(ArrayList<Student>) in.readObject();
+                        Type_Student type=(Type_Student) in.readObject();
+                        //qualcosa
+                        break;
+                    case "NotifyCh_11":
+                        ArrayList<Student> card=(ArrayList<Student>) in.readObject();
+                        String n=(String) in.readObject();
+                        Student ss=(Student) in.readObject();
+                        //qualcosa
+                        break;
+                    case "NotifyCh_12":
+                        Type_Student ty=(Type_Student) in.readObject();
+                        String usrnm=(String) in.readObject();
+                        //qualcosa
+                        break;
+                    case "NotifyCh_8":
+                        String usr=(String) in.readObject();
+                        //qualcosa
+                        break;
+                    case "NotifyThreeArchipelagos":
                         //qualcosa
                         break;
                 }

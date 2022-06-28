@@ -12,6 +12,8 @@ public interface CharacterCard extends Serializable {
      */
     void activatePowerUp() throws Exception;
 
+    public String getPU();
+
     /**
      *
      * @return the price of the card (it's increased by 1 of it has been activated at least one time yet)

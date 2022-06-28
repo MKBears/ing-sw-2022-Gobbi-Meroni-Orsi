@@ -36,6 +36,11 @@ public class Ch_4 implements CharacterCard, Serializable {
     }
 
     @Override
+    public String getPU() {
+        return powerUp;
+    }
+
+    @Override
     public short getPrice() {
         if(activated){
             return (short)(price+1);

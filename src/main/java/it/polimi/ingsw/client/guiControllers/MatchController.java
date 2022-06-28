@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.Bloom;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
@@ -43,8 +44,8 @@ public class MatchController extends Thread {
     private FileInputStream pink_student;
     private String state;
     private ArrayList<Land> stepsmn;
-
-
+    private CharacterCard[] ch;
+    private FileInputStream noentry;
     @FXML
     Pane land_view;
     @FXML
@@ -601,6 +602,43 @@ public class MatchController extends Thread {
     Button tomyboard1;
     @FXML
     Button tomyboard2;
+    @FXML
+    ImageView ch_00;
+    @FXML
+    ImageView ch_01;
+    @FXML
+    ImageView ch_02;
+    @FXML
+    ImageView ch_03;
+    @FXML
+    ImageView ch_10;
+    @FXML
+    ImageView ch_11;
+    @FXML
+    ImageView ch_12;
+    @FXML
+    ImageView ch_13;
+    @FXML
+    ImageView ch_20;
+    @FXML
+    ImageView ch_21;
+    @FXML
+    ImageView ch_22;
+    @FXML
+    ImageView ch_23;
+    @FXML
+    TextField power0;
+    @FXML
+    TextField power1;
+    @FXML
+    TextField power2;
+    @FXML
+    Pane youwantusechcards;
+    @FXML
+    Button yesiwant;
+    @FXML
+    Button noidont;
+
 
     public static void setServer(Message4Server server) {
         MatchController.server = server;
@@ -712,6 +750,17 @@ public class MatchController extends Thread {
             character(ch0, ((Expert_Match) match).getCard()[0]);
             character(ch1, ((Expert_Match) match).getCard()[1]);
             character(ch2, ((Expert_Match) match).getCard()[2]);
+            coin0.setVisible(true);
+            coin1.setVisible(true);
+            coin2.setVisible(true);
+            ncoin0.setVisible(true);
+            ncoin1.setVisible(true);
+            ncoin2.setVisible(true);
+            character_button.setVisible(true);
+            power0.setText(((Expert_Match) match).getCard()[0].getPU());
+            power1.setText(((Expert_Match) match).getCard()[1].getPU());
+            power2.setText(((Expert_Match) match).getCard()[1].getPU());
+            setDisableChCards(true);
         }
         if(match.getPlayersNum()==2){
             two.setVisible(false);
@@ -723,11 +772,71 @@ public class MatchController extends Thread {
         state = "Start";
     }
 
-    public void setStateLabel(String s){
+    public void setStateLabel(String s) {
         state_label.setText(s);
     }
 
+    public void setCharacters(CharacterCard[] ch){
+        this.ch=ch;
+        character(ch0, ch[0]);
+        character(ch1, ch[1]);
+        character(ch2, ch[2]);
+        power0.setText(ch[0].getPU());
+        power1.setText(ch[1].getPU());
+        power2.setText(ch[2].getPU());
+        int i=0;
+        for(CharacterCard c: ((Expert_Match)match).getCard()){
+            if(i==0) {
+                if (c instanceof Ch_1) {
+                    show_student(ch_00, ((Ch_1) c).getStudents().get(0));
+                    show_student(ch_01, ((Ch_1) c).getStudents().get(1));
+                    show_student(ch_02, ((Ch_1) c).getStudents().get(2));
+                    show_student(ch_03, ((Ch_1) c).getStudents().get(3));
+                }else if(c instanceof Ch_4){
+                    show_noentry(ch_00);
+                    show_noentry(ch_01);
+                    show_noentry(ch_02);
+                    show_noentry(ch_03);
+                }
+            }else if(i==1) {
+                if (c instanceof Ch_1) {
+                    show_student(ch_10, ((Ch_1) c).getStudents().get(0));
+                    show_student(ch_11, ((Ch_1) c).getStudents().get(1));
+                    show_student(ch_12, ((Ch_1) c).getStudents().get(2));
+                    show_student(ch_13, ((Ch_1) c).getStudents().get(3));
+                } else if (c instanceof Ch_4) {
+                    show_noentry(ch_10);
+                    show_noentry(ch_11);
+                    show_noentry(ch_12);
+                    show_noentry(ch_13);
+                }
+            }
+            else if(i==2){
+                if (c instanceof Ch_1) {
+                    show_student(ch_20, ((Ch_1) c).getStudents().get(0));
+                    show_student(ch_21, ((Ch_1) c).getStudents().get(1));
+                    show_student(ch_22, ((Ch_1) c).getStudents().get(2));
+                    show_student(ch_23, ((Ch_1) c).getStudents().get(3));
+                }else if(c instanceof Ch_4){
+                    show_noentry(ch_20);
+                    show_noentry(ch_21);
+                    show_noentry(ch_22);
+                    show_noentry(ch_23);
+                }
+            }
+            i++;
+        }
+    }
 
+    public void show_noentry(ImageView imageView){
+        imageView.setImage(new Image(noentry));
+        File f=new File("src/main/resources/wooden_pieces/wooden_pieces/deny_island_icon.png");
+        try {
+            noentry=new FileInputStream(f);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @FXML
     /**
@@ -2301,6 +2410,7 @@ public class MatchController extends Thread {
         setDisableAssistants(true);
         setDisableClouds(true);
         setDisableMN(true);
+        setDisableChCards(true);
         ((ImageView) mouseEvent.getSource()).setEffect(null);
         //((ImageView) mouseEvent.getSource()).setVisible(false);
     }
@@ -2482,6 +2592,7 @@ public class MatchController extends Thread {
                         setDisableEntrance(true);
                         setDisableLands(true);
                         setDisableMN(true);
+                        setDisableChCards(true);
                         break;
                     case "ChooseAssistant":
                         System.out.println("Sono in MatchController ChooseAssistant");
@@ -2491,6 +2602,7 @@ public class MatchController extends Thread {
                         setDisableEntrance(true);
                         setDisableLands(true);
                         setDisableMN(true);
+                        setDisableChCards(true);
                         gui.popUp("Scegliere carta assistente", "Tocca a te! Scegli una carta assistente");
                         break;
                     case "MoveStudent":
@@ -2535,6 +2647,7 @@ public class MatchController extends Thread {
                         setDisableClouds(true);
                         setDisableBoards(true);
                         setDisableAssistants(true);
+                        setDisableChCards(true);
                         gui.popUp("Spostare lo studente", "Tocca a te! Scegli lo studente dall'ingresso e poi scegli la isola o la tua plancia in cui piazzarlo");
                         break;
                     case "ChooseMN":
@@ -2544,6 +2657,7 @@ public class MatchController extends Thread {
                         setDisableBoards(true);
                         setDisableClouds(true);
                         setDisableEntrance(true);
+                        setDisableChCards(true);
                         gui.popUp("Spostare Madre Natura", "Ora puoi spostare madre natura");
                         break;
                     case "ChooseCloud":
@@ -2553,11 +2667,21 @@ public class MatchController extends Thread {
                         setDisableAssistants(true);
                         setDisableLands(true);
                         setDisableMN(true);
+                        setDisableChCards(true);
                         gui.popUp("Scegliere una nuvola", "Ora puoi scegliere una nuvola");
                         break;
                     case "EndGame": //da fare
                         break;
-                    case "Ch":  //da fare
+                    case "Ch":
+                        setDisableMN(true);
+                        setDisableLands(true);
+                        setDisableAssistants(true);
+                        setDisableBoards(true);
+                        setDisableClouds(true);
+                        setDisableClouds(true);
+                        setDisableEntrance(true);
+                        setDisableChCards(true);
+                        ch_question();
                         break;
                 }
                 theIfMethd();
@@ -2575,6 +2699,16 @@ public class MatchController extends Thread {
             }
             Platform.runLater(updater);
         }
+    }
+
+    public void setDisableChCards(boolean v){
+        ch0.setDisable(v);
+        ch1.setDisable(v);
+        ch2.setDisable(v);
+    }
+
+    public void ch_question(){
+        youwantusechcards.setVisible(true);
     }
 
     public void theIfMethd(){
@@ -2886,6 +3020,7 @@ public class MatchController extends Thread {
 
     @FXML
     public void use_ch(MouseEvent mouseEvent) {
+
     }
 
     @FXML
@@ -2894,13 +3029,6 @@ public class MatchController extends Thread {
         board_view.setVisible(false);
         characters.setVisible(true);
     }
-
-    /*public void clearStudentFromBoard(Type_Student s, int n){
-        boolean gone=false;
-        if(n==0){
-            if()
-        }
-    }*/
 
     public void movetoboard(ActionEvent actionEvent) {
 
@@ -2940,5 +3068,60 @@ public class MatchController extends Thread {
         synchronized (this) {
             notifyAll();
         }
+    }
+
+    public void usechyes(ActionEvent actionEvent) {
+        youwantusechcards.setVisible(false);
+        setDisableChCards(false);
+        int i=0;
+        for(CharacterCard c: ch){
+            if(i==0) {
+                if (c instanceof Ch_1) {
+                    ch_00.setDisable(false);
+                    ch_01.setDisable(false);
+                    ch_02.setDisable(false);
+                    ch_03.setDisable(false);
+                }else if(c instanceof Ch_4){
+                    ch_00.setDisable(false);
+                    ch_01.setDisable(false);
+                    ch_02.setDisable(false);
+                    ch_03.setDisable(false);
+                }
+            }else if(i==1) {
+                if (c instanceof Ch_1) {
+                    ch_10.setDisable(false);
+                    ch_11.setDisable(false);
+                    ch_12.setDisable(false);
+                    ch_13.setDisable(false);
+                } else if (c instanceof Ch_4) {
+                    ch_10.setDisable(false);
+                    ch_11.setDisable(false);
+                    ch_12.setDisable(false);
+                    ch_13.setDisable(false);
+                }
+            }
+            else if(i==2){
+                if (c instanceof Ch_1) {
+                    ch_20.setDisable(false);
+                    ch_21.setDisable(false);
+                    ch_22.setDisable(false);
+                    ch_23.setDisable(false);
+                }else if(c instanceof Ch_4){
+                    ch_20.setDisable(false);
+                    ch_21.setDisable(false);
+                    ch_22.setDisable(false);
+                    ch_23.setDisable(false);
+                }
+            }
+            i++;
+        }
+    }
+
+    public void usechno(ActionEvent actionEvent) {
+        server.sendNoCh();
+    }
+
+    public void useit(MouseEvent mouseEvent) {
+        //DA FARE
     }
 }

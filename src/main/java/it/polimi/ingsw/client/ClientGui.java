@@ -66,6 +66,9 @@ public class ClientGui  extends Thread {
     private String received;
     private String response;
     private Wizards wizard;
+    private Player finish;
+    private String error;
+    private CharacterCard[] ch;
 
     /**
      * Constructor of the class Client
@@ -231,8 +234,8 @@ public class ClientGui  extends Thread {
                             }
                             view.setMe(me);
                             view.setMatch(match);
-                            if (match instanceof Expert_Match)
-                                view.setCharacters(((Expert_Match) match).getCard());
+                            //if (match instanceof Expert_Match)
+                            //    view.setCharacters(((Expert_Match) match).getCard());
                             server.sendACK();
                             break;
                         case "RefillClouds":
@@ -514,13 +517,16 @@ public class ClientGui  extends Thread {
                             });
                             server.sendACK();
                             break;
-                        case "FinishedAssistants": //da mettere a posto
-                            Player who = (Player) in.readObject();
-                            view.finishedAC(who);
+                        case "FinishedAssistants":
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printNotification(finish.getUserName()+" ha finito le carte assistente: ultimo turno");
+                                }
+                            });
                             server.sendACK();
                             break;
-                        case "GenericError":  //da mettere a posto
-                            String error = (String) in.readObject();
+                        case "GenericError":
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
@@ -529,10 +535,16 @@ public class ClientGui  extends Thread {
                             });
                             server.sendACK();
                             break;
-                        case "Ch": //da mettere a posto
-                            CharacterCard[] ch = (CharacterCard[]) in.readObject();
-                            view.setCharacters(ch);
-                            view.wakeUp("Ch");
+                        case "Ch":
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.getCharacter(ch);
+                                }
+                            });
+                            synchronized (this){
+                                wait();
+                            }
                             break;
                         case "NotifyCh_1": //da mettere a posto
                             Land land3 = (Land) in.readObject();
@@ -851,5 +863,17 @@ public class ClientGui  extends Thread {
 
     public String getReceived(){
         return received;
+    }
+
+    public void setFinish(Player finish){
+        this.finish=finish;
+    }
+
+    public void setError(String error){
+        this.error=error;
+    }
+
+    public void setCh(CharacterCard[] ch){
+        this.ch=ch;
     }
 }

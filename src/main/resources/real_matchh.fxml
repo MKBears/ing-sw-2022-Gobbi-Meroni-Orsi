@@ -11,13 +11,15 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.TextField?>
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: #87cefa;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.guiControllers.MatchController">
    <ImageView fitHeight="720.0" fitWidth="1080.0" pickOnBounds="true" preserveRatio="true">
       <image>
          <Image url="@sfondo.jpg" />
       </image>
    </ImageView>
-    <Pane fx:id="land_view" prefHeight="719.0" prefWidth="1080.0" visible="false">
+    <Pane fx:id="land_view" prefHeight="719.0" prefWidth="1080.0">
+      <ImageView fx:id="ch_chosen" fitHeight="117.0" fitWidth="86.0" layoutX="747.0" layoutY="268.0" pickOnBounds="true" preserveRatio="true" visible="false" />
         <AnchorPane fx:id="land3" layoutX="600.0" layoutY="25.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="218.0" prefWidth="251.0">
             <ImageView fx:id="island3" fitHeight="205.0" fitWidth="227.0" layoutX="25.0" layoutY="10.0" onMouseClicked="#moveto" pickOnBounds="true" preserveRatio="true">
                 <Image url="@wooden_pieces/wooden_pieces/island1.png" />
@@ -883,7 +885,7 @@
          </effect>
       </Button>
     </Pane>
-    <Pane fx:id="board_view" prefHeight="720.0" prefWidth="1080.0">
+    <Pane fx:id="board_view" prefHeight="720.0" prefWidth="1080.0" visible="false">
         <AnchorPane layoutX="-121.0" layoutY="92.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="339.0" prefWidth="581.0" rotate="-90.0">
             <ImageView fx:id="board0" fitHeight="220.0" fitWidth="500.0" layoutX="50.0" layoutY="102.0" pickOnBounds="true" preserveRatio="true">
                 <Image url="@Graphical_Assets/Plancia/Plancia_DEF2.png" />
@@ -1880,6 +1882,36 @@
                <InnerShadow height="65.0" radius="33.0" width="69.0" />
             </effect>
          </Button>
+         <ImageView fx:id="ch_00" fitHeight="70.0" fitWidth="70.0" layoutX="163.0" layoutY="463.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
+         <ImageView fx:id="ch_01" fitHeight="70.0" fitWidth="70.0" layoutX="100.0" layoutY="533.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
+         <ImageView fx:id="ch_02" fitHeight="70.0" fitWidth="70.0" layoutX="237.0" layoutY="517.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
+         <ImageView fx:id="ch_03" fitHeight="70.0" fitWidth="70.0" layoutX="174.0" layoutY="595.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
+         <ImageView fx:id="ch_10" fitHeight="70.0" fitWidth="70.0" layoutX="511.0" layoutY="473.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
+         <ImageView fx:id="ch_11" fitHeight="70.0" fitWidth="70.0" layoutX="420.0" layoutY="535.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
+         <ImageView fx:id="ch_13" fitHeight="70.0" fitWidth="70.0" layoutX="505.0" layoutY="570.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
+         <ImageView fx:id="ch_12" fitHeight="70.0" fitWidth="70.0" layoutX="576.0" layoutY="520.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
+         <ImageView fx:id="ch_20" fitHeight="70.0" fitWidth="70.0" layoutX="828.0" layoutY="485.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
+         <ImageView fx:id="ch_21" fitHeight="70.0" fitWidth="70.0" layoutX="760.0" layoutY="543.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
+         <ImageView fx:id="ch_22" fitHeight="70.0" fitWidth="70.0" layoutX="889.0" layoutY="531.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
+         <ImageView fx:id="ch_23" fitHeight="70.0" fitWidth="70.0" layoutX="834.0" layoutY="582.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
+         <TextField fx:id="power0" layoutX="95.0" layoutY="66.0" prefHeight="70.0" prefWidth="197.0" text="ch_0" />
+         <TextField fx:id="power1" layoutX="442.0" layoutY="66.0" prefHeight="70.0" prefWidth="197.0" text="Label" />
+         <TextField fx:id="power2" layoutX="765.0" layoutY="66.0" prefHeight="70.0" prefWidth="197.0" text="Label" />
       </children>
    </Pane>
+    <Pane fx:id="youwantusechcards" layoutX="274.0" layoutY="149.0" prefHeight="422.0" prefWidth="614.0" style="-fx-background-color: #00ff00;" visible="false">
+        <effect>
+            <DropShadow />
+        </effect>
+            <Button fx:id="yesiwant" layoutX="109.0" layoutY="236.0" mnemonicParsing="false" onAction="#usechyes" prefHeight="127.0" prefWidth="156.0" style="-fx-background-color: yellow;" text="SI">
+                <font>
+                    <Font name="System Bold" size="12.0" />
+                </font></Button>
+            <Button fx:id="noidont" layoutX="350.0" layoutY="236.0" mnemonicParsing="false" onAction="#usechno" prefHeight="127.0" prefWidth="156.0" style="-fx-background-color: red;" text="NO" />
+            <Label layoutX="59.0" prefHeight="185.0" prefWidth="497.0" text="VUOI USARE IL POTERE DELLE CARTE PERSONAGGIO?">
+                <font>
+                    <Font size="20.0" />
+                </font>
+            </Label>
+        </Pane>
 </AnchorPane>
