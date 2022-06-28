@@ -162,7 +162,7 @@ public class Message4Client extends Thread {
             name = "ChooseCard";
             try {
                 out.writeObject(name);
-                out.writeObject((List<AssistantCard>)cards);
+                out.writeObject(cards);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -185,15 +185,12 @@ public class Message4Client extends Thread {
 
     /**
      * The server asks the client the cloud that chooses the player
-     *
-     * @param clouds the possible clouds to chose
      */
-    public void sendChooseCloud(ArrayList<Cloud> clouds) {
+    public void sendChooseCloud() {
         synchronized (this) {
             name = "ChooseCloud";
             try {
                 out.writeObject(name);
-                out.writeObject(clouds);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

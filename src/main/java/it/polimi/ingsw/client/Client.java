@@ -21,7 +21,7 @@ public class Client  extends Thread{
     private ObjectInputStream in;
     private Message4Server server;
     private Match match;
-    private final View view;
+    private final Cli view;
     private Action action;
     private String username;
     private Player me;
@@ -34,7 +34,7 @@ public class Client  extends Thread{
      *
      * @param view the instance of the view (it can be Cli or Gui)
      */
-    public Client(View view) {
+    public Client(Cli view) {
         match=null;
         username=null;
         me=null;
@@ -85,7 +85,7 @@ public class Client  extends Thread{
             view.setServer(server);
             String received = "base";
             dSokk.close();
-            view.getTitolo();
+            view.getTitle();
             while (!end){
                 if(!received.equals("base")) {
                     received = (String) in.readObject();
@@ -163,9 +163,6 @@ public class Client  extends Thread{
                         break;
                     //nella nuova versione non è previsto ACK o NACK
                     case "ChooseCloud":
-                        List<Cloud> clouds;
-                        clouds = (ArrayList<Cloud>) in.readObject();
-                        view.setClouds(clouds);
                         view.wakeUp("ChooseCloud");
                         break;
                     case "NotifyChosenCard":
@@ -554,14 +551,13 @@ public class Client  extends Thread{
         } catch (Exception e) {
             view.printNotification("Errore interno: ");
             e.printStackTrace();
-        } finally {
-            try {
-                out.close();
-                in.close();
-                socket.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        }
+        try {
+            out.close();
+            in.close();
+            socket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

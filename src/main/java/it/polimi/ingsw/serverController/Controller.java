@@ -1106,7 +1106,7 @@ public class Controller extends Thread{
     }
 
     public void delete(){
-        File file=new File("matches/"+match.getPlayer()[0].getUserName()+".txt");
+        File file=new File("matches/"+match.getPlayer()[0].getUserName());
         file.delete();
     }
 
@@ -1146,6 +1146,5 @@ public class Controller extends Thread{
         if(connectedPlayers==gameSaved.players_num()){
             this.start();
         }
-        System.out.println(players[0].getAvatar().getUserName()+" "+players[1].getAvatar().getUserName());
     }
 }

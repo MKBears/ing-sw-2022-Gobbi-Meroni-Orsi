@@ -208,11 +208,7 @@ public class Server extends Thread{
      */
     public ArrayList<String> getPausedMatches(String userName){
         ArrayList<String> creators = new ArrayList<>();
-        for (Controller match : matches){
-            if (match.isPaused() && match.getPlayers().contains(userName)) {
-                creators.add(match.getCreator());
-            }
-        }
+
         for (GameSaved g:interrupt_matches) {
             if(g.usernames().contains(userName)){
                 creators.add(g.usernames().get(0));

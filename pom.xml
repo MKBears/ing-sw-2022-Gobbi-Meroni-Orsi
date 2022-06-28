@@ -126,9 +126,9 @@
         <executions>
           <execution>
             <!-- Default configuration for running with: mvn clean javafx:run -->
-            <id>default-cli</id>
+            <id>default-gui</id>
             <configuration>
-              <mainClass>demo.demo1/demo.demo1.HelloApplication</mainClass>
+              <mainClass>src/it.polimi.ingsw.client</mainClass>
               <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
               <jlinkImageName>app</jlinkImageName>

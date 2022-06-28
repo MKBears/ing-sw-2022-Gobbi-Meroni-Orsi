@@ -14,7 +14,7 @@ import java.util.Arrays;
  */
 public class ClientHandler extends Thread{
     private final Socket socket;
-    private final Server serve;
+    private final Server server;
     MessageFromClient in;
     Message4Client out;
     private Controller controller;
@@ -51,7 +51,7 @@ public class ClientHandler extends Thread{
      */
     public ClientHandler (Socket s, Server server){
         socket = s;
-        this.serve = server;
+        this.server = server;
         connected = true;
         ongoingMatch = false;
         expertMatch=true;
@@ -108,7 +108,7 @@ public class ClientHandler extends Thread{
                     do {
                         wait();
 
-                        if (serve.getUserNames().contains(userName) && serve.inactivePlayer(this)) {
+                        if (server.getUserNames().contains(userName) && server.inactivePlayer(this)) {
                             out.sendLoginSucceeded();
                             System.out.println("Login avvenuto con successo: "+userName);
                             nack = false;
@@ -118,15 +118,15 @@ public class ClientHandler extends Thread{
                         }
                     } while (nack);
 
-                    if (serve.canConnectPlayer(userName)) {
+                    if (server.canConnectPlayer(userName)) {
                         try {
-                            serve.joinGame(null, this);
+                            server.joinGame(null, this);
                         } catch (Exception e) {
                             out.sendGenericError("Unable to connect to the match ("+e.getMessage()+")");
                         }
                     }
                     else {
-                        out.sendListOfGames(serve.getJoinableMatches(), serve.getPausedMatches(userName));
+                        out.sendListOfGames(server.getJoinableMatches(), server.getPausedMatches(userName));
                         do {
                             wait();
                         } while (nack);
@@ -222,6 +222,7 @@ public class ClientHandler extends Thread{
                     controller.notifyProfessors();
 
                     if(expertMatch){
+                        System.out.println("Entro nella fase 7");
                         state = 7;
                         changeState();
                     }
@@ -282,7 +283,7 @@ public class ClientHandler extends Thread{
 
                     do {
                         clouds.addAll(Arrays.asList(match.getCloud()));
-                        out.sendChooseCloud(clouds);
+                        out.sendChooseCloud();
                         clouds.clear();
                         this.wait();
                     } while (nack);
@@ -312,6 +313,7 @@ public class ClientHandler extends Thread{
                     break;
                 case 7:
                     //ACTION phase: playing a character card
+                    System.out.println("Nella fase 7");
                     do{
                         out.sendCh(((Expert_Match)match).getCard());
                         wait();
@@ -399,7 +401,7 @@ public class ClientHandler extends Thread{
      * @param userName
      */
     public synchronized void register (String userName) {
-        this.serve.addUserName(userName);
+        this.server.addUserName(userName);
         setUserName(userName);
     }
 
@@ -442,7 +444,7 @@ public class ClientHandler extends Thread{
      */
     public synchronized void createMatch (int playersNum, boolean expert) {
         expertMatch = expert;
-        controller = serve.createMatch(this, playersNum, expertMatch);
+        controller = server.createMatch(this, playersNum, expertMatch);
     }
 
     /**
@@ -451,7 +453,7 @@ public class ClientHandler extends Thread{
      */
     public synchronized void joinMatch (String creator) {
         try {
-            controller = serve.joinGame(creator, this);
+            controller = server.joinGame(creator, this);
         } catch (Exception e) {
             out.sendGenericError(e.getMessage());
             state = 8;
