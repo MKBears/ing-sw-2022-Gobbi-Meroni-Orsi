@@ -127,7 +127,6 @@ public class ClientHandler extends Thread{
                     }
                     else {
                         out.sendListOfGames(serve.getJoinableMatches(), serve.getPausedMatches(userName));
-
                         do {
                             wait();
                         } while (nack);
@@ -902,8 +901,16 @@ public class ClientHandler extends Thread{
      */
     public Student getCh_11_student() {return ch_11_student;}
 
+    /**
+     * set the controller,it is used for the match from the memory
+     * @param controller to be set
+     */
     public void setController(Controller controller) {this.controller = controller;}
 
+    /**
+     * set the player into the clienthandler, this method is used for the match from memory
+     * @param avatar avatar to set into the clienthandler
+     */
     public void setAvatar(Player avatar){this.avatar=avatar;}
 
 }

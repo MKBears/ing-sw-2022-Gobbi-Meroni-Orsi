@@ -168,13 +168,15 @@ public class Server extends Thread{
         for (Controller match : matches){
             if (creator != null) {
                 if (match.getCreator().equals(creator)) {
-                    if (!match.isPaused() && match.getPlayers().contains(player.getUserName())) {
+                    if (match.isPaused() || match.getPlayers().contains(player.getUserName())) {
                         match.connectPlayer(player);
                     } else {
                         if(!match.isGame_from_memory()) {
                             match.addPlayer(player);
                         }else{
-                            match.restartMatch(player);
+                            if(match!=null) {
+                                match.restartMatch(player);
+                            }
                         }
                     }
                     return match;
@@ -189,16 +191,12 @@ public class Server extends Thread{
                 }
             }
         }
-        GameSaved load=null;
         for (GameSaved g:interrupt_matches) {
             if(g.usernames().get(0).equals(creator)){
                 Controller game=new Controller(player,g);
                 matches.add(game);
-                load=g;
+                return  game;
             }
-        }
-        if(load!=null){
-            interrupt_matches.remove(load);
         }
         return null;
     }
@@ -210,7 +208,11 @@ public class Server extends Thread{
      */
     public ArrayList<String> getPausedMatches(String userName){
         ArrayList<String> creators = new ArrayList<>();
-
+        for (Controller match : matches){
+            if (match.isPaused() && match.getPlayers().contains(userName)) {
+                creators.add(match.getCreator());
+            }
+        }
         for (GameSaved g:interrupt_matches) {
             if(g.usernames().contains(userName)){
                 creators.add(g.usernames().get(0));

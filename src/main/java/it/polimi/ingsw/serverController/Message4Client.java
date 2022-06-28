@@ -88,10 +88,12 @@ public class Message4Client extends Thread {
         synchronized (this) {
             name = "ListOfGames";
             try {
+                System.out.println("mando a "+this.name+"i match");
                 out.writeObject(name);
                 out.writeObject(joinGames);
                 out.writeObject(resumeGames);
             } catch (IOException e) {
+                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -528,13 +530,14 @@ public class Message4Client extends Thread {
      * @param ch the cards
      */
     public void sendCh(CharacterCard[] ch){
-        try {
-            out.writeObject("Ch");
-            out.writeObject(ch.clone());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        synchronized (this) {
+            try {
+                out.writeObject("Ch");
+                out.writeObject(ch.clone());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
-
     }
 
     /**

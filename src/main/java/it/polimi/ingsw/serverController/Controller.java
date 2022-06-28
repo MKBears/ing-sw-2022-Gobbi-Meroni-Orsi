@@ -299,9 +299,8 @@ public class Controller extends Thread{
         if (connectedPlayers == playersNum)
             return true;
         else {
-            while (i<playersNum)
-                if (players[i] != null)
-                    i++;
+            for (ClientHandler player : players)
+                i++;
 
             return i == playersNum;
         }
@@ -1072,6 +1071,9 @@ public class Controller extends Thread{
         }
     }
 
+    /**
+     * save the match into the file with the name of the first player
+     */
     public void save(){
         File file=new File("matches/"+match.getPlayer()[0].getUserName()+".txt");
         File directory = new File("matches");
@@ -1108,10 +1110,20 @@ public class Controller extends Thread{
         file.delete();
     }
 
+
+    /**
+     *
+     * @return if the match is from the memory
+     */
     public boolean isGame_from_memory() {
         return game_from_memory;
     }
 
+
+    /**
+     * check if there are the right number of player to restart
+     * @param player the client handler of the player to be added
+     */
     public void restartMatch(ClientHandler player){
         int j=-1;
         for (int i=0;i< match.getPlayersNum();i++) {
