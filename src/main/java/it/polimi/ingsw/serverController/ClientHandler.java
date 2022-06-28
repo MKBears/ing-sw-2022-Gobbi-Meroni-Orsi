@@ -131,7 +131,6 @@ public class ClientHandler extends Thread{
                         do {
                             wait();
                         } while (nack);
-                        //System.out.println("Mando maghi");
                         if(!controller.isGame_from_memory()) {
                             do {
                                 out.sendWizard(controller.getWizards());
@@ -139,12 +138,10 @@ public class ClientHandler extends Thread{
                             } while (nack);
                             out.sendACK();
                             controller.chooseWizard(wizard);
-                            //System.out.println("helooo");
                             createAvatar(color, controller.getPlayersNum(), expertMatch);
 
                             controller.createMatch();
                         }
-                        //wait();
                     }
                     if(!controller.isGame_from_memory()) {
                         do {
@@ -158,13 +155,9 @@ public class ClientHandler extends Thread{
                     } while (nack);
                     out.start();
                     socket.setSoTimeout(5000);
-                    if(!controller.isGame_from_memory()) {
+                    if(!controller.isGame_from_memory() && state!=6) {
                         state = 1;
                     }
-
-                    if (state != 6)
-                        state = 1;
-                    break;
                 case 1:
                     //PLANNING phase: notify refilled clouds
                     do {

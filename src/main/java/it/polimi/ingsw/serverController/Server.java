@@ -19,7 +19,7 @@ public class Server extends Thread{
         players = Executors.newCachedThreadPool();
         userNames = new ArrayList<>();
         interrupt_matches=new ArrayList<>();
-        File file=new File("src/main/resources/username.txt");
+        File file=new File("username.txt");
         try {
             if(!file.createNewFile()) {
                 file.setReadable(true);
@@ -34,7 +34,7 @@ public class Server extends Thread{
         }
         File matchFile;
         for (String u: userNames) {
-           matchFile=new File("src/main/resources/matches/"+u+".txt");
+           matchFile=new File("matches/"+u+".txt");
            if(matchFile.exists()){
                try{
                    FileInputStream fIn = new FileInputStream(matchFile);
@@ -98,7 +98,7 @@ public class Server extends Thread{
     public synchronized void addUserName(String userName) {
         if (!userNames.contains(userName)){
             userNames.add(userName);
-            File file=new File("src/main/resources/username.txt");
+            File file=new File("username.txt");
             FileOutputStream f;
             ObjectOutputStream out;
             try {

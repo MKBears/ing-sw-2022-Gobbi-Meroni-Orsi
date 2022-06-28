@@ -251,8 +251,10 @@ public class Match implements Serializable {
                 professors.put(e, player[a]);
                 return player[a];
             } else return professors.get(e);
-        }
-        else return null;
+        }else if(professors.containsKey(e)) {
+            professors.remove(e);
+            return null;
+        }else return null;
     }
 
     /**

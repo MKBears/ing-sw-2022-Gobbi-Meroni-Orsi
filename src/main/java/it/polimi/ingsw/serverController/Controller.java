@@ -1062,7 +1062,7 @@ public class Controller extends Thread{
     }
 
     public void save(){
-        File file=new File("src/main/resources/matches/"+match.getPlayer()[0].getUserName()+".txt");
+        File file=new File("matches/"+match.getPlayer()[0].getUserName()+".txt");
         file.delete();
         FileOutputStream f;
         ObjectOutputStream out;
@@ -1085,7 +1085,7 @@ public class Controller extends Thread{
     }
 
     public void delete(){
-        File file=new File("src/main/resources/matches/"+match.getPlayer()[0].getUserName()+".txt");
+        File file=new File("matches/"+match.getPlayer()[0].getUserName()+".txt");
         file.delete();
     }
 

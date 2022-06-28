@@ -46,7 +46,7 @@ public class MessageFromClient extends Thread{
                             Boolean expert = (Boolean) in.readObject();
                             ch.createMatch(playersNum, expert);
                             //System.out.println("Ricevuto num giocatori e expert");
-                            File file=new File("src/main/resources/matches/"+ch.getUserName()+".txt");
+                            File file=new File("matches/"+ch.getUserName()+".txt");
                             file.delete();
                             ch.setAck(true);
                         } else {

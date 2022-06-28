@@ -1,9 +1,6 @@
 package it.polimi.ingsw.model.characterCards;
 
-import it.polimi.ingsw.model.Bag;
-import it.polimi.ingsw.model.CharacterCard;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Student;
+import it.polimi.ingsw.model.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,7 +11,7 @@ public class Ch_11 implements CharacterCard, Serializable {
     private boolean activated;
     private final String powerUp;
     private ArrayList<Student> students;
-    private final Bag bag;
+    private final Match match;
     Player player;
     private Student student;
 
@@ -26,16 +23,16 @@ public class Ch_11 implements CharacterCard, Serializable {
         this.player = player;
     }
 
-    public Ch_11(Bag bag) throws Exception {
+    public Ch_11(Match match) throws Exception {
         price=2;
         activated=false;
         powerUp="Prendi 1 studente da questa carta e piazzalo nella tua sala. " +
                 "Poi pesca un nuovo studente dal sacchetto e posizionalo su questa carta.";
         students = new ArrayList<>(4);
-        this.bag = bag;
+        this.match = match;
 
         for (int i=0; i<4; i++){
-            students.add(bag.getRandomStudent());
+            students.add(match.getBag().getRandomStudent());
         }
     }
 
@@ -48,7 +45,8 @@ public class Ch_11 implements CharacterCard, Serializable {
             }
         }
         player.getBoard().ch_11_effect(student);
-        students.add(bag.getRandomStudent());
+        match.checkProfessor(student.type());
+        students.add(match.getBag().getRandomStudent());
         if(!activated){
             activated=true;
         }

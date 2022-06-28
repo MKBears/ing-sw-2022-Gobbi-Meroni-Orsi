@@ -256,7 +256,6 @@ public class Message4Client extends Thread {  //METTI DENTRO RUN DEL PING
      * The server notifies to all the clients the movement of someone's students, we have to call it for every student moved
      *
      * @param student  the single student
-     * @param board    the board of the player
      * @param username the username of the player that moves the students
      */
     public void sendNotifyMoveStudent(Student student, String username) {

@@ -454,7 +454,7 @@ public class Client  extends Thread{
                         String usa = (String) in.readObject();
                         ArrayList<Student> studes = (ArrayList<Student>) in.readObject();
                         ArrayList<Type_Student> types = (ArrayList<Type_Student>) in.readObject();
-                        for (int i = 0; i < 2; i++) {
+                        for (int i = 0; i < studes.size(); i++) {
                             for (Player player : match.getPlayer()) {
                                 if (player.getUserName().equals(usa)) {
                                     player.getBoard().ch_10_effect(studes.get(i), types.get(i));
@@ -471,6 +471,7 @@ public class Client  extends Thread{
                                 }
                             }
                         }
+                        action.checkAllProfessors();
                         view.printMatch(match);
                         view.printNotification("giocatore "+usa+" ha giocato la carta personaggio 10");
                         server.sendACK();
@@ -494,6 +495,7 @@ public class Client  extends Thread{
                                }
                            }
                         }
+                        match.checkProfessor(s3.type());
                         for (int i = 0; i < 3; i++) {
                             if(((Expert_Match)match).getCard()[i] instanceof Ch_11) {
                                 ((Ch_11) ((Expert_Match) match).getCard()[i]).setStudents(ch11);
