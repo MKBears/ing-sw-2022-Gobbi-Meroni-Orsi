@@ -31,6 +31,7 @@ public class Client  extends Thread{
 
     /**
      * Constructor of the class Client
+     *
      * @param view the instance of the view (it can be Cli or Gui)
      */
     public Client(View view) {

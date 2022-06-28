@@ -786,14 +786,14 @@ public class MatchController extends Thread {
                 }
                 int step = 0;
                 if (indexlandselected >= 0) {
-                    if (indexmn < indexlandselected) {
+                    if (indexmn <= indexlandselected) {
                         step = indexlandselected - indexmn;
                     } else if (indexmn > indexlandselected) {
                         step = match.getLands().size() - 1 - indexmn;
                         step++;
                         step = step + indexlandselected;
                     }
-                    if (step > 0 && step <= me.getPlayedCard().getMNSteps()) {
+                    if (step >= 0 && step <= me.getPlayedCard().getMNSteps()) {
                         server.sendStepsMN(step);
                     }
                 }
@@ -2504,7 +2504,7 @@ public class MatchController extends Thread {
                                 entry02.setDisable(false);
                                 entry03.setDisable(false);
                                 entry04.setDisable(false);
-                                entry15.setDisable(false);
+                                entry05.setDisable(false);
                                 entry06.setDisable(false);
                                 entry07.setDisable(false);
                                 entry08.setDisable(false);
@@ -2854,10 +2854,6 @@ public class MatchController extends Thread {
                 f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front2.jpg");
                 fil = new FileInputStream(f);
                 imageView.setImage(new Image(fil));
-            }else if(character instanceof Ch_3){
-                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front3.jpg");
-                fil = new FileInputStream(f);
-                imageView.setImage(new Image(fil));
             }else if(character instanceof Ch_4){
                 f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front4.jpg");
                 fil = new FileInputStream(f);
@@ -2866,20 +2862,8 @@ public class MatchController extends Thread {
                 f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front5.jpg");
                 fil = new FileInputStream(f);
                 imageView.setImage(new Image(fil));
-            }else if(character instanceof Ch_6){
-                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front6.jpg");
-                fil = new FileInputStream(f);
-                imageView.setImage(new Image(fil));
-            }else if(character instanceof Ch_7){
-                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front7.jpg");
-                fil = new FileInputStream(f);
-                imageView.setImage(new Image(fil));
-            }else if(character instanceof Ch_8){
+            } if(character instanceof Ch_8){
                 f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front8.jpg");
-                fil = new FileInputStream(f);
-                imageView.setImage(new Image(fil));
-            }else if(character instanceof Ch_9){
-                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front9.jpg");
                 fil = new FileInputStream(f);
                 imageView.setImage(new Image(fil));
             }else if(character instanceof Ch_10){

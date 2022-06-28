@@ -158,6 +158,7 @@ public class ClientHandler extends Thread{
                     if(!controller.isGame_from_memory() && state!=6) {
                         state = 1;
                     }
+                    break;
                 case 1:
                     //PLANNING phase: notify refilled clouds
                     do {

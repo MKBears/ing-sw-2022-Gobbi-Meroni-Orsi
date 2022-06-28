@@ -75,8 +75,6 @@ public class Gui extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         setStage(stage);
-        GuiThread gt=new GuiThread(this);
-        gt.start();
         System.out.println("BUONGIORNOOOOO");
         System.out.println("Ho creato il client");
         ClientGui c=new ClientGui(this);
