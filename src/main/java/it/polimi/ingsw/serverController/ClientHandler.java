@@ -153,7 +153,7 @@ public class ClientHandler extends Thread{
                         wait();
                     } while (nack);
                     out.start();
-                    socket.setSoTimeout(5000);
+                    socket.setSoTimeout(6000);
                     if(!controller.isGame_from_memory() && state!=6) {
                         state = 1;
                     }

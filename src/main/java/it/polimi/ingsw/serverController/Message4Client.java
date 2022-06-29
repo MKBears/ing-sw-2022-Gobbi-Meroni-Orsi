@@ -438,7 +438,7 @@ public class Message4Client extends Thread {
 
         while (condition) {
             try {
-                sleep(4000);
+                sleep(5000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
