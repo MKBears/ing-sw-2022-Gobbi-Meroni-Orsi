@@ -224,11 +224,17 @@ public class Controller extends Thread{
                     } while (currentPlayer!=firstPlayer && playing);
                 }
 
+                if (match.getMotherNature().getPosition().hasChanged())
+                    if (match.getMotherNature().getPosition().getTower().getBoard().hasNoTowersLeft())
+                        for (ClientHandler player : players)
+                            if (player.getAvatar().getBoard().hasNoTowersLeft())
+                                notifyBuiltLastTower(player);
+
                 if (playing) {
                     state = 1;
                     save();
                 } else {
-                    state = 6;
+                    state = 5;
                 }
                 playedAssistants.clear();
 
