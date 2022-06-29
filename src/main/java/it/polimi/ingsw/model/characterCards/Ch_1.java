@@ -59,10 +59,6 @@ public class Ch_1 implements CharacterCard, Serializable {
         return activated;
     }
 
-    public String getPU(){
-        return powerUp;
-    }
-
     @Override
     public String getPowerUp() {
         StringBuilder pu = new StringBuilder(powerUp);
