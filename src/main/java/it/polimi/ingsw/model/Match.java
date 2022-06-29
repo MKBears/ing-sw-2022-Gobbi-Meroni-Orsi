@@ -582,7 +582,7 @@ public class Match implements Serializable {
         String arrow;
 
         for (Land land : lands) {
-            if (motherNature.getPosition().equals(land) || land.getIslands().contains((Island)motherNature.getPosition())) {
+            if (motherNature.getPosition().equals(land) || land.getIslands().contains(motherNature.getPosition().getIslands().get(0))) {
                 if (land.getIslands().get(0).equals(i)) {
                     if (island > 4 && island < 10)
                         arrow = "↑";

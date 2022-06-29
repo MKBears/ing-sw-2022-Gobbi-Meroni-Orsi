@@ -111,7 +111,6 @@ public class Client  extends Thread{
                         join = (ArrayList<String>) in.readObject();
                         ArrayList<String> resume;
                         resume = (ArrayList<String>) in.readObject();
-                        System.out.println("ci sono");
                         view.chooseMatch(join, resume);
                     case "ACK":
                         //view.wakeUp("MoveStudents");
