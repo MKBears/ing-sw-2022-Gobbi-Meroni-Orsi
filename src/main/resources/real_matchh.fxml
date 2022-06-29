@@ -10,8 +10,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<?import javafx.scene.control.TextField?>
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" style="-fx-background-color: #87cefa;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.guiControllers.MatchController">
    <ImageView fitHeight="720.0" fitWidth="1080.0" pickOnBounds="true" preserveRatio="true">
       <image>
@@ -19,7 +19,7 @@
       </image>
    </ImageView>
     <Pane fx:id="land_view" prefHeight="719.0" prefWidth="1080.0">
-      <ImageView fx:id="ch_chosen" fitHeight="117.0" fitWidth="86.0" layoutX="747.0" layoutY="268.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="asschosen" fitHeight="117.0" fitWidth="86.0" layoutX="747.0" layoutY="268.0" pickOnBounds="true" preserveRatio="true" visible="false" />
         <AnchorPane fx:id="land3" layoutX="600.0" layoutY="25.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="218.0" prefWidth="251.0">
             <ImageView fx:id="island3" fitHeight="205.0" fitWidth="227.0" layoutX="25.0" layoutY="10.0" onMouseClicked="#moveto" pickOnBounds="true" preserveRatio="true">
                 <Image url="@wooden_pieces/wooden_pieces/island1.png" />
@@ -74,7 +74,7 @@
             </effect>
             </ImageView>
             <Label fx:id="yellow_3" layoutX="244.0" layoutY="184.0" text=":0" />
-            <ImageView fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
+            <ImageView fx:id="noentry3" fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
                 <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
             </ImageView>
             <Label fx:id="size3" layoutX="120.0" layoutY="-18.0" prefHeight="29.0" prefWidth="33.0" text="1">
@@ -137,7 +137,7 @@
             </effect>
             </ImageView>
             <Label fx:id="yellow_1" layoutX="244.0" layoutY="184.0" text=":0" />
-            <ImageView fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
+            <ImageView fx:id="noentry1" fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
                 <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
             </ImageView>
             <Label fx:id="size1" layoutX="123.0" layoutY="-18.0" prefHeight="29.0" prefWidth="33.0" text="1">
@@ -200,7 +200,7 @@
             </effect>
             </ImageView>
             <Label fx:id="yellow_2" layoutX="244.0" layoutY="184.0" text=":0" />
-            <ImageView fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
+            <ImageView fx:id="noentry2" fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
                 <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
             </ImageView>
             <Label fx:id="size2" layoutX="120.0" layoutY="-18.0" prefHeight="29.0" prefWidth="33.0" text="1">
@@ -263,7 +263,7 @@
             </effect>
             </ImageView>
             <Label fx:id="yellow_9" layoutX="244.0" layoutY="184.0" text=":0" />
-            <ImageView fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
+            <ImageView fx:id="noentry9" fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
                 <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
             </ImageView>
             <Label fx:id="size9" layoutX="124.0" layoutY="-16.0" prefHeight="29.0" prefWidth="33.0" text="1">
@@ -326,7 +326,7 @@
             </effect>
             </ImageView>
             <Label fx:id="yellow_7" layoutX="244.0" layoutY="184.0" text=":0" />
-            <ImageView fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
+            <ImageView fx:id="noentry7" fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
                 <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
             </ImageView>
             <Label fx:id="size7" layoutX="120.0" layoutY="-18.0" prefHeight="29.0" prefWidth="33.0" text="1">
@@ -389,7 +389,7 @@
             </effect>
             </ImageView>
             <Label fx:id="yellow_10" layoutX="244.0" layoutY="184.0" text=":0" />
-            <ImageView fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
+            <ImageView fx:id="noentry10" fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
                 <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
             </ImageView>
             <Label fx:id="size10" layoutX="42.0" layoutY="16.0" prefHeight="29.0" prefWidth="33.0" text="1">
@@ -452,7 +452,7 @@
             </effect>
             </ImageView>
             <Label fx:id="yellow_11" layoutX="244.0" layoutY="184.0" text=":0" />
-            <ImageView fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
+            <ImageView fx:id="noentry11" fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
                 <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
             </ImageView>
             <Label fx:id="size11" layoutX="50.0" layoutY="7.0" prefHeight="29.0" prefWidth="33.0" text="1">
@@ -515,7 +515,7 @@
             </effect>
             </ImageView>
             <Label fx:id="yellow_0" layoutX="244.0" layoutY="184.0" text=":0" />
-            <ImageView fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
+            <ImageView fx:id="noentry0" fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
                 <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
             </ImageView>
             <Label fx:id="size0" layoutX="129.0" layoutY="-18.0" prefHeight="29.0" prefWidth="33.0" text="1">
@@ -578,7 +578,7 @@
             </effect>
             </ImageView>
             <Label fx:id="yellow_4" layoutX="244.0" layoutY="184.0" text=":0" />
-            <ImageView fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
+            <ImageView fx:id="noentry4" fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
                 <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
             </ImageView>
             <Label fx:id="size4" layoutX="42.0" layoutY="149.0" prefHeight="29.0" prefWidth="33.0" text="1">
@@ -641,7 +641,7 @@
             </effect>
             </ImageView>
             <Label fx:id="yellow_6" layoutX="244.0" layoutY="184.0" text=":0" />
-            <ImageView fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
+            <ImageView fx:id="noentry6" fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
                 <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
             </ImageView>
             <Label fx:id="size6" layoutX="42.0" layoutY="25.0" prefHeight="29.0" prefWidth="33.0" text="1">
@@ -704,7 +704,7 @@
             </effect>
             </ImageView>
             <Label fx:id="yellow_5" layoutX="244.0" layoutY="184.0" text=":0" />
-            <ImageView fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
+            <ImageView fx:id="noentry5" fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
                 <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
             </ImageView>
             <Label fx:id="size5" layoutX="25.0" layoutY="67.0" prefHeight="29.0" prefWidth="33.0" text="1">
@@ -767,7 +767,7 @@
             </effect>
             </ImageView>
             <Label fx:id="yellow_8" layoutX="244.0" layoutY="184.0" text=":0" />
-            <ImageView fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
+            <ImageView fx:id="noentry8" fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
                 <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
             </ImageView>
             <Label fx:id="size8" layoutX="128.0" layoutY="-16.0" prefHeight="29.0" prefWidth="33.0" text="1">
@@ -902,7 +902,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="green0" layoutX="141.0" layoutY="128.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="green0" layoutX="141.0" layoutY="128.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="23.0" prefWidth="244.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_green.png" />
                 </ImageView>
@@ -937,7 +937,7 @@
                <DropShadow />
             </effect>
             </HBox>
-            <HBox fx:id="blue0" layoutX="141.0" layoutY="271.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="238.0" spacing="1.0">
+            <HBox fx:id="blue0" layoutX="141.0" layoutY="271.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="26.0" prefWidth="238.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_blue.png" />
                 </ImageView>
@@ -978,7 +978,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="red0" layoutX="140.0" layoutY="163.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="246.0" spacing="1.0">
+            <HBox fx:id="red0" layoutX="140.0" layoutY="163.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="26.0" prefWidth="246.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_red.png" />
                 </ImageView>
@@ -1019,7 +1019,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="yellow0" layoutX="141.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="29.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="yellow0" layoutX="141.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="29.0" prefWidth="244.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_yellow.png" />
                 </ImageView>
@@ -1054,7 +1054,7 @@
                <DropShadow />
             </effect>
             </HBox>
-            <HBox fx:id="pink0" layoutX="139.0" layoutY="236.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="pink0" layoutX="139.0" layoutY="236.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="30.0" prefWidth="244.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_pink.png" />
                 </ImageView>
@@ -1177,19 +1177,23 @@
             <font>
                <Font name="Script MT Bold" size="22.0" />
             </font></Label>
-            <ImageView fx:id="coin0" fitHeight="90.0" fitWidth="90.0" layoutX="352.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
+            <ImageView fx:id="coin0" fitHeight="90.0" fitWidth="90.0" layoutX="324.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                 <Image url="@Graphical_Assets/Moneta_base.png" />
             </ImageView>
-            <Label fx:id="ncoin0" layoutX="335.0" layoutY="40.0" rotate="90.0" text="0">
+            <Label fx:id="ncoin0" layoutX="288.0" layoutY="41.0" rotate="90.0" text="0">
             <font>
                <Font name="Script MT Bold" size="20.0" />
             </font></Label>
             <ImageView fx:id="wizard0" fitHeight="90.0" fitWidth="85.0" layoutX="455.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-radius: 20;" />
-         <Button fx:id="tomyboard0" layoutX="171.0" layoutY="34.0" mnemonicParsing="false" onAction="#movetoboard" prefHeight="28.0" prefWidth="90.0" rotate="90.0" text="Metti nella mia plancia">
+         <Button fx:id="tomyboard0" layoutX="171.0" layoutY="34.0" mnemonicParsing="false" onAction="#movetoboard" prefHeight="28.0" prefWidth="90.0" rotate="90.0" style="-fx-background-color: white;" text="Metti nella mia plancia">
             <font>
                <Font size="6.0" />
             </font>
+            <effect>
+               <DropShadow />
+            </effect>
          </Button>
+         <Button fx:id="ok0" layoutX="84.0" layoutY="36.0" mnemonicParsing="false" onAction="#Ok" rotate="90.0" text="Ok" />
         </AnchorPane>
         <AnchorPane layoutX="199.0" layoutY="92.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="339.0" prefWidth="581.0" rotate="-90.0">
             <ImageView fx:id="board1" fitHeight="220.0" fitWidth="500.0" layoutX="50.0" layoutY="102.0" pickOnBounds="true" preserveRatio="true">
@@ -1207,7 +1211,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="green1" layoutX="141.0" layoutY="128.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="green1" layoutX="141.0" layoutY="128.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="23.0" prefWidth="244.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_green.png" />
                 </ImageView>
@@ -1242,7 +1246,7 @@
                <DropShadow />
             </effect>
             </HBox>
-            <HBox fx:id="blue1" layoutX="141.0" layoutY="271.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="238.0" spacing="1.0">
+            <HBox fx:id="blue1" layoutX="141.0" layoutY="271.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="26.0" prefWidth="238.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_blue.png" />
                 </ImageView>
@@ -1283,7 +1287,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="red1" layoutX="140.0" layoutY="163.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="246.0" spacing="1.0">
+            <HBox fx:id="red1" layoutX="140.0" layoutY="163.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="26.0" prefWidth="246.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_red.png" />
                 </ImageView>
@@ -1324,7 +1328,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="yellow1" layoutX="141.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="29.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="yellow1" layoutX="141.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="29.0" prefWidth="244.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_yellow.png" />
                 </ImageView>
@@ -1359,7 +1363,7 @@
                <DropShadow />
             </effect>
             </HBox>
-            <HBox fx:id="pink1" layoutX="139.0" layoutY="236.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="pink1" layoutX="139.0" layoutY="236.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="30.0" prefWidth="244.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_pink.png" />
                 </ImageView>
@@ -1482,21 +1486,25 @@
             <font>
                <Font name="Script MT Bold" size="22.0" />
             </font></Label>
-            <ImageView fx:id="coin1" fitHeight="90.0" fitWidth="90.0" layoutX="352.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
+            <ImageView fx:id="coin1" fitHeight="90.0" fitWidth="90.0" layoutX="325.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                 <Image url="@Graphical_Assets/Moneta_base.png" />
             </ImageView>
-            <Label fx:id="ncoin1" layoutX="335.0" layoutY="43.0" rotate="90.0" text="0">
+            <Label fx:id="ncoin1" layoutX="293.0" layoutY="41.0" rotate="90.0" text="0">
             <font>
                <Font name="Script MT Bold" size="20.0" />
             </font></Label>
             <ImageView fx:id="wizard1" fitHeight="90.0" fitWidth="88.0" layoutX="458.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-radius: 20;" />
-         <Button fx:id="tomyboard1" layoutX="175.0" layoutY="41.0" mnemonicParsing="false" onAction="#movetoboard" prefHeight="28.0" prefWidth="86.0" rotate="90.0" text="Metti nella mia plancia">
+         <Button fx:id="tomyboard1" layoutX="175.0" layoutY="41.0" mnemonicParsing="false" onAction="#movetoboard" prefHeight="28.0" prefWidth="86.0" rotate="90.0" style="-fx-background-color: white;" text="Metti nella mia plancia">
             <font>
                <Font size="6.0" />
             </font>
+            <effect>
+               <DropShadow />
+            </effect>
          </Button>
+         <Button fx:id="ok1" layoutX="80.0" layoutY="35.0" mnemonicParsing="false" onAction="#Ok" rotate="90.0" text="Ok" />
         </AnchorPane>
-        <AnchorPane fx:id="two" layoutX="519.0" layoutY="92.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="339.0" prefWidth="581.0" rotate="-90.0">
+        <AnchorPane fx:id="two" layoutX="518.0" layoutY="92.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="339.0" prefWidth="581.0" rotate="-90.0">
             <ImageView fx:id="board2" fitHeight="220.0" fitWidth="500.0" layoutX="50.0" layoutY="102.0" pickOnBounds="true" preserveRatio="true">
                 <Image url="@Graphical_Assets/Plancia/Plancia_DEF2.png" />
             </ImageView>
@@ -1512,7 +1520,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="green2" layoutX="141.0" layoutY="128.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="green2" layoutX="141.0" layoutY="128.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="23.0" prefWidth="244.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_green.png" />
                 </ImageView>
@@ -1547,7 +1555,7 @@
                <DropShadow />
             </effect>
             </HBox>
-            <HBox fx:id="blue2" layoutX="141.0" layoutY="271.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="238.0" spacing="1.0">
+            <HBox fx:id="blue2" layoutX="141.0" layoutY="271.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="26.0" prefWidth="238.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_blue.png" />
                 </ImageView>
@@ -1588,7 +1596,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="red2" layoutX="140.0" layoutY="163.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="246.0" spacing="1.0">
+            <HBox fx:id="red2" layoutX="140.0" layoutY="163.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="26.0" prefWidth="246.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_red.png" />
                 </ImageView>
@@ -1629,7 +1637,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="yellow2" layoutX="141.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="29.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="yellow2" layoutX="141.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="29.0" prefWidth="244.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_yellow.png" />
                 </ImageView>
@@ -1664,7 +1672,7 @@
                <DropShadow />
             </effect>
             </HBox>
-            <HBox fx:id="pink2" layoutX="139.0" layoutY="236.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="pink2" layoutX="139.0" layoutY="236.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="30.0" prefWidth="244.0" spacing="1.0">
                 <children>
                     <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                         <Image url="@wooden_pieces/wooden_pieces/student_pink.png" />
@@ -1789,18 +1797,22 @@
             <font>
                <Font name="Script MT Bold" size="22.0" />
             </font></Label>
-            <ImageView fx:id="coin2" fitHeight="90.0" fitWidth="90.0" layoutX="349.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
+            <ImageView fx:id="coin2" fitHeight="90.0" fitWidth="90.0" layoutX="325.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                 <Image url="@Graphical_Assets/Moneta_base.png" />
             </ImageView>
-            <Label fx:id="ncoin2" layoutX="335.0" layoutY="35.0" rotate="90.0" text="0">
+            <Label fx:id="ncoin2" layoutX="300.0" layoutY="34.0" rotate="90.0" text="0">
             <font>
                <Font name="Script MT Bold" size="20.0" />
             </font></Label>
             <ImageView fx:id="wizard2" fitHeight="90.0" fitWidth="88.0" layoutX="458.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-radius: 20;" />
-         <Button fx:id="tomyboard2" layoutX="180.0" layoutY="34.0" mnemonicParsing="false" onAction="#movetoboard" prefHeight="28.0" prefWidth="86.0" rotate="90.0" text="Metti nella mia plancia">
+         <Button fx:id="tomyboard2" layoutX="180.0" layoutY="34.0" mnemonicParsing="false" onAction="#movetoboard" prefHeight="28.0" prefWidth="86.0" rotate="90.0" style="-fx-background-color: white;" text="Metti nella mia plancia">
             <font>
                <Font size="6.0" />
-            </font></Button>
+            </font>
+            <effect>
+               <DropShadow />
+            </effect></Button>
+         <Button fx:id="ok2" layoutX="80.0" layoutY="41.0" mnemonicParsing="false" onAction="#Ok" rotate="90.0" text="Ok" />
         </AnchorPane>
         <Label layoutX="455.0" layoutY="500.0" text="Il tuo mazzo:">
             <font>
@@ -1853,16 +1865,16 @@
     </Pane>
    <Pane fx:id="characters" prefHeight="720.0" prefWidth="1080.0" visible="false">
       <children>
-         <ImageView fx:id="ch0" fitHeight="344.0" fitWidth="197.0" layoutX="100.0" layoutY="150.0" onMouseClicked="#use_ch" pickOnBounds="true" preserveRatio="true">
+         <ImageView fx:id="ch0" fitHeight="344.0" fitWidth="197.0" layoutX="101.0" layoutY="211.0" onMouseClicked="#use_ch" pickOnBounds="true" preserveRatio="true">
             <image>
                <Image url="@Graphical_Assets/Personaggi/CarteTOT_front.jpg" />
             </image>
          </ImageView>
-         <ImageView fx:id="ch2" fitHeight="299.0" fitWidth="197.0" layoutX="764.0" layoutY="150.0" onMouseClicked="#use_ch" pickOnBounds="true" preserveRatio="true">
+         <ImageView fx:id="ch2" fitHeight="299.0" fitWidth="197.0" layoutX="766.0" layoutY="211.0" onMouseClicked="#use_ch" pickOnBounds="true" preserveRatio="true">
             <image>
                <Image url="@Graphical_Assets/Personaggi/CarteTOT_front11.jpg" />
             </image></ImageView>
-         <ImageView fx:id="ch1" fitHeight="299.0" fitWidth="197.0" layoutX="441.0" layoutY="150.0" onMouseClicked="#use_ch" pickOnBounds="true" preserveRatio="true">
+         <ImageView fx:id="ch1" fitHeight="299.0" fitWidth="197.0" layoutX="443.0" layoutY="211.0" onMouseClicked="#use_ch" pickOnBounds="true" preserveRatio="true">
             <image>
                <Image url="@Graphical_Assets/Personaggi/CarteTOT_front12.jpg" />
             </image></ImageView>
@@ -1882,21 +1894,102 @@
                <InnerShadow height="65.0" radius="33.0" width="69.0" />
             </effect>
          </Button>
-         <ImageView fx:id="ch_00" fitHeight="70.0" fitWidth="70.0" layoutX="163.0" layoutY="463.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
-         <ImageView fx:id="ch_01" fitHeight="70.0" fitWidth="70.0" layoutX="100.0" layoutY="533.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
-         <ImageView fx:id="ch_02" fitHeight="70.0" fitWidth="70.0" layoutX="237.0" layoutY="517.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
-         <ImageView fx:id="ch_03" fitHeight="70.0" fitWidth="70.0" layoutX="174.0" layoutY="595.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
-         <ImageView fx:id="ch_10" fitHeight="70.0" fitWidth="70.0" layoutX="511.0" layoutY="473.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
-         <ImageView fx:id="ch_11" fitHeight="70.0" fitWidth="70.0" layoutX="420.0" layoutY="535.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
-         <ImageView fx:id="ch_13" fitHeight="70.0" fitWidth="70.0" layoutX="505.0" layoutY="570.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
-         <ImageView fx:id="ch_12" fitHeight="70.0" fitWidth="70.0" layoutX="576.0" layoutY="520.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
-         <ImageView fx:id="ch_20" fitHeight="70.0" fitWidth="70.0" layoutX="828.0" layoutY="485.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
-         <ImageView fx:id="ch_21" fitHeight="70.0" fitWidth="70.0" layoutX="760.0" layoutY="543.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
-         <ImageView fx:id="ch_22" fitHeight="70.0" fitWidth="70.0" layoutX="889.0" layoutY="531.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
-         <ImageView fx:id="ch_23" fitHeight="70.0" fitWidth="70.0" layoutX="834.0" layoutY="582.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true" />
-         <TextField fx:id="power0" layoutX="95.0" layoutY="66.0" prefHeight="70.0" prefWidth="197.0" text="ch_0" />
-         <TextField fx:id="power1" layoutX="442.0" layoutY="66.0" prefHeight="70.0" prefWidth="197.0" text="Label" />
-         <TextField fx:id="power2" layoutX="765.0" layoutY="66.0" prefHeight="70.0" prefWidth="197.0" text="Label" />
+         <ImageView fx:id="ch_00" fitHeight="55.0" fitWidth="59.0" layoutX="169.0" layoutY="528.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
+            </image>
+            <effect>
+               <DropShadow />
+            </effect></ImageView>
+         <ImageView fx:id="ch_01" fitHeight="55.0" fitWidth="55.0" layoutX="115.0" layoutY="577.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
+            </image>
+            <effect>
+               <DropShadow />
+            </effect></ImageView>
+         <ImageView fx:id="ch_02" fitHeight="59.0" fitWidth="59.0" layoutX="240.0" layoutY="576.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
+            </image>
+            <effect>
+               <DropShadow />
+            </effect></ImageView>
+         <ImageView fx:id="ch_03" fitHeight="59.0" fitWidth="59.0" layoutX="170.0" layoutY="632.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
+            </image>
+            <effect>
+               <DropShadow />
+            </effect></ImageView>
+         <ImageView fx:id="ch_10" fitHeight="55.0" fitWidth="59.0" layoutX="506.0" layoutY="539.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
+            </image>
+            <effect>
+               <DropShadow />
+            </effect></ImageView>
+         <ImageView fx:id="ch_11" fitHeight="55.0" fitWidth="59.0" layoutX="431.0" layoutY="586.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
+            </image>
+            <effect>
+               <DropShadow />
+            </effect></ImageView>
+         <ImageView fx:id="ch_13" fitHeight="55.0" fitWidth="59.0" layoutX="506.0" layoutY="636.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
+            </image>
+            <effect>
+               <DropShadow />
+            </effect></ImageView>
+         <ImageView fx:id="ch_12" fitHeight="55.0" fitWidth="59.0" layoutX="582.0" layoutY="586.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
+            </image>
+            <effect>
+               <DropShadow />
+            </effect></ImageView>
+         <ImageView fx:id="ch_20" fitHeight="55.0" fitWidth="55.0" layoutX="836.0" layoutY="528.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
+            </image>
+            <effect>
+               <DropShadow />
+            </effect></ImageView>
+         <ImageView fx:id="ch_21" fitHeight="59.0" fitWidth="59.0" layoutX="766.0" layoutY="584.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
+            </image>
+            <effect>
+               <DropShadow />
+            </effect></ImageView>
+         <ImageView fx:id="ch_22" fitHeight="70.0" fitWidth="59.0" layoutX="891.0" layoutY="575.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
+            </image>
+            <effect>
+               <DropShadow />
+            </effect></ImageView>
+         <ImageView fx:id="ch_23" fitHeight="55.0" fitWidth="55.0" layoutX="836.0" layoutY="636.0" onMouseClicked="#useit" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
+            </image>
+            <effect>
+               <DropShadow />
+            </effect></ImageView>
+         <Text fx:id="power0" layoutX="99.0" layoutY="93.0" text="ch_0" wrappingWidth="200.0">
+            <font>
+               <Font name="Verdana Italic" size="12.0" />
+            </font></Text>
+         <Text fx:id="power1" layoutX="441.0" layoutY="93.0" text="Label" wrappingWidth="200.0">
+            <font>
+               <Font name="Verdana" size="12.0" />
+            </font></Text>
+         <Text fx:id="power2" layoutX="764.0" layoutY="92.0" text="Label" wrappingWidth="200.0">
+            <font>
+               <Font name="Verdana" size="12.0" />
+            </font></Text>
       </children>
    </Pane>
     <Pane fx:id="youwantusechcards" layoutX="274.0" layoutY="149.0" prefHeight="422.0" prefWidth="614.0" style="-fx-background-color: #00ff00;" visible="false">

@@ -229,7 +229,7 @@ public class Cli extends Thread{
      */
     public int getNumStep(Player pl) {
         System.out.println("\nScegli di spostare Madre Natura di? (deve " +
-                "essere un numero compreso tra 0 e " + pl.getPlayedCard().getMNSteps());
+                "essere un numero compreso tra 0 e " + pl.getPlayedCard().getMNSteps()+ ")");
 
         while (true) {
             try {

@@ -40,7 +40,10 @@ public class Gui extends Application {
     private FXMLLoader pup;
     private boolean newgame;
     private  int whoami;
-    private CharacterCard[]ch;
+    private CharacterCard[] ch;
+    private boolean isch1usable;
+    private boolean isch2usable;
+    private boolean isch3usable;
 
     public Gui() {
         end=false;
@@ -167,12 +170,7 @@ public class Gui extends Application {
         }
     }
     public void popUp(String title, String message){
-        System.out.println("In popup di GUI ho: "+message);
 
-        //PopUpController.setNotify(message);
-        //System.out.println(fxmlLoader.getLocation().toString());
-        //try {
-            //popup.setScene(new Scene(pup.load()));
         FXMLLoader fxmlLoader=new FXMLLoader(getClass().getClassLoader().getResource("popup_notify.fxml"));
         try {
             popup.setScene(new Scene(fxmlLoader.load()));
@@ -180,9 +178,8 @@ public class Gui extends Application {
             throw new RuntimeException(e);
         }
         ((PopUpController)fxmlLoader.getController()).setNotify(message);
-        //} catch (IOException e) {
-        //    e.printStackTrace();
-        //}
+
+        popup.sizeToScene();
         popup.setTitle(title);
         popup.setAlwaysOnTop(true);
         popup.show();
@@ -397,8 +394,38 @@ public class Gui extends Application {
     }
 
     public void getCharacter(CharacterCard[] cards) {
-        this.ch=ch;
+        System.out.println("Sono i getcharacter della gui");
+        this.ch=cards;
+        isch1usable=false;
+        isch2usable=false;
+        isch3usable=false;
+        if(((Board_Experts)me.getBoard()).getCoinsNumber()>=ch[0].getPrice()){
+            isch1usable=true;
+        }
+        if(((Board_Experts)me.getBoard()).getCoinsNumber()>=ch[1].getPrice()){
+            isch2usable=true;
+        }
+        if(((Board_Experts)me.getBoard()).getCoinsNumber()>=ch[2].getPrice()){
+            isch3usable=true;
+        }
+        System.out.println("Faccio wakeup con ch del matchcontroller");
         ((MatchController)game.getController()).wakeUp("Ch");
+    }
+
+    public boolean getUsability(int y){
+        switch (y) {
+            case 1:
+                return isch1usable;
+            case 2:
+                return isch2usable;
+            case 3:
+                return isch3usable;
+        }
+        return false;
+    }
+
+    public CharacterCard[] getCh(){
+        return ch;
     }
 
     public void setCharacters(CharacterCard[] ch){

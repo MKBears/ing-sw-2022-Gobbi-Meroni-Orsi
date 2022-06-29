@@ -69,6 +69,12 @@ public class ClientGui  extends Thread {
     private Player finish;
     private String error;
     private CharacterCard[] ch;
+    private List<Student> ss;
+    private Map<Type_Student, Player> profs;
+    private ArrayList<Student> classroom;
+    private ArrayList<Type_Student> type;
+    private Type_Student ty;
+    private boolean noch;
 
     /**
      * Constructor of the class Client
@@ -85,6 +91,7 @@ public class ClientGui  extends Thread {
         wizard = null;
         ass = null;
         pm = false;
+        noch=false;
     }
 
     public Gui getView(){
@@ -234,23 +241,24 @@ public class ClientGui  extends Thread {
                             }
                             view.setMe(me);
                             view.setMatch(match);
-                            //if (match instanceof Expert_Match)
-                            //    view.setCharacters(((Expert_Match) match).getCard());
                             server.sendACK();
                             break;
                         case "RefillClouds":
+                            noch=false;
                             //if(!pm){
                             Platform.runLater(new Runnable() {
                                 @Override
                             public void run() {
                                     view.printMatch(match);
+                                    if (match instanceof Expert_Match)
+                                        view.setCharacters(((Expert_Match) match).getCard());
                                 }
                             });
 
                             //synchronized (this) {
                             //    this.wait();
                             //}
-                            sleep(3500);
+                            sleep(4500);
                             server.sendACK();
                             //pm=false;
                             //}
@@ -460,19 +468,20 @@ public class ClientGui  extends Thread {
                             Player winner = (Player) in.readObject();
                             String ex = (String) in.readObject(); //spiegazione di perchè ha vinto
                             GameRecap recap = (GameRecap) in.readObject();
+                            //view.printMatch(match);
                             view.getWinner(winner);
-                            view.printMatch(match);
+                            System.out.println("dopo getwinner");
                             view. printNotification(winner.getColor()+winner.getUserName()+" ha vinto perché "+ex);
+                            System.out.println("Dopo explanation");
                             view.printNotification(recap.toString());
-                            sleep(5000);
-                            view.wakeUp("EndGame");
+                            System.out.println("Dopo recap");
                             end = true;
+                            view.wakeUp("EndGame");
                             server.sendACK();
                             break;
                         case "LastTower":  //da mettere a posto
                             Player pl = (Player) in.readObject();
-                            view.getWinner(pl);
-                            view.wakeUp("EndGame");
+                            view.printNotification(pl.getColor() + pl.getUserName() + " ha costruito tutte le torri");
                             end = true;
                             server.sendACK();
                             break;
@@ -536,50 +545,64 @@ public class ClientGui  extends Thread {
                             server.sendACK();
                             break;
                         case "Ch":
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    view.getCharacter(ch);
+                            noch=false;
+                            Board_Experts becs=(Board_Experts) me.getBoard();
+                            System.out.println("Ho "+ ((Board_Experts) me.getBoard()).getCoinsNumber()+ " monete");
+                            for (CharacterCard c: ch) {
+                                if (becs.getCoinsNumber() >= c.getPrice()){
+                                    noch=true; /////////////////////////////////PERCHè???????
                                 }
-                            });
-                            synchronized (this){
-                                wait();
+                            }
+                            if (noch){
+                                System.out.println("Per me puoi giocare le carte personaggio");
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        noch=true;
+                                        view.getCharacter(ch);
+                                    }
+                                });
+                                /*synchronized (this){
+                                    wait();
+                                }*/
+                            } else {
+                                noch=false;
+                                server.sendNoCh();
                             }
                             break;
-                        case "NotifyCh_1": //da mettere a posto
-                            Land land3 = (Land) in.readObject();
-                            ArrayList<Student> c1 = (ArrayList<Student>) in.readObject();
-                            Student s2 = (Student) in.readObject();
-                            String us6=(String) in.readObject();
+                        case "NotifyCh_1":
                             for (int i = 0; i < 3; i++) {
                                 if (((Expert_Match) match).getCard()[i] instanceof Ch_1)
-                                    ((Ch_1) ((Expert_Match) match).getCard()[i]).setStudents(c1);
+                                    ((Ch_1) ((Expert_Match) match).getCard()[i]).setStudents((ArrayList<Student>) ss);
                             }
                             for (Land l : match.getLands()) {
-                                if (l.getID() == land3.getID()) {
-                                    l.addStudent(s2);
+                                if (l.getID() == land.getID()) {
+                                    l.addStudent(stu);
                                 }
                             }
                             for (CharacterCard c:((Expert_Match)match).getCard()) {
                                 if(c instanceof Ch_1) {
                                     for (Player player : match.getPlayer()) {
-                                        if (player.getUserName().equals(us6)) {
+                                        if (player.getUserName().equals(u)) {
                                             ((Board_Experts) player.getBoard()).subCoin(c.getPrice());
                                             c.setActivated();
                                         }
                                     }
                                 }
                             }
-                            view.printMatch(match);
-                            view.printNotification("Il player "+us6+" ha giocato la carta personaggio 1");
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printMatch(match);
+                                    view.printNotification("Il player "+u+" ha giocato la carta personaggio 1");
+                                }
+                            });
                             server.sendACK();
                             break;
-                        case "NotifyCh_2": //da mettere a posto
-                            Map<Type_Student, Player> pro = (Map<Type_Student, Player>) in.readObject();
-                            String use = (String) in.readObject();
-                            match.setProfessors(pro);
+                        case "NotifyCh_2":
+                            match.setProfessors(profs);
                             for (Player e : match.getPlayer()) {
-                                if (e.getUserName().equals(use)) {
+                                if (e.getUserName().equals(u)) {
                                     for (Type_Student t : match.getProfessors().keySet()) {
                                         if (match.getProfessors().get(t).getBoard().getStudentsOfType(t) == e.getBoard().getStudentsOfType(t)) {
                                             match.getProfessors().replace(t, e);
@@ -590,38 +613,45 @@ public class ClientGui  extends Thread {
                             for (CharacterCard c:((Expert_Match)match).getCard()) {
                                 if(c instanceof Ch_2){
                                     for (Player pa: match.getPlayer()) {
-                                        if(pa.getUserName().equals(use)){
+                                        if(pa.getUserName().equals(u)){
                                             ((Board_Experts)pa.getBoard()).subCoin(c.getPrice());
                                             c.setActivated();
                                         }
                                     }
                                 }
                             }
-                            view.printMatch(match);
-                            view.printNotification("Il player " + use + " ha giocato la carta personaggio 2");
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printMatch(match);
+                                    view.printNotification("Il player "+u+" ha giocato la carta personaggio 2");
+                                }
+                            });
                             server.sendACK();
                             break;
-                        case "NotifyCh_4": //da mettere a posto
-                            String userna = (String) in.readObject();
+                        case "NotifyCh_4":
                             for (CharacterCard c:((Expert_Match)match).getCard()) {
                                 if(c instanceof Ch_4){
                                     for (Player pa: match.getPlayer()) {
-                                        if(pa.getUserName().equals(userna)){
+                                        if(pa.getUserName().equals(u)){
                                             ((Board_Experts)pa.getBoard()).subCoin(c.getPrice());
                                             c.setActivated();
                                         }
                                     }
                                 }
                             }
-                            view.printNotification("giocatore " + userna + " ha giocato la carta personaggio 4");
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printNotification("Il giocatore " + u + " ha giocato la carta personaggio 4");
+                                }
+                            });
                             server.sendACK();
                             break;
-                        case "NotifyCh_5": //da mettere a posto
-                            Land land2 = (Land) in.readObject();
-                            String us5=(String) in.readObject();
-                            if (!me.getUserName().equals(us5)) {
+                        case "NotifyCh_5":
+                            if (!me.getUserName().equals(u)) {
                                 for (Land l : match.getLands()) {
-                                    if (l.getID() == land2.getID()) {
+                                    if (l.getID() == land.getID()) {
                                         l.setNoEntry(true);
                                     }
                                 }
@@ -629,61 +659,65 @@ public class ClientGui  extends Thread {
                             for (CharacterCard c:((Expert_Match)match).getCard()) {
                                 if(c instanceof Ch_5) {
                                     for (Player player : match.getPlayer()) {
-                                        if (player.getUserName().equals(us5)) {
+                                        if (player.getUserName().equals(u)) {
                                             ((Board_Experts) player.getBoard()).subCoin(c.getPrice());
                                             c.setActivated();
                                         }
                                     }
                                 }
                             }
-                            view.printMatch(match);
-                            view.printNotification("Il player "+us5+" ha giocato la carta personaggio 5");
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printMatch(match);
+                                    view.printNotification("Il player "+u+" ha giocato la carta personaggio 5");
+                                }
+                            });
                             server.sendACK();
                             break;
-                        case "NotifyCh_11": //da mettere a posto
-                            ArrayList<Student> ch11=(ArrayList<Student>) in.readObject();
-                            String usernam=(String) in.readObject();
-                            Student s3=(Student) in.readObject();
+                        case "NotifyCh_11":
                             for (Player player:match.getPlayer()) {
-                                if(player.getUserName().equals(usernam)){
-                                    player.getBoard().ch_11_effect(s3);
+                                if(player.getUserName().equals(u)){
+                                    player.getBoard().ch_11_effect(s);
                                 }
                             }
                             for (CharacterCard c:((Expert_Match)match).getCard()) {
                                 if(c instanceof Ch_11){
                                     for (Player pa:match.getPlayer()) {
-                                        if(pa.getUserName().equals(usernam)){
+                                        if(pa.getUserName().equals(u)){
                                             ((Board_Experts)pa.getBoard()).subCoin(c.getPrice());
                                             c.setActivated();
                                         }
                                     }
                                 }
                             }
-                            match.checkProfessor(s3.type());
+                            match.checkProfessor(s.type());
                             for (int i = 0; i < 3; i++) {
                                 if(((Expert_Match)match).getCard()[i] instanceof Ch_11) {
-                                    ((Ch_11) ((Expert_Match) match).getCard()[i]).setStudents(ch11);
+                                    ((Ch_11) ((Expert_Match) match).getCard()[i]).setStudents(classroom);
                                 }
                             }
-                            view.printMatch(match);
-                            view.printNotification("Il player "+usernam+" ha giocato la carta personaggio 11");
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printMatch(match);
+                                    view.printNotification("Il player "+u+" ha giocato la carta personaggio 11");
+                                }
+                            });
                             server.sendACK();
                             break;
-                        case "NotifyCh_10": //da mettere a posto
-                            String usa = (String) in.readObject();
-                            ArrayList<Student> studes = (ArrayList<Student>) in.readObject();
-                            ArrayList<Type_Student> types = (ArrayList<Type_Student>) in.readObject();
-                            for (int i = 0; i < studes.size(); i++) {
+                        case "NotifyCh_10":
+                            for (int i = 0; i < classroom.size(); i++) {
                                 for (Player player : match.getPlayer()) {
-                                    if (player.getUserName().equals(usa)) {
-                                        player.getBoard().ch_10_effect(studes.get(i), types.get(i));
+                                    if (player.getUserName().equals(u)) {
+                                        player.getBoard().ch_10_effect(classroom.get(i), type.get(i));
                                     }
                                 }
                             }
                             for (CharacterCard c:((Expert_Match)match).getCard()) {
                                 if(c instanceof Ch_10) {
                                     for (Player player : match.getPlayer()) {
-                                        if (player.getUserName().equals(usa)) {
+                                        if (player.getUserName().equals(u)) {
                                             ((Board_Experts) player.getBoard()).subCoin(c.getPrice());
                                             c.setActivated();
                                         }
@@ -691,43 +725,54 @@ public class ClientGui  extends Thread {
                                 }
                             }
                             action.checkAllProfessors();
-                            view.printMatch(match);
-                            view.printNotification("giocatore "+usa+" ha giocato la carta personaggio 10");
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printMatch(match);
+                                    view.printNotification("Il player "+u+" ha giocato la carta personaggio 10");
+                                }
+                            });
                             server.sendACK();
                             break;
                         case "NotifyCh_12":
-                            Type_Student type=(Type_Student)in.readObject();
-                            String s4=(String) in.readObject();
                             for (Player pa:match.getPlayer()) {
-                                pa.getBoard().ch_12_effect(type);
+                                pa.getBoard().ch_12_effect(ty);
                             }
                             for (CharacterCard c:((Expert_Match)match).getCard()) {
                                 if(c instanceof Ch_12){
                                     for (Player pa:match.getPlayer()) {
-                                        if(pa.getUserName().equals(s4)){
+                                        if(pa.getUserName().equals(u)){
                                             ((Board_Experts)pa.getBoard()).subCoin(c.getPrice());
                                             c.setActivated();
                                         }
                                     }
                                 }
                             }
-                            view.printMatch(match);
-                            view.printNotification("Il player "+s4+" ha giocato la carta personaggio 12");
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printMatch(match);
+                                    view.printNotification("Il player "+u+" ha giocato la carta personaggio 12");
+                                }
+                            });
                             server.sendACK();
                             break;
                         case "NotifyCh_8":
-                            String us1=(String) in.readObject();
                             for (int i = 0; i < 3; i++) {
                                 if(((Expert_Match)match).getCard()[i] instanceof Ch_8){
                                     for (Player pa:match.getPlayer()) {
-                                        if(pa.getUserName().equals(us1)){
+                                        if(pa.getUserName().equals(u)){
                                             ((Board_Experts)pa.getBoard()).subCoin(((Expert_Match)match).getCard()[i].getPrice());
                                             ((Expert_Match)match).getCard()[i].setActivated();
                                         }
                                     }
                                 }
+                            }Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.printNotification("Il player "+u+" ha giocato la carta personaggio 8");
                             }
-                            view.printNotification("Il player "+us1+" ha giocato la carta personaggio 12");
+                        });
                             server.sendACK();
                             break;
                         //:
@@ -804,8 +849,7 @@ public class ClientGui  extends Thread {
         this.cards =(List<AssistantCard>) cards;
     }
 
-    public void setClouds(ArrayList<Cloud> clouds) {
-        this.clouds=clouds;
+    public void setClouds() {
     }
 
     public void setChosenCard(AssistantCard card, Player pl2){
@@ -819,9 +863,8 @@ public class ClientGui  extends Thread {
         this.use=use;
     }
 
-    public void setNotifyMovedStudentBoard(Student s, Board b, String usern){
+    public void setNotifyMovedStudentBoard(Student s, String usern){
         this.s=s;
-        this.b=b;
         this.usern=usern;
     }
 
@@ -875,5 +918,57 @@ public class ClientGui  extends Thread {
 
     public void setCh(CharacterCard[] ch){
         this.ch=ch;
+        view.setCharacters(ch);
     }
+
+    public void setCh_1(Land l, List<Student> s, Student stu, String user){
+        this.land=l;
+        this.ss=s;
+        this.stu=stu;
+        this.u=user;
+    }
+
+    public void setCh_2(Map<Type_Student,Player>profs, String u){
+        this.profs=profs;
+        this.u=u;
+    }
+
+    public void setCh_4(String u){
+        this.u=u;
+    }
+
+    public void setCh_5(Land lala, String name){
+        this.land=lala;
+        this.u=name;
+    }
+
+    public void setCh_10(String neim, ArrayList<Student> classroom, ArrayList<Type_Student> type){
+        this.u=neim;
+        this.classroom=classroom;
+        this.type=type;
+    }
+
+    public void setCh_11( ArrayList<Student> card, String n, Student ss){
+        this.classroom=card;
+        this.u=n;
+        this.s=ss;
+    }
+
+    public void setCh_12(Type_Student ty, String usrnm){
+        this.ty=ty;
+        this.u=usrnm;
+    }
+
+    public void setCh_8(String usr){
+        this.u=usr;
+    }
+
+    public boolean getNoCh(){
+        return noch;
+    }
+
+    public void setNoCh(boolean v){
+        this.noch=v;
+    }
+
 }

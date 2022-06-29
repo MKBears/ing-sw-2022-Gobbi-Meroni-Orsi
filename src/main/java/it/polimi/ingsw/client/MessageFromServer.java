@@ -60,7 +60,7 @@ public class MessageFromServer extends Thread{
                         break;
                     case "ChooseCloud":
                         synchronized (in) {
-                            cg.setClouds((ArrayList<Cloud>) in.readObject());
+                            cg.setClouds();
                         }
                         break;
                     case "NotifyChosenCard":
@@ -80,7 +80,7 @@ public class MessageFromServer extends Thread{
                         break;
                     case "NotifyMoveStudents (board)":
                         synchronized (in) {
-                            cg.setNotifyMovedStudentBoard((Student) in.readObject(), (Board) in.readObject(), (String) in.readObject());
+                            cg.setNotifyMovedStudentBoard((Student) in.readObject(), (String) in.readObject());
                         }
                         break;
                     case "NotifyMovementMN":
@@ -145,46 +145,44 @@ public class MessageFromServer extends Thread{
                         }
                         break;
                     case "NotifyCh_1":
-                        Land l=(Land) in.readObject();
-                        List<Student> s=(List<Student>) in.readObject();
-                        Student stu=(Student) in.readObject();
-                        String user=(String) in.readObject();
-                        //qualcosa
+                        synchronized (in) {
+                            cg.setCh_1((Land) in.readObject(), (List<Student>) in.readObject(), (Student) in.readObject(), (String) in.readObject());
+                        }
                         break;
                     case "NotifyCh_2":
-                        Map<Type_Student,Player>profs=(Map<Type_Student, Player>) in.readObject();
-                        String u=(String) in.readObject();
-                        //qualcosa
+                        synchronized (in){
+                            cg.setCh_2((Map<Type_Student, Player>) in.readObject(), (String) in.readObject());
+                        }
                         break;
                     case "NotifyCh_4":
-                        String use=(String) in.readObject();
-                        //qualcosa
+                        synchronized (in){
+                            cg.setCh_4((String) in.readObject());
+                        }
                         break;
                     case "NotifyCh_5":
-                        Land lala=(Land) in.readObject();
-                        String name=(String) in.readObject();
-                        //qualcosa
+                        synchronized (in){
+                            cg.setCh_5((Land) in.readObject(), (String) in.readObject());
+                        }
                         break;
                     case "NotifyCh_10":
-                        String neim=(String) in.readObject();
-                        ArrayList<Student> classroom=(ArrayList<Student>) in.readObject();
-                        Type_Student type=(Type_Student) in.readObject();
-                        //qualcosa
+                        synchronized (in){
+                            cg.setCh_10((String) in.readObject(), (ArrayList<Student>) in.readObject(), (ArrayList<Type_Student>) in.readObject());
+                        }
                         break;
                     case "NotifyCh_11":
-                        ArrayList<Student> card=(ArrayList<Student>) in.readObject();
-                        String n=(String) in.readObject();
-                        Student ss=(Student) in.readObject();
-                        //qualcosa
+                        synchronized (in){
+                            cg.setCh_11((ArrayList<Student>) in.readObject(), (String) in.readObject(), (Student) in.readObject());
+                        }
                         break;
                     case "NotifyCh_12":
-                        Type_Student ty=(Type_Student) in.readObject();
-                        String usrnm=(String) in.readObject();
-                        //qualcosa
+                        synchronized (in){
+                            cg.setCh_12((Type_Student) in.readObject(), (String) in.readObject());
+                        }
                         break;
                     case "NotifyCh_8":
-                        String usr=(String) in.readObject();
-                        //qualcosa
+                        synchronized (in){
+                            cg.setCh_8((String) in.readObject());
+                        }
                         break;
                     case "NotifyThreeArchipelagos":
                         //qualcosa

@@ -7,16 +7,20 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.Bloom;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.characterCards.*;
@@ -46,6 +50,15 @@ public class MatchController extends Thread {
     private ArrayList<Land> stepsmn;
     private CharacterCard[] ch;
     private FileInputStream noentry;
+    private Student stuch1;
+    private  boolean ich1;
+    private  boolean ich5;
+    private boolean ich10;
+    private boolean ich11;
+    private boolean ich12;
+    private ArrayList<Student> stuch10;
+    private ArrayList<Type_Student> tych10;
+    private int selection;
     @FXML
     Pane land_view;
     @FXML
@@ -627,17 +640,49 @@ public class MatchController extends Thread {
     @FXML
     ImageView ch_23;
     @FXML
-    TextField power0;
+    Text power0;
     @FXML
-    TextField power1;
+    Text power1;
     @FXML
-    TextField power2;
+    Text power2;
     @FXML
     Pane youwantusechcards;
     @FXML
     Button yesiwant;
     @FXML
     Button noidont;
+    @FXML
+    Button ok0;
+    @FXML
+    Button ok1;
+    @FXML
+    Button ok2;
+    @FXML
+    ImageView noentry0;
+    @FXML
+    ImageView noentry1;
+    @FXML
+    ImageView noentry2;
+    @FXML
+    ImageView noentry3;
+    @FXML
+    ImageView noentry4;
+    @FXML
+    ImageView noentry5;
+    @FXML
+    ImageView noentry6;
+    @FXML
+    ImageView noentry7;
+    @FXML
+    ImageView noentry8;
+    @FXML
+    ImageView noentry9;
+    @FXML
+    ImageView noentry10;
+    @FXML
+    ImageView noentry11;
+    @FXML
+    ImageView asschosen;
 
 
     public static void setServer(Message4Server server) {
@@ -710,6 +755,34 @@ public class MatchController extends Thread {
         mn11.setVisible(false);
         state_label.setText("Benvenuto!");
         state_label.setVisible(true);
+        ok0.setVisible(false);
+        ok1.setVisible(false);
+        ok2.setVisible(false);
+        ch_00.setVisible(true);
+        ch_01.setVisible(true);
+        ch_02.setVisible(true);
+        ch_03.setVisible(true);
+        ch_10.setVisible(true);
+        ch_11.setVisible(true);
+        ch_12.setVisible(true);
+        ch_13.setVisible(true);
+        ch_20.setVisible(true);
+        ch_21.setVisible(true);
+        ch_22.setVisible(true);
+        ch_23.setVisible(true);
+        ch_00.setDisable(true);
+        ch_01.setDisable(true);
+        ch_02.setDisable(true);
+        ch_03.setDisable(true);
+        ch_10.setDisable(true);
+        ch_11.setDisable(true);
+        ch_12.setDisable(true);
+        ch_13.setDisable(true);
+        ch_20.setDisable(true);
+        ch_21.setDisable(true);
+        ch_22.setDisable(true);
+        ch_23.setDisable(true);
+        asschosen.setVisible(false);
         for (int i = 0; i < 12; i++) {
             show_islands(i);
         }
@@ -747,19 +820,26 @@ public class MatchController extends Thread {
             ncoin2.setVisible(false);
             character_button.setVisible(false);
         } else {
-            character(ch0, ((Expert_Match) match).getCard()[0]);
-            character(ch1, ((Expert_Match) match).getCard()[1]);
-            character(ch2, ((Expert_Match) match).getCard()[2]);
+            System.out.println("Confermo che la partita è modalità esperto");
+            setCharacters(((Expert_Match)match).getCard());
+            character(ch0, ((Expert_Match)match).getCard()[0]);
+            character(ch1, ((Expert_Match)match).getCard()[1]);
+            character(ch2, ((Expert_Match)match).getCard()[2]);
             coin0.setVisible(true);
             coin1.setVisible(true);
             coin2.setVisible(true);
             ncoin0.setVisible(true);
             ncoin1.setVisible(true);
-            ncoin2.setVisible(true);
+            ncoin0.setText(String.valueOf(((Board_Experts)(((Expert_Match)match).getPlayer()[0].getBoard())).getCoinsNumber()));
+            ncoin1.setText(String.valueOf(((Board_Experts)(((Expert_Match)match).getPlayer()[1].getBoard())).getCoinsNumber()));
+            if(match.getPlayersNum()==3) {
+                ncoin2.setText(String.valueOf(((Board_Experts) (((Expert_Match) match).getPlayer()[2].getBoard())).getCoinsNumber()));
+                ncoin2.setVisible(true);
+            }
             character_button.setVisible(true);
-            power0.setText(((Expert_Match) match).getCard()[0].getPowerUp());
-            power1.setText(((Expert_Match) match).getCard()[1].getPowerUp());
-            power2.setText(((Expert_Match) match).getCard()[1].getPowerUp());
+            power0.setText(((Expert_Match)match).getCard()[0].getPowerUp());
+            power1.setText(((Expert_Match)match).getCard()[1].getPowerUp());
+            power2.setText(((Expert_Match)match).getCard()[2].getPowerUp());
             setDisableChCards(true);
         }
         if(match.getPlayersNum()==2){
@@ -769,6 +849,14 @@ public class MatchController extends Thread {
             entry17.setVisible(false);
             entry18.setVisible(false);
         }
+        ich1=false;
+        ich5=false;
+        ich10=false;
+        ich11=false;
+        ich12=false;
+        stuch10=null;
+        tych10=null;
+        selection=0;
         state = "Start";
     }
 
@@ -792,11 +880,35 @@ public class MatchController extends Thread {
                     show_student(ch_01, ((Ch_1) c).getStudents().get(1));
                     show_student(ch_02, ((Ch_1) c).getStudents().get(2));
                     show_student(ch_03, ((Ch_1) c).getStudents().get(3));
-                }else if(c instanceof Ch_4){
+                    ch_00.setVisible(true);
+                    ch_01.setVisible(true);
+                    ch_02.setVisible(true);
+                    ch_03.setVisible(true);
+                    System.out.println("HO STAMPATOGLI STUDENTI DELLA 1");
+                }else if(c instanceof Ch_5){
                     show_noentry(ch_00);
                     show_noentry(ch_01);
                     show_noentry(ch_02);
                     show_noentry(ch_03);
+                    ch_00.setVisible(true);
+                    ch_01.setVisible(true);
+                    ch_02.setVisible(true);
+                    ch_03.setVisible(true);
+                    System.out.println("HO STAMPATO I NO ENTRY DELLA 1");
+                } else if (c instanceof  Ch_11){
+                    show_student(ch_00, ((Ch_11) c).getStudents().get(0));
+                    show_student(ch_01, ((Ch_11) c).getStudents().get(1));
+                    show_student(ch_02, ((Ch_11) c).getStudents().get(2));
+                    show_student(ch_03, ((Ch_11) c).getStudents().get(3));
+                    ch_00.setVisible(true);
+                    ch_01.setVisible(true);
+                    ch_02.setVisible(true);
+                    ch_03.setVisible(true);
+                } else {
+                    ch_00.setVisible(false);
+                    ch_01.setVisible(false);
+                    ch_02.setVisible(false);
+                    ch_03.setVisible(false);
                 }
             }else if(i==1) {
                 if (c instanceof Ch_1) {
@@ -804,11 +916,35 @@ public class MatchController extends Thread {
                     show_student(ch_11, ((Ch_1) c).getStudents().get(1));
                     show_student(ch_12, ((Ch_1) c).getStudents().get(2));
                     show_student(ch_13, ((Ch_1) c).getStudents().get(3));
-                } else if (c instanceof Ch_4) {
+                    ch_10.setVisible(true);
+                    ch_11.setVisible(true);
+                    ch_12.setVisible(true);
+                    ch_13.setVisible(true);
+                    System.out.println("HO STAMPATOGLI STUDENTI DELLA 2");
+                } else if (c instanceof Ch_5) {
                     show_noentry(ch_10);
                     show_noentry(ch_11);
                     show_noentry(ch_12);
                     show_noentry(ch_13);
+                    ch_10.setVisible(true);
+                    ch_11.setVisible(true);
+                    ch_12.setVisible(true);
+                    ch_13.setVisible(true);
+                    System.out.println("HO STAMPATO I NO ENTRY DELLA 1");
+                } else if (c instanceof  Ch_11){
+                    show_student(ch_10, ((Ch_11) c).getStudents().get(0));
+                    show_student(ch_11, ((Ch_11) c).getStudents().get(1));
+                    show_student(ch_12, ((Ch_11) c).getStudents().get(2));
+                    show_student(ch_13, ((Ch_11) c).getStudents().get(3));
+                    ch_10.setVisible(true);
+                    ch_11.setVisible(true);
+                    ch_12.setVisible(true);
+                    ch_13.setVisible(true);
+                } else {
+                    ch_10.setVisible(false);
+                    ch_11.setVisible(false);
+                    ch_12.setVisible(false);
+                    ch_13.setVisible(false);
                 }
             }
             else if(i==2){
@@ -817,11 +953,35 @@ public class MatchController extends Thread {
                     show_student(ch_21, ((Ch_1) c).getStudents().get(1));
                     show_student(ch_22, ((Ch_1) c).getStudents().get(2));
                     show_student(ch_23, ((Ch_1) c).getStudents().get(3));
-                }else if(c instanceof Ch_4){
+                    ch_20.setVisible(true);
+                    ch_21.setVisible(true);
+                    ch_22.setVisible(true);
+                    ch_23.setVisible(true);
+                    System.out.println("HO STAMPATOGLI STUDENTI DELLA 3");
+                }else if(c instanceof Ch_5){
                     show_noentry(ch_20);
                     show_noentry(ch_21);
                     show_noentry(ch_22);
                     show_noentry(ch_23);
+                    ch_20.setVisible(true);
+                    ch_21.setVisible(true);
+                    ch_22.setVisible(true);
+                    ch_23.setVisible(true);
+                    System.out.println("HO STAMPATO I NO ENTRY DELLA 1");
+                } else if (c instanceof  Ch_11){
+                    show_student(ch_20, ((Ch_11) c).getStudents().get(0));
+                    show_student(ch_21, ((Ch_11) c).getStudents().get(1));
+                    show_student(ch_22, ((Ch_11) c).getStudents().get(2));
+                    show_student(ch_23, ((Ch_11) c).getStudents().get(3));
+                    ch_20.setVisible(true);
+                    ch_21.setVisible(true);
+                    ch_22.setVisible(true);
+                    ch_23.setVisible(true);
+                } else {
+                    ch_20.setVisible(false);
+                    ch_21.setVisible(false);
+                    ch_22.setVisible(false);
+                    ch_23.setVisible(false);
                 }
             }
             i++;
@@ -829,10 +989,11 @@ public class MatchController extends Thread {
     }
 
     public void show_noentry(ImageView imageView){
-        imageView.setImage(new Image(noentry));
+        //imageView.setImage(new Image(noentry));
         File f=new File("src/main/resources/wooden_pieces/wooden_pieces/deny_island_icon.png");
         try {
             noentry=new FileInputStream(f);
+            imageView.setImage(new Image(noentry));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -917,6 +1078,14 @@ public class MatchController extends Thread {
                 }
                 action.checkAllProfessors();
             }
+            if(ich1){
+                server.sendChooseCh1(stuch1,match.findIsland(idland));
+                ich1=false;
+            }
+            if(ich5){
+                server.sendChooseCh5(match.findIsland(idland));
+                ich5=false;
+            }
         }
         refreshEntry();
         selectedstudent = false;
@@ -925,6 +1094,7 @@ public class MatchController extends Thread {
         setDisableClouds(true);
         setDisableAssistants(true);
         setDisableLands(true);
+        setDisableColumns(true);
         setDisableEntrance(true);
         setDisableBoards(true);
         tomyboard2.setVisible(false);
@@ -935,306 +1105,311 @@ public class MatchController extends Thread {
         }
     }
 
-    public void refreshEntry(){
-        for(Player p: match.getPlayer())
-        switch (p.getColor()) {
-            case WHITE:
-                switch (p.getBoard().getEntrance().size()) {
-                    case 1:
-                        entry01.setVisible(false);
-                        entry02.setVisible(false);
-                        entry03.setVisible(false);
-                        entry04.setVisible(false);
-                        entry05.setVisible(false);
-                        entry06.setVisible(false);
-                        entry07.setVisible(false);
-                        entry08.setVisible(false);
-                        entry00.setEffect(new DropShadow());
-                        break;
-                    case 2:
-                        entry02.setVisible(false);
-                        entry03.setVisible(false);
-                        entry04.setVisible(false);
-                        entry05.setVisible(false);
-                        entry06.setVisible(false);
-                        entry07.setVisible(false);
-                        entry08.setVisible(false);
-                        entry00.setEffect(new DropShadow());
-                        entry01.setEffect(new DropShadow());
-                        break;
-                    case 3:
-                        entry03.setVisible(false);
-                        entry04.setVisible(false);
-                        entry05.setVisible(false);
-                        entry06.setVisible(false);
-                        entry07.setVisible(false);
-                        entry08.setVisible(false);
-                        entry00.setEffect(new DropShadow());
-                        entry01.setEffect(new DropShadow());
-                        entry02.setEffect(new DropShadow());
-                        break;
-                    case 4:
-                        entry04.setVisible(false);
-                        entry05.setVisible(false);
-                        entry06.setVisible(false);
-                        entry07.setVisible(false);
-                        entry08.setVisible(false);
-                        entry00.setEffect(new DropShadow());
-                        entry01.setEffect(new DropShadow());
-                        entry02.setEffect(new DropShadow());
-                        entry03.setEffect(new DropShadow());
-                        break;
-                    case 5:
-                        entry05.setVisible(false);
-                        entry06.setVisible(false);
-                        entry07.setVisible(false);
-                        entry08.setVisible(false);
-                        entry00.setEffect(new DropShadow());
-                        entry01.setEffect(new DropShadow());
-                        entry02.setEffect(new DropShadow());
-                        entry03.setEffect(new DropShadow());
-                        entry04.setEffect(new DropShadow());
-                        break;
-                    case 6:
-                        entry06.setVisible(false);
-                        entry07.setVisible(false);
-                        entry08.setVisible(false);
-                        entry00.setEffect(new DropShadow());
-                        entry01.setEffect(new DropShadow());
-                        entry02.setEffect(new DropShadow());
-                        entry03.setEffect(new DropShadow());
-                        entry04.setEffect(new DropShadow());
-                        entry05.setEffect(new DropShadow());
-                        break;
-                    case 7:
-                        entry07.setVisible(false);
-                        entry08.setVisible(false);
-                        entry00.setEffect(new DropShadow());
-                        entry01.setEffect(new DropShadow());
-                        entry02.setEffect(new DropShadow());
-                        entry03.setEffect(new DropShadow());
-                        entry04.setEffect(new DropShadow());
-                        entry05.setEffect(new DropShadow());
-                        entry06.setEffect(new DropShadow());
-                        break;
-                    case 8:
-                        entry08.setVisible(false);
-                        entry00.setEffect(new DropShadow());
-                        entry01.setEffect(new DropShadow());
-                        entry02.setEffect(new DropShadow());
-                        entry03.setEffect(new DropShadow());
-                        entry04.setEffect(new DropShadow());
-                        entry05.setEffect(new DropShadow());
-                        entry06.setEffect(new DropShadow());
-                        entry07.setEffect(new DropShadow());
-                        break;
-                    default:
-                        entry00.setEffect(new DropShadow());
-                        entry01.setEffect(new DropShadow());
-                        entry02.setEffect(new DropShadow());
-                        entry03.setEffect(new DropShadow());
-                        entry04.setEffect(new DropShadow());
-                        entry05.setEffect(new DropShadow());
-                        entry06.setEffect(new DropShadow());
-                        entry07.setEffect(new DropShadow());
-                        entry08.setEffect(new DropShadow());
-                }
-                break;
-            case BLACK:
-                switch (me.getBoard().getEntrance().size()) {
-                    case 1:
-                        entry11.setVisible(false);
-                        entry12.setVisible(false);
-                        entry13.setVisible(false);
-                        entry14.setVisible(false);
-                        entry15.setVisible(false);
-                        entry16.setVisible(false);
-                        entry17.setVisible(false);
-                        entry18.setVisible(false);
-                        entry10.setEffect(new DropShadow());
-                        break;
-                    case 2:
-                        entry12.setVisible(false);
-                        entry13.setVisible(false);
-                        entry14.setVisible(false);
-                        entry15.setVisible(false);
-                        entry16.setVisible(false);
-                        entry17.setVisible(false);
-                        entry18.setVisible(false);
-                        entry10.setEffect(new DropShadow());
-                        entry11.setEffect(new DropShadow());
-                        break;
-                    case 3:
-                        entry13.setVisible(false);
-                        entry14.setVisible(false);
-                        entry15.setVisible(false);
-                        entry16.setVisible(false);
-                        entry17.setVisible(false);
-                        entry18.setVisible(false);
-                        entry10.setEffect(new DropShadow());
-                        entry11.setEffect(new DropShadow());
-                        entry12.setEffect(new DropShadow());
-                        break;
-                    case 4:
-                        entry14.setVisible(false);
-                        entry15.setVisible(false);
-                        entry16.setVisible(false);
-                        entry17.setVisible(false);
-                        entry18.setVisible(false);
-                        entry10.setEffect(new DropShadow());
-                        entry11.setEffect(new DropShadow());
-                        entry12.setEffect(new DropShadow());
-                        entry13.setEffect(new DropShadow());
-                        break;
-                    case 5:
-                        entry15.setVisible(false);
-                        entry16.setVisible(false);
-                        entry17.setVisible(false);
-                        entry18.setVisible(false);
-                        entry10.setEffect(new DropShadow());
-                        entry11.setEffect(new DropShadow());
-                        entry12.setEffect(new DropShadow());
-                        entry13.setEffect(new DropShadow());
-                        entry14.setEffect(new DropShadow());
-                        break;
-                    case 6:
-                        entry16.setVisible(false);
-                        entry17.setVisible(false);
-                        entry18.setVisible(false);
-                        entry10.setEffect(new DropShadow());
-                        entry11.setEffect(new DropShadow());
-                        entry12.setEffect(new DropShadow());
-                        entry13.setEffect(new DropShadow());
-                        entry14.setEffect(new DropShadow());
-                        entry15.setEffect(new DropShadow());
-                        break;
-                    case 7:
-                        entry17.setVisible(false);
-                        entry18.setVisible(false);
-                        entry10.setEffect(new DropShadow());
-                        entry11.setEffect(new DropShadow());
-                        entry12.setEffect(new DropShadow());
-                        entry13.setEffect(new DropShadow());
-                        entry14.setEffect(new DropShadow());
-                        entry15.setEffect(new DropShadow());
-                        entry16.setEffect(new DropShadow());
-                        break;
-                    case 8:
-                        entry18.setVisible(false);
-                        entry10.setEffect(new DropShadow());
-                        entry11.setEffect(new DropShadow());
-                        entry12.setEffect(new DropShadow());
-                        entry13.setEffect(new DropShadow());
-                        entry14.setEffect(new DropShadow());
-                        entry15.setEffect(new DropShadow());
-                        entry16.setEffect(new DropShadow());
-                        entry17.setEffect(new DropShadow());
-                        break;
-                    default:
-                        entry10.setEffect(new DropShadow());
-                        entry11.setEffect(new DropShadow());
-                        entry12.setEffect(new DropShadow());
-                        entry13.setEffect(new DropShadow());
-                        entry14.setEffect(new DropShadow());
-                        entry15.setEffect(new DropShadow());
-                        entry16.setEffect(new DropShadow());
-                        entry17.setEffect(new DropShadow());
-                        entry18.setEffect(new DropShadow());
-                }
-                break;
-            case GREY:
-                switch (me.getBoard().getEntrance().size()) {
-                    case 1:
-                        entry21.setVisible(false);
-                        entry22.setVisible(false);
-                        entry23.setVisible(false);
-                        entry24.setVisible(false);
-                        entry25.setVisible(false);
-                        entry26.setVisible(false);
-                        entry27.setVisible(false);
-                        entry28.setVisible(false);
-                        entry20.setEffect(new DropShadow());
-                        break;
-                    case 2:
-                        entry22.setVisible(false);
-                        entry23.setVisible(false);
-                        entry24.setVisible(false);
-                        entry25.setVisible(false);
-                        entry26.setVisible(false);
-                        entry27.setVisible(false);
-                        entry28.setVisible(false);
-                        entry20.setEffect(new DropShadow());
-                        entry21.setEffect(new DropShadow());
-                        break;
-                    case 3:
-                        entry23.setVisible(false);
-                        entry24.setVisible(false);
-                        entry25.setVisible(false);
-                        entry26.setVisible(false);
-                        entry27.setVisible(false);
-                        entry28.setVisible(false);
-                        entry20.setEffect(new DropShadow());
-                        entry21.setEffect(new DropShadow());
-                        entry22.setEffect(new DropShadow());
-                        break;
-                    case 4:
-                        entry24.setVisible(false);
-                        entry25.setVisible(false);
-                        entry26.setVisible(false);
-                        entry27.setVisible(false);
-                        entry28.setVisible(false);
-                        entry20.setEffect(new DropShadow());
-                        entry21.setEffect(new DropShadow());
-                        entry22.setEffect(new DropShadow());
-                        entry23.setEffect(new DropShadow());
-                        break;
-                    case 5:
-                        entry25.setVisible(false);
-                        entry26.setVisible(false);
-                        entry27.setVisible(false);
-                        entry28.setVisible(false);
-                        entry20.setEffect(new DropShadow());
-                        entry21.setEffect(new DropShadow());
-                        entry22.setEffect(new DropShadow());
-                        entry23.setEffect(new DropShadow());
-                        entry24.setEffect(new DropShadow());
-                        break;
-                    case 6:
-                        entry26.setVisible(false);
-                        entry27.setVisible(false);
-                        entry28.setVisible(false);
-                        entry20.setEffect(new DropShadow());
-                        entry21.setEffect(new DropShadow());
-                        entry22.setEffect(new DropShadow());
-                        entry23.setEffect(new DropShadow());
-                        entry24.setEffect(new DropShadow());
-                        entry25.setEffect(new DropShadow());
-                        break;
-                    case 7:
-                        entry27.setVisible(false);
-                        entry28.setVisible(false);
-                        entry20.setEffect(new DropShadow());
-                        entry21.setEffect(new DropShadow());
-                        entry22.setEffect(new DropShadow());
-                        entry23.setEffect(new DropShadow());
-                        entry24.setEffect(new DropShadow());
-                        entry25.setEffect(new DropShadow());
-                        entry26.setEffect(new DropShadow());
-                        break;
-                    case 8:
-                        entry28.setVisible(false);
-                        entry20.setEffect(new DropShadow());
-                        entry21.setEffect(new DropShadow());
-                        entry22.setEffect(new DropShadow());
-                        entry23.setEffect(new DropShadow());
-                        entry24.setEffect(new DropShadow());
-                        entry25.setEffect(new DropShadow());
-                        entry26.setEffect(new DropShadow());
-                        entry27.setEffect(new DropShadow());
-                        break;
-                }
+    public void refreshEntry() {
+        for (Player p : match.getPlayer()) {
+            switch (p.getColor()) {
+                case WHITE:
+                    switch (p.getBoard().getEntrance().size()) {
+                        case 1:
+                            entry01.setVisible(false);
+                            entry02.setVisible(false);
+                            entry03.setVisible(false);
+                            entry04.setVisible(false);
+                            entry05.setVisible(false);
+                            entry06.setVisible(false);
+                            entry07.setVisible(false);
+                            entry08.setVisible(false);
+                            entry00.setEffect(new DropShadow());
+                            break;
+                        case 2:
+                            entry02.setVisible(false);
+                            entry03.setVisible(false);
+                            entry04.setVisible(false);
+                            entry05.setVisible(false);
+                            entry06.setVisible(false);
+                            entry07.setVisible(false);
+                            entry08.setVisible(false);
+                            entry00.setEffect(new DropShadow());
+                            entry01.setEffect(new DropShadow());
+                            break;
+                        case 3:
+                            entry03.setVisible(false);
+                            entry04.setVisible(false);
+                            entry05.setVisible(false);
+                            entry06.setVisible(false);
+                            entry07.setVisible(false);
+                            entry08.setVisible(false);
+                            entry00.setEffect(new DropShadow());
+                            entry01.setEffect(new DropShadow());
+                            entry02.setEffect(new DropShadow());
+                            break;
+                        case 4:
+                            entry04.setVisible(false);
+                            entry05.setVisible(false);
+                            entry06.setVisible(false);
+                            entry07.setVisible(false);
+                            entry08.setVisible(false);
+                            entry00.setEffect(new DropShadow());
+                            entry01.setEffect(new DropShadow());
+                            entry02.setEffect(new DropShadow());
+                            entry03.setEffect(new DropShadow());
+                            break;
+                        case 5:
+                            entry05.setVisible(false);
+                            entry06.setVisible(false);
+                            entry07.setVisible(false);
+                            entry08.setVisible(false);
+                            entry00.setEffect(new DropShadow());
+                            entry01.setEffect(new DropShadow());
+                            entry02.setEffect(new DropShadow());
+                            entry03.setEffect(new DropShadow());
+                            entry04.setEffect(new DropShadow());
+                            break;
+                        case 6:
+                            entry06.setVisible(false);
+                            entry07.setVisible(false);
+                            entry08.setVisible(false);
+                            entry00.setEffect(new DropShadow());
+                            entry01.setEffect(new DropShadow());
+                            entry02.setEffect(new DropShadow());
+                            entry03.setEffect(new DropShadow());
+                            entry04.setEffect(new DropShadow());
+                            entry05.setEffect(new DropShadow());
+                            break;
+                        case 7:
+                            entry07.setVisible(false);
+                            entry08.setVisible(false);
+                            entry00.setEffect(new DropShadow());
+                            entry01.setEffect(new DropShadow());
+                            entry02.setEffect(new DropShadow());
+                            entry03.setEffect(new DropShadow());
+                            entry04.setEffect(new DropShadow());
+                            entry05.setEffect(new DropShadow());
+                            entry06.setEffect(new DropShadow());
+                            break;
+                        case 8:
+                            entry08.setVisible(false);
+                            entry00.setEffect(new DropShadow());
+                            entry01.setEffect(new DropShadow());
+                            entry02.setEffect(new DropShadow());
+                            entry03.setEffect(new DropShadow());
+                            entry04.setEffect(new DropShadow());
+                            entry05.setEffect(new DropShadow());
+                            entry06.setEffect(new DropShadow());
+                            entry07.setEffect(new DropShadow());
+                            break;
+                        default:
+                            entry00.setEffect(new DropShadow());
+                            entry01.setEffect(new DropShadow());
+                            entry02.setEffect(new DropShadow());
+                            entry03.setEffect(new DropShadow());
+                            entry04.setEffect(new DropShadow());
+                            entry05.setEffect(new DropShadow());
+                            entry06.setEffect(new DropShadow());
+                            entry07.setEffect(new DropShadow());
+                            entry08.setEffect(new DropShadow());
+                            break;
+                    }
+                    break;
+                case BLACK:
+                    switch (p.getBoard().getEntrance().size()) {
+                        case 1:
+                            entry11.setVisible(false);
+                            entry12.setVisible(false);
+                            entry13.setVisible(false);
+                            entry14.setVisible(false);
+                            entry15.setVisible(false);
+                            entry16.setVisible(false);
+                            entry17.setVisible(false);
+                            entry18.setVisible(false);
+                            entry10.setEffect(new DropShadow());
+                            break;
+                        case 2:
+                            entry12.setVisible(false);
+                            entry13.setVisible(false);
+                            entry14.setVisible(false);
+                            entry15.setVisible(false);
+                            entry16.setVisible(false);
+                            entry17.setVisible(false);
+                            entry18.setVisible(false);
+                            entry10.setEffect(new DropShadow());
+                            entry11.setEffect(new DropShadow());
+                            break;
+                        case 3:
+                            entry13.setVisible(false);
+                            entry14.setVisible(false);
+                            entry15.setVisible(false);
+                            entry16.setVisible(false);
+                            entry17.setVisible(false);
+                            entry18.setVisible(false);
+                            entry10.setEffect(new DropShadow());
+                            entry11.setEffect(new DropShadow());
+                            entry12.setEffect(new DropShadow());
+                            break;
+                        case 4:
+                            entry14.setVisible(false);
+                            entry15.setVisible(false);
+                            entry16.setVisible(false);
+                            entry17.setVisible(false);
+                            entry18.setVisible(false);
+                            entry10.setEffect(new DropShadow());
+                            entry11.setEffect(new DropShadow());
+                            entry12.setEffect(new DropShadow());
+                            entry13.setEffect(new DropShadow());
+                            break;
+                        case 5:
+                            entry15.setVisible(false);
+                            entry16.setVisible(false);
+                            entry17.setVisible(false);
+                            entry18.setVisible(false);
+                            entry10.setEffect(new DropShadow());
+                            entry11.setEffect(new DropShadow());
+                            entry12.setEffect(new DropShadow());
+                            entry13.setEffect(new DropShadow());
+                            entry14.setEffect(new DropShadow());
+                            break;
+                        case 6:
+                            entry16.setVisible(false);
+                            entry17.setVisible(false);
+                            entry18.setVisible(false);
+                            entry10.setEffect(new DropShadow());
+                            entry11.setEffect(new DropShadow());
+                            entry12.setEffect(new DropShadow());
+                            entry13.setEffect(new DropShadow());
+                            entry14.setEffect(new DropShadow());
+                            entry15.setEffect(new DropShadow());
+                            break;
+                        case 7:
+                            entry17.setVisible(false);
+                            entry18.setVisible(false);
+                            entry10.setEffect(new DropShadow());
+                            entry11.setEffect(new DropShadow());
+                            entry12.setEffect(new DropShadow());
+                            entry13.setEffect(new DropShadow());
+                            entry14.setEffect(new DropShadow());
+                            entry15.setEffect(new DropShadow());
+                            entry16.setEffect(new DropShadow());
+                            break;
+                        case 8:
+                            entry18.setVisible(false);
+                            entry10.setEffect(new DropShadow());
+                            entry11.setEffect(new DropShadow());
+                            entry12.setEffect(new DropShadow());
+                            entry13.setEffect(new DropShadow());
+                            entry14.setEffect(new DropShadow());
+                            entry15.setEffect(new DropShadow());
+                            entry16.setEffect(new DropShadow());
+                            entry17.setEffect(new DropShadow());
+                            break;
+                        default:
+                            entry10.setEffect(new DropShadow());
+                            entry11.setEffect(new DropShadow());
+                            entry12.setEffect(new DropShadow());
+                            entry13.setEffect(new DropShadow());
+                            entry14.setEffect(new DropShadow());
+                            entry15.setEffect(new DropShadow());
+                            entry16.setEffect(new DropShadow());
+                            entry17.setEffect(new DropShadow());
+                            entry18.setEffect(new DropShadow());
+                            break;
+                    }
+                    break;
+                case GREY:
+                    switch (p.getBoard().getEntrance().size()) {
+                        case 1:
+                            entry21.setVisible(false);
+                            entry22.setVisible(false);
+                            entry23.setVisible(false);
+                            entry24.setVisible(false);
+                            entry25.setVisible(false);
+                            entry26.setVisible(false);
+                            entry27.setVisible(false);
+                            entry28.setVisible(false);
+                            entry20.setEffect(new DropShadow());
+                            break;
+                        case 2:
+                            entry22.setVisible(false);
+                            entry23.setVisible(false);
+                            entry24.setVisible(false);
+                            entry25.setVisible(false);
+                            entry26.setVisible(false);
+                            entry27.setVisible(false);
+                            entry28.setVisible(false);
+                            entry20.setEffect(new DropShadow());
+                            entry21.setEffect(new DropShadow());
+                            break;
+                        case 3:
+                            entry23.setVisible(false);
+                            entry24.setVisible(false);
+                            entry25.setVisible(false);
+                            entry26.setVisible(false);
+                            entry27.setVisible(false);
+                            entry28.setVisible(false);
+                            entry20.setEffect(new DropShadow());
+                            entry21.setEffect(new DropShadow());
+                            entry22.setEffect(new DropShadow());
+                            break;
+                        case 4:
+                            entry24.setVisible(false);
+                            entry25.setVisible(false);
+                            entry26.setVisible(false);
+                            entry27.setVisible(false);
+                            entry28.setVisible(false);
+                            entry20.setEffect(new DropShadow());
+                            entry21.setEffect(new DropShadow());
+                            entry22.setEffect(new DropShadow());
+                            entry23.setEffect(new DropShadow());
+                            break;
+                        case 5:
+                            entry25.setVisible(false);
+                            entry26.setVisible(false);
+                            entry27.setVisible(false);
+                            entry28.setVisible(false);
+                            entry20.setEffect(new DropShadow());
+                            entry21.setEffect(new DropShadow());
+                            entry22.setEffect(new DropShadow());
+                            entry23.setEffect(new DropShadow());
+                            entry24.setEffect(new DropShadow());
+                            break;
+                        case 6:
+                            entry26.setVisible(false);
+                            entry27.setVisible(false);
+                            entry28.setVisible(false);
+                            entry20.setEffect(new DropShadow());
+                            entry21.setEffect(new DropShadow());
+                            entry22.setEffect(new DropShadow());
+                            entry23.setEffect(new DropShadow());
+                            entry24.setEffect(new DropShadow());
+                            entry25.setEffect(new DropShadow());
+                            break;
+                        case 7:
+                            entry27.setVisible(false);
+                            entry28.setVisible(false);
+                            entry20.setEffect(new DropShadow());
+                            entry21.setEffect(new DropShadow());
+                            entry22.setEffect(new DropShadow());
+                            entry23.setEffect(new DropShadow());
+                            entry24.setEffect(new DropShadow());
+                            entry25.setEffect(new DropShadow());
+                            entry26.setEffect(new DropShadow());
+                            break;
+                        case 8:
+                            entry28.setVisible(false);
+                            entry20.setEffect(new DropShadow());
+                            entry21.setEffect(new DropShadow());
+                            entry22.setEffect(new DropShadow());
+                            entry23.setEffect(new DropShadow());
+                            entry24.setEffect(new DropShadow());
+                            entry25.setEffect(new DropShadow());
+                            entry26.setEffect(new DropShadow());
+                            entry27.setEffect(new DropShadow());
+                            break;
+
+                    }
+            }
         }
     }
+
 
     public void setStepsmn(ArrayList<Land> n){
         this.stepsmn=n;
@@ -1635,6 +1810,8 @@ public class MatchController extends Thread {
                         me.draw(a);
                         assistant0.setVisible(false);
                         gui.setAssistant(a);
+                        asschosen.setImage(assistant0.getImage());
+                        asschosen.setVisible(true);
                     }
                 }
                 break;
@@ -1645,6 +1822,8 @@ public class MatchController extends Thread {
                         me.draw(a);
                         assistant1.setVisible(false);
                         gui.setAssistant(a);
+                        asschosen.setImage(assistant1.getImage());
+                        asschosen.setVisible(true);
                     }
                 }
                 break;
@@ -1655,6 +1834,8 @@ public class MatchController extends Thread {
                         me.draw(a);
                         assistant2.setVisible(false);
                         gui.setAssistant(a);
+                        asschosen.setImage(assistant2.getImage());
+                        asschosen.setVisible(true);
                     }
                 }
                 break;
@@ -1665,6 +1846,8 @@ public class MatchController extends Thread {
                         me.draw(a);
                         assistant3.setVisible(false);
                         gui.setAssistant(a);
+                        asschosen.setImage(assistant3.getImage());
+                        asschosen.setVisible(true);
                     }
                 }
                 break;
@@ -1675,6 +1858,8 @@ public class MatchController extends Thread {
                         me.draw(a);
                         assistant4.setVisible(false);
                         gui.setAssistant(a);
+                        asschosen.setImage(assistant4.getImage());
+                        asschosen.setVisible(true);
                     }
                 }
                 break;
@@ -1685,6 +1870,8 @@ public class MatchController extends Thread {
                         me.draw(a);
                         assistant5.setVisible(false);
                         gui.setAssistant(a);
+                        asschosen.setImage(assistant5.getImage());
+                        asschosen.setVisible(true);
                     }
                 }
                 break;
@@ -1695,6 +1882,8 @@ public class MatchController extends Thread {
                         me.draw(a);
                         assistant6.setVisible(false);
                         gui.setAssistant(a);
+                        asschosen.setImage(assistant6.getImage());
+                        asschosen.setVisible(true);
                     }
                 }
                 break;
@@ -1705,6 +1894,8 @@ public class MatchController extends Thread {
                         me.draw(a);
                         assistant7.setVisible(false);
                         gui.setAssistant(a);
+                        asschosen.setImage(assistant7.getImage());
+                        asschosen.setVisible(true);
                     }
                 }
                 break;
@@ -1715,6 +1906,8 @@ public class MatchController extends Thread {
                         me.draw(a);
                         assistant8.setVisible(false);
                         gui.setAssistant(a);
+                        asschosen.setImage(assistant8.getImage());
+                        asschosen.setVisible(true);
                     }
                 }
                 break;
@@ -1725,6 +1918,8 @@ public class MatchController extends Thread {
                         me.draw(a);
                         assistant9.setVisible(false);
                         gui.setAssistant(a);
+                        asschosen.setImage(assistant9.getImage());
+                        asschosen.setVisible(true);
                     }
                 }
                 break;
@@ -1753,6 +1948,8 @@ public class MatchController extends Thread {
         frog.add(Type_Student.FROG);
         ArrayList<Type_Student> unicorn = new ArrayList<>();
         unicorn.add(Type_Student.UNICORN);
+        boolean exp=false;
+        if(match instanceof Expert_Match) exp=true;
         switch (i) {
             case 0 -> {
                 red_0.setText(":" + l.getInfluence(dragon));
@@ -1785,6 +1982,10 @@ public class MatchController extends Thread {
                     white0.setVisible(false);
                     black0.setVisible(false);
                     grey0.setVisible(false);
+                }
+                if(exp){
+                    if(l.isThereNoEntry()) noentry0.setVisible(true);
+                    else noentry0.setVisible(false);
                 }
             }
             case 1 -> {
@@ -1819,6 +2020,10 @@ public class MatchController extends Thread {
                     black1.setVisible(false);
                     grey1.setVisible(false);
                 }
+                if(exp){
+                    if(l.isThereNoEntry()) noentry1.setVisible(true);
+                    else noentry1.setVisible(false);
+                }
             }
             case 2 -> {
                 red_2.setText(":" + l.getInfluence(dragon));
@@ -1851,6 +2056,10 @@ public class MatchController extends Thread {
                     white2.setVisible(false);
                     black2.setVisible(false);
                     grey2.setVisible(false);
+                }
+                if(exp){
+                    if(l.isThereNoEntry()) noentry2.setVisible(true);
+                    else noentry2.setVisible(false);
                 }
             }
             case 3 -> {
@@ -1885,6 +2094,10 @@ public class MatchController extends Thread {
                     black3.setVisible(false);
                     grey3.setVisible(false);
                 }
+                if(exp){
+                    if(l.isThereNoEntry()) noentry3.setVisible(true);
+                    else noentry3.setVisible(false);
+                }
             }
             case 4 -> {
                 red_4.setText(":" + l.getInfluence(dragon));
@@ -1917,6 +2130,10 @@ public class MatchController extends Thread {
                     white4.setVisible(false);
                     black4.setVisible(false);
                     grey4.setVisible(false);
+                }
+                if(exp){
+                    if(l.isThereNoEntry()) noentry4.setVisible(true);
+                    else noentry4.setVisible(false);
                 }
             }
             case 5 -> {
@@ -1951,6 +2168,10 @@ public class MatchController extends Thread {
                     black5.setVisible(false);
                     grey5.setVisible(false);
                 }
+                if(exp){
+                    if(l.isThereNoEntry()) noentry5.setVisible(true);
+                    else noentry5.setVisible(false);
+                }
             }
             case 6 -> {
                 red_6.setText(":" + l.getInfluence(dragon));
@@ -1983,6 +2204,10 @@ public class MatchController extends Thread {
                     white6.setVisible(false);
                     black6.setVisible(false);
                     grey6.setVisible(false);
+                }
+                if(exp){
+                    if(l.isThereNoEntry()) noentry6.setVisible(true);
+                    else noentry6.setVisible(false);
                 }
             }
             case 7 -> {
@@ -2017,6 +2242,10 @@ public class MatchController extends Thread {
                     black7.setVisible(false);
                     grey7.setVisible(false);
                 }
+                if(exp){
+                    if(l.isThereNoEntry()) noentry7.setVisible(true);
+                    else noentry7.setVisible(false);
+                }
             }
             case 8 -> {
                 red_8.setText(":" + l.getInfluence(dragon));
@@ -2049,6 +2278,10 @@ public class MatchController extends Thread {
                     white8.setVisible(false);
                     black8.setVisible(false);
                     grey8.setVisible(false);
+                }
+                if(exp){
+                    if(l.isThereNoEntry()) noentry8.setVisible(true);
+                    else noentry8.setVisible(false);
                 }
             }
             case 9 -> {
@@ -2083,6 +2316,10 @@ public class MatchController extends Thread {
                     black9.setVisible(false);
                     grey9.setVisible(false);
                 }
+                if(exp){
+                    if(l.isThereNoEntry()) noentry9.setVisible(true);
+                    else noentry9.setVisible(false);
+                }
             }
             case 10 -> {
                 red_10.setText(":" + l.getInfluence(dragon));
@@ -2115,6 +2352,10 @@ public class MatchController extends Thread {
                     white10.setVisible(false);
                     black10.setVisible(false);
                     grey10.setVisible(false);
+                }
+                if(exp){
+                    if(l.isThereNoEntry()) noentry10.setVisible(true);
+                    else noentry10.setVisible(false);
                 }
             }
             case 11 -> {
@@ -2149,6 +2390,10 @@ public class MatchController extends Thread {
                     black11.setVisible(false);
                     grey11.setVisible(false);
                 }
+                if(exp){
+                    if(l.isThereNoEntry()) noentry11.setVisible(true);
+                    else noentry11.setVisible(false);
+                }
             }
         }
     }
@@ -2159,6 +2404,7 @@ public class MatchController extends Thread {
      * @param i the island to set invisible
      */
     private void show_islands(int i) {
+
         boolean found = false;
         for (Land l : match.getLands()) {
             if (l.getID() == i) {
@@ -2374,34 +2620,113 @@ public class MatchController extends Thread {
      */
     public void selectfromentry(MouseEvent mouseEvent) {
         ((ImageView) mouseEvent.getSource()).setEffect(new Bloom());
-        switch (((ImageView) mouseEvent.getSource()).getId()) {
-            case "entry00" -> selected(0, 0);
-            case "entry01" -> selected(0, 1);
-            case "entry02" -> selected(0, 2);
-            case "entry03" -> selected(0, 3);
-            case "entry04" -> selected(0, 4);
-            case "entry05" -> selected(0, 5);
-            case "entry06" -> selected(0, 6);
-            case "entry07" -> selected(0, 7);
-            case "entry08" -> selected(0, 8);
-            case "entry10" -> selected(1, 0);
-            case "entry11" -> selected(1, 1);
-            case "entry12" -> selected(1, 2);
-            case "entry13" -> selected(1, 3);
-            case "entry14" -> selected(1, 4);
-            case "entry15" -> selected(1, 5);
-            case "entry16" -> selected(1, 6);
-            case "entry17" -> selected(1, 7);
-            case "entry18" -> selected(1, 8);
-            case "entry20" -> selected(2, 0);
-            case "entry21" -> selected(2, 1);
-            case "entry22" -> selected(2, 2);
-            case "entry23" -> selected(2, 3);
-            case "entry24" -> selected(2, 4);
-            case "entry25" -> selected(2, 5);
-            case "entry26" -> selected(2, 6);
-            case "entry27" -> selected(2, 7);
-            case "entry28" -> selected(2, 8);
+        if(ich10){
+            selection++;
+            if(selection==1) {
+                switch (me.getColor()){
+                    case WHITE -> ok0.setVisible(true);
+                    case BLACK -> ok1.setVisible(true);
+                    case GREY -> ok2.setVisible(true);
+                }
+                gui.popUp("Ok", "Ora scegli un altro studente oppure premi sul tasto 'OK' per scegliere quello della plancia con cui scambiarlo");
+                switch (((ImageView) mouseEvent.getSource()).getId()) {
+                    case "entry00" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(0));
+                    case "entry01" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(1));
+                    case "entry02" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(2));
+                    case "entry03" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(3));
+                    case "entry04" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(4));
+                    case "entry05" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(5));
+                    case "entry06" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(6));
+                    case "entry07" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(7));
+                    case "entry08" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(8));
+                    case "entry10" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(0));
+                    case "entry11" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(1));
+                    case "entry12" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(2));
+                    case "entry13" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(3));
+                    case "entry14" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(4));
+                    case "entry15" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(5));
+                    case "entry16" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(6));
+                    case "entry17" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(7));
+                    case "entry18" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(8));
+                    case "entry20" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(0));
+                    case "entry21" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(1));
+                    case "entry22" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(2));
+                    case "entry23" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(3));
+                    case "entry24" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(4));
+                    case "entry25" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(5));
+                    case "entry26" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(6));
+                    case "entry27" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(7));
+                    case "entry28" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(8));
+                }
+                //gui.popUp("Ok", "Ora scegli una o due colonne della tua board");
+            } else if (selection ==2){
+                switch (((ImageView) mouseEvent.getSource()).getId()) {
+                    case "entry00" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(0));
+                    case "entry01" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(1));
+                    case "entry02" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(2));
+                    case "entry03" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(3));
+                    case "entry04" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(4));
+                    case "entry05" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(5));
+                    case "entry06" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(6));
+                    case "entry07" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(7));
+                    case "entry08" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(8));
+                    case "entry10" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(0));
+                    case "entry11" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(1));
+                    case "entry12" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(2));
+                    case "entry13" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(3));
+                    case "entry14" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(4));
+                    case "entry15" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(5));
+                    case "entry16" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(6));
+                    case "entry17" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(7));
+                    case "entry18" -> stuch10.add(match.getPlayer()[1].getBoard().getEntrance().get(8));
+                    case "entry20" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(0));
+                    case "entry21" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(1));
+                    case "entry22" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(2));
+                    case "entry23" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(3));
+                    case "entry24" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(4));
+                    case "entry25" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(5));
+                    case "entry26" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(6));
+                    case "entry27" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(7));
+                    case "entry28" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(8));
+                }
+                setDisableEntrance(true);
+                gui.popUp("OK", "Ora premi su OK per scegliere gli studenti con cui scambiarli nella plancia");
+                switch (me.getColor()){
+                    case WHITE -> ok0.setVisible(true);
+                    case BLACK -> ok1.setVisible(true);
+                    case GREY -> ok2.setVisible(true);
+                }
+            }
+        } else {
+            switch (((ImageView) mouseEvent.getSource()).getId()) {
+                case "entry00" -> selected(0, 0);
+                case "entry01" -> selected(0, 1);
+                case "entry02" -> selected(0, 2);
+                case "entry03" -> selected(0, 3);
+                case "entry04" -> selected(0, 4);
+                case "entry05" -> selected(0, 5);
+                case "entry06" -> selected(0, 6);
+                case "entry07" -> selected(0, 7);
+                case "entry08" -> selected(0, 8);
+                case "entry10" -> selected(1, 0);
+                case "entry11" -> selected(1, 1);
+                case "entry12" -> selected(1, 2);
+                case "entry13" -> selected(1, 3);
+                case "entry14" -> selected(1, 4);
+                case "entry15" -> selected(1, 5);
+                case "entry16" -> selected(1, 6);
+                case "entry17" -> selected(1, 7);
+                case "entry18" -> selected(1, 8);
+                case "entry20" -> selected(2, 0);
+                case "entry21" -> selected(2, 1);
+                case "entry22" -> selected(2, 2);
+                case "entry23" -> selected(2, 3);
+                case "entry24" -> selected(2, 4);
+                case "entry25" -> selected(2, 5);
+                case "entry26" -> selected(2, 6);
+                case "entry27" -> selected(2, 7);
+                case "entry28" -> selected(2, 8);
+            }
         }
         setStateLabel("Ora scegli se mettere lo studente nella plancia o in un isola");
         setDisableEntrance(true);
@@ -2411,8 +2736,163 @@ public class MatchController extends Thread {
         setDisableClouds(true);
         setDisableMN(true);
         setDisableChCards(true);
+        setDisableColumns(true);
         ((ImageView) mouseEvent.getSource()).setEffect(null);
         //((ImageView) mouseEvent.getSource()).setVisible(false);
+    }
+
+    public void columnselected(MouseEvent mouseEvent) {
+        if(ich10) {
+            selection--;
+            switch (((ImageView) mouseEvent.getSource()).getId()) {
+                case "green0":
+                case "green1":
+                case "green2":
+                    tych10.add(Type_Student.FROG);
+                    break;
+                case "red0":
+                case "red1":
+                case "red2":
+                    tych10.add(Type_Student.DRAGON);
+                    break;
+                case "yellow0":
+                case "yellow1":
+                case "yellow2":
+                    tych10.add(Type_Student.GNOME);
+                    break;
+                case "pink0":
+                case "pink1":
+                case "pink2":
+                    tych10.add(Type_Student.FAIRY);
+                    break;
+                case "blue0":
+                case "blue1":
+                case "blue2":
+                    tych10.add(Type_Student.UNICORN);
+                    break;
+            }
+            if (selection == 0) {
+                setDisableEntrance(true);
+                setDisableColumns(true);
+                if (stuch10.size() == tych10.size()) {
+                    server.sendChooseCh10(stuch10, tych10);
+                }
+            }
+            stuch10 = null;
+            tych10 = null;
+            ich10 = false;
+            selection = 0;
+        } else if (ich12){
+            switch (((ImageView) mouseEvent.getSource()).getId()) {
+                case "green0":
+                case "green1":
+                case "green2":
+                    server.sendChooseCh12(Type_Student.FROG);
+                    break;
+                case "red0":
+                case "red1":
+                case "red2":
+                    server.sendChooseCh12(Type_Student.DRAGON);
+                    break;
+                case "yellow0":
+                case "yellow1":
+                case "yellow2":
+                    server.sendChooseCh12(Type_Student.GNOME);
+                    break;
+                case "pink0":
+                case "pink1":
+                case "pink2":
+                    server.sendChooseCh12(Type_Student.FAIRY);
+                    break;
+                case "blue0":
+                case "blue1":
+                case "blue2":
+                    server.sendChooseCh12(Type_Student.UNICORN);
+                    break;
+            }
+            setDisableColumns(true);
+            ich12=false;
+        }
+        setNoEffectColumns();
+    }
+
+    public void setDisableColumns(boolean v){
+        green0.setDisable(v);
+        red0.setDisable(v);
+        yellow0.setDisable(v);
+        pink0.setDisable(v);
+        blue0.setDisable(v);
+        green1.setDisable(v);
+        red1.setDisable(v);
+        yellow1.setDisable(v);
+        pink1.setDisable(v);
+        blue1.setDisable(v);
+        green2.setDisable(v);
+        red2.setDisable(v);
+        yellow2.setDisable(v);
+        pink2.setDisable(v);
+        blue2.setDisable(v);
+    }
+
+    public void setNoEffectColumns(){
+        green0.setEffect(new DropShadow());
+        red0.setEffect(new DropShadow());
+        yellow0.setEffect(new DropShadow());
+        pink0.setEffect(new DropShadow());
+        blue0.setEffect(new DropShadow());
+        green1.setEffect(new Bloom());
+        red1.setEffect(new DropShadow());
+        yellow1.setEffect(new DropShadow());
+        pink1.setEffect(new DropShadow());
+        blue1.setEffect(new DropShadow());
+        green2.setEffect(new DropShadow());
+        red2.setEffect(new DropShadow());
+        yellow2.setEffect(new DropShadow());
+        pink2.setEffect(new DropShadow());
+        blue2.setEffect(new DropShadow());
+    }
+
+    public void Ok(ActionEvent actionEvent) {
+        ((ImageView)actionEvent.getSource()).setVisible(false);
+        setDropShadow();
+        switch (((ImageView)actionEvent.getSource()).getId()){
+            case "ok0":
+                green0.setDisable(false);
+                red0.setDisable(false);
+                yellow0.setDisable(false);
+                pink0.setDisable(false);
+                blue0.setDisable(false);
+                green0.setEffect(new Bloom());
+                red0.setEffect(new Bloom());
+                yellow0.setEffect(new Bloom());
+                pink0.setEffect(new Bloom());
+                blue0.setEffect(new Bloom());
+                break;
+            case "ok1":
+                green1.setDisable(false);
+                red1.setDisable(false);
+                yellow1.setDisable(false);
+                pink1.setDisable(false);
+                blue1.setDisable(false);
+                green1.setEffect(new Bloom());
+                red1.setEffect(new Bloom());
+                yellow1.setEffect(new Bloom());
+                pink1.setEffect(new Bloom());
+                blue1.setEffect(new Bloom());
+                break;
+            case "ok2":
+                green2.setDisable(false);
+                red2.setDisable(false);
+                yellow2.setDisable(false);
+                pink2.setDisable(false);
+                blue2.setDisable(false);
+                green2.setEffect(new Bloom());
+                red2.setEffect(new Bloom());
+                yellow2.setEffect(new Bloom());
+                pink2.setEffect(new Bloom());
+                blue2.setEffect(new Bloom());
+                break;
+        }
     }
 
 
@@ -2475,7 +2955,7 @@ public class MatchController extends Thread {
         mn11.setDisable(v);
     }
 
-    private void setDisableEntrance(boolean v){
+    private void setDisableEntrance(boolean v) {
         entry00.setDisable(v);
         entry01.setDisable(v);
         entry02.setDisable(v);
@@ -2591,14 +3071,16 @@ public class MatchController extends Thread {
                         setDisableClouds(true);
                         setDisableEntrance(true);
                         setDisableLands(true);
+                        setDisableColumns(true);
                         setDisableMN(true);
                         setDisableChCards(true);
                         break;
                     case "ChooseAssistant":
-                        System.out.println("Sono in MatchController ChooseAssistant");
+                        //System.out.println("Sono in MatchController ChooseAssistant");
                         setDisableAssistants(false);
                         setDisableBoards(true);
                         setDisableClouds(true);
+                        setDisableColumns(true);
                         setDisableEntrance(true);
                         setDisableLands(true);
                         setDisableMN(true);
@@ -2606,8 +3088,10 @@ public class MatchController extends Thread {
                         gui.popUp("Scegliere carta assistente", "Tocca a te! Scegli una carta assistente");
                         break;
                     case "MoveStudent":
+
                         setDisableMN(true);
                         setDisableLands(true);
+                        setDisableColumns(true);
                         setDisableEntrance(true);
                         switch(me.getColor()){
                             case WHITE:
@@ -2653,27 +3137,33 @@ public class MatchController extends Thread {
                     case "ChooseMN":
                         setDisableMN(false);
                         setDisableLands(false);
+                        setDisableColumns(true);
                         setDisableAssistants(true);
                         setDisableBoards(true);
                         setDisableClouds(true);
                         setDisableEntrance(true);
                         setDisableChCards(true);
-                        gui.popUp("Spostare Madre Natura", "Ora puoi spostare madre natura");
+                        gui.popUp("Spostare Madre Natura", "Ora puoi spostare madre natura: selezionala e poi scegli l'isola");
+                        setStateLabel("E' il momento di spostare Madre Natura");
                         break;
                     case "ChooseCloud":
+                        asschosen.setVisible(false);
                         setDisableEntrance(true);
                         setDisableClouds(false);
                         setDisableBoards(true);
                         setDisableAssistants(true);
+                        setDisableColumns(true);
                         setDisableLands(true);
                         setDisableMN(true);
                         setDisableChCards(true);
                         gui.popUp("Scegliere una nuvola", "Ora puoi scegliere una nuvola");
+                        setStateLabel("Ora scegli una nuvola");
                         break;
                     case "EndGame": //da fare
                         break;
                     case "Ch":
                         setDisableMN(true);
+                        setDisableColumns(true);
                         setDisableLands(true);
                         setDisableAssistants(true);
                         setDisableBoards(true);
@@ -2681,7 +3171,9 @@ public class MatchController extends Thread {
                         setDisableClouds(true);
                         setDisableEntrance(true);
                         setDisableChCards(true);
-                        ch_question();
+                        if(cg.getNoCh()) {
+                            ch_question();
+                        }
                         break;
                 }
                 theIfMethd();
@@ -2711,7 +3203,59 @@ public class MatchController extends Thread {
         youwantusechcards.setVisible(true);
     }
 
+    /*public void show_ch(){
+
+        for (int i=0; i<3; i++){
+            if(((Expert_Match)match).getCard()[i] instanceof Ch_1){
+                switch (i){
+                    case 0:
+                        show_student(ch_00, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(0));
+                        show_student(ch_01, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(1));
+                        show_student(ch_02, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(2));
+                        show_student(ch_03, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(3));
+                        break;
+                    case 1:
+                        show_student(ch_10, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(0));
+                        show_student(ch_11, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(1));
+                        show_student(ch_12, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(2));
+                        show_student(ch_13, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(3));
+                        break;
+                    case 2:
+                        show_student(ch_20, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(0));
+                        show_student(ch_21, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(1));
+                        show_student(ch_22, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(2));
+                        show_student(ch_23, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(3));
+                        break;
+                }
+            } else if (((Expert_Match)match).getCard()[i] instanceof Ch_5){
+                switch (i){
+                    case 0:
+                        show_noentry(ch_00);
+                        show_noentry(ch_01);
+                        show_noentry(ch_02);
+                        show_noentry(ch_03);
+                        break;
+                    case 1:
+                        show_noentry(ch_10);
+                        show_noentry(ch_11);
+                        show_noentry(ch_12);
+                        show_noentry(ch_22);
+                        break;
+                    case 2:
+                        show_noentry(ch_20);
+                        show_noentry(ch_21);
+                        show_noentry(ch_22);
+                        show_noentry(ch_23);
+                        break;
+                }
+            }
+        }
+    }*/
+
     public void theIfMethd(){
+        if(match instanceof Expert_Match){
+            setCharacters(gui.getCh());
+        }
         if (land_view.isVisible()) {
             for (int i = 0; i < 12; i++) {
                 show_islands(i);
@@ -2884,6 +3428,7 @@ public class MatchController extends Thread {
     /**
      * Sets the clouds
      */
+    @FXML
     private void show_cloud(){
         for (int i = 0; i < match.getPlayer().length; i++) {
             switch (i) {
@@ -2941,6 +3486,7 @@ public class MatchController extends Thread {
      * @param imageView
      * @param wizards
      */
+    @FXML
     private void show_wizard(ImageView imageView,Wizards wizards){
         try {
             switch (wizards) {
@@ -2976,6 +3522,7 @@ public class MatchController extends Thread {
      * @param imageView
      * @param character
      */
+    @FXML
     private void character(ImageView imageView,CharacterCard character){
         File f;
         FileInputStream fil;
@@ -3019,17 +3566,13 @@ public class MatchController extends Thread {
     }
 
     @FXML
-    public void use_ch(MouseEvent mouseEvent) {
-
-    }
-
-    @FXML
     public void show_characters(ActionEvent actionEvent) {
         land_view.setVisible(false);
         board_view.setVisible(false);
         characters.setVisible(true);
     }
 
+     @FXML
     public void movetoboard(ActionEvent actionEvent) {
 
         switch (((Button) actionEvent.getSource()).getId()) {
@@ -3060,19 +3603,48 @@ public class MatchController extends Thread {
         setDisableClouds(true);
         setDisableAssistants(true);
         setDisableLands(true);
+        setDisableColumns(true);
         setDisableEntrance(true);
         setDisableBoards(true);
         tomyboard2.setVisible(false);
         tomyboard1.setVisible(false);
         tomyboard0.setVisible(false);
+        if(match instanceof Expert_Match) {
+            ncoin0.setText(String.valueOf(((Board_Experts) (((Expert_Match) match).getPlayer()[0].getBoard())).getCoinsNumber()));
+            ncoin1.setText(String.valueOf(((Board_Experts) (((Expert_Match) match).getPlayer()[1].getBoard())).getCoinsNumber()));
+            if (match.getPlayersNum() == 3) {
+                ncoin2.setText(String.valueOf(((Board_Experts) (((Expert_Match) match).getPlayer()[2].getBoard())).getCoinsNumber()));
+            }
+        }
         synchronized (this) {
             notifyAll();
         }
     }
 
+    @FXML
     public void usechyes(ActionEvent actionEvent) {
+        setStateLabel("Momento carte personaggio!");
         youwantusechcards.setVisible(false);
-        setDisableChCards(false);
+        System.out.println("Hai scelto sii!!!");
+        //setDisableChCards(false);
+        if(gui.getUsability(1)){
+            System.out.println("Rendo usabile la 1 perchè costa "+gui.getCh()[0].getPrice());
+            ch0.setDisable(false);
+        } else {
+            ch0.setEffect(new InnerShadow());
+        }
+        if(gui.getUsability(2)){
+            ch1.setDisable(false);
+            System.out.println("Rendo usabile la 2 perchè costa "+gui.getCh()[1].getPrice());
+        } else {
+            ch1.setEffect(new InnerShadow());
+        }
+        if(gui.getUsability(3)){
+            ch2.setDisable(false);
+            System.out.println("Rendo usabile la 3 perchè costa "+gui.getCh()[2].getPrice());
+        } else {
+            ch2.setEffect(new InnerShadow());
+        }
         int i=0;
         for(CharacterCard c: ch){
             if(i==0) {
@@ -3081,7 +3653,7 @@ public class MatchController extends Thread {
                     ch_01.setDisable(false);
                     ch_02.setDisable(false);
                     ch_03.setDisable(false);
-                }else if(c instanceof Ch_4){
+                }else if(c instanceof Ch_5){
                     ch_00.setDisable(false);
                     ch_01.setDisable(false);
                     ch_02.setDisable(false);
@@ -3093,7 +3665,7 @@ public class MatchController extends Thread {
                     ch_11.setDisable(false);
                     ch_12.setDisable(false);
                     ch_13.setDisable(false);
-                } else if (c instanceof Ch_4) {
+                } else if (c instanceof Ch_5) {
                     ch_10.setDisable(false);
                     ch_11.setDisable(false);
                     ch_12.setDisable(false);
@@ -3106,7 +3678,7 @@ public class MatchController extends Thread {
                     ch_21.setDisable(false);
                     ch_22.setDisable(false);
                     ch_23.setDisable(false);
-                }else if(c instanceof Ch_4){
+                }else if(c instanceof Ch_5){
                     ch_20.setDisable(false);
                     ch_21.setDisable(false);
                     ch_22.setDisable(false);
@@ -3117,11 +3689,472 @@ public class MatchController extends Thread {
         }
     }
 
+    @FXML
     public void usechno(ActionEvent actionEvent) {
+        System.out.println("Mando NO al server");
         server.sendNoCh();
+        youwantusechcards.setVisible(false);
     }
 
+    public void useCh1(int h){
+        setDisableChCards(true);
+        setDisableAssistants(true);
+        setDisableBoards(true);
+        setDisableClouds(true);
+        setDisableEntrance(true);
+        setDisableMN(true);
+        setDisableColumns(true);
+        setDisableLands(true);
+        gui.popUp("Scelta studente", "Ora scegli lo studente da spostare");
+        ich1 = true;
+        if(h==0){
+            ch_00.setDisable(false);
+            ch_01.setDisable(false);
+            ch_02.setDisable(false);
+            ch_03.setDisable(false);
+        }else if(h==1){
+            ch_10.setDisable(false);
+            ch_11.setDisable(false);
+            ch_12.setDisable(false);
+            ch_13.setDisable(false);
+        }else if (h==2){
+            ch_20.setDisable(false);
+            ch_21.setDisable(false);
+            ch_22.setDisable(false);
+            ch_23.setDisable(false);
+        }
+    }
+
+    @FXML
     public void useit(MouseEvent mouseEvent) {
-        //DA FARE
+        switch (((ImageView) mouseEvent.getSource()).getId()){
+            case "ch_00":
+                stuch1=(((Ch_1)gui.getCh()[0]).getStudents().get(0));
+                if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[0]).getStudents().get(0));
+                ch_00.setDisable(true);
+                ch_01.setDisable(true);
+                ch_02.setDisable(true);
+                ch_03.setDisable(true);
+                ch_00.setEffect(new Bloom());
+                break;
+            case "ch_01":
+                stuch1=(((Ch_1)gui.getCh()[0]).getStudents().get(1));
+                if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[0]).getStudents().get(1));
+                ch_00.setDisable(true);
+                ch_01.setDisable(true);
+                ch_02.setDisable(true);
+                ch_03.setDisable(true);
+                ch_01.setEffect(new Bloom());
+                break;
+            case "ch_02":
+                stuch1=(((Ch_1)gui.getCh()[0]).getStudents().get(2));
+                if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[0]).getStudents().get(2));
+                ch_00.setDisable(true);
+                ch_01.setDisable(true);
+                ch_02.setDisable(true);
+                ch_03.setDisable(true);
+                ch_02.setEffect(new Bloom());
+                break;
+            case "ch_03":
+                stuch1=(((Ch_1)gui.getCh()[0]).getStudents().get(3));
+                if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[0]).getStudents().get(3));
+                ch_00.setDisable(true);
+                ch_01.setDisable(true);
+                ch_02.setDisable(true);
+                ch_03.setDisable(true);
+                ch_03.setEffect(new Bloom());
+                break;
+            case "ch_10":
+                stuch1=(((Ch_1)gui.getCh()[1]).getStudents().get(0));
+                if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[1]).getStudents().get(0));
+                ch_10.setDisable(true);
+                ch_11.setDisable(true);
+                ch_12.setDisable(true);
+                ch_13.setDisable(true);
+                ch_10.setEffect(new Bloom());
+                break;
+            case "ch_11":
+                stuch1=(((Ch_1)gui.getCh()[1]).getStudents().get(1));
+                if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[1]).getStudents().get(1));
+                ch_10.setDisable(true);
+                ch_11.setDisable(true);
+                ch_12.setDisable(true);
+                ch_13.setDisable(true);
+                ch_11.setEffect(new Bloom());
+                break;
+            case "ch_12":
+                stuch1=(((Ch_1)gui.getCh()[1]).getStudents().get(2));
+                if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[1]).getStudents().get(2));
+                ch_10.setDisable(true);
+                ch_11.setDisable(true);
+                ch_12.setDisable(true);
+                ch_13.setDisable(true);
+                ch_12.setEffect(new Bloom());
+                break;
+            case "ch_13":
+                stuch1=(((Ch_1)gui.getCh()[1]).getStudents().get(3));
+                if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[1]).getStudents().get(3));
+                ch_10.setDisable(true);
+                ch_11.setDisable(true);
+                ch_12.setDisable(true);
+                ch_13.setDisable(true);
+                ch_13.setEffect(new Bloom());
+                break;
+            case "ch_20":
+                stuch1=(((Ch_1)gui.getCh()[2]).getStudents().get(0));
+                if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[2]).getStudents().get(0));
+                ch_20.setDisable(true);
+                ch_21.setDisable(true);
+                ch_22.setDisable(true);
+                ch_23.setDisable(true);
+                ch_20.setEffect(new Bloom());
+                break;
+            case "ch_21":
+                stuch1=(((Ch_1)gui.getCh()[2]).getStudents().get(1));
+                if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[2]).getStudents().get(1));
+                ch_20.setDisable(true);
+                ch_21.setDisable(true);
+                ch_22.setDisable(true);
+                ch_23.setDisable(true);
+                ch_21.setEffect(new Bloom());
+                break;
+            case "ch_22":
+                stuch1=(((Ch_1)gui.getCh()[2]).getStudents().get(2));
+                if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[2]).getStudents().get(2));
+                ch_20.setDisable(true);
+                ch_21.setDisable(true);
+                ch_22.setDisable(true);
+                ch_23.setDisable(true);
+                ch_22.setEffect(new Bloom());
+                break;
+            case "ch_23":
+                stuch1=(((Ch_1)gui.getCh()[2]).getStudents().get(3));
+                if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[2]).getStudents().get(3));
+                ch_20.setDisable(true);
+                ch_21.setDisable(true);
+                ch_22.setDisable(true);
+                ch_23.setDisable(true);
+                ch_23.setEffect(new Bloom());
+                break;
+        }
+        if(ich1) {
+            gui.popUp("Scelta isola", "Ora scegli l'isola in cui piazzarlo");
+            setDisableLands(false);
+        } else if (ich11){
+            ich11=false;
+        }
+    }
+
+    public void useCh5(){
+        gui.popUp("Scelta isola", "Scegliere l'isola su cui piazzare la tessera divieto");
+        setDisableLands(false);
+        setDisableChCards(true);
+        ich5=true;
+    }
+
+    public void useCh11(){
+        gui.popUp("Scelta studente", "Scegliere lo studente da mettere nel tuo ingresso");
+        int j=0;
+        for (j=0; j<3; j++){
+            if (gui.getCh()[j] instanceof Ch_11){
+                break;
+            }
+        }
+        if(j==0){
+            ch_00.setDisable(false);
+            ch_01.setDisable(false);
+            ch_02.setDisable(false);
+            ch_03.setDisable(false);
+        }else if(j==1){
+            ch_10.setDisable(false);
+            ch_11.setDisable(false);
+            ch_12.setDisable(false);
+            ch_13.setDisable(false);
+        }else if (j==2){
+            ch_20.setDisable(false);
+            ch_21.setDisable(false);
+            ch_22.setDisable(false);
+            ch_23.setDisable(false);
+        }
+        ich11=true;
+    }
+
+    public void useCh12(){
+        ich12=true;
+        setDisableBoards(false);
+        gui.popUp("Ok", "Scegli la colonna della tua sala del colore che desideri per attivare la carta");
+        switch (me.getColor()){
+            case WHITE:
+                green0.setDisable(true);
+                red0.setDisable(true);
+                yellow0.setDisable(true);
+                pink0.setDisable(true);
+                blue0.setDisable(true);
+                break;
+            case BLACK:
+                green1.setDisable(true);
+                red1.setDisable(true);
+                yellow1.setDisable(true);
+                pink1.setDisable(true);
+                blue1.setDisable(true);
+                break;
+            case GREY:
+                green2.setDisable(true);
+                red2.setDisable(true);
+                yellow2.setDisable(true);
+                pink2.setDisable(true);
+                blue2.setDisable(true);
+                break;
+        }
+    }
+
+    public void useCh10(){
+        gui.popUp("Ok", "Scegli uno o due studenti dall'ingresso della tua plancia da scambiare con quelli nella sala");
+        switch (me.getColor()) {
+            case WHITE:
+                switch (me.getBoard().getEntrance().size()) {
+                    case 1:
+                        entry01.setDisable(false);
+                        entry02.setDisable(false);
+                        entry03.setDisable(false);
+                        entry04.setDisable(false);
+                        entry05.setDisable(false);
+                        entry06.setDisable(false);
+                        entry07.setDisable(false);
+                        entry08.setDisable(false);
+                        break;
+                    case 2:
+                        entry02.setDisable(false);
+                        entry03.setDisable(false);
+                        entry04.setDisable(false);
+                        entry05.setDisable(false);
+                        entry06.setDisable(false);
+                        entry07.setDisable(false);
+                        entry08.setDisable(false);
+                        break;
+                    case 3:
+                        entry03.setDisable(false);
+                        entry04.setDisable(false);
+                        entry05.setDisable(false);
+                        entry06.setDisable(false);
+                        entry07.setDisable(false);
+                        entry08.setDisable(false);
+                        break;
+                    case 4:
+                        entry04.setDisable(false);
+                        entry05.setDisable(false);
+                        entry06.setDisable(false);
+                        entry07.setDisable(false);
+                        entry08.setDisable(false);
+                        break;
+                    case 5:
+                        entry05.setDisable(false);
+                        entry06.setDisable(false);
+                        entry07.setDisable(false);
+                        entry08.setDisable(false);
+                        break;
+                    case 6:
+                        entry06.setDisable(false);
+                        entry07.setDisable(false);
+                        entry08.setDisable(false);
+                        break;
+                    case 7:
+                        entry07.setDisable(false);
+                        entry08.setDisable(false);
+                        break;
+                    case 8:
+                        entry08.setDisable(false);
+                        break;
+                }
+                break;
+            case BLACK:
+                switch (me.getBoard().getEntrance().size()) {
+                    case 1:
+                        entry11.setDisable(false);
+                        entry12.setDisable(false);
+                        entry13.setDisable(false);
+                        entry14.setDisable(false);
+                        entry15.setDisable(false);
+                        entry16.setDisable(false);
+                        entry17.setDisable(false);
+                        entry18.setDisable(false);
+                        break;
+                    case 2:
+                        entry12.setDisable(false);
+                        entry13.setDisable(false);
+                        entry14.setDisable(false);
+                        entry15.setDisable(false);
+                        entry16.setDisable(false);
+                        entry17.setDisable(false);
+                        entry18.setDisable(false);
+                        break;
+                    case 3:
+                        entry13.setDisable(false);
+                        entry14.setDisable(false);
+                        entry15.setDisable(false);
+                        entry16.setDisable(false);
+                        entry17.setDisable(false);
+                        entry18.setDisable(false);
+                        break;
+                    case 4:
+                        entry14.setDisable(false);
+                        entry15.setDisable(false);
+                        entry16.setDisable(false);
+                        entry17.setDisable(false);
+                        entry18.setDisable(false);
+                        break;
+                    case 5:
+                        entry15.setDisable(false);
+                        entry16.setDisable(false);
+                        entry17.setDisable(false);
+                        entry18.setDisable(false);
+                        break;
+                    case 6:
+                        entry16.setDisable(false);
+                        entry17.setDisable(false);
+                        entry18.setDisable(false);
+                        break;
+                    case 7:
+                        entry17.setDisable(false);
+                        entry18.setDisable(false);
+                        break;
+                    case 8:
+                        entry18.setDisable(false);
+                        break;
+                }
+                break;
+            case GREY:
+                switch (me.getBoard().getEntrance().size()) {
+                    case 1:
+                        entry21.setDisable(false);
+                        entry22.setDisable(false);
+                        entry23.setDisable(false);
+                        entry24.setDisable(false);
+                        entry25.setDisable(false);
+                        entry26.setDisable(false);
+                        entry27.setDisable(false);
+                        entry28.setDisable(false);
+                        break;
+                    case 2:
+                        entry22.setDisable(false);
+                        entry23.setDisable(false);
+                        entry24.setDisable(false);
+                        entry25.setDisable(false);
+                        entry26.setDisable(false);
+                        entry27.setDisable(false);
+                        entry28.setDisable(false);
+                        break;
+                    case 3:
+                        entry23.setDisable(false);
+                        entry24.setDisable(false);
+                        entry25.setDisable(false);
+                        entry26.setDisable(false);
+                        entry27.setDisable(false);
+                        entry28.setDisable(false);
+                        break;
+                    case 4:
+                        entry24.setDisable(false);
+                        entry25.setDisable(false);
+                        entry26.setDisable(false);
+                        entry27.setDisable(false);
+                        entry28.setDisable(false);
+                        break;
+                    case 5:
+                        entry25.setDisable(false);
+                        entry26.setDisable(false);
+                        entry27.setDisable(false);
+                        entry28.setDisable(false);
+                        break;
+                    case 6:
+                        entry26.setDisable(false);
+                        entry27.setDisable(false);
+                        entry28.setDisable(false);
+                        break;
+                    case 7:
+                        entry27.setDisable(false);
+                        entry28.setDisable(false);
+                        break;
+                    case 8:
+                        entry28.setDisable(false);
+                        break;
+                }
+                break;
+        }
+        ich10=true;
+    }
+    @FXML
+    public void use_ch(MouseEvent mouseEvent){
+        switch (((ImageView) mouseEvent.getSource()).getId()){
+            case "ch0":
+                if (gui.getCh()[0] instanceof Ch_1) {
+                    useCh1(0);
+                } else if (gui.getCh()[0] instanceof Ch_2){
+                    gui.popUp("Ok", "Hai scelto la carta assistente per avere il controllo dei professori");
+                    server.sendChooseCh2();
+                }else if(gui.getCh()[0] instanceof Ch_4){
+                    gui.popUp("Ok", "Hai scelto la carta assistente per aumentare il numero di isole per lo spostamento di Madre Natura");
+                    me.getPlayedCard().ch_4_effect();
+                    server.sendChooseCh4();
+                }else if(gui.getCh()[0] instanceof Ch_5){
+                    useCh5();
+                }else if (gui.getCh()[0] instanceof Ch_8){
+                    gui.popUp("Ok", "Hai scelto la carta assistente per avere più influenza durante il conteggio");
+                    server.sendChooseCh8();
+                } else if (gui.getCh()[0] instanceof Ch_10){
+                    useCh10();
+                }else if (gui.getCh()[0] instanceof Ch_11){
+                    useCh11();
+                } else if (gui.getCh()[0] instanceof Ch_12){
+                    useCh12();
+                }
+                break;
+            case "ch1":
+                if (gui.getCh()[1] instanceof Ch_1) {
+                    useCh1(1);
+                } else if (gui.getCh()[1] instanceof Ch_2){
+                    gui.popUp("Ok", "Hai scelto la carta assistente per avere il controllo dei professori");
+                    server.sendChooseCh2();
+                }else if(gui.getCh()[1] instanceof Ch_4){
+                    gui.popUp("Ok", "Hai scelto la carta assistente per aumentare il numero di isole per lo spostamento di Madre Natura");
+                    me.getPlayedCard().ch_4_effect();
+                    server.sendChooseCh4();
+                }else if(gui.getCh()[1] instanceof Ch_5){
+                    useCh5();
+                }else if (gui.getCh()[1] instanceof Ch_8){
+                    gui.popUp("Ok", "Hai scelto la carta assistente per avere più influenza durante il conteggio");
+                    server.sendChooseCh8();
+                } else if (gui.getCh()[1] instanceof Ch_10){
+                    useCh10();
+                }else if (gui.getCh()[1] instanceof Ch_11){
+                    useCh11();
+                } else if (gui.getCh()[1] instanceof Ch_12){
+                    useCh12();
+                }
+                break;
+            case "ch2":
+                if (gui.getCh()[2] instanceof Ch_1) {
+                    useCh1(2);
+                } else if (gui.getCh()[2] instanceof Ch_2){
+                    gui.popUp("Ok", "Hai scelto la carta assistente per avere il controllo dei professori");
+                    server.sendChooseCh2();
+                }else if(gui.getCh()[2] instanceof Ch_4){
+                    me.getPlayedCard().ch_4_effect();
+                    server.sendChooseCh4();
+                }else if(gui.getCh()[2] instanceof Ch_5){
+                    useCh5();
+                }else if (gui.getCh()[2] instanceof Ch_8){
+                    gui.popUp("Ok", "Hai scelto la carta assistente per avere più influenza durante il conteggio");
+                    server.sendChooseCh8();
+                } else if (gui.getCh()[2] instanceof Ch_10){
+                    useCh10();
+                }else if (gui.getCh()[2] instanceof Ch_11){
+                    useCh11();
+                } else if (gui.getCh()[2] instanceof Ch_12){
+                    useCh12();
+                }
+                break;
+        }
+        cg.setNoCh(false);
+        refreshEntry();
     }
 }

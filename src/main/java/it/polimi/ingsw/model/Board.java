@@ -45,7 +45,7 @@ public class Board implements Serializable {
         Tower temp;
         towers=new ArrayList<>();
 
-        for (int i=0; i< 1; i++){////////////////////////////////////////////////////////
+        for (int i=0; i< towersNum; i++){////////////////////////////////////////////////////////
             temp = new Tower(color, this);
             towers.add(temp);
         }
