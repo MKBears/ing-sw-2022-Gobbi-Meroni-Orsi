@@ -348,12 +348,15 @@ public class Message4Client extends Thread {
 
     /**
      * The server notifies the clients the situation of the towers in the game
+     *
+     * @param board  the board involved
      */
-    public void sendNotifyTowers(String username) {
+    public void sendNotifyTowers(Board board, String username) {
         synchronized (this) {
             name = "NotifyTowers (board)";
             try {
                 out.writeObject(name);
+                out.writeObject(board);
                 out.writeObject(username);
             } catch (IOException e) {
                 throw new RuntimeException(e);

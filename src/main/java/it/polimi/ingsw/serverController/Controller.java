@@ -932,7 +932,7 @@ public class Controller extends Thread{
                     } while (p.getNack());
                     if (previousTowers != null) {
                         do {
-                            p.getOutputStream().sendNotifyTowers(player2.getUserName());
+                            p.getOutputStream().sendNotifyTowers(player2.getAvatar().getBoard(), player2.getUserName());
                             p.wait();
                         } while (p.getNack());
                     }

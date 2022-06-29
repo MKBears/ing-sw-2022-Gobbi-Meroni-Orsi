@@ -512,7 +512,6 @@ public class Cli extends Thread{
                         a = this.getAssistantCard(cards);
                         me.draw(a);
                         printMatch(match);
-                        System.out.println("Carta scelta:" + a.toString() + '\n');
                         do {
                             server.sendChosenCard(a);
                             synchronized (this) {

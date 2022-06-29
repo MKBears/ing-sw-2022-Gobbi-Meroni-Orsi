@@ -223,7 +223,7 @@ public class Client  extends Thread{
                             match.getMotherNature().getPosition().setNoEntry(false);
                         }
                         view.printNotification("Madre Natura é stata spostata di " + movement
-                                + " passi nell'isola " + idLand);
+                                + " passi nell'isola " + (idLand+1));
                         server.sendACK();
                         break;
                     case "NotifyProfessors":
