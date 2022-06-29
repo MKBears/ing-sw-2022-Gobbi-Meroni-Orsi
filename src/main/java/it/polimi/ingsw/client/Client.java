@@ -520,6 +520,7 @@ public class Client  extends Thread{
                                 }
                             }
                         }
+                        action.checkAllProfessors();
                         view.printMatch(match);
                         view.printNotification("Il player "+s4+" ha giocato la carta personaggio 12");
                         server.sendACK();
