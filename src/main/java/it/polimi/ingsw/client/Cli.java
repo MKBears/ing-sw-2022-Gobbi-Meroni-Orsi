@@ -80,7 +80,7 @@ public class Cli extends Thread{
             System.out.println("\nInserire username: ");
             user = input.nextLine();
             if (!user.equals(""))
-                return user;
+                return user.toLowerCase();
         }
     }
 
@@ -398,7 +398,7 @@ public class Cli extends Thread{
             chCards.append('\n');
         }
 
-        return chCards.toString().indent(26);
+        return chCards.toString().indent(34);
     }
 
     /**
@@ -740,7 +740,9 @@ public class Cli extends Thread{
         }
 
         do {
-            System.out.println("\nScegli la partita (oppure per creare una nuova partita scrivi NewGame):");
+            System.out.println("\nScegli la partita (oppure per creare una nuova partita scrivi NewGame)");
+            System.out.println("Se scegli di creare una nuova partita e ce n'é già una creata " +
+                    "da te tra quelle salvate nella memori del server, quest'ultima verrà eliminata");
             choose = input.nextLine();
 
             if (choose.equalsIgnoreCase("newgame")) {
@@ -748,7 +750,7 @@ public class Cli extends Thread{
                 createMatch();
             } else {
                 if (join.contains(choose) || resume.contains(choose))
-                    server.sendChoosingGame(choose);
+                    server.sendChoosingGame(choose.toLowerCase());
                 else
                     System.out.println("Non ci sono partite create da " + choose);
             }

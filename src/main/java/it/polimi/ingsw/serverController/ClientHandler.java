@@ -283,14 +283,11 @@ public class ClientHandler extends Thread{
                     }
                 case 5:
                     //ACTION phase: choose a cloud and import students to the entrance
-                    ArrayList<Cloud> clouds = new ArrayList<>();
-
                     do {
-                        clouds.addAll(Arrays.asList(match.getCloud()));
                         out.sendChooseCloud();
-                        clouds.clear();
                         this.wait();
                     } while (nack);
+
                     do {
                         if (chosenCloud != null) {
                             for (Cloud clou : match.getCloud()) {

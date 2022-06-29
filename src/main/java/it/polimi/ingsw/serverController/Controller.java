@@ -911,7 +911,7 @@ public class Controller extends Thread{
         }
 
         for (ClientHandler p : players) {
-            if (position.getTower().getBoard() == p.getAvatar().getBoard()) {
+            if (position.getTower().getBoard()==p.getAvatar().getBoard() && position.hasChanged()) {
                 player1 = p.getUserName();
                 break;
             }
