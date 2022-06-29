@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.characterCards;
 
+import it.polimi.ingsw.client.Action;
 import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
@@ -30,6 +31,8 @@ public class Ch_12 implements CharacterCard {
         for (int i = 0; i < match.getPlayersNum(); i++) {
             match.getBag().ch12effect(match.getPlayer()[i].getBoard().ch_12_effect(type));
         }
+        Action action=new Action(match);
+        action.checkAllProfessors();
         if(!activated){
             activated=true;
         }
