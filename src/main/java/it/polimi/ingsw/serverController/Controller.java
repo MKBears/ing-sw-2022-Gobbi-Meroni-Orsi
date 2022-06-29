@@ -217,18 +217,22 @@ public class Controller extends Thread{
                         wait();
                         moveCurrentPlayer();
                         go = true;
+                        System.out.println(match.toString());
+
+                        for (ClientHandler player : players) {
+                            System.out.println("Controllo player " + player.getUserName());
+                            if (player.getAvatar().getBoard().hasNoTowersLeft()) {
+                                System.out.println(player.getUserName() + " ha finito le torri");
+                                notifyBuiltLastTower(player);
+                                break;
+                            }
+                        }
 
                         if (!playing)
                             if (endExplanation.equals("Ha costruito tutte le torri"))
                                 break;
                     } while (currentPlayer!=firstPlayer && playing);
                 }
-
-                if (match.getMotherNature().getPosition().hasChanged())
-                    if (match.getMotherNature().getPosition().getTower().getBoard().hasNoTowersLeft())
-                        for (ClientHandler player : players)
-                            if (player.getAvatar().getBoard().hasNoTowersLeft())
-                                notifyBuiltLastTower(player);
 
                 if (playing) {
                     state = 1;
@@ -917,13 +921,13 @@ public class Controller extends Thread{
         }
 
         for (ClientHandler p : players) {
-            if (position.getTower().getBoard()==p.getAvatar().getBoard() && position.hasChanged()) {
+            if (position.getTower().getBoard().equals(p.getAvatar().getBoard()) && position.hasChanged()) {
                 player1 = p.getUserName();
                 break;
             }
 
             if(previousTowers!=null){
-                if (previousTowers.get(0).getBoard() == p.getAvatar().getBoard()) {
+                if (previousTowers.get(0).getBoard().equals(p.getAvatar().getBoard())) {
                     player2 = p;
                 }
             }
@@ -934,11 +938,13 @@ public class Controller extends Thread{
                 synchronized (p) {
                     do {
                         p.getOutputStream().sendNotifyTowers(position.getAllTowers(), position, player1);
+                        System.out.println("NotyTowers p1 " + player1);
                         p.wait();
                     } while (p.getNack());
                     if (previousTowers != null) {
                         do {
                             p.getOutputStream().sendNotifyTowers(player2.getAvatar().getBoard(), player2.getUserName());
+                            System.out.println("NotyTowers p2 " + player1);
                             p.wait();
                         } while (p.getNack());
                     }

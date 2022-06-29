@@ -294,8 +294,8 @@ public class Client  extends Thread{
                         Player winner = (Player) in.readObject();
                         String ex = (String) in.readObject(); //spiegazione di perchè ha vinto
                         GameRecap recap = (GameRecap) in.readObject();
-                        view.getWinner(winner);
                         view.printMatch(match);
+                        view.getWinner(winner);
                         view. printNotification(winner.getColor()+winner.getUserName()+" ha vinto perché "+ex);
                         view.printNotification(recap.toString());
                         sleep(5000);
