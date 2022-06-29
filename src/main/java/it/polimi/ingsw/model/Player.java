@@ -151,7 +151,7 @@ public class Player implements Serializable {
         for (int i=0; i<userName.length(); i++) {
             switch (userName.charAt(i)) {
                 case 'a' -> megaName.append(" /\\  ");
-                case 'b' -> megaName.append("|_> ");
+                case 'b' -> megaName.append("|_) ");
                 case 'r', 'u', '0' -> megaName.append("| | ");
                 case 'c' -> megaName.append("/  ");
                 case 'g' -> megaName.append("/_  ");
@@ -189,7 +189,7 @@ public class Player implements Serializable {
         for (int i=0; i<userName.length(); i++) {
             switch (userName.charAt(i)) {
                 case 'a' -> megaName.append("/‾‾\\ ");
-                case 'b' -> megaName.append("|_> ");
+                case 'b' -> megaName.append("|_) ");
                 case 'c' -> megaName.append("\\_ ");
                 case 'd' -> megaName.append("|_/ ");
                 case 'e', 'l' -> megaName.append("|_ ");

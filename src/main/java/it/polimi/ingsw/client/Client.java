@@ -85,6 +85,7 @@ public class Client  extends Thread{
             view.setServer(server);
             String received = "base";
             dSokk.close();
+            view.clearConsole();
             view.getTitle();
             while (!end){
                 if(!received.equals("base")) {
@@ -168,7 +169,7 @@ public class Client  extends Thread{
                         AssistantCard card = (AssistantCard) in.readObject();
                         Player pl2 = (Player) in.readObject();
                         view.printNotification(pl2.getColor() + pl2.getUserName() +
-                                "\u001b[0m ha giocatola carta:" + card.toString());
+                                "\u001b[0m ha giocatola carta:" + card.toString() + '\n');
 
                         for (int i = 0; i < match.getPlayer().length; i++) {
                             if (match.getPlayer()[i].getUserName().equals(pl2.getUserName())) {
