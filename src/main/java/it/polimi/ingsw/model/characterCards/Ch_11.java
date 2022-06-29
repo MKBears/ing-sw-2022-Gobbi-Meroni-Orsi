@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Ch_11 implements CharacterCard, Serializable {
+public class Ch_11 implements CharacterCard {
 
     private final short price;
     private boolean activated;

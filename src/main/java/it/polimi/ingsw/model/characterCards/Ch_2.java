@@ -7,7 +7,7 @@ import it.polimi.ingsw.model.Type_Student;
 
 import java.io.Serializable;
 
-public class Ch_2 implements CharacterCard, Serializable {
+public class Ch_2 implements CharacterCard {
     private boolean activated;
     private final String powerUp;
     private Player player;

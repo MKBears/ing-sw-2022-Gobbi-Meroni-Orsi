@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ch_1 implements CharacterCard, Serializable {
+public class Ch_1 implements CharacterCard {
     private final short price;
     private boolean activated;
     private final String powerUp;

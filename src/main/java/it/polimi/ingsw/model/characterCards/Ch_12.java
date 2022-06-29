@@ -7,7 +7,7 @@ import it.polimi.ingsw.model.Type_Student;
 
 import java.io.Serializable;
 
-public class Ch_12 implements CharacterCard, Serializable {
+public class Ch_12 implements CharacterCard {
 
     private final short price;
     private boolean activated;
