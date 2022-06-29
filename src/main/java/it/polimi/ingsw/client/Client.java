@@ -352,7 +352,7 @@ public class Client  extends Thread{
                     case "Ch":
                         CharacterCard[] ch = (CharacterCard[]) in.readObject();
                         view.setCharacters(ch);
-                        sleep(500);
+                        sleep(1000);
                         view.wakeUp("Ch");
                         break;
                     case "NotifyCh_1":
