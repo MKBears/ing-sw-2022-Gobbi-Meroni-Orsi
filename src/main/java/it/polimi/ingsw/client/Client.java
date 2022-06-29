@@ -294,16 +294,15 @@ public class Client  extends Thread{
                         Player winner = (Player) in.readObject();
                         String ex = (String) in.readObject(); //spiegazione di perchè ha vinto
                         GameRecap recap = (GameRecap) in.readObject();
-                        //view.printMatch(match);
-                        view.getWinner(winner);
-                        System.out.println("dopo getwinner");
-                        view. printNotification(winner.getColor()+winner.getUserName()+" ha vinto perché "+ex);
-                        System.out.println("Dopo explanation");
-                        view.printNotification(recap.toString());
-                        System.out.println("Dopo recap");
-                        end = true;
-                        view.wakeUp("EndGame");
                         server.sendACK();
+                        //view.printMatch(match);
+                        sleep(4000);
+                        view.getWinner(winner);
+                        view. printNotification(winner.getColor()+winner.getUserName()+" ha vinto perché "+ex);
+                        view.printNotification(recap.toString());
+                        view.wakeUp("EndGame");
+                        sleep(2000);
+                        end=true;
                         break;
                     case "LastTower":
                         Player pl = (Player) in.readObject();
@@ -341,7 +340,7 @@ public class Client  extends Thread{
                     case "FinishedAssistants":
                         Player who = (Player) in.readObject();
                         view.finishedAC(who);
-                        server.sendACK();
+                        //server.sendACK();
                         break;
                     case "GenericError":
                         String error = (String) in.readObject();
@@ -354,7 +353,7 @@ public class Client  extends Thread{
                     case "Ch":
                         CharacterCard[] ch = (CharacterCard[]) in.readObject();
                         view.setCharacters(ch);
-                        sleep(1000);
+                        sleep(1100);
                         view.wakeUp("Ch");
                         break;
                     case "NotifyCh_1":
@@ -549,6 +548,7 @@ public class Client  extends Thread{
             }
         } catch (IOException e) {
             view.printNotification("Non trovo il server\n"+e.getMessage());
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
             server.sendNACK();
         } catch (Exception e) {

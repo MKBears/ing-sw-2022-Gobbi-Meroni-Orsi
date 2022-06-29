@@ -108,6 +108,7 @@ public class Controller extends Thread{
                 notifyDeletion("Qualcosa non ha funzionato aspettando che un giocatore muovesse ("+e.getMessage()+")");
             } catch (Exception e) {
                 notifyDeletion("Errore nel riempire gli ingressi ("+e.getMessage()+")");
+                e.printStackTrace();
             }
         }
         //End match
@@ -194,7 +195,6 @@ public class Controller extends Thread{
             case 3 -> {
                 //PLANNING phase: deciding the first player of the following action phase
                 firstPlayer = 0;
-
                 for (currentPlayer = 1; currentPlayer < playersNum; currentPlayer++)
                     if (players[currentPlayer].getAvatar().getPlayedCard().getValue() < players[firstPlayer].getAvatar().getPlayedCard().getValue())
                         firstPlayer = currentPlayer;
@@ -237,6 +237,10 @@ public class Controller extends Thread{
                 if (playing) {
                     state = 1;
                     save();
+                    for (ClientHandler p:players) {
+                        if(p.isFinished_assistant())
+                            state=5;
+                    }
                 } else {
                     state = 5;
                 }
@@ -249,6 +253,8 @@ public class Controller extends Thread{
             }
             case 5 -> {
                 //Match END: determine the winner
+                currentPlayer = 0;
+                playing=false;
                 Player winner;
                 winner = match.getWinner();
 
@@ -258,14 +264,16 @@ public class Controller extends Thread{
                     }
                 }
                 gameRecap = new GameRecap(players, match);
-
+                sleep(4000);
                 for (ClientHandler player : players) {
                     player.setState(6);
-                    player.notify();
-
+                    synchronized (player) {
+                        player.notify();
+                    }
                     synchronized (this) {
                         wait();
                     }
+                    moveCurrentPlayer();
                 }
                 delete();
                 state = 6;
@@ -980,10 +988,11 @@ public class Controller extends Thread{
             if (p != player){
                 p.getOutputStream().sendFinishedAssistants(player.getAvatar());
             }
-            p.endMatch();
+            //p.endMatch();
+            p.setFinished_assistant(true);
         }
         endExplanation = player.getUserName()+" ha finito le carte assistente";
-        playing = false;
+        playing = true;
     }
 
     /**

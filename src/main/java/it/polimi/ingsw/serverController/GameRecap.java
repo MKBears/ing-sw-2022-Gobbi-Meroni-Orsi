@@ -58,12 +58,13 @@ public class GameRecap  implements Serializable {
                     break;
             }
             controlledProfessors[i] = 0;
-
-            for (Type_Student professor : Type_Student.values()) {
-                if (professors.get(professor).equals(players[i].getAvatar())) {
+            System.out.println("qui");
+            for (Type_Student professor : professors.keySet()) {
+                if (professors.get(professor)==players[i].getAvatar()) {
                     controlledProfessors[i]++;
                 }
             }
+            System.out.println("qua");
         }
     }
 

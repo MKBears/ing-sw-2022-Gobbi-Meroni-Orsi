@@ -44,6 +44,7 @@ public class ClientHandler extends Thread{
     private ArrayList<Type_Student> ch_10_types;
     private Student ch_11_student;
     private Type_Student ch_12_type;
+    private boolean finished_assistant;
 
     /**
      *
@@ -63,6 +64,7 @@ public class ClientHandler extends Thread{
         }
         connected = true;
         nackCounter = 0;
+        finished_assistant=false;
     }
 
     /**
@@ -88,7 +90,13 @@ public class ClientHandler extends Thread{
         } while (ongoingMatch);
 
         try {
+            sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
             closeConnection();
+            out.setCondition(false);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -319,8 +327,9 @@ public class ClientHandler extends Thread{
                         out.sendGenericError("Desynchronized ("+e.getMessage()+")");
                     }
                     synchronized (controller) {
-                        controller.notify();
+                        controller.notifyAll();
                     }
+                    ongoingMatch=false;
                     break;
                 case 7:
                     //ACTION phase: playing a character card
@@ -925,4 +934,9 @@ public class ClientHandler extends Thread{
      */
     public void setAvatar(Player avatar){this.avatar=avatar;}
 
+    public boolean isFinished_assistant() {return finished_assistant;}
+
+    public void setFinished_assistant(boolean finished_assistant) {
+        this.finished_assistant = finished_assistant;
+    }
 }
