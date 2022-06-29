@@ -213,6 +213,7 @@ public class Cli extends Thread{
                 }
             } catch (Exception e) {
                 System.out.println("Inserire un valore numerico\n");
+                input.next();
                 correctChoice = false;
             }
         } while (!correctChoice);
@@ -302,7 +303,8 @@ public class Cli extends Thread{
                         return 13;
                     choose = Integer.parseInt(value);
                 } while (choose < 0 || choose > 12);
-                if (choose >= match.getLands().size())
+
+                if (choose >= 12)
                     System.out.println("Scegli un'isola tra quelle che vedi");
                 else
                     return choose;
@@ -978,7 +980,7 @@ public class Cli extends Thread{
     /**
      * Clears the console screen
      */
-    private void clearConsole() {
+    public void clearConsole() {
         if (System.getProperty("os.name").contains("Windows")) {
             try {
                 svnProcessBuilder.inheritIO().start().waitFor();
