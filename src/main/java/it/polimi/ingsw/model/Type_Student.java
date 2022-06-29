@@ -2,32 +2,19 @@ package it.polimi.ingsw.model;
 
 import java.io.Serializable;
 
+/**
+ * Enumeration representing the possible student types
+ */
 public enum Type_Student implements Serializable {
-    DRAGON("dragon"), GNOME("gnome"), FAIRIE("fairie"), UNICORN("unicorn"), FROG("frog");
+    DRAGON("\u001B[31m"), GNOME("\u001B[33;1m"), FAIRY("\u001B[35m"), UNICORN("\u001B[34m"), FROG("\u001B[32m");
     private final String name;
 
     Type_Student(String name) {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
-
     @Override
     public String toString() {
-        switch (name) {
-            case ("dragon"):
-                return "Rosso";
-            case ("frog"):
-                return "Verde";
-            case ("unicorn"):
-                return "Blu";
-            case ("fairie"):
-                return "Giallo";
-            case ("gnome"):
-                return "Rosa";
-        }
-        return null;
+        return name;
     }
 }

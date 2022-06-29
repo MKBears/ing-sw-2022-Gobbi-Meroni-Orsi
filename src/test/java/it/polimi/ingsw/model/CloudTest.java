@@ -54,6 +54,7 @@ public class CloudTest { //
         }catch (Exception e){
             fail();
         }
+        System.out.println(cloud.toString());
         assertTrue(arr.containsAll(cloud.getStudents()));
         /*for (int j=0; j<500; j++) {
             if(j>119) {

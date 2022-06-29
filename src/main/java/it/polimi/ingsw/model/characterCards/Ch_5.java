@@ -1,30 +1,41 @@
 package it.polimi.ingsw.model.characterCards;
 
-import it.polimi.ingsw.model.CharacterCard;
-import it.polimi.ingsw.model.Island;
+import it.polimi.ingsw.model.*;
+
+import java.io.Serializable;
 
 public class Ch_5 implements CharacterCard {
 
     private final short price;
     private boolean activated;
     private final String powerUp;
-    private Island[] Islands= new Island[4];
+    private final Island[] Islands= new Island[4];
+    private final Match match;
+    private Land land;
+    private int noEntryCounter;
 
-    public Ch_5(){
+
+    public Ch_5(Match match){
+        this.match=match;
         price=2;
         activated=false;
+        noEntryCounter = 4;
         for(int i=0; i<4; i++){
             Islands[i]=null;
         }
-        powerUp="Place a No Entry tile on an Island of your choice. "+"" +
-                "The first time Mother Nature ends her movement there, "+"" +
-                "put the No Entry tile back onto this card DO NOT calculate influence"+"" +
-                " on that Island, or place any Towers.";
+        powerUp="Piazza una tessera divieto su un'isola a tua scelta." +
+                "La prima volta che Madre Natura termina il suo movimento lì,"+
+                " rimettere la tessera divieto sulla carta SENZA calcolare l'influenza " +
+                "su quell'isola ne piazzare torri.";
     }
 
     @Override
-    public void activatePowerUp() {
-        //...
+    public void activatePowerUp() throws Exception {
+        if (noEntryCounter == 0)
+            throw new Exception("Tutti i divieti sono già stati piazzati");
+        land.setNoEntry(true);
+        noEntryCounter--;
+
         if(!activated){
             activated=true;
         }
@@ -47,10 +58,40 @@ public class Ch_5 implements CharacterCard {
 
     @Override
     public String getPowerUp() {
-        return powerUp;
+        StringBuilder pu = new StringBuilder(powerUp);
+
+        if (noEntryCounter == 0)
+            pu.append("\nTutte le tessere divieto sono state piazzate su qualche isola");
+        else
+            pu.append("\nCi sono ").append(noEntryCounter).append(" tessere divieto");
+
+        return pu.toString();
     }
 
     public Island[] getIslands() {
         return Islands;
+    }
+
+    @Override
+    public void setPlayer(Player player) {
+    }
+
+    /**
+     *
+     * @param land where add the no entry
+     */
+    public void setLand(Land land) {
+        this.land = land;
+    }
+
+    @Override
+    public int getNumber() {
+        return 5;
+    }
+
+    public void setActivated(){activated=true;}
+
+    public void returnNoEntryTile() {
+        noEntryCounter++;
     }
 }

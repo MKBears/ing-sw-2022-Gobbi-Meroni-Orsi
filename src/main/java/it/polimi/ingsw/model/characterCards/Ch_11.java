@@ -1,9 +1,8 @@
 package it.polimi.ingsw.model.characterCards;
 
-import it.polimi.ingsw.model.Bag;
-import it.polimi.ingsw.model.CharacterCard;
-import it.polimi.ingsw.model.Student;
+import it.polimi.ingsw.model.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Ch_11 implements CharacterCard {
@@ -11,29 +10,43 @@ public class Ch_11 implements CharacterCard {
     private final short price;
     private boolean activated;
     private final String powerUp;
-    private  ArrayList<Student> students;
-    private Bag bag;
+    private ArrayList<Student> students;
+    private final Match match;
+    Player player;
+    private Student student;
 
-    public Ch_11(Bag bag){
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Ch_11(Match match) throws Exception {
         price=2;
         activated=false;
-        powerUp="Take 1 Student from this card and place it in your Dining Room. " +
-                "Then, draw a new Student from the Bag and place it on this card.";
+        powerUp="Prendi 1 studente da questa carta e piazzalo nella tua sala. " +
+                "Poi pesca un nuovo studente dal sacchetto e posizionalo su questa carta.";
         students = new ArrayList<>(4);
-        this.bag = bag;
+        this.match = match;
 
         for (int i=0; i<4; i++){
-            try {
-                students.add(bag.getRandomStudent());
-            }
-            catch (Exception e){};
+            students.add(match.getBag().getRandomStudent());
         }
     }
 
     @Override
-    public void activatePowerUp() {
-        //...
-
+    public void activatePowerUp() throws Exception {
+        for (Student s:this.students) {
+            if(student.type().equals(s.type())){
+                students.remove(s);
+                break;
+            }
+        }
+        player.getBoard().ch_11_effect(student);
+        match.checkProfessor(student.type());
+        students.add(match.getBag().getRandomStudent());
         if(!activated){
             activated=true;
         }
@@ -56,10 +69,56 @@ public class Ch_11 implements CharacterCard {
 
     @Override
     public String getPowerUp() {
-        return powerUp;
+        StringBuilder pu = new StringBuilder(powerUp);
+        pu.append("\n");
+
+        if (students.isEmpty())
+            pu.append("\tNon ci sono studenti su questa carta.");
+        else {
+
+            for (Student value : students)
+                pu.append("    ").append(value.toString());
+        }
+
+        return pu.toString();
     }
 
+    /**
+     *
+     * @return the students on this card
+     */
     public ArrayList<Student> getStudents() {
         return students;
     }
+
+    /**
+     *
+     * @param student to be added to the dinning room
+     */
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    @Override
+    public int getNumber() {
+        return 11;
+    }
+
+    public ArrayList<Student> copy(){
+        ArrayList<Student> result=new ArrayList<>();
+        for (Student s:students) {
+            result.add(new Student(s.type()));
+        }
+        return result;
+    }
+
+    /**
+     * change the student on the card for the client
+     * @param students new students of the card
+     */
+    public void setStudents(ArrayList<Student> students) {
+        this.students = students;
+    }
+
+    public void setActivated(){activated=true;}
 }

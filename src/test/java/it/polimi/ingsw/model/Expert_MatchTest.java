@@ -14,12 +14,7 @@ class Expert_MatchTest {
     void getCard() {
         Player pl1=new Player("Gino",Colors.GREY,8,Wizards.WIZARD1, TRUE);
         Player pl2=new Player("Pina",Colors.BLACK,8,Wizards.WIZARD2, TRUE);
-        CharacterCard[] a=new CharacterCard[3];
-        a[0]=new Ch_2();
-        a[1]=new Ch_4();
-        a[2]=new Ch_5();
-        Expert_Match eMatch=new Expert_Match(pl1,pl2,a);
-        assertEquals(a[2],eMatch.getCard()[2]);
+        Expert_Match eMatch=new Expert_Match(pl1,pl2);
     }
 
     @Test
@@ -27,11 +22,6 @@ class Expert_MatchTest {
         Player pl1=new Player("Gino",Colors.GREY,6,Wizards.WIZARD1, TRUE);
         Player pl2=new Player("Pina",Colors.BLACK,6,Wizards.WIZARD2, TRUE);
         Player pl3=new Player("Franco",Colors.WHITE,6,Wizards.WIZARD4,TRUE);
-        CharacterCard[] a=new CharacterCard[3];
-        a[0]=new Ch_2();
-        a[1]=new Ch_4();
-        a[2]=new Ch_5();
-        Expert_Match eMatch=new Expert_Match(pl1,pl2,a);
-        assertEquals(a[2],eMatch.getCard()[2]);
+        Expert_Match eMatch=new Expert_Match(pl1,pl2);
     }
 }

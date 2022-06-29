@@ -1,21 +1,43 @@
 package it.polimi.ingsw.model;
 
-import java.io.Serializable;
-import java.util.Arrays;
+import it.polimi.ingsw.model.characterCards.*;
 
-public class Expert_Match extends Match {
-    CharacterCard card[];
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
+public class Expert_Match extends Match{
+    CharacterCard[] card;
+
+    /**
+     * set the character cards on the match
+     * @throws Exception the bag is empty
+     */
+    public void setCard() throws Exception{
+        card=new CharacterCard[3];
+        List<CharacterCard> c=new ArrayList<>();
+        c.add(new Ch_1(this));
+        c.add(new Ch_2(this));
+        c.add(new Ch_4());
+        c.add(new Ch_5(this));
+        c.add(new Ch_8());
+        c.add(new Ch_10(this));
+        c.add(new Ch_11(this));
+        c.add(new Ch_12(this));
+        for(int i=0; i<3; i++) {
+            Random a = new Random();
+            int x = a.nextInt(1000);
+            x = x % c.size();
+            card[i]=c.remove(x);
+        }
+    }
     /**
      * create an instance of an expert match
      * @param pl1 first player of the match
      * @param pl2 second player of the match
-     * @param card the character cards of the match
      */
-    Expert_Match(Player pl1,Player pl2,CharacterCard[] card){
+    public Expert_Match(Player pl1,Player pl2){
        super(pl1,pl2);
-       this.card=new CharacterCard[3];
-       this.card=card;
     }
 
     /**
@@ -23,12 +45,9 @@ public class Expert_Match extends Match {
      * @param pl1 first player of the match
      * @param pl2 second player of the match
      * @param pl3 third player of the match
-     * @param card the character cards of the match
      */
-    Expert_Match(Player pl1,Player pl2,Player pl3,CharacterCard[] card){
+    public Expert_Match(Player pl1,Player pl2,Player pl3){
         super(pl1,pl2,pl3);
-        this.card=new CharacterCard[3];
-        this.card=card;
     }
 
     /**
@@ -37,11 +56,5 @@ public class Expert_Match extends Match {
      */
     public CharacterCard[] getCard() {
         return card;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() +
-                "carte personaggio= " + Arrays.toString(card);
     }
 }

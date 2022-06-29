@@ -15,8 +15,8 @@ class PlayerTest {
 
     @BeforeAll
     public static void instantiate() {
-        id1 = "Abcd";
-        id2 = "MK00";
+        id1 = "0123456789";
+        id2 = "abcdefghijklmnopqrstuvwxyz";
         color = Colors.BLACK;
         wizard = Wizards.WIZARD1;
         player1 = new Player(id1, color, 8, wizard, false);
@@ -25,12 +25,15 @@ class PlayerTest {
 
     @Test
     public void instanceTest(){
+        Board board = new Board(6, Colors.WHITE);
         assertFalse (player1.hasNoCardsLeft());
         assertEquals(id1, player1.getUserName());
         assertEquals(id2, player2.getUserName());
         assertSame(color, player1.getColor());
         assertNotNull(player1.getBoard());
         assertTrue(player2.getBoard() instanceof Board_Experts);
+        player1.setBoard(board);
+        assertEquals(board, player1.getBoard());
     }
 
     @Test
@@ -39,7 +42,7 @@ class PlayerTest {
         ArrayList<AssistantCard> deck;
 
         for (int i=1; i<=10; i++){
-            player1.draw(i);
+            player1.draw(player1.getDeck().get(0));
             assertSame(i, player1.getPlayedCard().getValue());
             assertSame((i+1)/2, player1.getPlayedCard().getMNSteps());
             deck = player1.getDeck();

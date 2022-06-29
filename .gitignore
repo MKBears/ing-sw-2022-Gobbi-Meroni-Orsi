@@ -215,3 +215,7 @@ $RECYCLE.BIN/
 # http://www.sonarlint.org/commandline/
 # SonarLint working directories, configuration files (including credentials)
 .sonarlint/
+
+#Ignores saved data
+matches/
+username.txt

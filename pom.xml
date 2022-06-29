@@ -9,7 +9,7 @@
   <artifactId>PSP30</artifactId>
 
   <version>1.0-SNAPSHOT</version>
-  <name>Eryantis</name>
+  <name>Eriantys</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,12 +20,52 @@
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
       <version>18</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
       <version>18</version>
+      <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>18</version>
+      <classifier>linux</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+      <version>18</version>
+      <classifier>linux</classifier>
+    </dependency>
+    <dependency>
+    <groupId>org.openjfx</groupId>
+    <artifactId>javafx-controls</artifactId>
+    <version>18</version>
+    <classifier>mac</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+      <version>18</version>
+      <classifier>mac</classifier>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>18</version>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-fxml</artifactId>
+      <version>18</version>
+      <classifier>win</classifier>
+    </dependency>
+
     <!-- JUnit provides unit testing for Java applications -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -51,6 +91,12 @@
           <version>4.12</version>
           <scope>test</scope>
       </dependency>
+      <dependency>
+          <groupId>org.jetbrains</groupId>
+          <artifactId>annotations</artifactId>
+          <version>RELEASE</version>
+          <scope>compile</scope>
+      </dependency>
   </dependencies>
 
   <build>
@@ -62,9 +108,9 @@
         <version>3.10.1</version>
         <configuration>
           <!-- Version of the Java language to use -->
-          <source>11</source>
+          <source>18</source>
           <!-- Minimum JRE version the JAR will be compatible with -->
-          <target>11</target>
+          <target>18</target>
         </configuration>
       </plugin>
       <!-- Surefire plugin, responsible for running tests -->
@@ -72,6 +118,79 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>0.0.8</version>
+        <executions>
+          <execution>
+            <!-- Default configuration for running with: mvn clean javafx:run -->
+            <id>default-gui</id>
+            <configuration>
+              <mainClass>src/it.polimi.ingsw.client</mainClass>
+              <launcher>app</launcher>
+              <jlinkZipName>app</jlinkZipName>
+              <jlinkImageName>app</jlinkImageName>
+              <noManPages>true</noManPages>
+              <stripDebug>true</stripDebug>
+              <noHeaderFiles>true</noHeaderFiles>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- jar plugin, responsible for building jar files -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.4</version>
+        <executions>
+          <execution>
+            <id>cli-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer implementation=
+                                     "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>it.polimi.ingsw.client.Cli</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+          <execution>
+            <id>cli-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer implementation=
+                                     "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>it.polimi.ingsw.client.Gui</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+          <execution>
+            <id>server-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer implementation=
+                                     "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>it.polimi.ingsw.serverController.Server</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

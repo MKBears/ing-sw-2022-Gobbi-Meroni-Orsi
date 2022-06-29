@@ -20,6 +20,7 @@ public class IslandTest {
         assertTrue(island.getStudents().isEmpty());
         assertEquals(1,island.size());
         assertEquals(island,island.getHead());
+        assertFalse(island.hasChanged());
     }
 
     @Test //
@@ -50,7 +51,9 @@ public class IslandTest {
         old.add(t);
         ArrayList<Tower> h=b.getTowers();
         assertNull(island.getTower());
-        island.changeTower(t);
+        ArrayList<Tower> jj=new ArrayList<>();
+        jj.add(t);
+        island.changeTower(jj);
         assertEquals(h,island.getTower().getBoard().getTowers()); //dovrebbe essere uguale perchè null
         assertEquals(t,island.getTower());
         try {
@@ -63,7 +66,9 @@ public class IslandTest {
         Colors colo=Colors.GREY;
         Board boa= new Board(2,colo);
         Tower tow=new Tower(colo,boa);
-        island.changeTower(tow);
+        ArrayList<Tower> rr=new ArrayList<>();
+        rr.add(tow);
+        island.changeTower(rr);
         assertEquals(3,b.getTowers().size());
         assertEquals(tow,island.getTower());
         assertEquals(boa,island.getTower().getBoard());
@@ -85,7 +90,7 @@ public class IslandTest {
                 fail();
             }
             island.addStudent(s);
-            switch (s.getType()){
+            switch (s.type()){
                 case FROG:
                     fr++;
                     break;
@@ -95,7 +100,7 @@ public class IslandTest {
                 case DRAGON:
                     d++;
                     break;
-                case FAIRIE:
+                case FAIRY:
                     fa++;
                     break;
                 case UNICORN:
@@ -103,11 +108,21 @@ public class IslandTest {
                     break;
             }
         }
-        assertEquals(fr,island.getInfluence(Type_Student.FROG));
-        assertEquals(g,island.getInfluence(Type_Student.GNOME));
-        assertEquals(d,island.getInfluence(Type_Student.DRAGON));
-        assertEquals(fa,island.getInfluence(Type_Student.FAIRIE));
-        assertEquals(u,island.getInfluence(Type_Student.UNICORN));
+        ArrayList<Type_Student> a=new ArrayList<>();
+        a.add(Type_Student.FROG);
+        assertEquals(fr,island.getInfluence(a));
+        a.remove(0);
+        a.add(Type_Student.GNOME);
+        assertEquals(g,island.getInfluence(a));
+        a.remove(0);
+        a.add(Type_Student.DRAGON);
+        assertEquals(d,island.getInfluence(a));
+        a.remove(0);
+        a.add(Type_Student.FAIRY);
+        assertEquals(fa,island.getInfluence(a));
+        a.remove(0);
+        a.add(Type_Student.UNICORN);
+        assertEquals(u,island.getInfluence(a));
     }
 
     @Test
@@ -137,16 +152,20 @@ public class IslandTest {
         Island isa=new Island(9999);
         Board bruh=new Board(3,Colors.GREY);
         Tower tow=new Tower(Colors.GREY,bruh);
-        isa.changeTower(tow);
+        ArrayList<Tower> bella=new ArrayList<>();
+        bella.add(tow);
+        isa.changeTower(bella);
+        ArrayList<Tower> gg=new ArrayList<>();
+        gg.add(t);
         for(int h=2; h<7; h++) {
             Island i = new Island(h);
-            i.changeTower(t);
+            i.changeTower(gg);
             if(h>3)
             {
                 ArrayList<Island>isles=new ArrayList<>();
                 for(int z=h+3; z<(h+22);z++){
                     Island isl=new Island(z);
-                    isl.changeTower(t);
+                    isl.changeTower(gg);
                     isles.add(isl);
                 }
                 Archipelago arch=new Archipelago(isles);
@@ -156,7 +175,7 @@ public class IslandTest {
         }
 
         ArrayList<Island>is=new ArrayList<>();
-        island.changeTower(t);
+        island.changeTower(gg);
         is.add(island);
         for(Land l: lands){
             is.addAll(l.getIslands());
@@ -176,5 +195,48 @@ public class IslandTest {
         }
         assertThrows(Exception.class,()->island.uniteIslands(isa));
     }
+
+    /*@Test
+    public void toStringTest(){
+        assertThrows(Exception.class,()->island.getPreviousTowers());
+        String s="isola "+island.getID()+" con studenti: "+island.getStudents()+" non ha torri";
+        Island f=new Island(88);
+        Board on=new Board(6,Colors.WHITE);
+        Tower bu= new Tower(Colors.WHITE, on);
+        ArrayList<Tower> gio=new ArrayList<>();
+        gio.add(bu);
+        f.changeTower(gio);
+        try {
+            f.setNoEntry(true);
+        } catch (Exception e) {
+            fail();
+        }
+        String rno="isola "+f.getID()+" con studenti: [] e torre di colore Bianco  entrata chiusa";
+        assertEquals(rno, f.toString());
+        assertEquals(s,island.toString());
+        assertFalse(island.hasChanged());
+        Board bo=new Board(55, Colors.BLACK);
+        Tower j=new Tower(Colors.BLACK, bo);
+        ArrayList<Tower> ho=new ArrayList<>();
+        ho.add(j);
+        island.changeTower(ho);
+        Board fa=new Board(55, Colors.GREY);
+        Tower me=new Tower(Colors.GREY, fa);
+        ho.clear();
+        ho.add(me);
+        island.changeTower(ho);
+        assertTrue(island.hasChanged());
+        ho.clear();
+        ho.add(j);
+        island.changeTower(ho);
+        assertEquals(56,bo.getTowersNum()); //QUI FUNZIONA MALEDETTO
+        ho.clear();
+        ho.add(me);
+        try {  //LANCIA L'ECCEZIONE
+            assertEquals(ho, island.getPreviousTowers());
+        }catch (Exception e){
+            fail();
+        }
+    }*/
 }
 

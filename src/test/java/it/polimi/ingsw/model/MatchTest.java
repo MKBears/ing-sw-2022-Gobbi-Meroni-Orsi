@@ -8,7 +8,7 @@ import static it.polimi.ingsw.model.Colors.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MatchTest {
-    private final String u1 = "Pina", u2 = "Gino";
+    private final String u1 = "abcdefghijklmnopqrstuvwxyz", u2 = "Gino";
     @Test
     void checkInit(){
         Player pl1,pl2;
@@ -17,10 +17,11 @@ class MatchTest {
         Match a=new Match(pl1,pl2);
         for (int i=0;i<12;i++){
             if(i==0 || i==6)
-                assertTrue(a.getLands().get(i).getStudents().size()==0);
+                assertEquals(0, a.getLands().get(i).getStudents().size());
             else
-                assertTrue(a.getLands().get(i).getStudents().size()==1);
+                assertEquals(1, a.getLands().get(i).getStudents().size());
         }
+        System.out.println(a);
     }
     @Test
     void moveMotherNature() {
@@ -42,8 +43,10 @@ class MatchTest {
         pl1=new Player(u1,GREY,8,Wizards.WIZARD1, false);
         pl2=new Player(u2,BLACK,8,Wizards.WIZARD2, false);
         Match a=new Match(pl1,pl2);
-        a.getLands().get(2).changeTower(pl1.getBoard().removeTower());
-        a.getLands().get(3).changeTower(pl1.getBoard().removeTower());
+        ArrayList<Tower> t=new ArrayList<>();
+        t.add(pl1.getBoard().removeTower());
+        a.getLands().get(2).changeTower(t);
+        a.getLands().get(3).changeTower(t);
         a.uniteLandAfter(2);
         assertEquals(11, a.getLands().size());
         assertSame(GREY, a.getLands().get(2).getTowerColor());
@@ -59,8 +62,10 @@ class MatchTest {
         pl1=new Player(u1,GREY,8,Wizards.WIZARD1, false);
         pl2=new Player(u2,BLACK,8,Wizards.WIZARD2, false);
         Match a=new Match(pl1,pl2);
-        a.getLands().get(0).changeTower(pl1.getBoard().removeTower());
-        a.getLands().get(11).changeTower(pl1.getBoard().removeTower());
+        ArrayList<Tower> t=new ArrayList<>();
+        t.add(pl1.getBoard().removeTower());
+        a.getLands().get(0).changeTower(t);
+        a.getLands().get(11).changeTower(t);
         a.uniteLandAfter(11);
         assertEquals(11, a.getLands().size());
         assertSame(GREY, a.getLands().get(0).getTowerColor());
@@ -76,8 +81,10 @@ class MatchTest {
         pl2=new Player(u2,BLACK,6,Wizards.WIZARD2, false);
         pl3=new Player("Franco",WHITE,6,Wizards.WIZARD3, false);
         Match a=new Match(pl1,pl2,pl3);
-        a.getLands().get(2).changeTower(pl1.getBoard().removeTower());
-        a.getLands().get(3).changeTower(pl1.getBoard().removeTower());
+        ArrayList<Tower> t=new ArrayList<>();
+        t.add(pl1.getBoard().removeTower());
+        a.getLands().get(2).changeTower(t);
+        a.getLands().get(3).changeTower(t);
         a.uniteLandBefore(3);
         assertEquals(11, a.getLands().size());
         assertSame(GREY, a.getLands().get(2).getTowerColor());
@@ -91,8 +98,10 @@ class MatchTest {
         pl1=new Player(u1,GREY,8,Wizards.WIZARD1, false);
         pl2=new Player(u2,BLACK,8,Wizards.WIZARD2, false);
         Match a=new Match(pl1,pl2);
-        a.getLands().get(0).changeTower(pl1.getBoard().removeTower());
-        a.getLands().get(11).changeTower(pl1.getBoard().removeTower());
+        ArrayList<Tower> t=new ArrayList<>();
+        t.add(pl1.getBoard().removeTower());
+        a.getLands().get(0).changeTower(t);
+        a.getLands().get(11).changeTower(t);
         a.uniteLandBefore(0);
         assertEquals(11, a.getLands().size());
         assertSame(GREY, a.getLands().get(0).getTowerColor());
@@ -107,9 +116,11 @@ class MatchTest {
         pl1=new Player(u1,GREY,8,Wizards.WIZARD1, false);
         pl2=new Player(u2,BLACK,8,Wizards.WIZARD2, false);
         Match a=new Match(pl1,pl2);
-        a.getLands().get(2).changeTower(pl1.getBoard().removeTower());
-        a.getLands().get(3).changeTower(pl1.getBoard().removeTower());
-        a.getLands().get(4).changeTower(pl1.getBoard().removeTower());
+        ArrayList<Tower> t=new ArrayList<>();
+        t.add(pl1.getBoard().removeTower());
+        a.getLands().get(2).changeTower(t);
+        a.getLands().get(3).changeTower(t);
+        a.getLands().get(4).changeTower(t);
         a.uniteLandBeforeAndAfter(3);
         assertEquals(10, a.getLands().size());
         assertSame(GREY, a.getLands().get(2).getTowerColor());
@@ -137,7 +148,6 @@ class MatchTest {
         assertDoesNotThrow(()->a.getPlayer()[1].getBoard().placeStudent(drago));
         assertDoesNotThrow(()->a.getPlayer()[0].getBoard().placeStudent(drago2));
         assertDoesNotThrow(()->a.getPlayer()[1].getBoard().placeStudent(drago3));
-        System.out.println(a);
         assertSame(a.checkProfessor(Type_Student.DRAGON), pl2);
         assertSame(a.getProfessors().get(Type_Student.DRAGON), pl2);
         Student drago4=new Student(Type_Student.DRAGON);
@@ -146,6 +156,6 @@ class MatchTest {
         assertDoesNotThrow(()->a.getPlayer()[0].getBoard().placeStudent(drago5));
         assertSame(pl1, a.checkProfessor(Type_Student.DRAGON));
         assertSame(pl1, a.getProfessors().get(Type_Student.DRAGON));
-        System.out.println(a);
     }
+
 }
