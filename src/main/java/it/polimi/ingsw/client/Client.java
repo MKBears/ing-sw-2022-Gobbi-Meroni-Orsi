@@ -294,19 +294,20 @@ public class Client  extends Thread{
                         Player winner = (Player) in.readObject();
                         String ex = (String) in.readObject(); //spiegazione di perchè ha vinto
                         GameRecap recap = (GameRecap) in.readObject();
-                        view.printMatch(match);
+                        //view.printMatch(match);
                         view.getWinner(winner);
+                        System.out.println("dopo getwinner");
                         view. printNotification(winner.getColor()+winner.getUserName()+" ha vinto perché "+ex);
+                        System.out.println("Dopo explanation");
                         view.printNotification(recap.toString());
-                        sleep(5000);
-                        view.wakeUp("EndGame");
+                        System.out.println("Dopo recap");
                         end = true;
+                        view.wakeUp("EndGame");
                         server.sendACK();
                         break;
                     case "LastTower":
                         Player pl = (Player) in.readObject();
-                        view.getWinner(pl);
-                        view.wakeUp("EndGame");
+                        view.printNotification(pl.getColor() + pl.getUserName() + " ha costruito tutte le torri");
                         end = true;
                         server.sendACK();
                         break;

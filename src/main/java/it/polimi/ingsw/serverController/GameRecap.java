@@ -2,12 +2,13 @@ package it.polimi.ingsw.serverController;
 
 import it.polimi.ingsw.model.*;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * The class representing the recap of an ended match
  */
-public class GameRecap {
+public class GameRecap  implements Serializable {
     int playersNum;
     String[] players;
     Colors[] colors;

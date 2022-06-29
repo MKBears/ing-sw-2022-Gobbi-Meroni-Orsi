@@ -262,6 +262,10 @@ public class Controller extends Thread{
                 for (ClientHandler player : players) {
                     player.setState(6);
                     player.notify();
+
+                    synchronized (this) {
+                        wait();
+                    }
                 }
                 delete();
                 state = 6;

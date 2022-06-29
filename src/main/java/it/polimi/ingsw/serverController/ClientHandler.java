@@ -255,6 +255,8 @@ public class ClientHandler extends Thread{
                         if (match.getMotherNature().getPosition().hasChanged()) {
                             try {
                                 controller.notifyChanges();
+                                if (match.getMotherNature().getPosition().getTower().getBoard().hasNoTowersLeft())
+                                    ongoingMatch = false;
                             } catch (Exception e) {
                                 out.sendGenericError("Desynchronized (" + e.getMessage() + ")");
                                 out.sendCreation(match);
@@ -275,10 +277,15 @@ public class ClientHandler extends Thread{
                             e.printStackTrace();
                         }
                     }
+
                     if (ongoingMatch) {
                         state = 5;
                     } else {
                         state = 6;
+
+                        synchronized (controller) {
+                            controller.notify();
+                        }
                         break;
                     }
                 case 5:
@@ -310,6 +317,9 @@ public class ClientHandler extends Thread{
                         } while (nack);
                     } catch (Exception e) {
                         out.sendGenericError("Desynchronized ("+e.getMessage()+")");
+                    }
+                    synchronized (controller) {
+                        controller.notify();
                     }
                     break;
                 case 7:
