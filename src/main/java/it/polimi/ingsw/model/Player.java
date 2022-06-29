@@ -94,9 +94,9 @@ public class Player implements Serializable {
      * @param assistantCard the played assistant card
      */
     public void draw (AssistantCard assistantCard){
-        for (AssistantCard card : deck) {
-            if (assistantCard.getValue() == card.getValue()) {
-                playedCard = deck.remove(deck.indexOf(card));
+        for (int i=0;i<deck.size();i++) {
+            if (assistantCard.getValue() == deck.get(i).getValue()) {
+                playedCard = deck.remove(i);
                 break;
             }
         }

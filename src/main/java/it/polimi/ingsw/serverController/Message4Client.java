@@ -447,16 +447,20 @@ public class Message4Client extends Thread {
             }
             try {
                 synchronized (this) {
-                    out.writeObject("Ping");
+                    if(condition) {
+                        out.writeObject("Ping");
+                    }
                 }
             } catch (IOException e) {
                     sendGenericError("Internal server error");
             }
         }
-        try {
-            out.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if(!condition) {
+            try {
+                out.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -707,5 +711,9 @@ public class Message4Client extends Thread {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public void setCondition(boolean condition) {
+        this.condition = condition;
     }
 }
