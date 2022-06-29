@@ -757,9 +757,9 @@ public class MatchController extends Thread {
             ncoin1.setVisible(true);
             ncoin2.setVisible(true);
             character_button.setVisible(true);
-            power0.setText(((Expert_Match) match).getCard()[0].getPU());
-            power1.setText(((Expert_Match) match).getCard()[1].getPU());
-            power2.setText(((Expert_Match) match).getCard()[1].getPU());
+            power0.setText(((Expert_Match) match).getCard()[0].getPowerUp());
+            power1.setText(((Expert_Match) match).getCard()[1].getPowerUp());
+            power2.setText(((Expert_Match) match).getCard()[1].getPowerUp());
             setDisableChCards(true);
         }
         if(match.getPlayersNum()==2){
@@ -781,9 +781,9 @@ public class MatchController extends Thread {
         character(ch0, ch[0]);
         character(ch1, ch[1]);
         character(ch2, ch[2]);
-        power0.setText(ch[0].getPU());
-        power1.setText(ch[1].getPU());
-        power2.setText(ch[2].getPU());
+        power0.setText(ch[0].getPowerUp());
+        power1.setText(ch[1].getPowerUp());
+        power2.setText(ch[2].getPowerUp());
         int i=0;
         for(CharacterCard c: ((Expert_Match)match).getCard()){
             if(i==0) {
