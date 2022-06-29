@@ -509,7 +509,8 @@ public class Cli extends Thread{
                         printMatch(match);
                         a = this.getAssistantCard(cards);
                         me.draw(a);
-                        System.out.println("Carta scelta:" + a.toString());
+                        printMatch(match);
+                        System.out.println("Carta scelta:" + a.toString() + '\n');
                         do {
                             server.sendChosenCard(a);
                             synchronized (this) {
@@ -533,7 +534,7 @@ public class Cli extends Thread{
                     case ("ChooseCloud"):
                         Cloud clo = this.getCloud();
                         printMatch(match);
-                        System.out.println("Nuvola scelta:\n" + clo.toString());
+                        System.out.println("Nuvola scelta:\n" + clo.toString() + '\n');
                         action.chooseCloud(me, clo);
                         do {
                             server.sendChoiceCloud(clo.clone());
@@ -597,8 +598,9 @@ public class Cli extends Thread{
                                 enough_money = true;
                             }
                         }
-                        CharacterCard character = chooseChCard(characters);
+
                         if (enough_money) {
+                            CharacterCard character = chooseChCard(characters);
                             if (character == null) {
                                 server.sendNoCh();
                             } else {
