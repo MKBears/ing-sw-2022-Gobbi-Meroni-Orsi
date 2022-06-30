@@ -9,10 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.Bloom;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
-import javafx.scene.effect.InnerShadow;
+import javafx.scene.effect.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -26,6 +23,7 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.characterCards.*;
 
 import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,15 +39,15 @@ public class MatchController extends Thread {
     private boolean selectedmn;
     private boolean selectedstudent;
     private Student assistantchoosen;
-    private FileInputStream red_student;
-    private FileInputStream yellow_student;
-    private FileInputStream green_student;
-    private FileInputStream blue_student;
-    private FileInputStream pink_student;
+    private InputStream red_student;
+    private InputStream yellow_student;
+    private InputStream green_student;
+    private InputStream blue_student;
+    private InputStream pink_student;
     private String state;
     private ArrayList<Land> stepsmn;
     private CharacterCard[] ch;
-    private FileInputStream noentry;
+    private InputStream noentry;
     private Student stuch1;
     private  boolean ich1;
     private  boolean ich5;
@@ -786,20 +784,13 @@ public class MatchController extends Thread {
         for (int i = 0; i < 12; i++) {
             show_islands(i);
         }
-        File f = new File("src/main/resources/wooden_pieces/wooden_pieces/student_red.png");
-        try {
-            red_student = new FileInputStream(f);
-            f = new File("src/main/resources/wooden_pieces/wooden_pieces/student_yellow.png");
-            yellow_student = new FileInputStream(f);
-            f = new File("src/main/resources/wooden_pieces/wooden_pieces/student_blue.png");
-            blue_student = new FileInputStream(f);
-            f = new File("src/main/resources/wooden_pieces/wooden_pieces/student_pink.png");
-            pink_student = new FileInputStream(f);
-            f = new File("src/main/resources/wooden_pieces/wooden_pieces/student_green.png");
-            green_student = new FileInputStream(f);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+
+        red_student= getClass().getClassLoader().getResourceAsStream("student_red.png");
+        yellow_student = getClass().getClassLoader().getResourceAsStream("student_yellow.png");
+        blue_student = getClass().getClassLoader().getResourceAsStream("student_blue.png");
+        pink_student = getClass().getClassLoader().getResourceAsStream("student_pink.png");
+        green_student = getClass().getClassLoader().getResourceAsStream("student_green.png");
+
         if (match.getPlayer().length == 2) {
             cloud_for_three_player.setVisible(false);
         }
@@ -990,13 +981,8 @@ public class MatchController extends Thread {
 
     public void show_noentry(ImageView imageView){
         //imageView.setImage(new Image(noentry));
-        File f=new File("src/main/resources/wooden_pieces/wooden_pieces/deny_island_icon.png");
-        try {
-            noentry=new FileInputStream(f);
-            imageView.setImage(new Image(noentry));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        noentry=getClass().getClassLoader().getResourceAsStream("deny_island_icon.png");
+        imageView.setImage(new Image(noentry));
     }
 
     @FXML
@@ -1080,6 +1066,18 @@ public class MatchController extends Thread {
             }
             if(ich1){
                 server.sendChooseCh1(stuch1,match.findIsland(idland));
+                ch_00.setEffect(new DropShadow());
+                ch_01.setEffect(new DropShadow());
+                ch_02.setEffect(new DropShadow());
+                ch_03.setEffect(new DropShadow());
+                ch_10.setEffect(new DropShadow());
+                ch_11.setEffect(new DropShadow());
+                ch_12.setEffect(new DropShadow());
+                ch_13.setEffect(new DropShadow());
+                ch_20.setEffect(new DropShadow());
+                ch_21.setEffect(new DropShadow());
+                ch_22.setEffect(new DropShadow());
+                ch_23.setEffect(new DropShadow());
                 ich1=false;
             }
             if(ich5){
@@ -1485,19 +1483,14 @@ public class MatchController extends Thread {
     private void show_towers(int i) {
         Player pl = match.getPlayer()[i];
         Image colored_tower = null;
-        File f = null;
+        InputStream f=null;
         switch (pl.getColor()) {
-            case GREY -> f = new File("src/main/resources/wooden_pieces/wooden_pieces/grey_tower.png");
-            case BLACK -> f = new File("src/main/resources/wooden_pieces/wooden_pieces/black_tower.png");
-            case WHITE -> f = new File("src/main/resources/wooden_pieces/wooden_pieces/white_tower.png");
+            case GREY -> f = getClass().getClassLoader().getResourceAsStream("grey_tower.png");
+            case BLACK -> f = getClass().getClassLoader().getResourceAsStream("black_tower.png");
+            case WHITE -> f = getClass().getClassLoader().getResourceAsStream("white_tower.png");
         }
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(f);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        colored_tower = new Image(fis);
+
+        colored_tower = new Image(f);
         switch (i) {
             case 0 -> {
                 tower00.setImage(colored_tower);
@@ -3392,31 +3385,34 @@ public class MatchController extends Thread {
      */
     private void show_student(ImageView imageView,Student student){
         try {
+            //InputStream inputStream=getClass().getClassLoader().getResourceAsStream("CarteTOT_back_1@3x.png");
+            //imageView.setImage(new Image(inputStream));
+            //case WIZARD1 -> {
+            //                    InputStream inputStream=getClass().getClassLoader().getResourceAsStream("CarteTOT_back_1@3x.png");
+            //                    imageView.setImage(new Image(inputStream));
+            //                }
+            //InputStream f = null;
+
             switch (student.type()){
                 case GNOME -> {
+                    yellow_student=getClass().getClassLoader().getResourceAsStream("student_yellow.png");
                     imageView.setImage(new Image(yellow_student));
-                    File f=new File("src/main/resources/wooden_pieces/wooden_pieces/student_yellow.png");
-                    yellow_student=new FileInputStream(f);
                 }
                 case FAIRY -> {
+                    pink_student=getClass().getClassLoader().getResourceAsStream("student_pink.png");
                     imageView.setImage(new Image(pink_student));
-                    File f=new File("src/main/resources/wooden_pieces/wooden_pieces/student_pink.png");
-                    pink_student=new FileInputStream(f);
                 }
                 case FROG -> {
+                    green_student=getClass().getClassLoader().getResourceAsStream("student_green.png");
                     imageView.setImage(new Image(green_student));
-                    File f=new File("src/main/resources/wooden_pieces/wooden_pieces/student_green.png");
-                    green_student=new FileInputStream(f);
                 }
                 case UNICORN -> {
+                    blue_student=getClass().getClassLoader().getResourceAsStream("student_blue.png");
                     imageView.setImage(new Image(blue_student));
-                    File f=new File("src/main/resources/wooden_pieces/wooden_pieces/student_blue.png");
-                    blue_student=new FileInputStream(f);
                 }
                 case DRAGON -> {
+                    red_student=getClass().getClassLoader().getResourceAsStream("student_red.png");
                     imageView.setImage(new Image(red_student));
-                    File f=new File("src/main/resources/wooden_pieces/wooden_pieces/student_red.png");
-                    red_student=new FileInputStream(f);
                 }
             }
             imageView.setVisible(true);
@@ -3491,24 +3487,20 @@ public class MatchController extends Thread {
         try {
             switch (wizards) {
                 case WIZARD1 -> {
-                    File f = new File("src/main/resources/Graphical_Assets/Assistenti/retro/CarteTOT_back_1@3x.png");
-                    FileInputStream fis = new FileInputStream(f);
-                    imageView.setImage(new Image(fis));
+                    InputStream inputStream=getClass().getClassLoader().getResourceAsStream("CarteTOT_back_1@3x.png");
+                    imageView.setImage(new Image(inputStream));
                 }
                 case WIZARD2 -> {
-                    File f = new File("src/main/resources/Graphical_Assets/Assistenti/retro/CarteTOT_back_11@3x.png");
-                    FileInputStream fis = new FileInputStream(f);
-                    imageView.setImage(new Image(fis));
+                    InputStream inputStream=getClass().getClassLoader().getResourceAsStream("CarteTOT_back_11@3x.png");
+                    imageView.setImage(new Image(inputStream));
                 }
                 case WIZARD3 -> {
-                    File f = new File("src/main/resources/Graphical_Assets/Assistenti/retro/CarteTOT_back_21@3x.png");
-                    FileInputStream fis = new FileInputStream(f);
-                    imageView.setImage(new Image(fis));
+                    InputStream inputStream=getClass().getClassLoader().getResourceAsStream("CarteTOT_back_21@3x.png");
+                    imageView.setImage(new Image(inputStream));
                 }
                 case WIZARD4 -> {
-                    File f = new File("src/main/resources/Graphical_Assets/Assistenti/retro/CarteTOT_back_31@3x.png");
-                    FileInputStream fis = new FileInputStream(f);
-                    imageView.setImage(new Image(fis));
+                    InputStream inputStream=getClass().getClassLoader().getResourceAsStream("CarteTOT_back_31@3x.png");
+                    imageView.setImage(new Image(inputStream));
                 }
             }
             imageView.setRotate(90);
@@ -3524,41 +3516,34 @@ public class MatchController extends Thread {
      */
     @FXML
     private void character(ImageView imageView,CharacterCard character){
+        URL url;
         File f;
         FileInputStream fil;
         try {
             if (character instanceof Ch_1) {
-                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front.jpg");
-                fil = new FileInputStream(f);
-                imageView.setImage(new Image(fil));
+                InputStream inputStream=getClass().getClassLoader().getResourceAsStream("CarteTOT_front.jpg");
+                imageView.setImage(new Image(inputStream));
             }else if(character instanceof Ch_2){
-                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front2.jpg");
-                fil = new FileInputStream(f);
-                imageView.setImage(new Image(fil));
+                InputStream inputStream=getClass().getClassLoader().getResourceAsStream("CarteTOT_front12.jpg");
+                imageView.setImage(new Image(inputStream));
             }else if(character instanceof Ch_4){
-                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front4.jpg");
-                fil = new FileInputStream(f);
-                imageView.setImage(new Image(fil));
+                InputStream inputStream=getClass().getClassLoader().getResourceAsStream("CarteTOT_front3.jpg");
+                imageView.setImage(new Image(inputStream));
             }else if(character instanceof Ch_5){
-                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front5.jpg");
-                fil = new FileInputStream(f);
-                imageView.setImage(new Image(fil));
+                InputStream inputStream=getClass().getClassLoader().getResourceAsStream("CarteTOT_front4.jpg");
+                imageView.setImage(new Image(inputStream));
             } if(character instanceof Ch_8){
-                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front8.jpg");
-                fil = new FileInputStream(f);
-                imageView.setImage(new Image(fil));
+                InputStream inputStream=getClass().getClassLoader().getResourceAsStream("CarteTOT_front7.jpg");
+                imageView.setImage(new Image(inputStream));
             }else if(character instanceof Ch_10){
-                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front10.jpg");
-                fil = new FileInputStream(f);
-                imageView.setImage(new Image(fil));
+                InputStream inputStream=getClass().getClassLoader().getResourceAsStream("CarteTOT_front9.jpg");
+                imageView.setImage(new Image(inputStream));
             }else if(character instanceof Ch_11){
-                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front11.jpg");
-                fil = new FileInputStream(f);
-                imageView.setImage(new Image(fil));
+                InputStream inputStream=getClass().getClassLoader().getResourceAsStream("CarteTOT_front10.jpg");
+                imageView.setImage(new Image(inputStream));
             }else if(character instanceof Ch_12){
-                f = new File("src/main/resources/Graphical_Assets/Personaggi/CarteTOT_front12.jpg");
-                fil = new FileInputStream(f);
-                imageView.setImage(new Image(fil));
+                InputStream inputStream=getClass().getClassLoader().getResourceAsStream("CarteTOT_front11.jpg");
+                imageView.setImage(new Image(inputStream));
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -3631,19 +3616,19 @@ public class MatchController extends Thread {
             System.out.println("Rendo usabile la 1 perchè costa "+gui.getCh()[0].getPrice());
             ch0.setDisable(false);
         } else {
-            ch0.setEffect(new InnerShadow());
+            ch0.setEffect(new GaussianBlur());
         }
         if(gui.getUsability(2)){
             ch1.setDisable(false);
             System.out.println("Rendo usabile la 2 perchè costa "+gui.getCh()[1].getPrice());
         } else {
-            ch1.setEffect(new InnerShadow());
+            ch1.setEffect(new GaussianBlur());
         }
         if(gui.getUsability(3)){
             ch2.setDisable(false);
             System.out.println("Rendo usabile la 3 perchè costa "+gui.getCh()[2].getPrice());
         } else {
-            ch2.setEffect(new InnerShadow());
+            ch2.setEffect(new GaussianBlur());
         }
         int i=0;
         for(CharacterCard c: ch){
@@ -3908,12 +3893,13 @@ public class MatchController extends Thread {
         }
     }
 
-    public void useCh10(){
+    public void useCh10(){  //NON VA
         gui.popUp("Ok", "Scegli uno o due studenti dall'ingresso della tua plancia da scambiare con quelli nella sala");
         switch (me.getColor()) {
             case WHITE:
+                board0.setDisable(false);
                 switch (me.getBoard().getEntrance().size()) {
-                    case 1:
+                    case 8:
                         entry01.setDisable(false);
                         entry02.setDisable(false);
                         entry03.setDisable(false);
@@ -3923,53 +3909,54 @@ public class MatchController extends Thread {
                         entry07.setDisable(false);
                         entry08.setDisable(false);
                         break;
-                    case 2:
+                    case 7:
+                        entry01.setDisable(false);
                         entry02.setDisable(false);
                         entry03.setDisable(false);
                         entry04.setDisable(false);
                         entry05.setDisable(false);
                         entry06.setDisable(false);
                         entry07.setDisable(false);
-                        entry08.setDisable(false);
                         break;
-                    case 3:
+                    case 6:
+                        entry01.setDisable(false);
+                        entry02.setDisable(false);
                         entry03.setDisable(false);
                         entry04.setDisable(false);
                         entry05.setDisable(false);
                         entry06.setDisable(false);
-                        entry07.setDisable(false);
-                        entry08.setDisable(false);
-                        break;
-                    case 4:
-                        entry04.setDisable(false);
-                        entry05.setDisable(false);
-                        entry06.setDisable(false);
-                        entry07.setDisable(false);
-                        entry08.setDisable(false);
                         break;
                     case 5:
+                        entry01.setDisable(false);
+                        entry02.setDisable(false);
+                        entry03.setDisable(false);
+                        entry04.setDisable(false);
                         entry05.setDisable(false);
-                        entry06.setDisable(false);
-                        entry07.setDisable(false);
-                        entry08.setDisable(false);
                         break;
-                    case 6:
-                        entry06.setDisable(false);
-                        entry07.setDisable(false);
-                        entry08.setDisable(false);
+                    case 4:
+                        entry01.setDisable(false);
+                        entry02.setDisable(false);
+                        entry03.setDisable(false);
+                        entry04.setDisable(false);
                         break;
-                    case 7:
-                        entry07.setDisable(false);
-                        entry08.setDisable(false);
+                    case 3:
+                        entry01.setDisable(false);
+                        entry02.setDisable(false);
+                        entry03.setDisable(false);
                         break;
-                    case 8:
-                        entry08.setDisable(false);
+                    case 2:
+                        entry01.setDisable(false);
+                        entry02.setDisable(false);
+                        break;
+                    case 1:
+                        entry01.setDisable(false);
                         break;
                 }
                 break;
             case BLACK:
+                board1.setDisable(false);
                 switch (me.getBoard().getEntrance().size()) {
-                    case 1:
+                    case 8:
                         entry11.setDisable(false);
                         entry12.setDisable(false);
                         entry13.setDisable(false);
@@ -3979,53 +3966,54 @@ public class MatchController extends Thread {
                         entry17.setDisable(false);
                         entry18.setDisable(false);
                         break;
-                    case 2:
+                    case 7:
+                        entry11.setDisable(false);
                         entry12.setDisable(false);
                         entry13.setDisable(false);
                         entry14.setDisable(false);
                         entry15.setDisable(false);
                         entry16.setDisable(false);
                         entry17.setDisable(false);
-                        entry18.setDisable(false);
                         break;
-                    case 3:
+                    case 6:
+                        entry11.setDisable(false);
+                        entry12.setDisable(false);
                         entry13.setDisable(false);
                         entry14.setDisable(false);
                         entry15.setDisable(false);
                         entry16.setDisable(false);
-                        entry17.setDisable(false);
-                        entry18.setDisable(false);
-                        break;
-                    case 4:
-                        entry14.setDisable(false);
-                        entry15.setDisable(false);
-                        entry16.setDisable(false);
-                        entry17.setDisable(false);
-                        entry18.setDisable(false);
                         break;
                     case 5:
+                        entry11.setDisable(false);
+                        entry12.setDisable(false);
+                        entry13.setDisable(false);
+                        entry14.setDisable(false);
                         entry15.setDisable(false);
-                        entry16.setDisable(false);
-                        entry17.setDisable(false);
-                        entry18.setDisable(false);
                         break;
-                    case 6:
-                        entry16.setDisable(false);
-                        entry17.setDisable(false);
-                        entry18.setDisable(false);
+                    case 4:
+                        entry11.setDisable(false);
+                        entry12.setDisable(false);
+                        entry13.setDisable(false);
+                        entry14.setDisable(false);
                         break;
-                    case 7:
-                        entry17.setDisable(false);
-                        entry18.setDisable(false);
+                    case 3:
+                        entry11.setDisable(false);
+                        entry12.setDisable(false);
+                        entry13.setDisable(false);
                         break;
-                    case 8:
-                        entry18.setDisable(false);
+                    case 2:
+                        entry11.setDisable(false);
+                        entry12.setDisable(false);
+                        break;
+                    case 1:
+                        entry11.setDisable(false);
                         break;
                 }
                 break;
             case GREY:
+                board2.setDisable(false);
                 switch (me.getBoard().getEntrance().size()) {
-                    case 1:
+                    case 8:
                         entry21.setDisable(false);
                         entry22.setDisable(false);
                         entry23.setDisable(false);
@@ -4035,47 +4023,47 @@ public class MatchController extends Thread {
                         entry27.setDisable(false);
                         entry28.setDisable(false);
                         break;
-                    case 2:
+                    case 7:
+                        entry21.setDisable(false);
                         entry22.setDisable(false);
                         entry23.setDisable(false);
                         entry24.setDisable(false);
                         entry25.setDisable(false);
                         entry26.setDisable(false);
                         entry27.setDisable(false);
-                        entry28.setDisable(false);
                         break;
-                    case 3:
+                    case 6:
+                        entry21.setDisable(false);
+                        entry22.setDisable(false);
                         entry23.setDisable(false);
                         entry24.setDisable(false);
                         entry25.setDisable(false);
                         entry26.setDisable(false);
-                        entry27.setDisable(false);
-                        entry28.setDisable(false);
-                        break;
-                    case 4:
-                        entry24.setDisable(false);
-                        entry25.setDisable(false);
-                        entry26.setDisable(false);
-                        entry27.setDisable(false);
-                        entry28.setDisable(false);
                         break;
                     case 5:
+                        entry21.setDisable(false);
+                        entry22.setDisable(false);
+                        entry23.setDisable(false);
+                        entry24.setDisable(false);
                         entry25.setDisable(false);
-                        entry26.setDisable(false);
-                        entry27.setDisable(false);
-                        entry28.setDisable(false);
                         break;
-                    case 6:
-                        entry26.setDisable(false);
-                        entry27.setDisable(false);
-                        entry28.setDisable(false);
+                    case 4:
+                        entry21.setDisable(false);
+                        entry22.setDisable(false);
+                        entry23.setDisable(false);
+                        entry24.setDisable(false);
                         break;
-                    case 7:
-                        entry27.setDisable(false);
-                        entry28.setDisable(false);
+                    case 3:
+                        entry21.setDisable(false);
+                        entry22.setDisable(false);
+                        entry23.setDisable(false);
                         break;
-                    case 8:
-                        entry28.setDisable(false);
+                    case 2:
+                        entry21.setDisable(false);
+                        entry22.setDisable(false);
+                        break;
+                    case 1:
+                        entry21.setDisable(false);
                         break;
                 }
                 break;
@@ -4156,5 +4144,8 @@ public class MatchController extends Thread {
         }
         cg.setNoCh(false);
         refreshEntry();
+        ch0.setEffect(null);
+        ch1.setEffect(null);
+        ch2.setEffect(null);
     }
 }
