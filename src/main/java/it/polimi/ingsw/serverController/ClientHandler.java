@@ -7,7 +7,6 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Manages all the interactions between Controller (server) and the remote player (client)
@@ -228,10 +227,12 @@ public class ClientHandler extends Thread{
                     }
                     try {
                         checkAllProfessors();
+                        sleep (500);
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                     controller.notifyProfessors();
+                    System.out.println("Mandato notyfyprofessors");
 
                     if(expertMatch){
                         System.out.println("Entro nella fase 7");
@@ -245,6 +246,7 @@ public class ClientHandler extends Thread{
                 case 4:
                     ///ACTION phase: moving Mother Nature
                     //calculate the influence in that Land and verify if it joins other lands
+                    System.out.println("Entrato nella fase 4");
                     do {
                         out.sendMoveMN();
                         wait();
@@ -257,22 +259,25 @@ public class ClientHandler extends Thread{
                             out.sendGenericError("Desynchronized (" + e.getMessage() + ")");
                             out.sendCreation(match);
                         }
-                        uniteLands();
-                        controller.notifyMovedMN(motherNatureSteps);
 
-                        if (match.getMotherNature().getPosition().hasChanged()) {
-                            try {
-                                controller.notifyChanges();
-                                if (match.getMotherNature().getPosition().getTower().getBoard().hasNoTowersLeft())
-                                    ongoingMatch = false;
-                            } catch (Exception e) {
-                                out.sendGenericError("Desynchronized (" + e.getMessage() + ")");
-                                out.sendCreation(match);
+                        if (state != 6) { /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            uniteLands();
+                            controller.notifyMovedMN(motherNatureSteps);
+
+                            if (match.getMotherNature().getPosition().hasChanged()) {
+                                try {
+                                    controller.notifyChanges();
+                                    if (match.getMotherNature().getPosition().getTower().getBoard().hasNoTowersLeft())
+                                        ongoingMatch = false;
+                                } catch (Exception e) {
+                                    out.sendGenericError("Desynchronized (" + e.getMessage() + ")");
+                                    out.sendCreation(match);
+                                }
                             }
-                        }
 
-                        if (match.getLands().size() <= 3)
-                            controller.notifyThreeArchipelagos();
+                            if (match.getLands().size() <= 3)
+                                controller.notifyThreeArchipelagos();
+                        }
                     }else{
                         try {
                             match.getMotherNature().getPosition().setNoEntry(false);
@@ -290,14 +295,12 @@ public class ClientHandler extends Thread{
                         state = 5;
                     } else {
                         state = 6;
-
-                        synchronized (controller) {
-                            controller.notify();
-                        }
                         break;
                     }
                 case 5:
                     //ACTION phase: choose a cloud and import students to the entrance
+                    System.out.println("Mando choosecloud");
+
                     do {
                         out.sendChooseCloud();
                         this.wait();
@@ -313,6 +316,7 @@ public class ClientHandler extends Thread{
                         }
                     }while (chosenCloud==null);
                     controller.chooseCloud(chosenCloud, this);
+
                     if (state != 6)
                         state = 1;
                     break;

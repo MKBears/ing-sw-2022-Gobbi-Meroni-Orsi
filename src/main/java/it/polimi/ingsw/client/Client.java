@@ -90,6 +90,7 @@ public class Client  extends Thread{
             while (!end){
                 if(!received.equals("base")) {
                     received = (String) in.readObject();
+                    System.out.println("Arrivato " + received);
                 }
                 String response;
                 switch (received) {
@@ -306,8 +307,7 @@ public class Client  extends Thread{
                         break;
                     case "LastTower":
                         Player pl = (Player) in.readObject();
-                        view.printNotification(pl.getColor() + pl.getUserName() + " ha costruito tutte le torri");
-                        end = true;
+                        view.printNotification(pl.getColor() + pl.getUserName() + "\u001b[0m ha costruito tutte le torri");
                         server.sendACK();
                         break;
                     case "NoMoreStudents":
