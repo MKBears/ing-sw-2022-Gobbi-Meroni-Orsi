@@ -164,7 +164,6 @@ public class Controller extends Thread{
                 do {
                     synchronized (players[currentPlayer]) {
                         players[currentPlayer].notifyAll();
-                        System.out.println("Svegliato player " + players[currentPlayer].getUserName());
                     }
                     synchronized (this) {
                         wait();
@@ -183,6 +182,7 @@ public class Controller extends Thread{
                     notifyTurn("pianificazione");
                     synchronized (players[currentPlayer]) {
                         players[currentPlayer].notify();
+                        System.out.println("Svegliato player " + players[currentPlayer].getUserName());
                     }
 
                     synchronized (this) {
@@ -222,7 +222,7 @@ public class Controller extends Thread{
                     } while (currentPlayer!=firstPlayer && playing);
                 }
 
-                if (playing) {
+                if (playing && !match.getBag().isEmpty()) {
                     state = 1;
                     save();
                     for (ClientHandler p:players) {
@@ -664,6 +664,7 @@ public class Controller extends Thread{
         }
 
         synchronized (this) {
+            System.out.println("Mi autosveglio");
             notify();
         }
     }
@@ -973,7 +974,6 @@ public class Controller extends Thread{
                 player.getOutputStream().sendNoMoreStudents();
             }
             endExplanation = "sono finiti gli studenti del sacchetto";
-            playing = false;
         }
     }
 

@@ -283,10 +283,9 @@ public class Cli extends Thread{
 
     /**
      * request of where move the student
-     * @param match match of the player
      * @return int that express where move the student (12 for the board if less than 12 is the id of the land)
      */
-    public int getDestination(Match match) {
+    public int getDestination() {
         String value;
         int choose;
         do {
@@ -326,6 +325,7 @@ public class Cli extends Thread{
         if (match instanceof Expert_Match)
             System.out.println(printCharacters());
         System.out.println(printAssistants());
+        System.out.flush();
     }
 
     /**
@@ -556,7 +556,7 @@ public class Cli extends Thread{
                         int move;
                         for (int i = 0; i < match.getPlayer().length + 1; i++) {
                             st = this.getStudent(me);
-                            move = this.getDestination(match);
+                            move = this.getDestination();
                             if (move == 13) {
                                 try {
                                     action.moveFromIngressToBoard(me, st);

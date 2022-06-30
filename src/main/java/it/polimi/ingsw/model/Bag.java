@@ -18,7 +18,7 @@ public class Bag implements Serializable {
     public Bag(){
         Student s;
         for (Type_Student t : Type_Student.values()){
-            for (int i=0; i<4; i++){ //24
+            for (int i=0; i<24; i++){
                 s = new Student(t);
                 students.add(s);
             }
