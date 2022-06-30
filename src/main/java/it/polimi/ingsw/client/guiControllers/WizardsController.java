@@ -25,15 +25,26 @@ public class WizardsController {
     @FXML
     public Button w_4;
 
+    /**
+     * set the server to send the messages
+     * @param server server of the match
+     */
     public static void setServer(Message4Server server) {
         WizardsController.server = server;
     }
 
+    /**
+     * thread that call this scene
+     * @param cl
+     */
     public static void setCl(ClientGui cl){
         WizardsController.cl=cl;
     }
 
-
+    /**
+     * set he wizard that you can choose
+     * @param w
+     */
     public void setWilly(List<Wizards> w){
         w_1.setVisible(false);
         w_2.setVisible(false);
@@ -57,6 +68,9 @@ public class WizardsController {
     public void initialize(){
     }
     @FXML
+    /**
+     * action of the wizard that yuo choose and send it to the server
+     */
     public void chooseWizard(ActionEvent actionEvent){
         switch (((Button)actionEvent.getSource()).getId()){
             case("w_1"):

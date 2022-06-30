@@ -90,7 +90,7 @@ public class Client  extends Thread{
             while (!end){
                 if(!received.equals("base")) {
                     received = (String) in.readObject();
-                    System.out.println("Arrivato " + received);
+                    if(!received.equals("Ping")){System.out.println("Arrivato " + received);}
                 }
                 String response;
                 switch (received) {

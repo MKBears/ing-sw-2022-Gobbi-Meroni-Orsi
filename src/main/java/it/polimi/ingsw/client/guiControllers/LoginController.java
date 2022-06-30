@@ -30,16 +30,26 @@ public class LoginController{
     @FXML
     Label result_username;
 
+    /**
+     * set the client gui
+     * @param cl
+     */
     public static void setCl(ClientGui cl){
         LoginController.cl=cl;
     }
 
+    /**
+     * set the server to send message of the login
+     * @param server
+     */
     public static void setServer(Message4Server server){
         LoginController.server=server;
     }
 
-
-
+    /**
+     * set the gui that call this method
+     * @param gui
+     */
     public static void setGui(Gui gui) {
         LoginController.gui = gui;
     }
@@ -48,7 +58,9 @@ public class LoginController{
         return us;
     }
 
-
+    /**
+     * initialize the scene
+     */
     public void initialize() {
         result_username.setText("Scegleire l'username");
         result_username.setVisible(true);
@@ -57,6 +69,9 @@ public class LoginController{
     }
 
     @FXML
+    /**
+     * action after the click of the button
+     */
     public void username(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
         us = username.getCharacters().toString();
         //cl.setUsername(us);

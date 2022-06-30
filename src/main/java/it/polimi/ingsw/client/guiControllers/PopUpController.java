@@ -13,6 +13,10 @@ public class PopUpController {
 
     }
 
+    /**
+     * set the message of the popup
+     * @param s string to be added in the popup
+     */
     public void setNotify(String s){
         System.out.println("In popupcontroller ho: "+s);
         notify.setText(s);

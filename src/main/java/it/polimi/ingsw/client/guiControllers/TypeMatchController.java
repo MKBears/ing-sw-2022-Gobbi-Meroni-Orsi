@@ -23,10 +23,17 @@ public class TypeMatchController {
     @FXML
     Button typematch;
 
+    /**
+     * set the client gui
+     * @param cl
+     */
     public static void setCl(ClientGui cl){
         TypeMatchController.cl=cl;
     }
 
+    /**
+     * initialize the page
+     */
     public void initialize(){
         playernum.getItems().add("2");
         playernum.getItems().add("3");
@@ -35,11 +42,18 @@ public class TypeMatchController {
         error.setVisible(false);
     }
 
+    /**
+     * set the server to send the messages
+     * @param server the server to send the messages to
+     */
     public static void setServer(Message4Server server){
         TypeMatchController.server=server;
     }
 
     @FXML
+    /**
+     * action after choose the number of players and if do an expert match
+     */
     public void choosetypematch(ActionEvent actionEvent) {
         //System.out.println(playernum.getItems());
         if(playernum.getValue().toString()=="2"){

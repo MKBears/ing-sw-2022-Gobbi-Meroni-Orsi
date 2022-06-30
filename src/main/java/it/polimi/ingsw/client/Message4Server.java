@@ -44,7 +44,7 @@ public class Message4Server {
 
     /**
      * The client sends the username for a new avatar
-     * @param username
+     * @param username of the player
      */
     public void sendRegistration(String username) {
         synchronized (this) {

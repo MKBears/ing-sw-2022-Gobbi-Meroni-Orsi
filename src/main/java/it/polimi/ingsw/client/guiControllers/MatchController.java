@@ -699,7 +699,9 @@ public class MatchController extends Thread {
         MatchController.gui = gui;
     }
 
-
+    /**
+     * set the scene before the game starts
+     */
     public void initialize() {
         tomyboard1.setVisible(false);
         tomyboard2.setVisible(false);
@@ -855,6 +857,10 @@ public class MatchController extends Thread {
         state_label.setText(s);
     }
 
+    /**
+     * set the character card on the view
+     * @param ch characters of the match
+     */
     public void setCharacters(CharacterCard[] ch){
         this.ch=ch;
         character(ch0, ch[0]);
@@ -1103,6 +1109,9 @@ public class MatchController extends Thread {
         }
     }
 
+    /**
+     * update the student on the entrance of the boards
+     */
     public void refreshEntry() {
         for (Player p : match.getPlayer()) {
             switch (p.getColor()) {
@@ -2734,6 +2743,10 @@ public class MatchController extends Thread {
         //((ImageView) mouseEvent.getSource()).setVisible(false);
     }
 
+    /**
+     * action of the column
+     * @param mouseEvent click
+     */
     public void columnselected(MouseEvent mouseEvent) {
         if(ich10) {
             selection--;
@@ -2809,6 +2822,10 @@ public class MatchController extends Thread {
         setNoEffectColumns();
     }
 
+    /**
+     * set no action to the column in the dinning room
+     * @param v
+     */
     public void setDisableColumns(boolean v){
         green0.setDisable(v);
         red0.setDisable(v);
@@ -2827,13 +2844,16 @@ public class MatchController extends Thread {
         blue2.setDisable(v);
     }
 
+    /**
+     * set effect drop shadow to the student in the dinning room
+     */
     public void setNoEffectColumns(){
         green0.setEffect(new DropShadow());
         red0.setEffect(new DropShadow());
         yellow0.setEffect(new DropShadow());
         pink0.setEffect(new DropShadow());
         blue0.setEffect(new DropShadow());
-        green1.setEffect(new Bloom());
+        green1.setEffect(new DropShadow());
         red1.setEffect(new DropShadow());
         yellow1.setEffect(new DropShadow());
         pink1.setEffect(new DropShadow());
@@ -2845,6 +2865,10 @@ public class MatchController extends Thread {
         blue2.setEffect(new DropShadow());
     }
 
+    /**
+     * action after chose the students of the entrance for the character card 10
+     * @param actionEvent the click of the mouse
+     */
     public void Ok(ActionEvent actionEvent) {
         ((ImageView)actionEvent.getSource()).setVisible(false);
         setDropShadow();
@@ -2897,12 +2921,20 @@ public class MatchController extends Thread {
         in = i;
     }
 
+    /**
+     * set no action on the clouds
+     * @param v
+     */
     private void setDisableClouds(boolean v){
         cloud0.setDisable(v);
         cloud1.setDisable(v);
         cloud2.setDisable(v);
     }
 
+    /**
+     * set no action on the image of the land
+     * @param v
+     */
     private void setDisableLands(boolean v) {
         island0.setDisable(v);
         island1.setDisable(v);
@@ -2933,6 +2965,10 @@ public class MatchController extends Thread {
         white0.set
     }*/
 
+    /**
+     * set no action on the mn
+     * @param v
+     */
     private void setDisableMN(boolean v){
         mn0.setDisable(v);
         mn1.setDisable(v);
@@ -2948,6 +2984,10 @@ public class MatchController extends Thread {
         mn11.setDisable(v);
     }
 
+    /**
+     * set no action on the student of the entrance
+     * @param v
+     */
     private void setDisableEntrance(boolean v) {
         entry00.setDisable(v);
         entry01.setDisable(v);
@@ -2978,6 +3018,10 @@ public class MatchController extends Thread {
         entry28.setDisable(v);
     }
 
+    /**
+     * set no action on the assistant
+     * @param v
+     */
     private void setDisableAssistants(boolean v){
         assistant0.setDisable(v);
         assistant1.setDisable(v);
@@ -2991,12 +3035,20 @@ public class MatchController extends Thread {
         assistant9.setDisable(v);
     }
 
+    /**
+     * set the no action of the board
+     * @param v true if you want to set no action
+     */
     private void setDisableBoards(boolean v) {
         board0.setDisable(v);
         board1.setDisable(v);
         board2.setDisable(v);
     }
 
+    /**
+     * set visible the assistant card that you have in the deck, or you can choose
+     * @param ass the card to be visible
+     */
     public void setVisibleAssCards(List<AssistantCard> ass){
         System.out.println("Sono all'inizio del settaggio delle carte (MatchController)");
         assistant0.setVisible(false);
@@ -3047,6 +3099,9 @@ public class MatchController extends Thread {
     }
 
 
+    /**
+     * represent the match and set the right action that you can do in this phase
+     */
     @Override
     public void run() {
 
@@ -3245,6 +3300,9 @@ public class MatchController extends Thread {
         }
     }*/
 
+    /**
+     * show the state of the match
+     */
     public void theIfMethd(){
         if(match instanceof Expert_Match){
             setCharacters(gui.getCh());
@@ -3334,8 +3392,18 @@ public class MatchController extends Thread {
                 }
             }
         }
+        if(match instanceof Expert_Match) {
+            ncoin0.setText(String.valueOf(((Board_Experts) (((Expert_Match) match).getPlayer()[0].getBoard())).getCoinsNumber()));
+            ncoin1.setText(String.valueOf(((Board_Experts) (((Expert_Match) match).getPlayer()[1].getBoard())).getCoinsNumber()));
+            if (match.getPlayersNum() == 3) {
+                ncoin2.setText(String.valueOf(((Board_Experts) (((Expert_Match) match).getPlayer()[2].getBoard())).getCoinsNumber()));
+            }
+        }
     }
 
+    /**
+     * set effect on the student of the entrance
+     */
     public void setDropShadow(){
         entry00.setEffect(new DropShadow());
         entry01.setEffect(new DropShadow());
@@ -3367,7 +3435,10 @@ public class MatchController extends Thread {
     }
 
 
-
+    /**
+     * wake up the thread to see the right state of the match
+     * @param state phase of the match
+     */
     public synchronized void wakeUp(String state) {
         System.out.println("Wake up del MatchController");
         this.state=state;
@@ -3380,8 +3451,8 @@ public class MatchController extends Thread {
 
     /**
      * Stes visible the specified type of student
-     * @param imageView
-     * @param student
+     * @param imageView position of the student
+     * @param student student that will be on it
      */
     private void show_student(ImageView imageView,Student student){
         try {
@@ -3422,7 +3493,7 @@ public class MatchController extends Thread {
     }
 
     /**
-     * Sets the clouds
+     * Sets the clouds with the right color of the students
      */
     @FXML
     private void show_cloud(){
@@ -3479,8 +3550,8 @@ public class MatchController extends Thread {
 
     /**
      * Sets the wizards on the board_view
-     * @param imageView
-     * @param wizards
+     * @param imageView position of the wizard chosed at the begginning of the match
+     * @param wizards type of wizard chosen
      */
     @FXML
     private void show_wizard(ImageView imageView,Wizards wizards){
@@ -3510,9 +3581,9 @@ public class MatchController extends Thread {
     }
 
     /**
-     * Sets the character card
-     * @param imageView
-     * @param character
+     * Sets the character card image
+     * @param imageView the position on the view
+     * @param character that will be on the view
      */
     @FXML
     private void character(ImageView imageView,CharacterCard character){
@@ -3551,6 +3622,9 @@ public class MatchController extends Thread {
     }
 
     @FXML
+    /**
+     * action for see the character cards
+     */
     public void show_characters(ActionEvent actionEvent) {
         land_view.setVisible(false);
         board_view.setVisible(false);
@@ -3558,6 +3632,9 @@ public class MatchController extends Thread {
     }
 
      @FXML
+     /**
+      * action to move an assistant from the entrance to board
+      */
     public void movetoboard(ActionEvent actionEvent) {
 
         switch (((Button) actionEvent.getSource()).getId()) {
@@ -3607,6 +3684,9 @@ public class MatchController extends Thread {
     }
 
     @FXML
+    /**
+     * set you can use the character card
+     */
     public void usechyes(ActionEvent actionEvent) {
         setStateLabel("Momento carte personaggio!");
         youwantusechcards.setVisible(false);
@@ -3675,12 +3755,19 @@ public class MatchController extends Thread {
     }
 
     @FXML
+    /**
+     * action whe you don't use a charcter card
+     */
     public void usechno(ActionEvent actionEvent) {
         System.out.println("Mando NO al server");
         server.sendNoCh();
         youwantusechcards.setVisible(false);
     }
 
+    /**
+     * effect of card 1
+     * @param h position of the card
+     */
     public void useCh1(int h){
         setDisableChCards(true);
         setDisableAssistants(true);
@@ -3711,10 +3798,13 @@ public class MatchController extends Thread {
     }
 
     @FXML
+    /**
+     * action of the character card after you click it
+     */
     public void useit(MouseEvent mouseEvent) {
         switch (((ImageView) mouseEvent.getSource()).getId()){
             case "ch_00":
-                stuch1=(((Ch_1)gui.getCh()[0]).getStudents().get(0));
+                if(ich1) stuch1=(((Ch_1)gui.getCh()[0]).getStudents().get(0));
                 if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[0]).getStudents().get(0));
                 ch_00.setDisable(true);
                 ch_01.setDisable(true);
@@ -3723,7 +3813,7 @@ public class MatchController extends Thread {
                 ch_00.setEffect(new Bloom());
                 break;
             case "ch_01":
-                stuch1=(((Ch_1)gui.getCh()[0]).getStudents().get(1));
+                if(ich1) stuch1=(((Ch_1)gui.getCh()[0]).getStudents().get(1));
                 if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[0]).getStudents().get(1));
                 ch_00.setDisable(true);
                 ch_01.setDisable(true);
@@ -3732,7 +3822,7 @@ public class MatchController extends Thread {
                 ch_01.setEffect(new Bloom());
                 break;
             case "ch_02":
-                stuch1=(((Ch_1)gui.getCh()[0]).getStudents().get(2));
+                if(ich1) stuch1=(((Ch_1)gui.getCh()[0]).getStudents().get(2));
                 if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[0]).getStudents().get(2));
                 ch_00.setDisable(true);
                 ch_01.setDisable(true);
@@ -3741,7 +3831,7 @@ public class MatchController extends Thread {
                 ch_02.setEffect(new Bloom());
                 break;
             case "ch_03":
-                stuch1=(((Ch_1)gui.getCh()[0]).getStudents().get(3));
+                if(ich1) stuch1=(((Ch_1)gui.getCh()[0]).getStudents().get(3));
                 if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[0]).getStudents().get(3));
                 ch_00.setDisable(true);
                 ch_01.setDisable(true);
@@ -3750,7 +3840,7 @@ public class MatchController extends Thread {
                 ch_03.setEffect(new Bloom());
                 break;
             case "ch_10":
-                stuch1=(((Ch_1)gui.getCh()[1]).getStudents().get(0));
+                if(ich1) stuch1=(((Ch_1)gui.getCh()[1]).getStudents().get(0));
                 if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[1]).getStudents().get(0));
                 ch_10.setDisable(true);
                 ch_11.setDisable(true);
@@ -3759,7 +3849,7 @@ public class MatchController extends Thread {
                 ch_10.setEffect(new Bloom());
                 break;
             case "ch_11":
-                stuch1=(((Ch_1)gui.getCh()[1]).getStudents().get(1));
+                if(ich1)stuch1=(((Ch_1)gui.getCh()[1]).getStudents().get(1));
                 if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[1]).getStudents().get(1));
                 ch_10.setDisable(true);
                 ch_11.setDisable(true);
@@ -3768,7 +3858,7 @@ public class MatchController extends Thread {
                 ch_11.setEffect(new Bloom());
                 break;
             case "ch_12":
-                stuch1=(((Ch_1)gui.getCh()[1]).getStudents().get(2));
+                if(ich1)stuch1=(((Ch_1)gui.getCh()[1]).getStudents().get(2));
                 if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[1]).getStudents().get(2));
                 ch_10.setDisable(true);
                 ch_11.setDisable(true);
@@ -3777,7 +3867,7 @@ public class MatchController extends Thread {
                 ch_12.setEffect(new Bloom());
                 break;
             case "ch_13":
-                stuch1=(((Ch_1)gui.getCh()[1]).getStudents().get(3));
+                if(ich1)stuch1=(((Ch_1)gui.getCh()[1]).getStudents().get(3));
                 if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[1]).getStudents().get(3));
                 ch_10.setDisable(true);
                 ch_11.setDisable(true);
@@ -3786,7 +3876,7 @@ public class MatchController extends Thread {
                 ch_13.setEffect(new Bloom());
                 break;
             case "ch_20":
-                stuch1=(((Ch_1)gui.getCh()[2]).getStudents().get(0));
+                if(ich1)stuch1=(((Ch_1)gui.getCh()[2]).getStudents().get(0));
                 if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[2]).getStudents().get(0));
                 ch_20.setDisable(true);
                 ch_21.setDisable(true);
@@ -3795,7 +3885,7 @@ public class MatchController extends Thread {
                 ch_20.setEffect(new Bloom());
                 break;
             case "ch_21":
-                stuch1=(((Ch_1)gui.getCh()[2]).getStudents().get(1));
+                if(ich1)stuch1=(((Ch_1)gui.getCh()[2]).getStudents().get(1));
                 if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[2]).getStudents().get(1));
                 ch_20.setDisable(true);
                 ch_21.setDisable(true);
@@ -3804,7 +3894,7 @@ public class MatchController extends Thread {
                 ch_21.setEffect(new Bloom());
                 break;
             case "ch_22":
-                stuch1=(((Ch_1)gui.getCh()[2]).getStudents().get(2));
+                if(ich1)stuch1=(((Ch_1)gui.getCh()[2]).getStudents().get(2));
                 if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[2]).getStudents().get(2));
                 ch_20.setDisable(true);
                 ch_21.setDisable(true);
@@ -3813,7 +3903,7 @@ public class MatchController extends Thread {
                 ch_22.setEffect(new Bloom());
                 break;
             case "ch_23":
-                stuch1=(((Ch_1)gui.getCh()[2]).getStudents().get(3));
+                if(ich1)stuch1=(((Ch_1)gui.getCh()[2]).getStudents().get(3));
                 if (ich11) server.sendChooseCh11(((Ch_11)gui.getCh()[2]).getStudents().get(3));
                 ch_20.setDisable(true);
                 ch_21.setDisable(true);
@@ -3830,6 +3920,9 @@ public class MatchController extends Thread {
         }
     }
 
+    /**
+     * effect of ch 5
+     */
     public void useCh5(){
         gui.popUp("Scelta isola", "Scegliere l'isola su cui piazzare la tessera divieto");
         setDisableLands(false);
@@ -3837,6 +3930,9 @@ public class MatchController extends Thread {
         ich5=true;
     }
 
+    /**
+     * effect of ch 11
+     */
     public void useCh11(){
         gui.popUp("Scelta studente", "Scegliere lo studente da mettere nel tuo ingresso");
         int j=0;
@@ -3864,6 +3960,9 @@ public class MatchController extends Thread {
         ich11=true;
     }
 
+    /**
+     * effect of ch 12
+     */
     public void useCh12(){
         ich12=true;
         setDisableBoards(false);
@@ -3893,6 +3992,9 @@ public class MatchController extends Thread {
         }
     }
 
+    /**
+     * effect of ch 10
+     */
     public void useCh10(){  //NON VA
         gui.popUp("Ok", "Scegli uno o due studenti dall'ingresso della tua plancia da scambiare con quelli nella sala");
         switch (me.getColor()) {
@@ -4071,6 +4173,9 @@ public class MatchController extends Thread {
         ich10=true;
     }
     @FXML
+    /**
+     * action of the character cards
+     */
     public void use_ch(MouseEvent mouseEvent){
         switch (((ImageView) mouseEvent.getSource()).getId()){
             case "ch0":
