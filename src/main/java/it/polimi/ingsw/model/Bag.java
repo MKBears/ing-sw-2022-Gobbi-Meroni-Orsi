@@ -52,7 +52,7 @@ public class Bag implements Serializable {
     /**
      * Activates 12th character card's power and puts
      * all the students removed from each player's board again in the bag
-     * @param students
+     * @param students the removed students
      */
     public void ch12effect(List<Student> students){
         this.students.addAll(students);

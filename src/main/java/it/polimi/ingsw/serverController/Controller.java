@@ -182,7 +182,6 @@ public class Controller extends Thread{
                     notifyTurn("pianificazione");
                     synchronized (players[currentPlayer]) {
                         players[currentPlayer].notify();
-                        System.out.println("Svegliato player " + players[currentPlayer].getUserName());
                     }
 
                     synchronized (this) {
@@ -218,7 +217,6 @@ public class Controller extends Thread{
                         wait();
                         moveCurrentPlayer();
                         go = true;
-                        System.out.println(match.toString());
                     } while (currentPlayer!=firstPlayer && playing);
                 }
 
@@ -533,7 +531,7 @@ public class Controller extends Thread{
 
                 if (connectedPlayers == 1) {
                     p.getOutputStream().sendNotifyAllPlayersDisconnected();
-                    sleep (Timer.ONE_MINUTE/2);
+                    sleep (Timer.ONE_MINUTE/30);
                     switch (connectedPlayers) {
                         case 0:
                             paused = true;
@@ -664,7 +662,6 @@ public class Controller extends Thread{
         }
 
         synchronized (this) {
-            System.out.println("Mi autosveglio");
             notify();
         }
     }
@@ -813,7 +810,6 @@ public class Controller extends Thread{
                         towers.add(dominant.getBoard().removeTower());
 
                         if (dominant.getBoard().hasNoTowersLeft()) {
-                            System.out.println("Player " + dominant + "ha finito le torri");
                             for (ClientHandler winner : players)
                                 if (winner.getAvatar().getUserName().equals(dominant.getUserName()))
                                     synchronized (winner) {
@@ -823,7 +819,6 @@ public class Controller extends Thread{
                                     }
                             break;
                         }
-                        System.out.println("Controllato player " + dominant.getUserName() + " per torri");
                     } catch (Exception e) {
                         for (ClientHandler p : players) {
                             if (p.getAvatar().equals(dominant)) {
@@ -871,7 +866,6 @@ public class Controller extends Thread{
                 land.changeTower(temp);
 
                 if (Pmax.getBoard().hasNoTowersLeft()) {
-                    System.out.println("Player " + Pmax.getUserName() + "ha finito le torri");
                     for (ClientHandler winner : players)
                         if (winner.getAvatar().getUserName().equals(Pmax.getUserName()))
                             synchronized (winner) {
@@ -950,13 +944,11 @@ public class Controller extends Thread{
                 synchronized (p) {
                     do {
                         p.getOutputStream().sendNotifyTowers(position.getAllTowers(), position, player1);
-                        System.out.println("NotyTowers p1 " + player1);
                         p.wait();
                     } while (p.getNack());
                     if (previousTowers != null) {
                         do {
                             p.getOutputStream().sendNotifyTowers(player2.getAvatar().getBoard(), player2.getUserName());
-                            System.out.println("NotyTowers p2 " + player1);
                             p.wait();
                         } while (p.getNack());
                     }

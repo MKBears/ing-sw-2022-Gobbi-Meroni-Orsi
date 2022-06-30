@@ -30,8 +30,6 @@ public class MessageFromClient extends Thread{
             try {
                 String message = (String) in.readObject();
 
-                if (!message.equals("ACK"))
-                    System.out.println("Player " + ch.getUserName() + ": ricevuto " + message);
                 switch (message) {
                     case "ACK" -> ch.setAck(true);
                     case "Login" -> {

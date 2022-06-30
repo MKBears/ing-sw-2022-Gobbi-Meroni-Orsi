@@ -88,7 +88,6 @@ public class Message4Client extends Thread {
         synchronized (this) {
             name = "ListOfGames";
             try {
-                System.out.println("mando a "+this.name+"i match");
                 out.writeObject(name);
                 out.writeObject(joinGames);
                 out.writeObject(resumeGames);
@@ -334,7 +333,6 @@ public class Message4Client extends Thread {
     public void sendNotifyTowers(ArrayList<Tower> towers, Land land, String username) {
         synchronized (this) {
             name = "NotifyTowers (land)";
-            System.out.println("mando NOTIFYTOWERS");
             try {
                 out.writeObject(name);
                 out.writeObject(towers);
@@ -380,7 +378,6 @@ public class Message4Client extends Thread {
                 out.writeObject(winner);
                 out.writeObject(explanation);
                 out.writeObject(gameRecap);
-                System.out.println(gameRecap.toString());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -712,9 +709,5 @@ public class Message4Client extends Thread {
                 throw new RuntimeException(e);
             }
         }
-    }
-
-    public void setCondition(boolean condition) {
-        this.condition = condition;
     }
 }

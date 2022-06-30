@@ -64,7 +64,6 @@ public class GameRecap  implements Serializable {
                     controlledProfessors[i]++;
                 }
             }
-            System.out.println("qua");
         }
     }
 
@@ -122,7 +121,8 @@ public class GameRecap  implements Serializable {
                     append("\t").append(colors[i].toString()).append(colors[i].getName()).append("\u001B[0m").
                     append("\t").append(wizards[i].toString()).
                     append("\t\t").append(builtTowers[i]).
-                    append("\t").append(controlledProfessors[i]);
+                    append("\t").append(controlledProfessors[i]).
+                    append("\n");
             if (i != playersNum-1) {
                 string.append("\n");
             }

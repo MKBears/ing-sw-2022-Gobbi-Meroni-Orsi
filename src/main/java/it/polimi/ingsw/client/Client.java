@@ -90,7 +90,6 @@ public class Client  extends Thread{
             while (!end){
                 if(!received.equals("base")) {
                     received = (String) in.readObject();
-                    System.out.println("Arrivato " + received);
                 }
                 String response;
                 switch (received) {
@@ -329,11 +328,9 @@ public class Client  extends Thread{
                         } else {
                             view.playerDisconnected(u);
                         }
-                        server.sendACK();
                         break;
                     case "NotifyAllPlayersDisconnected":
                         view.playerDisconnectedAll();
-                        server.sendACK();
                         break;
                     case "FinishedAssistants":
                         Player who = (Player) in.readObject();

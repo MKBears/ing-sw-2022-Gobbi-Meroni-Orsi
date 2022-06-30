@@ -588,8 +588,6 @@ public class Cli extends Thread{
                         end = true;
                         System.out.println("Grazie di aver giocato a Eriantys. Premere invio per terminare");
                         state = input.nextLine();
-                        svnProcessBuilder = new ProcessBuilder("PowerShell", "/c", "exit");
-                        svnProcessBuilder.inheritIO().start().waitFor();
                         break;
                     case ("Ch"):
                         Board_Experts me_ex = (Board_Experts) me.getBoard();
@@ -671,11 +669,8 @@ public class Cli extends Thread{
                 }
             }
 
-
         } catch (InterruptedException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
