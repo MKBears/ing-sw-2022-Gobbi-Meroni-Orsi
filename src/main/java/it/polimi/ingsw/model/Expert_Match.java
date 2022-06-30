@@ -16,13 +16,13 @@ public class Expert_Match extends Match{
     public void setCard() throws Exception{
         card=new CharacterCard[3];
         List<CharacterCard> c=new ArrayList<>();
-        c.add(new Ch_1(this));
+        //c.add(new Ch_1(this));
         c.add(new Ch_2(this));
-        c.add(new Ch_4());
-        c.add(new Ch_5(this));
-        c.add(new Ch_8());
+        //c.add(new Ch_4());
+        //c.add(new Ch_5(this));
+        //c.add(new Ch_8());
         c.add(new Ch_10(this));
-        c.add(new Ch_11(this));
+        //c.add(new Ch_11(this));
         c.add(new Ch_12(this));
         for(int i=0; i<3; i++) {
             Random a = new Random();

@@ -681,6 +681,18 @@ public class MatchController extends Thread {
     ImageView noentry11;
     @FXML
     ImageView asschosen;
+    @FXML
+    Button greenbutton;
+    @FXML
+    Button redbutton;
+    @FXML
+    Button yellowbutton;
+    @FXML
+    Button bluebutton;
+    @FXML
+    Button pinkbutton;
+    @FXML
+    Pane color;
 
 
     public static void setServer(Message4Server server) {
@@ -814,6 +826,7 @@ public class MatchController extends Thread {
             character_button.setVisible(false);
         } else {
             System.out.println("Confermo che la partita è modalità esperto");
+            stuch10= new ArrayList<>();
             setCharacters(((Expert_Match)match).getCard());
             character(ch0, ((Expert_Match)match).getCard()[0]);
             character(ch1, ((Expert_Match)match).getCard()[1]);
@@ -2750,36 +2763,27 @@ public class MatchController extends Thread {
     public void columnselected(MouseEvent mouseEvent) {
         if(ich10) {
             selection--;
-            switch (((ImageView) mouseEvent.getSource()).getId()) {
-                case "green0":
-                case "green1":
-                case "green2":
-                    tych10.add(Type_Student.FROG);
-                    break;
-                case "red0":
-                case "red1":
-                case "red2":
-                    tych10.add(Type_Student.DRAGON);
-                    break;
-                case "yellow0":
-                case "yellow1":
-                case "yellow2":
+            switch(((Button)mouseEvent.getSource()).getId()){
+                case "yellowbutton":
                     tych10.add(Type_Student.GNOME);
                     break;
-                case "pink0":
-                case "pink1":
-                case "pink2":
+                case "greenbutton":
+                    tych10.add(Type_Student.FROG);
+                    break;
+                case "redbutton":
+                    tych10.add(Type_Student.DRAGON);
+                    break;
+                case "pinkbutton":
                     tych10.add(Type_Student.FAIRY);
                     break;
-                case "blue0":
-                case "blue1":
-                case "blue2":
+                case "bluebutton":
                     tych10.add(Type_Student.UNICORN);
                     break;
             }
             if (selection == 0) {
                 setDisableEntrance(true);
                 setDisableColumns(true);
+                color.setVisible(false);
                 if (stuch10.size() == tych10.size()) {
                     server.sendChooseCh10(stuch10, tych10);
                 }
@@ -2789,30 +2793,21 @@ public class MatchController extends Thread {
             ich10 = false;
             selection = 0;
         } else if (ich12){
-            switch (((ImageView) mouseEvent.getSource()).getId()) {
-                case "green0":
-                case "green1":
-                case "green2":
-                    server.sendChooseCh12(Type_Student.FROG);
-                    break;
-                case "red0":
-                case "red1":
-                case "red2":
-                    server.sendChooseCh12(Type_Student.DRAGON);
-                    break;
-                case "yellow0":
-                case "yellow1":
-                case "yellow2":
+            color.setVisible(false);
+            switch(((Button)mouseEvent.getSource()).getId()){
+                case "yellowbutton":
                     server.sendChooseCh12(Type_Student.GNOME);
                     break;
-                case "pink0":
-                case "pink1":
-                case "pink2":
+                case "greenbutton":
+                    server.sendChooseCh12(Type_Student.FROG);
+                    break;
+                case "redbutton":
+                    server.sendChooseCh12(Type_Student.DRAGON);
+                    break;
+                case "pinkbutton":
                     server.sendChooseCh12(Type_Student.FAIRY);
                     break;
-                case "blue0":
-                case "blue1":
-                case "blue2":
+                case "bluebutton":
                     server.sendChooseCh12(Type_Student.UNICORN);
                     break;
             }
@@ -2871,45 +2866,33 @@ public class MatchController extends Thread {
      */
     public void Ok(ActionEvent actionEvent) {
         ((ImageView)actionEvent.getSource()).setVisible(false);
-        setDropShadow();
-        switch (((ImageView)actionEvent.getSource()).getId()){
-            case "ok0":
-                green0.setDisable(false);
-                red0.setDisable(false);
-                yellow0.setDisable(false);
-                pink0.setDisable(false);
-                blue0.setDisable(false);
-                green0.setEffect(new Bloom());
-                red0.setEffect(new Bloom());
-                yellow0.setEffect(new Bloom());
-                pink0.setEffect(new Bloom());
-                blue0.setEffect(new Bloom());
-                break;
-            case "ok1":
-                green1.setDisable(false);
-                red1.setDisable(false);
-                yellow1.setDisable(false);
-                pink1.setDisable(false);
-                blue1.setDisable(false);
-                green1.setEffect(new Bloom());
-                red1.setEffect(new Bloom());
-                yellow1.setEffect(new Bloom());
-                pink1.setEffect(new Bloom());
-                blue1.setEffect(new Bloom());
-                break;
-            case "ok2":
-                green2.setDisable(false);
-                red2.setDisable(false);
-                yellow2.setDisable(false);
-                pink2.setDisable(false);
-                blue2.setDisable(false);
-                green2.setEffect(new Bloom());
-                red2.setEffect(new Bloom());
-                yellow2.setEffect(new Bloom());
-                pink2.setEffect(new Bloom());
-                blue2.setEffect(new Bloom());
-                break;
+        int noprof=0;
+        if(me.getBoard().getStudentsOfType(Type_Student.DRAGON)==0){
+            redbutton.setVisible(false);
+            noprof++;
         }
+        if(me.getBoard().getStudentsOfType(Type_Student.GNOME)==0){
+            yellowbutton.setVisible(false);
+            noprof++;
+        }
+        if(me.getBoard().getStudentsOfType(Type_Student.FAIRY)==0){
+            pinkbutton.setVisible(false);
+            noprof++;
+        }
+        if(me.getBoard().getStudentsOfType(Type_Student.UNICORN)==0){
+            bluebutton.setVisible(false);
+            noprof++;
+        }
+        if(me.getBoard().getStudentsOfType(Type_Student.FROG)==0){
+            greenbutton.setVisible(false);
+            noprof++;
+        }
+        if(noprof==5){
+            server.sendNoCh();
+            gui.popUp("Oh no!!", "Non hai professori sulla tua plancia!!");
+        }
+        color.setVisible(true);
+        setDropShadow();
     }
 
 
@@ -3934,7 +3917,7 @@ public class MatchController extends Thread {
      * effect of ch 11
      */
     public void useCh11(){
-        gui.popUp("Scelta studente", "Scegliere lo studente da mettere nel tuo ingresso");
+        gui.popUp("Scelta studente", "Scegliere lo studente da mettere nella tua sala");
         int j=0;
         for (j=0; j<3; j++){
             if (gui.getCh()[j] instanceof Ch_11){
@@ -3965,31 +3948,9 @@ public class MatchController extends Thread {
      */
     public void useCh12(){
         ich12=true;
-        setDisableBoards(false);
-        gui.popUp("Ok", "Scegli la colonna della tua sala del colore che desideri per attivare la carta");
-        switch (me.getColor()){
-            case WHITE:
-                green0.setDisable(true);
-                red0.setDisable(true);
-                yellow0.setDisable(true);
-                pink0.setDisable(true);
-                blue0.setDisable(true);
-                break;
-            case BLACK:
-                green1.setDisable(true);
-                red1.setDisable(true);
-                yellow1.setDisable(true);
-                pink1.setDisable(true);
-                blue1.setDisable(true);
-                break;
-            case GREY:
-                green2.setDisable(true);
-                red2.setDisable(true);
-                yellow2.setDisable(true);
-                pink2.setDisable(true);
-                blue2.setDisable(true);
-                break;
-        }
+        setDisableBoards(true);
+        gui.popUp("Ok", "Scegli il colore che desideri per attivare la carta");
+        color.setVisible(true);
     }
 
     /**

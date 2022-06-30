@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.effect.DropShadow?>
@@ -902,7 +903,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="green0" layoutX="141.0" layoutY="128.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="23.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="green0" layoutX="141.0" layoutY="128.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="244.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_green.png" />
                 </ImageView>
@@ -937,7 +938,7 @@
                <DropShadow />
             </effect>
             </HBox>
-            <HBox fx:id="blue0" layoutX="141.0" layoutY="271.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="26.0" prefWidth="238.0" spacing="1.0">
+            <HBox fx:id="blue0" layoutX="141.0" layoutY="271.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="238.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_blue.png" />
                 </ImageView>
@@ -978,7 +979,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="red0" layoutX="140.0" layoutY="163.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="26.0" prefWidth="246.0" spacing="1.0">
+            <HBox fx:id="red0" layoutX="140.0" layoutY="163.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="246.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_red.png" />
                 </ImageView>
@@ -1019,7 +1020,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="yellow0" layoutX="141.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="29.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="yellow0" layoutX="141.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="29.0" prefWidth="244.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_yellow.png" />
                 </ImageView>
@@ -1054,7 +1055,7 @@
                <DropShadow />
             </effect>
             </HBox>
-            <HBox fx:id="pink0" layoutX="139.0" layoutY="236.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="30.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="pink0" layoutX="139.0" layoutY="236.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="244.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_pink.png" />
                 </ImageView>
@@ -1211,7 +1212,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="green1" layoutX="141.0" layoutY="128.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="23.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="green1" layoutX="141.0" layoutY="128.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="244.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_green.png" />
                 </ImageView>
@@ -1246,7 +1247,7 @@
                <DropShadow />
             </effect>
             </HBox>
-            <HBox fx:id="blue1" layoutX="141.0" layoutY="271.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="26.0" prefWidth="238.0" spacing="1.0">
+            <HBox fx:id="blue1" layoutX="141.0" layoutY="271.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="238.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_blue.png" />
                 </ImageView>
@@ -1287,7 +1288,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="red1" layoutX="140.0" layoutY="163.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="26.0" prefWidth="246.0" spacing="1.0">
+            <HBox fx:id="red1" layoutX="140.0" layoutY="163.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="246.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_red.png" />
                 </ImageView>
@@ -1328,7 +1329,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="yellow1" layoutX="141.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="29.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="yellow1" layoutX="141.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="29.0" prefWidth="244.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_yellow.png" />
                 </ImageView>
@@ -1363,7 +1364,7 @@
                <DropShadow />
             </effect>
             </HBox>
-            <HBox fx:id="pink1" layoutX="139.0" layoutY="236.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="30.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="pink1" layoutX="139.0" layoutY="236.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="244.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_pink.png" />
                 </ImageView>
@@ -1520,7 +1521,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="green2" layoutX="141.0" layoutY="128.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="23.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="green2" layoutX="141.0" layoutY="128.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="244.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_green.png" />
                 </ImageView>
@@ -1555,7 +1556,7 @@
                <DropShadow />
             </effect>
             </HBox>
-            <HBox fx:id="blue2" layoutX="141.0" layoutY="271.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="26.0" prefWidth="238.0" spacing="1.0">
+            <HBox fx:id="blue2" layoutX="141.0" layoutY="271.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="238.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_blue.png" />
                 </ImageView>
@@ -1596,7 +1597,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="red2" layoutX="140.0" layoutY="163.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="26.0" prefWidth="246.0" spacing="1.0">
+            <HBox fx:id="red2" layoutX="140.0" layoutY="163.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="246.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_red.png" />
                 </ImageView>
@@ -1637,7 +1638,7 @@
                <DropShadow />
             </effect>
             </ImageView>
-            <HBox fx:id="yellow2" layoutX="141.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="29.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="yellow2" layoutX="141.0" layoutY="200.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="29.0" prefWidth="244.0" spacing="1.0">
                 <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                     <Image url="@wooden_pieces/wooden_pieces/student_yellow.png" />
                 </ImageView>
@@ -1672,7 +1673,7 @@
                <DropShadow />
             </effect>
             </HBox>
-            <HBox fx:id="pink2" layoutX="139.0" layoutY="236.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#columnselected" prefHeight="30.0" prefWidth="244.0" spacing="1.0">
+            <HBox fx:id="pink2" layoutX="139.0" layoutY="236.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="244.0" spacing="1.0">
                 <children>
                     <ImageView fitHeight="23.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                         <Image url="@wooden_pieces/wooden_pieces/student_pink.png" />
@@ -2007,4 +2008,43 @@
                 </font>
             </Label>
         </Pane>
+   <Pane fx:id="color" layoutX="337.0" layoutY="325.0" prefHeight="200.0" prefWidth="534.0" style="-fx-background-color: #F87217; -fx-background-radius: 70;" visible="false">
+      <children>
+         <Label layoutX="179.0" layoutY="14.0" prefHeight="55.0" prefWidth="176.0" style="-fx-background-radius: 100;" text="Scegli il colore" textAlignment="CENTER">
+            <font>
+               <Font name="Gabriola" size="39.0" />
+            </font>
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
+         </Label>
+         <Button fx:id="greenbutton" layoutX="50.0" layoutY="125.0" mnemonicParsing="false" onMouseClicked="#columnselected" style="-fx-background-color: #54C571;" text="Verde">
+            <effect>
+               <DropShadow />
+            </effect>
+         </Button>
+         <Button fx:id="redbutton" layoutX="153.0" layoutY="125.0" mnemonicParsing="false" onMouseClicked="#columnselected" style="-fx-background-color: #FF2400;" text="Rosso">
+            <effect>
+               <DropShadow />
+            </effect>
+         </Button>
+         <Button fx:id="yellowbutton" layoutX="252.0" layoutY="125.0" mnemonicParsing="false" onMouseClicked="#columnselected" style="-fx-background-color: #FFFF00;" text="Giallo">
+            <effect>
+               <DropShadow />
+            </effect>
+         </Button>
+         <Button fx:id="pinkbutton" layoutX="355.0" layoutY="125.0" mnemonicParsing="false" onMouseClicked="#columnselected" style="-fx-background-color: #F660AB;" text="Rosa">
+            <effect>
+               <DropShadow />
+            </effect>
+         </Button>
+         <Button fx:id="bluebutton" layoutX="447.0" layoutY="125.0" mnemonicParsing="false" onMouseClicked="#columnselected" style="-fx-background-color: #38ACEC;" text="Azzurro">
+            <effect>
+               <DropShadow />
+            </effect>
+         </Button>
+      </children>
+      <effect>
+         <DropShadow />
+      </effect></Pane>
 </AnchorPane>
