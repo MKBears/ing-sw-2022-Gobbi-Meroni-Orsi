@@ -296,10 +296,10 @@ public class Client  extends Thread{
                         String ex = (String) in.readObject(); //spiegazione di perchè ha vinto
                         GameRecap recap = (GameRecap) in.readObject();
                         server.sendACK();
-                        //view.printMatch(match);
-                        sleep(4000);
+                        view.printMatch(match);
+                        sleep(1000);
                         view.getWinner(winner);
-                        view. printNotification(winner.getColor()+winner.getUserName()+" ha vinto perché "+ex);
+                        view. printNotification("La partita é finita perché "+ex);
                         view.printNotification(recap.toString());
                         view.wakeUp("EndGame");
                         sleep(2000);
@@ -308,7 +308,7 @@ public class Client  extends Thread{
                     case "LastTower":
                         Player pl = (Player) in.readObject();
                         view.printNotification(pl.getColor() + pl.getUserName() + "\u001b[0m ha costruito tutte le torri");
-                        server.sendACK();
+                        //server.sendACK();
                         break;
                     case "NoMoreStudents":
                         view.lastRound();

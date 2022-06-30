@@ -586,8 +586,8 @@ public class Cli extends Thread{
                         break;
                     case ("EndGame"):
                         end = true;
-                        System.out.println("Grazie di aver giocato a Eriantys. Premere qualsiasi tasto per terminare");
-                        state = input.next();
+                        System.out.println("Grazie di aver giocato a Eriantys. Premere invio per terminare");
+                        state = input.nextLine();
                         svnProcessBuilder = new ProcessBuilder("PowerShell", "/c", "exit");
                         svnProcessBuilder.inheritIO().start().waitFor();
                         break;

@@ -48,7 +48,7 @@ public class GameRecap  implements Serializable {
 
             switch (playersNum) {
                 case 3:
-                    builtTowers[i] = 6-players[i].getAvatar().getBoard().getTowersNum();
+                    builtTowers[i] = 9-players[i].getAvatar().getBoard().getTowersNum();
                     break;
                 case 2:
                     builtTowers[i] = 8-players[i].getAvatar().getBoard().getTowersNum();
@@ -121,7 +121,7 @@ public class GameRecap  implements Serializable {
             string.append(i).append(".\t").append(players[i]).
                     append("\t").append(colors[i].toString()).append(colors[i].getName()).append("\u001B[0m").
                     append("\t").append(wizards[i].toString()).
-                    append("\t").append(builtTowers[i]).
+                    append("\t\t").append(builtTowers[i]).
                     append("\t").append(controlledProfessors[i]);
             if (i != playersNum-1) {
                 string.append("\n");

@@ -278,6 +278,8 @@ public class ClientHandler extends Thread{
                             if (match.getLands().size() <= 3)
                                 controller.notifyThreeArchipelagos();
                         }
+                        else
+                            break;
                     }else{
                         try {
                             match.getMotherNature().getPosition().setNoEntry(false);
