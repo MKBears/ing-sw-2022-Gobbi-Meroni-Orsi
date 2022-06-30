@@ -18,7 +18,7 @@ public class Bag implements Serializable {
     public Bag(){
         Student s;
         for (Type_Student t : Type_Student.values()){
-            for (int i=0; i<24; i++){
+            for (int i=0; i<4; i++){ //24
                 s = new Student(t);
                 students.add(s);
             }
@@ -39,6 +39,14 @@ public class Bag implements Serializable {
         }
         else
             throw new Exception("No more students");
+    }
+
+    /**
+     *
+     * @return true if there are no more students in the bag
+     */
+    public boolean isEmpty() {
+        return students.isEmpty();
     }
 
     /**

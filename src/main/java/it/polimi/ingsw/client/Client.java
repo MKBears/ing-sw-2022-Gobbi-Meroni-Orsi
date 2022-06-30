@@ -170,7 +170,7 @@ public class Client  extends Thread{
                         AssistantCard card = (AssistantCard) in.readObject();
                         Player pl2 = (Player) in.readObject();
                         view.printNotification(pl2.getColor() + pl2.getUserName() +
-                                "\u001b[0m ha giocatola carta:" + card.toString() + '\n');
+                                "\u001b[0m ha giocato la carta assistente:" + card.toString() + '\n');
 
                         for (int i = 0; i < match.getPlayer().length; i++) {
                             if (match.getPlayer()[i].getUserName().equals(pl2.getUserName())) {
@@ -312,7 +312,6 @@ public class Client  extends Thread{
                         break;
                     case "NoMoreStudents":
                         view.lastRound();
-                        server.sendACK();
                         break;
                     case "NextTurn":
                         Player play = (Player) in.readObject();
@@ -340,7 +339,6 @@ public class Client  extends Thread{
                     case "FinishedAssistants":
                         Player who = (Player) in.readObject();
                         view.finishedAC(who);
-                        //server.sendACK();
                         break;
                     case "GenericError":
                         String error = (String) in.readObject();

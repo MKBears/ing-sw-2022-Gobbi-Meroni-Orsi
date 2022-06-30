@@ -351,6 +351,9 @@ public class ClientHandler extends Thread{
                             controller.notifyFinishedStudents();
                         }
                         controller.notifyCh();
+
+                        if (match.getBag().isEmpty())
+                            controller.notifyFinishedStudents();
                     }
 
                     if (state != 6)
@@ -634,13 +637,6 @@ public class ClientHandler extends Thread{
      */
     public synchronized void chooseCloud (Cloud cloud) {
         chosenCloud = cloud;
-    }
-
-    /**
-     * Sets ongoingMatch attribute on false
-     */
-    public synchronized void endMatch() {
-        ongoingMatch = false;
     }
 
     /**

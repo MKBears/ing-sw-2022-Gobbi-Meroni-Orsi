@@ -155,16 +155,16 @@ public class Controller extends Thread{
             }
             case 1 -> {
                 //PLANNING phase: all the clouds are filled with 3 or 4 students
-                try {
-                    fillClouds(match.getCloud());
-                } catch (Exception e) {
+                fillClouds(match.getCloud());
+
+                if (match.getBag().isEmpty())
                     notifyFinishedStudents();
-                }
                 currentPlayer = firstPlayer;
 
                 do {
                     synchronized (players[currentPlayer]) {
                         players[currentPlayer].notifyAll();
+                        System.out.println("Svegliato player " + players[currentPlayer].getUserName());
                     }
                     synchronized (this) {
                         wait();
@@ -971,7 +971,6 @@ public class Controller extends Thread{
         if (playing) {
             for (ClientHandler player : players) {
                 player.getOutputStream().sendNoMoreStudents();
-                player.endMatch();
             }
             endExplanation = "sono finiti gli studenti del sacchetto";
             playing = false;
@@ -987,7 +986,6 @@ public class Controller extends Thread{
             if (p != player){
                 p.getOutputStream().sendFinishedAssistants(player.getAvatar());
             }
-            //p.endMatch();
             p.setFinished_assistant(true);
         }
         endExplanation = player.getUserName()+" ha finito le carte assistente";
@@ -1022,7 +1020,6 @@ public class Controller extends Thread{
             if (p.isConnected()){
                 p.getOutputStream().sendThreeArchipelagos();
             }
-            p.endMatch();
         }
         endExplanation = "si sono formati " + match.getLands().size() + " gruppi di isole";
         state = 5;
