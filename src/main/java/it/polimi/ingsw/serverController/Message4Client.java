@@ -380,6 +380,7 @@ public class Message4Client extends Thread {
                 out.writeObject(winner);
                 out.writeObject(explanation);
                 out.writeObject(gameRecap);
+                System.out.println(gameRecap.toString());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

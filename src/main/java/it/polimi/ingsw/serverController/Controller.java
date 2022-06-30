@@ -195,6 +195,7 @@ public class Controller extends Thread{
             case 3 -> {
                 //PLANNING phase: deciding the first player of the following action phase
                 firstPlayer = 0;
+
                 for (currentPlayer = 1; currentPlayer < playersNum; currentPlayer++)
                     if (players[currentPlayer].getAvatar().getPlayedCard().getValue() < players[firstPlayer].getAvatar().getPlayedCard().getValue())
                         firstPlayer = currentPlayer;
@@ -219,19 +220,10 @@ public class Controller extends Thread{
                         go = true;
                         System.out.println(match.toString());
 
-                        for (ClientHandler player : players) {
-                            System.out.println("Controllo player " + player.getUserName());
-                            if (player.getAvatar().getBoard().hasNoTowersLeft()) {
-                                System.out.println(player.getUserName() + " ha finito le torri");
-                                notifyBuiltLastTower(player);
-                                break;
-                            }
-                        }
-
                         if (!playing)
                             if (endExplanation.equals("Ha costruito tutte le torri"))
                                 break;
-                    } while (currentPlayer!=firstPlayer && playing);
+                    } while (currentPlayer!=firstPlayer);
                 }
 
                 if (playing) {
@@ -267,11 +259,10 @@ public class Controller extends Thread{
                 sleep(4000);
                 for (ClientHandler player : players) {
                     player.setState(6);
+
                     synchronized (player) {
                         player.notify();
-                    }
-                    synchronized (this) {
-                        wait();
+                        player.wait();
                     }
                     moveCurrentPlayer();
                 }
@@ -599,7 +590,7 @@ public class Controller extends Thread{
                 return false;
             }
         }
-        return players[currentPlayer].equals(player) && go;
+        return (players[currentPlayer].equals(player) && go) || !playing;
     }
 
     /**
@@ -1001,10 +992,10 @@ public class Controller extends Thread{
      */
     public void notifyBuiltLastTower (ClientHandler player) {
         for (ClientHandler p: players){
-            if (p!=player && p.isConnected()){
+            if (p.isConnected()){
                 p.getOutputStream().sendLastTower(player.getAvatar());
+                p.setState(6);
             }
-            p.endMatch();
         }
         endExplanation = "ha costruito tutte le torri";
         state = 5;
