@@ -291,6 +291,7 @@ public class ClientGui  extends Thread {
                             synchronized (this) {
                                 this.wait();
                             }
+
                             break;
                         case "MoveMN":
                             System.out.println("Ricevuto " + received);
@@ -550,7 +551,7 @@ public class ClientGui  extends Thread {
                             System.out.println("Ho "+ ((Board_Experts) me.getBoard()).getCoinsNumber()+ " monete");
                             for (CharacterCard c: ch) {
                                 if (becs.getCoinsNumber() >= c.getPrice()){
-                                    noch=true; /////////////////////////////////PERCHè???????
+                                    noch=true;
                                 }
                             }
                             if (noch){
