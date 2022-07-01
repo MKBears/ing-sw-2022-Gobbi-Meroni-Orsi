@@ -226,12 +226,6 @@ public class ClientGui  extends Thread {
                             }
                             view.setMe(me);
                             view.setMatch(match);
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    view.printMatch(match);
-                                }
-                            });
                             server.sendACK();
                             break;
                         case "RefillClouds":
@@ -266,7 +260,6 @@ public class ClientGui  extends Thread {
                                 @Override
                                 public void run() {
                                     view.moveStudent();
-                                    view.printMatch(match);
                                 }
                             });
                             synchronized (this) {
@@ -279,7 +272,6 @@ public class ClientGui  extends Thread {
                                 @Override
                                 public void run() {
                                     view.moveMN();
-                                    view.printMatch(match);
                                 }
                             });
                             synchronized (this) {
@@ -292,7 +284,6 @@ public class ClientGui  extends Thread {
                                 @Override
                                 public void run() {
                                     view.getCloud();
-                                    view.printMatch(match);
                                 }
                             });
                             synchronized (this) {
