@@ -320,6 +320,7 @@ public class Cli extends Thread{
      * @param match match of the player
      */
     public void printMatch(Match match) {
+        clearConsole();
         getTitle();
         System.out.print(match.toString());
 
