@@ -910,34 +910,34 @@ public class MatchController extends Thread {
         if(i==0){
             asschosen0.setVisible(true);
             switch (c.getValue()){
-                case 0:
+                case 1:
                     asschosen0.setImage(assistant0.getImage());
                     break;
-                case 1:
+                case 2:
                     asschosen0.setImage(assistant1.getImage());
                     break;
-                case 2:
+                case 3:
                     asschosen0.setImage(assistant2.getImage());
                     break;
-                case 3:
+                case 4:
                     asschosen0.setImage(assistant3.getImage());
                     break;
-                case 4:
+                case 5:
                     asschosen0.setImage(assistant4.getImage());
                     break;
-                case 5:
+                case 6:
                     asschosen0.setImage(assistant5.getImage());
                     break;
-                case 6:
+                case 7:
                     asschosen0.setImage(assistant6.getImage());
                     break;
-                case 7:
+                case 8:
                     asschosen0.setImage(assistant7.getImage());
                     break;
-                case 8:
+                case 9:
                     asschosen0.setImage(assistant8.getImage());
                     break;
-                case 9:
+                case 10:
                     asschosen0.setImage(assistant9.getImage());
                     break;
 
@@ -945,34 +945,34 @@ public class MatchController extends Thread {
         } else if (i==1) {
             asschosen1.setVisible(true);
             switch (c.getValue()){
-                case 0:
+                case 1:
                     asschosen1.setImage(assistant0.getImage());
                     break;
-                case 1:
+                case 2:
                     asschosen1.setImage(assistant1.getImage());
                     break;
-                case 2:
+                case 3:
                     asschosen1.setImage(assistant2.getImage());
                     break;
-                case 3:
+                case 4:
                     asschosen1.setImage(assistant3.getImage());
                     break;
-                case 4:
+                case 5:
                     asschosen1.setImage(assistant4.getImage());
                     break;
-                case 5:
+                case 6:
                     asschosen1.setImage(assistant5.getImage());
                     break;
-                case 6:
+                case 7:
                     asschosen1.setImage(assistant6.getImage());
                     break;
-                case 7:
+                case 8:
                     asschosen1.setImage(assistant7.getImage());
                     break;
-                case 8:
+                case 9:
                     asschosen1.setImage(assistant8.getImage());
                     break;
-                case 9:
+                case 10:
                     asschosen1.setImage(assistant9.getImage());
                     break;
 
@@ -980,34 +980,34 @@ public class MatchController extends Thread {
         } else if (i==2) {
             asschosen2.setVisible(true);
             switch (c.getValue()){
-                case 0:
+                case 1:
                     asschosen2.setImage(assistant0.getImage());
                     break;
-                case 1:
+                case 2:
                     asschosen2.setImage(assistant1.getImage());
                     break;
-                case 2:
+                case 3:
                     asschosen2.setImage(assistant2.getImage());
                     break;
-                case 3:
+                case 4:
                     asschosen2.setImage(assistant3.getImage());
                     break;
-                case 4:
+                case 5:
                     asschosen2.setImage(assistant4.getImage());
                     break;
-                case 5:
+                case 6:
                     asschosen2.setImage(assistant5.getImage());
                     break;
-                case 6:
+                case 7:
                     asschosen2.setImage(assistant6.getImage());
                     break;
-                case 7:
+                case 8:
                     asschosen2.setImage(assistant7.getImage());
                     break;
-                case 8:
+                case 9:
                     asschosen2.setImage(assistant8.getImage());
                     break;
-                case 9:
+                case 10:
                     asschosen2.setImage(assistant9.getImage());
                     break;
 
