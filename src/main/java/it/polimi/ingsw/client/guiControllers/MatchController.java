@@ -3266,6 +3266,7 @@ public class MatchController extends Thread {
                     case "Start":
                     case "EndGame":
                     case "Next Turn":
+
                         setDisableAssistants(true);
                         setDisableBoards(true);
                         setDisableClouds(true);
