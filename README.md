@@ -2,7 +2,7 @@
 
 Camilla Gobbi, Alessandro Meroni, Marco Orsi
 
-### Funzionalità mplementate:<br/>
+### Funzionalità implementate:<br/>
 Regole complete, CLI + GUI, Socket, 2 FA: partite multiple, persistenza
 
 ### Istruzioni per eseguire il progetto da jar:<br/>
