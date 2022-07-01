@@ -1,0 +1,4 @@
+# Prova Finale Ing.Sw. 2021/22
+#.gitignore per aggiungere il jar alla repository
+
+!*.jar
