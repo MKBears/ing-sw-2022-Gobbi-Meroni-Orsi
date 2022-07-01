@@ -252,6 +252,7 @@ public class ClientGui  extends Thread {
                                     @Override
                                     public void run() {
                                         Platform.setImplicitExit(false);
+                                        view.printMatch(match);
                                         view.getAssistantCard();
                                     }
                                 });
@@ -265,6 +266,7 @@ public class ClientGui  extends Thread {
                                 @Override
                                 public void run() {
                                     view.moveStudent();
+                                    view.printMatch(match);
                                 }
                             });
                             synchronized (this) {
@@ -277,6 +279,7 @@ public class ClientGui  extends Thread {
                                 @Override
                                 public void run() {
                                     view.moveMN();
+                                    view.printMatch(match);
                                 }
                             });
                             synchronized (this) {
@@ -289,6 +292,7 @@ public class ClientGui  extends Thread {
                                 @Override
                                 public void run() {
                                     view.getCloud();
+                                    view.printMatch(match);
                                 }
                             });
                             synchronized (this) {
