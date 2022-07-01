@@ -222,9 +222,6 @@ public class ClientGui  extends Thread {
                             for (int i = 0; i < match.getPlayer().length; i++) {
                                 if (match.getPlayer()[i].getUserName().equals(username))
                                     me = match.getPlayer()[i];
-                                if (match instanceof Expert_Match){
-                                    view.setCharacters(((Expert_Match)match).getCard());
-                                }
                             }
                             view.setMe(me);
                             view.setMatch(match);

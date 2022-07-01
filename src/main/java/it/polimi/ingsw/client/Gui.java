@@ -272,6 +272,9 @@ public class Gui extends Application {
                 MatchController.setClientGui(cg);
                 stage.setScene(new Scene(game.load()));
                 ((MatchController)game.getController()).start();
+                if (match instanceof Expert_Match){
+                    setCharacters(((Expert_Match)match).getCard());
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
