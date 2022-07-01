@@ -100,7 +100,7 @@ public class MessageFromServer extends Thread{
                         break;
                     case "NotifyTowers (board)":
                         synchronized (in) {
-                            cg.setNotifyTowersBoard((ArrayList<Tower>) in.readObject(), (Board) in.readObject(), (String) in.readObject());
+                            cg.setNotifyTowersBoard((Board) in.readObject(), (String) in.readObject());
                         }
                         break;
                     case "EndGame":

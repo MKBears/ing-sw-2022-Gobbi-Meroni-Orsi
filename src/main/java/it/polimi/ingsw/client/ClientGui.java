@@ -366,7 +366,7 @@ public class ClientGui  extends Thread {
                                 @Override
                                 public void run() {
                                     view.printNotification("Madre Natura é stata spostata di " + movement
-                                            + " passi nell'isola " + idLand);
+                                            + " passi nell'isola " + (idLand+1));
                                     view.wakeUp("Start");
                                 }
                             });
@@ -924,12 +924,11 @@ public class ClientGui  extends Thread {
 
     /**
      * Sets the parameters that we use in this class when a "NotifyTowers (board)" message is received
-     * @param toewrs1 the ArryList of towers that are moving
+     *
      * @param board the board in wich they have to end
      * @param u the username of the player that made the choice
      */
-    public  void setNotifyTowersBoard(ArrayList<Tower> toewrs1, Board board, String u){
-        this.towers1=toewrs1;
+    public  void setNotifyTowersBoard( Board board, String u){
         this.board=board;
         this.u=u;
     }
