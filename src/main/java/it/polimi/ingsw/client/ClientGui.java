@@ -255,7 +255,6 @@ public class ClientGui  extends Thread {
                                     @Override
                                     public void run() {
                                         Platform.setImplicitExit(false);
-                                        view.printMatch(match);
                                         view.getAssistantCard();
                                     }
                                 });
