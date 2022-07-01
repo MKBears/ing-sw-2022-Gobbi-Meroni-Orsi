@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.characterCards;
 
 import it.polimi.ingsw.model.*;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Ch_11 implements CharacterCard {

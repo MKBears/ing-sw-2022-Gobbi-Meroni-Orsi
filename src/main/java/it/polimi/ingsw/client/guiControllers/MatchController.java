@@ -7,8 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.effect.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,8 +15,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
-import javafx.stage.Stage;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.characterCards.*;
 
@@ -45,7 +41,6 @@ public class MatchController extends Thread {
     private InputStream blue_student;
     private InputStream pink_student;
     private String state;
-    private ArrayList<Land> stepsmn;
     private CharacterCard[] ch;
     private InputStream noentry;
     private Student stuch1;
@@ -852,7 +847,6 @@ public class MatchController extends Thread {
             ncoin2.setVisible(false);
             character_button.setVisible(false);
         } else {
-            System.out.println("Confermo che la partita è modalità esperto");
             stuch10= new ArrayList<>();
             setCharacters(((Expert_Match)match).getCard());
             character(ch0, ((Expert_Match)match).getCard()[0]);
@@ -895,7 +889,7 @@ public class MatchController extends Thread {
 
     /**
      * Sets the state for the switch in the run() method
-     * @param s
+     * @param s the state to set
      */
     public void setStateLabel(String s) {
         state_label.setText(s);
@@ -2664,8 +2658,8 @@ public class MatchController extends Thread {
     /**
      * Sets selectedstudent on true and selectedmn on false and sets assistantchoonsen
      *
-     * @param pla
-     * @param stu
+     * @param pla the number of the player
+     * @param stu the number of the student in the entrance
      */
     private void selected(int pla, int stu) {
         if (me == match.getPlayer()[pla]) {
@@ -3214,7 +3208,6 @@ public class MatchController extends Thread {
      * @param ass the card to be visible
      */
     public void setVisibleAssCards(List<AssistantCard> ass){
-        System.out.println("Sono all'inizio del settaggio delle carte (MatchController)");
         assistant0.setVisible(false);
         assistant1.setVisible(false);
         assistant2.setVisible(false);
@@ -3259,7 +3252,6 @@ public class MatchController extends Thread {
                     break;
             }
         }
-        System.out.println("Ho finito di settare le cards (MatchControler)");
     }
 
 
@@ -3268,12 +3260,9 @@ public class MatchController extends Thread {
      */
     @Override
     public void run() {
-
-        System.out.println("Sono qui");
         Runnable updater = new Runnable() {
             @Override
             public void run() {
-                System.out.println(state);
                 switch (state) {
                     case "Start":
                     case "EndGame":
@@ -3288,7 +3277,6 @@ public class MatchController extends Thread {
                         setDisableChCards(true);
                         break;
                     case "ChooseAssistant":
-                        //System.out.println("Sono in MatchController ChooseAssistant");
                         setDisableAssistants(false);
                         setDisableBoards(true);
                         setDisableClouds(true);
@@ -3300,7 +3288,6 @@ public class MatchController extends Thread {
                         gui.popUp("Scegliere carta assistente", "Tocca a te! Scegli una carta assistente");
                         break;
                     case "MoveStudent":
-
                         setDisableMN(true);
                         setDisableLands(true);
                         setDisableColumns(true);
@@ -3393,7 +3380,6 @@ public class MatchController extends Thread {
         while (true) {
             try {
                 synchronized (this) {
-                    System.out.println("Sono in wait in Matchcontroller");
                     this.wait();
                 }
             } catch (InterruptedException e) {
@@ -3560,7 +3546,6 @@ public class MatchController extends Thread {
      * @param state phase of the match
      */
     public synchronized void wakeUp(String state) {
-        System.out.println("Wake up del MatchController");
         this.state=state;
         this.notifyAll();
     }
@@ -3703,9 +3688,6 @@ public class MatchController extends Thread {
      */
     @FXML
     private void character(ImageView imageView,CharacterCard character){
-        URL url;
-        File f;
-        FileInputStream fil;
         try {
             if (character instanceof Ch_1) {
                 InputStream inputStream=getClass().getClassLoader().getResourceAsStream("CarteTOT_front.jpg");
@@ -3806,23 +3788,19 @@ public class MatchController extends Thread {
     public void usechyes(ActionEvent actionEvent) {
         setStateLabel("Momento carte personaggio!");
         youwantusechcards.setVisible(false);
-        System.out.println("Hai scelto sii!!!");
         //setDisableChCards(false);
         if(gui.getUsability(1)){
-            System.out.println("Rendo usabile la 1 perchè costa "+gui.getCh()[0].getPrice());
             ch0.setDisable(false);
         } else {
             ch0.setEffect(new GaussianBlur());
         }
         if(gui.getUsability(2)){
             ch1.setDisable(false);
-            System.out.println("Rendo usabile la 2 perchè costa "+gui.getCh()[1].getPrice());
         } else {
             ch1.setEffect(new GaussianBlur());
         }
         if(gui.getUsability(3)){
             ch2.setDisable(false);
-            System.out.println("Rendo usabile la 3 perchè costa "+gui.getCh()[2].getPrice());
         } else {
             ch2.setEffect(new GaussianBlur());
         }
@@ -3875,7 +3853,6 @@ public class MatchController extends Thread {
      * action whe you don't use a charcter card
      */
     public void usechno(ActionEvent actionEvent) {
-        System.out.println("Mando NO al server");
         server.sendNoCh();
         youwantusechcards.setVisible(false);
     }
@@ -4089,7 +4066,7 @@ public class MatchController extends Thread {
     /**
      * effect of ch 10
      */
-    public void useCh10(){  //NON VA
+    public void useCh10(){
         gui.popUp("Ok", "Scegli uno o due studenti dall'ingresso della tua plancia da scambiare con quelli nella sala");
         switch (me.getColor()) {
             case WHITE:

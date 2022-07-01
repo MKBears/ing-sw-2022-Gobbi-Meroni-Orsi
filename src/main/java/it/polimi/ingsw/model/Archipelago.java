@@ -14,8 +14,6 @@ public class Archipelago implements Land, Serializable {
     private boolean hasChanged;
     private final ArrayList<Tower> previousTowers;
 
-    //Sarebbe meglio non scrivere nello specifico tutte le istruzioni del metodo, basta solo descrivere
-    // il funzionamento molto ad altro livello
     /**
      * Constructor: group==ArrayList of Islands, size=group.size(), head=group.get(0), color=towercolor
      * @param group ArrayList of Islands

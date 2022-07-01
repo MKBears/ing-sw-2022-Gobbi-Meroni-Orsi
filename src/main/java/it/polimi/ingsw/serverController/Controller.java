@@ -55,7 +55,11 @@ public class Controller extends Thread{
         game_from_memory=false;
     }
 
-
+    /**
+     * This constructor is used when is necessary to resume a game form the memory
+     * @param first the first player that is connected
+     * @param gamesaved the informations about the game to resume
+     */
     public Controller (ClientHandler first,GameSaved gamesaved){
         this.gameSaved=gamesaved;
         state = gameSaved.state();
@@ -921,7 +925,7 @@ public class Controller extends Thread{
         ClientHandler player2 = null;
         ArrayList<Tower> t=position.getPreviousTowers();
 
-        if (t != null) { /////////////
+        if (t != null) {
             if (!t.isEmpty())
                 previousTowers = t;
         }
@@ -1122,6 +1126,9 @@ public class Controller extends Thread{
         }
     }
 
+    /**
+     * This method deletes the file of the game from the memory
+     */
     public void delete(){
         File file=new File("matches/"+match.getPlayer()[0].getUserName());
         file.delete();

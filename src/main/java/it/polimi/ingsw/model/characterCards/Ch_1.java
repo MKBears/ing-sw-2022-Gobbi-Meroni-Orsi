@@ -2,9 +2,7 @@ package it.polimi.ingsw.model.characterCards;
 
 import it.polimi.ingsw.model.*;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Ch_1 implements CharacterCard {
     private final short price;

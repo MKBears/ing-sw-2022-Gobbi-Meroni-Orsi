@@ -37,7 +37,6 @@ public class TypeMatchController {
     public void initialize(){
         playernum.getItems().add("2");
         playernum.getItems().add("3");
-        //playernum.setValue("2");
         expert.setSelected(false);
         error.setVisible(false);
     }
@@ -55,7 +54,6 @@ public class TypeMatchController {
      * action after choose the number of players and if do an expert match
      */
     public void choosetypematch(ActionEvent actionEvent) {
-        //System.out.println(playernum.getItems());
         if(playernum.getValue().toString()=="2"){
             server.sendNumPlayers(2);
             System.out.println("Ho mandato numero giocatori: 2");

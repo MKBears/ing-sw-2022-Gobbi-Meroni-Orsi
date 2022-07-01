@@ -160,7 +160,6 @@ public class Client  extends Thread{
                     case "MoveMN":
                         view.wakeUp(received);
                         break;
-                    //nella nuova versione non è previsto ACK o NACK
                     case "ChooseCloud":
                         view.wakeUp("ChooseCloud");
                         break;
@@ -178,8 +177,8 @@ public class Client  extends Thread{
                         server.sendACK();
                         break;
                     case "NotifyMoveStudents (id)":
-                        Student stu = (Student) in.readObject(); //lo studente stesso
-                        int id = (int) in.readObject(); //id della Land
+                        Student stu = (Student) in.readObject();
+                        int id = (int) in.readObject();
                         String user = (String) in.readObject();
                         for (Land e : match.getLands()) {
                             if (id == e.getID())
@@ -291,7 +290,7 @@ public class Client  extends Thread{
                         break;
                     case "EndGame":
                         Player winner = (Player) in.readObject();
-                        String ex = (String) in.readObject(); //spiegazione di perchè ha vinto
+                        String ex = (String) in.readObject();
                         GameRecap recap = (GameRecap) in.readObject();
                         server.sendACK();
 

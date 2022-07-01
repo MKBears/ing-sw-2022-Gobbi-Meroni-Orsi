@@ -2,8 +2,6 @@ package it.polimi.ingsw.model.characterCards;
 
 import it.polimi.ingsw.model.*;
 
-import java.io.Serializable;
-
 public class Ch_5 implements CharacterCard {
 
     private final short price;

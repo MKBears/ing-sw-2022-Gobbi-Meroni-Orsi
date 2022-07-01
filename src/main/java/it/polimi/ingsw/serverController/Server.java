@@ -65,7 +65,7 @@ public class Server extends Thread{
 
         try (ServerSocket sSocket = new ServerSocket(); DatagramSocket sock=new DatagramSocket(portUDP)){
             ClientHandler newPlayer;
-            myIP=new InetSocketAddress(InetAddress.getLocalHost(),portTCP); //indirizzo tcp
+            myIP=new InetSocketAddress(InetAddress.getLocalHost(),portTCP);
             sSocket.bind(myIP);
             System.out.println("Server running @"+myIP);
             byte[] buf=new byte[1];
@@ -74,10 +74,10 @@ public class Server extends Thread{
 
             while (true) {
                 try {
-                    sock.receive(packet); //ricevo richiesta di connessione dal client
+                    sock.receive(packet);
                     packet4client = new DatagramPacket(buf, 0, buf.length, packet.getAddress(), packet.getPort());
-                    sock.send(packet4client);//gli mando un datagrampacket all'indirizzo al pacchetto che ho ricevuto
-                    Socket client = sSocket.accept(); //accetto connessione tcp dal client
+                    sock.send(packet4client);
+                    Socket client = sSocket.accept();
                     newPlayer = new ClientHandler(client, this);
                     players.submit(newPlayer);
                 }catch (IOException e) {
@@ -115,6 +115,10 @@ public class Server extends Thread{
         }
     }
 
+    /**
+     * This methos return the ArrayList of the usernames utilized
+     * @return the ArrayList of usernames
+     */
     @SuppressWarnings("unchecked")
     public ArrayList<String> getUserNames() {
 

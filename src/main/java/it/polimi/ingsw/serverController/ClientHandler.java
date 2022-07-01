@@ -256,7 +256,7 @@ public class ClientHandler extends Thread{
                             out.sendCreation(match);
                         }
 
-                        if (state != 6) { /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        if (state != 6) {
                             uniteLands();
                             controller.notifyMovedMN(motherNatureSteps);
 
@@ -930,8 +930,16 @@ public class ClientHandler extends Thread{
      */
     public void setAvatar(Player avatar){this.avatar=avatar;}
 
+    /**
+     * Gets a boolean value that explains if the assistants of the player are finihed
+     * @return the boolean value
+     */
     public boolean isFinished_assistant() {return finished_assistant;}
 
+    /**
+     * Sets a boolean value that explains if the assistants of the player are finihed
+     * @param finished_assistant the boolean value
+     */
     public void setFinished_assistant(boolean finished_assistant) {
         this.finished_assistant = finished_assistant;
     }

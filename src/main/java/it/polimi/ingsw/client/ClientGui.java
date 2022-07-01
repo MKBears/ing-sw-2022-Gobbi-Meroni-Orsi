@@ -1,12 +1,9 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.client.guiControllers.LoginController;
-import it.polimi.ingsw.client.guiControllers.MatchController;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.characterCards.*;
 import it.polimi.ingsw.serverController.GameRecap;
 import javafx.application.Platform;
-import javafx.scene.input.SwipeEvent;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -102,7 +99,6 @@ public class ClientGui  extends Thread {
      */
     public void setUsername(String username) {
         this.username = username;
-        System.out.println("Ho aggiornato lo username: " + username);
     }
 
     /**
@@ -164,7 +160,6 @@ public class ClientGui  extends Thread {
             }
             while (!end) {
                 synchronized (in) {
-                    System.out.println(received);
                     switch (received) {
                         case "base":
                             do {
@@ -204,7 +199,6 @@ public class ClientGui  extends Thread {
                         case "NACK":
                             break;
                         case "Wizard":
-                            System.out.println("Sono in WIZARD");
                             view.setWilly(willy);
                             Platform.runLater(new Runnable() {
                                 @Override
@@ -273,7 +267,6 @@ public class ClientGui  extends Thread {
                             }
                             break;
                         case "MoveMN":
-                            System.out.println("Ricevuto " + received);
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
@@ -358,7 +351,6 @@ public class ClientGui  extends Thread {
                             break;
                         case "NotifyMovementMN":
                             int idLand;
-                            //System.out.println(lands);
                             match.moveMotherNature(movement);
                             match.setLands(lands);
                             idLand = match.getMotherNature().getPosition().getID();
@@ -549,9 +541,6 @@ public class ClientGui  extends Thread {
                                         view.getCharacter(ch);
                                     }
                                 });
-                                /*synchronized (this){
-                                    wait();
-                                }*/
                             } else {
                                 noch=false;
                                 server.sendNoCh();
@@ -776,7 +765,6 @@ public class ClientGui  extends Thread {
                     }
                 }
                 synchronized (this) {
-                    System.out.println("In wait CG");
                     wait();
                 }
                 if (end)
@@ -861,7 +849,6 @@ public class ClientGui  extends Thread {
      * @param cards the List of cards
      */
     public void setCards(List<AssistantCard> cards) {
-        System.out.println("Sto settando le carte");
         this.cards =(List<AssistantCard>) cards;
     }
 
