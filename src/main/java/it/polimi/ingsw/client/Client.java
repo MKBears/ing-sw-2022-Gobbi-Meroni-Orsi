@@ -295,6 +295,12 @@ public class Client  extends Thread{
                         String ex = (String) in.readObject(); //spiegazione di perchè ha vinto
                         GameRecap recap = (GameRecap) in.readObject();
                         server.sendACK();
+
+                        if (view.running) {
+                            synchronized (view) {
+                                view.wait();
+                            }
+                        }
                         view.getWinner(winner);
                         view. printNotification("La partita é finita perché "+ex);
                         view.printNotification(recap.toString());

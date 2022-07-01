@@ -12,6 +12,7 @@ import java.util.List;
  * Representation of the game via command line
  */
 public class Cli extends Thread{
+    public boolean running;
     private final Scanner input;
     private String state;
     private Boolean end;
@@ -33,6 +34,7 @@ public class Cli extends Thread{
         input = new Scanner(System.in);
         end = false;
         nack = false;
+        running = false;
         state = "Start";
         svnProcessBuilder = new ProcessBuilder("PowerShell", "/c", "clear");
     }
@@ -490,13 +492,16 @@ public class Cli extends Thread{
             while (!end) {
                 switch (state) {
                     case ("Start"):
+                        running = true;
                         synchronized (this) {
                             nack = false;
                             this.wait();
                         }
+                        running = false;
                         break;
                     case ("Wizard"):
                         Wizards choose = this.getWizard();
+                        running = true;
                         do {
                             server.sendChoice(choose);
                             synchronized (this) {
@@ -505,9 +510,15 @@ public class Cli extends Thread{
                                 this.wait();
                             }
                         } while (nack);
+                        running = false;
+
+                        synchronized (this) {
+                            notify();
+                        }
                         break;
                     case ("ChooseCard"):
                         AssistantCard a;
+                        running = true;
                         printMatch(match);
                         a = this.getAssistantCard(cards);
                         me.draw(a);
@@ -519,8 +530,14 @@ public class Cli extends Thread{
                                 this.wait();
                             }
                         } while (nack);
+                        running = false;
+
+                        synchronized (this) {
+                            notify();
+                        }
                         break;
                     case ("MoveMN"):
+                        running = true;
                         printMatch(match);
                         int step = this.getNumStep(me);
                         do {
@@ -531,8 +548,14 @@ public class Cli extends Thread{
                                 this.wait();
                             }
                         } while (nack);
+                        running = false;
+
+                        synchronized (this) {
+                            notify();
+                        }
                         break;
                     case ("ChooseCloud"):
+                        running = true;
                         Cloud clo = this.getCloud();
                         printMatch(match);
                         System.out.println("Nuvola scelta:\n" + clo.toString() + '\n');
@@ -550,8 +573,14 @@ public class Cli extends Thread{
                             }
                         } while (nack);
                         printMatch(match);
+                        running = false;
+
+                        synchronized (this) {
+                            notify();
+                        }
                         break;
                     case ("MoveStudents"):
+                        running = true;
                         Student st;
                         int move;
                         for (int i = 0; i < match.getPlayer().length + 1; i++) {
@@ -583,6 +612,11 @@ public class Cli extends Thread{
                             nack = false;
                             this.wait();
                         }
+                        running = false;
+
+                        synchronized (this) {
+                            notify();
+                        }
                         break;
                     case ("EndGame"):
                         end = true;
@@ -590,6 +624,7 @@ public class Cli extends Thread{
                         state = input.nextLine();
                         break;
                     case ("Ch"):
+                        running = true;
                         Board_Experts me_ex = (Board_Experts) me.getBoard();
                         boolean enough_money = false;
                         for (CharacterCard c : characters) {
@@ -665,6 +700,11 @@ public class Cli extends Thread{
                             nack = false;
                             this.wait();
                         }
+
+                        synchronized (this) {
+                            notify();
+                        }
+                        running = false;
                         break;
                 }
             }
@@ -931,11 +971,12 @@ public class Cli extends Thread{
      */
     public CharacterCard chooseChCard(CharacterCard[] cards) {
         int chosen;
-        System.out.println("\nVuoi giocare una carta personaggio? [si/no]");
-        System.out.println("Per visualizzare la descrizione dell'effetto della carta scrivi 'info'");
+        String choose;
 
         while (true) {
-            String choose = input.next();
+            System.out.println("\nVuoi giocare una carta personaggio? [si/no]");
+            System.out.println("Per visualizzare la descrizione dell'effetto della carta scrivi 'info'");
+            choose = input.next();
 
             switch (choose.toLowerCase()) {
                 case "si" -> {
@@ -958,6 +999,32 @@ public class Cli extends Thread{
                 case "info" -> {
                     for (CharacterCard card : cards) {
                         System.out.println("\nPersonaggio " + card.getNumber() + ":\n" + card.getPowerUp() + "\n");
+
+                        if (card instanceof Ch_1 || card instanceof Ch_11) {
+                            ArrayList<Student> students;
+
+                            if (card instanceof Ch_1)
+                                students = ((Ch_1)card).getStudents();
+                            else
+                                students = ((Ch_11)card).getStudents();
+
+                            if (!students.isEmpty()) {
+                                System.out.println("\nStudenti sulla carta :  ");
+
+                                for (int i = 0; i < students.size(); i++)
+                                    System.out.println("  " + (i + 1) + "." + students.get(i));
+                            }
+                            else {
+                                System.out.println("Non ci sono studenti su questa carda.");
+                            }
+                        }
+
+                        if (card instanceof Ch_5) {
+                            if (((Ch_5)card).getNoEntryCounter() == 0)
+                                System.out.println("\nTutte le tessere divieto sono state piazzate su qualche isola");
+                            else
+                                System.out.println("\nCi sono " + ((Ch_5)card).getNoEntryCounter() + " tessere divieto");
+                        }
                     }
                 }
                 default -> System.out.println("Inserisci si/no oppure info");

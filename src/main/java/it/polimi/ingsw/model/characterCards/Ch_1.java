@@ -61,16 +61,10 @@ public class Ch_1 implements CharacterCard {
 
     @Override
     public String getPowerUp() {
-        StringBuilder pu = new StringBuilder(powerUp);
-        pu.append("\nStudenti sulla carta :  ");
-
-        for (int i=0; i<students.size(); i++)
-            pu.append("  ").append(i+1).append(".").append(students.get(i));
-
-        return pu.toString();
+        return powerUp;
     }
 
-    public List<Student> getStudents() {
+    public ArrayList<Student> getStudents() {
         return students;
     }
 

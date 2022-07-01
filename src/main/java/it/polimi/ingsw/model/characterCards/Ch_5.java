@@ -58,14 +58,7 @@ public class Ch_5 implements CharacterCard {
 
     @Override
     public String getPowerUp() {
-        StringBuilder pu = new StringBuilder(powerUp);
-
-        if (noEntryCounter == 0)
-            pu.append("\nTutte le tessere divieto sono state piazzate su qualche isola");
-        else
-            pu.append("\nCi sono ").append(noEntryCounter).append(" tessere divieto");
-
-        return pu.toString();
+        return powerUp;
     }
 
     public Island[] getIslands() {
@@ -87,6 +80,10 @@ public class Ch_5 implements CharacterCard {
     @Override
     public int getNumber() {
         return 5;
+    }
+
+    public int getNoEntryCounter() {
+        return noEntryCounter;
     }
 
     public void setActivated(){activated=true;}

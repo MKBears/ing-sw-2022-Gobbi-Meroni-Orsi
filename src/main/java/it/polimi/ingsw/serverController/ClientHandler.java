@@ -367,7 +367,6 @@ public class ClientHandler extends Thread{
     public synchronized void setAck (boolean ack) throws Exception {
         nack = !ack;
         if (ack) {
-            //out.sendACK();
             nackCounter = 0;
             notifyAll();
         }
