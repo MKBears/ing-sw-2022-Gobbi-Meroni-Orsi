@@ -693,20 +693,47 @@ public class MatchController extends Thread {
     Button pinkbutton;
     @FXML
     Pane color;
+    @FXML
+    ImageView activatedcoin0;
+    @FXML
+    ImageView activatedcoin1;
+    @FXML
+    ImageView activatedcoin2;
+    @FXML
+    ImageView asschosen0;
+    @FXML
+    ImageView asschosen1;
+    @FXML
+    ImageView asschosen2;
 
-
+    /**
+     * Sets the Message4Client, server
+     * @param server
+     */
     public static void setServer(Message4Server server) {
         MatchController.server = server;
     }
 
+    /**
+     * Sets the Action, action
+     * @param action
+     */
     public static void setAction(Action action) {
         MatchController.action = action;
     }
 
+    /**
+     * Sets the Player me
+     * @param me
+     */
     public static void setMe(Player me) {
         MatchController.me = me;
     }
 
+    /**
+     * Sets the Gui gui
+     * @param gui
+     */
     public static void setGui(Gui gui) {
         MatchController.gui = gui;
     }
@@ -866,8 +893,126 @@ public class MatchController extends Thread {
         state = "Start";
     }
 
+    /**
+     * Sets the state for the switch in the run() method
+     * @param s
+     */
     public void setStateLabel(String s) {
         state_label.setText(s);
+    }
+
+    /**
+     * Sets near the other character's board the image of the AssistantCard chosen by him
+     * @param i the number of the player
+     * @param c the AssistantCard chosen by the other player
+     */
+    public void setCardChosenbytheother(int i, AssistantCard c){
+        if(i==0){
+            asschosen0.setVisible(true);
+            switch (c.getValue()){
+                case 0:
+                    asschosen0.setImage(assistant0.getImage());
+                    break;
+                case 1:
+                    asschosen0.setImage(assistant1.getImage());
+                    break;
+                case 2:
+                    asschosen0.setImage(assistant2.getImage());
+                    break;
+                case 3:
+                    asschosen0.setImage(assistant3.getImage());
+                    break;
+                case 4:
+                    asschosen0.setImage(assistant4.getImage());
+                    break;
+                case 5:
+                    asschosen0.setImage(assistant5.getImage());
+                    break;
+                case 6:
+                    asschosen0.setImage(assistant6.getImage());
+                    break;
+                case 7:
+                    asschosen0.setImage(assistant7.getImage());
+                    break;
+                case 8:
+                    asschosen0.setImage(assistant8.getImage());
+                    break;
+                case 9:
+                    asschosen0.setImage(assistant9.getImage());
+                    break;
+
+            }
+        } else if (i==1) {
+            asschosen1.setVisible(true);
+            switch (c.getValue()){
+                case 0:
+                    asschosen1.setImage(assistant0.getImage());
+                    break;
+                case 1:
+                    asschosen1.setImage(assistant1.getImage());
+                    break;
+                case 2:
+                    asschosen1.setImage(assistant2.getImage());
+                    break;
+                case 3:
+                    asschosen1.setImage(assistant3.getImage());
+                    break;
+                case 4:
+                    asschosen1.setImage(assistant4.getImage());
+                    break;
+                case 5:
+                    asschosen1.setImage(assistant5.getImage());
+                    break;
+                case 6:
+                    asschosen1.setImage(assistant6.getImage());
+                    break;
+                case 7:
+                    asschosen1.setImage(assistant7.getImage());
+                    break;
+                case 8:
+                    asschosen1.setImage(assistant8.getImage());
+                    break;
+                case 9:
+                    asschosen1.setImage(assistant9.getImage());
+                    break;
+
+            }
+        } else if (i==2) {
+            asschosen2.setVisible(true);
+            switch (c.getValue()){
+                case 0:
+                    asschosen2.setImage(assistant0.getImage());
+                    break;
+                case 1:
+                    asschosen2.setImage(assistant1.getImage());
+                    break;
+                case 2:
+                    asschosen2.setImage(assistant2.getImage());
+                    break;
+                case 3:
+                    asschosen2.setImage(assistant3.getImage());
+                    break;
+                case 4:
+                    asschosen2.setImage(assistant4.getImage());
+                    break;
+                case 5:
+                    asschosen2.setImage(assistant5.getImage());
+                    break;
+                case 6:
+                    asschosen2.setImage(assistant6.getImage());
+                    break;
+                case 7:
+                    asschosen2.setImage(assistant7.getImage());
+                    break;
+                case 8:
+                    asschosen2.setImage(assistant8.getImage());
+                    break;
+                case 9:
+                    asschosen2.setImage(assistant9.getImage());
+                    break;
+
+            }
+        }
     }
 
     /**
@@ -882,6 +1027,15 @@ public class MatchController extends Thread {
         power0.setText(ch[0].getPowerUp());
         power1.setText(ch[1].getPowerUp());
         power2.setText(ch[2].getPowerUp());
+        if(ch[0].hasBeenActivated()){
+            activatedcoin0.setVisible(true);
+        }
+        if(ch[1].hasBeenActivated()){
+            activatedcoin1.setVisible(true);
+        }
+        if(ch[2].hasBeenActivated()){
+            activatedcoin2.setVisible(true);
+        }
         int i=0;
         for(CharacterCard c: ((Expert_Match)match).getCard()){
             if(i==0) {
@@ -894,7 +1048,6 @@ public class MatchController extends Thread {
                     ch_01.setVisible(true);
                     ch_02.setVisible(true);
                     ch_03.setVisible(true);
-                    System.out.println("HO STAMPATOGLI STUDENTI DELLA 1");
                 }else if(c instanceof Ch_5){
                     show_noentry(ch_00);
                     show_noentry(ch_01);
@@ -904,7 +1057,6 @@ public class MatchController extends Thread {
                     ch_01.setVisible(true);
                     ch_02.setVisible(true);
                     ch_03.setVisible(true);
-                    System.out.println("HO STAMPATO I NO ENTRY DELLA 1");
                 } else if (c instanceof  Ch_11){
                     show_student(ch_00, ((Ch_11) c).getStudents().get(0));
                     show_student(ch_01, ((Ch_11) c).getStudents().get(1));
@@ -930,7 +1082,6 @@ public class MatchController extends Thread {
                     ch_11.setVisible(true);
                     ch_12.setVisible(true);
                     ch_13.setVisible(true);
-                    System.out.println("HO STAMPATOGLI STUDENTI DELLA 2");
                 } else if (c instanceof Ch_5) {
                     show_noentry(ch_10);
                     show_noentry(ch_11);
@@ -940,7 +1091,6 @@ public class MatchController extends Thread {
                     ch_11.setVisible(true);
                     ch_12.setVisible(true);
                     ch_13.setVisible(true);
-                    System.out.println("HO STAMPATO I NO ENTRY DELLA 1");
                 } else if (c instanceof  Ch_11){
                     show_student(ch_10, ((Ch_11) c).getStudents().get(0));
                     show_student(ch_11, ((Ch_11) c).getStudents().get(1));
@@ -967,7 +1117,6 @@ public class MatchController extends Thread {
                     ch_21.setVisible(true);
                     ch_22.setVisible(true);
                     ch_23.setVisible(true);
-                    System.out.println("HO STAMPATOGLI STUDENTI DELLA 3");
                 }else if(c instanceof Ch_5){
                     show_noentry(ch_20);
                     show_noentry(ch_21);
@@ -977,7 +1126,6 @@ public class MatchController extends Thread {
                     ch_21.setVisible(true);
                     ch_22.setVisible(true);
                     ch_23.setVisible(true);
-                    System.out.println("HO STAMPATO I NO ENTRY DELLA 1");
                 } else if (c instanceof  Ch_11){
                     show_student(ch_20, ((Ch_11) c).getStudents().get(0));
                     show_student(ch_21, ((Ch_11) c).getStudents().get(1));
@@ -998,8 +1146,11 @@ public class MatchController extends Thread {
         }
     }
 
+    /**
+     * Sets the image for the Imageview noentry
+     * @param imageView the Imageview to set
+     */
     public void show_noentry(ImageView imageView){
-        //imageView.setImage(new Image(noentry));
         noentry=getClass().getClassLoader().getResourceAsStream("deny_island_icon.png");
         imageView.setImage(new Image(noentry));
     }
@@ -1074,9 +1225,6 @@ public class MatchController extends Thread {
                 }
             } else if (selectedstudent) {
                 server.sendMovedStudent(assistantchoosen, idland);
-                /*switch (me.getBoard().getEntrance().indexOf(assistantchoosen)){
-                    case
-                }*/
                 for (Land l : match.getLands()) {
                     if (l.getID() == idland)
                         action.moveFromIngressToLand(me, assistantchoosen, l);
@@ -1101,6 +1249,44 @@ public class MatchController extends Thread {
             }
             if(ich5){
                 server.sendChooseCh5(match.findIsland(idland));
+                switch(idland){
+                    case 0:
+                        noentry0.setVisible(true);
+                        break;
+                    case 1:
+                        noentry1.setVisible(true);
+                        break;
+                    case 2:
+                        noentry2.setVisible(true);
+                        break;
+                    case 3:
+                        noentry3.setVisible(true);
+                        break;
+                    case 4:
+                        noentry4.setVisible(true);
+                        break;
+                    case 5:
+                        noentry5.setVisible(true);
+                        break;
+                    case 6:
+                        noentry6.setVisible(true);
+                        break;
+                    case 7:
+                        noentry7.setVisible(true);
+                        break;
+                    case 8:
+                        noentry8.setVisible(true);
+                        break;
+                    case 9:
+                        noentry9.setVisible(true);
+                        break;
+                    case 10:
+                        noentry10.setVisible(true);
+                        break;
+                    case 11:
+                        noentry11.setVisible(true);
+                        break;
+                }
                 ich5=false;
             }
         }
@@ -1123,7 +1309,7 @@ public class MatchController extends Thread {
     }
 
     /**
-     * update the student on the entrance of the boards
+     * Update the student on the entrance of the boards
      */
     public void refreshEntry() {
         for (Player p : match.getPlayer()) {
@@ -1430,11 +1616,10 @@ public class MatchController extends Thread {
         }
     }
 
-
-    public void setStepsmn(ArrayList<Land> n){
-        this.stepsmn=n;
-    }
-
+    /**
+     * Sets the ClientGui, cg
+     * @param cg the ClientGui to set
+     */
     public static void setClientGui(ClientGui cg){
         MatchController.cg=cg;
     }
@@ -1744,7 +1929,7 @@ public class MatchController extends Thread {
      * Sets the graphic interface of the board view (board_view)
      * @param actionEvent the click of the specified botton
      */
-    public void show_boards(ActionEvent actionEvent) {  /////////////////////////////////////////////////////////
+    public void show_boards(ActionEvent actionEvent) {
         land_view.setVisible(false);
         board_view.setVisible(true);
         characters.setVisible(false);
@@ -1947,7 +2132,7 @@ public class MatchController extends Thread {
         }
         synchronized (cg){
             cg.notifyAll();
-            cg.notifyAll();///////////////////////////////////////////////////////////////////////////
+            cg.notifyAll();
         }
 
     }
@@ -2759,7 +2944,6 @@ public class MatchController extends Thread {
         setDisableChCards(true);
         setDisableColumns(true);
         ((ImageView) mouseEvent.getSource()).setEffect(null);
-        //((ImageView) mouseEvent.getSource()).setVisible(false);
     }
 
     /**
@@ -2900,11 +3084,18 @@ public class MatchController extends Thread {
         setDropShadow();
     }
 
-
+    /**
+     * Sets the Match match
+     * @param m the match we are playing
+     */
     public static void setmatch(Match m) {
         MatchController.match = m;
     }
 
+    /**
+     * Sets the ObjectInputStream in
+     * @param i the ObjectInputStream to set
+     */
     public void setIn(ObjectInputStream i) {
         in = i;
     }
@@ -2937,21 +3128,6 @@ public class MatchController extends Thread {
         island10.setDisable(v);
         island11.setDisable(v);
     }
-    /*private void setInvisibleLands(boolean v) {
-        island0.setVisible(v);
-        island1.setVisible(v);
-        island2.setVisible(v);
-        island3.setVisible(v);
-        island4.setVisible(v);
-        island5.setVisible(v);
-        island6.setVisible(v);
-        island7.setVisible(v);
-        island8.setVisible(v);
-        island9.setVisible(v);
-        island10.setVisible(v);
-        island11.setVisible(v);
-        white0.set
-    }*/
 
     /**
      * set no action on the mn
@@ -3094,7 +3270,7 @@ public class MatchController extends Thread {
     public void run() {
 
         System.out.println("Sono qui");
-        Runnable updater = new Runnable() { ///Non va
+        Runnable updater = new Runnable() {
             @Override
             public void run() {
                 System.out.println(state);
@@ -3112,7 +3288,6 @@ public class MatchController extends Thread {
                         setDisableChCards(true);
                         break;
                     case "ChooseAssistant":
-                        //System.out.println("Sono in MatchController ChooseAssistant");
                         setDisableAssistants(false);
                         setDisableBoards(true);
                         setDisableClouds(true);
@@ -3227,64 +3402,22 @@ public class MatchController extends Thread {
         }
     }
 
+    /**
+     * Sets the CharacterCards in order to not use them when is not the moment
+     * @param v
+     */
     public void setDisableChCards(boolean v){
         ch0.setDisable(v);
         ch1.setDisable(v);
         ch2.setDisable(v);
     }
 
+    /**
+     * Makes visible the Pane for the choice if you want to use a CharacterCard
+     */
     public void ch_question(){
         youwantusechcards.setVisible(true);
     }
-
-    /*public void show_ch(){
-
-        for (int i=0; i<3; i++){
-            if(((Expert_Match)match).getCard()[i] instanceof Ch_1){
-                switch (i){
-                    case 0:
-                        show_student(ch_00, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(0));
-                        show_student(ch_01, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(1));
-                        show_student(ch_02, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(2));
-                        show_student(ch_03, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(3));
-                        break;
-                    case 1:
-                        show_student(ch_10, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(0));
-                        show_student(ch_11, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(1));
-                        show_student(ch_12, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(2));
-                        show_student(ch_13, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(3));
-                        break;
-                    case 2:
-                        show_student(ch_20, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(0));
-                        show_student(ch_21, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(1));
-                        show_student(ch_22, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(2));
-                        show_student(ch_23, ((Ch_1) ((Expert_Match)match).getCard()[i]).getStudents().get(3));
-                        break;
-                }
-            } else if (((Expert_Match)match).getCard()[i] instanceof Ch_5){
-                switch (i){
-                    case 0:
-                        show_noentry(ch_00);
-                        show_noentry(ch_01);
-                        show_noentry(ch_02);
-                        show_noentry(ch_03);
-                        break;
-                    case 1:
-                        show_noentry(ch_10);
-                        show_noentry(ch_11);
-                        show_noentry(ch_12);
-                        show_noentry(ch_22);
-                        break;
-                    case 2:
-                        show_noentry(ch_20);
-                        show_noentry(ch_21);
-                        show_noentry(ch_22);
-                        show_noentry(ch_23);
-                        break;
-                }
-            }
-        }
-    }*/
 
     /**
      * show the state of the match

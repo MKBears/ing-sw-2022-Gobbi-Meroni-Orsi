@@ -59,9 +59,6 @@ public class MessageFromServer extends Thread{
                         }
                         break;
                     case "ChooseCloud":
-                        synchronized (in) {
-                            cg.setClouds();
-                        }
                         break;
                     case "NotifyChosenCard":
                         synchronized (in) {

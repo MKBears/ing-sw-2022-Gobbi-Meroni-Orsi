@@ -19,7 +19,7 @@
          <Image url="@sfondo.jpg" />
       </image>
    </ImageView>
-    <Pane fx:id="land_view" prefHeight="850.0" prefWidth="1200.0">
+    <Pane fx:id="land_view" prefHeight="850.0" prefWidth="1200.0" visible="false">
       <ImageView fx:id="asschosen" fitHeight="117.0" fitWidth="86.0" layoutX="790.0" layoutY="320.0" pickOnBounds="true" preserveRatio="true" visible="false" />
         <AnchorPane fx:id="land3" layoutX="630.0" layoutY="25.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="218.0" prefWidth="251.0">
             <ImageView fx:id="island3" fitHeight="205.0" fitWidth="227.0" layoutX="25.0" layoutY="10.0" onMouseClicked="#moveto" pickOnBounds="true" preserveRatio="true">
@@ -886,7 +886,7 @@
          </effect>
       </Button>
     </Pane>
-    <Pane fx:id="board_view" prefHeight="720.0" prefWidth="1194.0" visible="false">
+    <Pane fx:id="board_view" prefHeight="720.0" prefWidth="1194.0">
         <AnchorPane layoutX="-121.0" layoutY="92.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="339.0" prefWidth="581.0" rotate="-90.0">
             <ImageView fx:id="board0" fitHeight="220.0" fitWidth="500.0" layoutX="50.0" layoutY="102.0" pickOnBounds="true" preserveRatio="true">
                 <Image url="@Graphical_Assets/Plancia/Plancia_DEF2.png" />
@@ -1195,6 +1195,7 @@
             </effect>
          </Button>
          <Button fx:id="ok0" layoutX="84.0" layoutY="36.0" mnemonicParsing="false" onAction="#Ok" rotate="90.0" text="Ok" />
+         <ImageView fx:id="asschosen0" fitHeight="90.0" fitWidth="150.0" layoutX="82.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" rotate="90.0" />
         </AnchorPane>
         <AnchorPane layoutX="199.0" layoutY="92.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="339.0" prefWidth="581.0" rotate="-90.0">
             <ImageView fx:id="board1" fitHeight="220.0" fitWidth="500.0" layoutX="50.0" layoutY="102.0" pickOnBounds="true" preserveRatio="true">
@@ -1504,6 +1505,7 @@
             </effect>
          </Button>
          <Button fx:id="ok1" layoutX="80.0" layoutY="35.0" mnemonicParsing="false" onAction="#Ok" rotate="90.0" text="Ok" />
+         <ImageView fx:id="asschosen1" fitHeight="90.0" fitWidth="150.0" layoutX="81.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" rotate="90.0" />
         </AnchorPane>
         <AnchorPane fx:id="two" layoutX="518.0" layoutY="92.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="339.0" prefWidth="581.0" rotate="-90.0">
             <ImageView fx:id="board2" fitHeight="220.0" fitWidth="500.0" layoutX="50.0" layoutY="102.0" pickOnBounds="true" preserveRatio="true">
@@ -1814,6 +1816,7 @@
                <DropShadow />
             </effect></Button>
          <Button fx:id="ok2" layoutX="80.0" layoutY="41.0" mnemonicParsing="false" onAction="#Ok" rotate="90.0" text="Ok" />
+         <ImageView fx:id="asschosen2" fitHeight="90.0" fitWidth="150.0" layoutX="138.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" rotate="90.0" />
         </AnchorPane>
         <Label layoutX="455.0" layoutY="500.0" text="Il tuo mazzo:">
             <font>
@@ -1991,6 +1994,28 @@
             <font>
                <Font name="Verdana" size="12.0" />
             </font></Text>
+         <ImageView fx:id="activatedcoin0" fitHeight="100.0" fitWidth="100.0" layoutX="147.0" layoutY="310.0" pickOnBounds="true" preserveRatio="true" visible="false">
+            <image>
+               <Image url="@Graphical_Assets/Moneta_base.png" />
+            </image>
+            <effect>
+               <DropShadow />
+            </effect></ImageView>
+         <ImageView fx:id="activaedcoin1" fitHeight="100.0" fitWidth="100.0" layoutX="498.0" layoutY="318.0" pickOnBounds="true" preserveRatio="true" visible="false">
+            <image>
+               <Image url="@Graphical_Assets/Moneta_base.png" />
+            </image>
+            <effect>
+               <DropShadow />
+            </effect></ImageView>
+         <ImageView fx:id="activatedcoin2" fitHeight="100.0" fitWidth="100.0" layoutX="821.0" layoutY="329.0" pickOnBounds="true" preserveRatio="true" visible="false">
+            <image>
+               <Image url="@Graphical_Assets/Moneta_base.png" />
+            </image>
+            <effect>
+               <DropShadow />
+            </effect>
+         </ImageView>
       </children>
    </Pane>
     <Pane fx:id="youwantusechcards" layoutX="274.0" layoutY="149.0" prefHeight="422.0" prefWidth="614.0" style="-fx-background-color: #00ff00;" visible="false">

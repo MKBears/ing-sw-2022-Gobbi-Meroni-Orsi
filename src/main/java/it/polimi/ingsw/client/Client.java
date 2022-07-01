@@ -115,7 +115,6 @@ public class Client  extends Thread{
                         resume = (ArrayList<String>) in.readObject();
                         view.chooseMatch(join, resume);
                     case "ACK":
-                        //view.wakeUp("MoveStudents");
                         break;
                     case "NACK":
                         view.setNack();

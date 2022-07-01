@@ -80,12 +80,9 @@ public class Gui extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         setStage(stage);
-        System.out.println("BUONGIORNOOOOO");
-        System.out.println("Ho creato il client");
         ClientGui c=new ClientGui(this);
         c.start();
         setCG(c);
-        System.out.println("Il client è partito");
     }
 
     public void setStage(Stage s) throws IOException {
@@ -119,8 +116,6 @@ public class Gui extends Application {
             e.printStackTrace();
         }
         stage.show();
-        //System.out.println("Sono nella gui: "+((LoginController)fxmlLoader.getController()).getUs());
-        //us=((LoginController)fxmlLoader.getController()).getUs();
     }
 
     public void setUs(String us){
@@ -151,13 +146,6 @@ public class Gui extends Application {
         }
         System.out.println("Faccio show di getwizards");
         stage.show();
-        /*synchronized (this){
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }*/
     }
 
     public Wizards getW(){
@@ -473,5 +461,9 @@ public class Gui extends Application {
 
     public void setW(Wizards w) {
         this.w = w;
+    }
+
+    public void showCard(int i, AssistantCard card){
+        ((MatchController)game.getController()).setCardChosenbytheother(i,card);
     }
 }

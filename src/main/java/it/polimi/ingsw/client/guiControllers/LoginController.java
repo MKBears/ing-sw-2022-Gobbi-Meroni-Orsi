@@ -54,10 +54,6 @@ public class LoginController{
         LoginController.gui = gui;
     }
 
-    public String getUs(){
-        return us;
-    }
-
     /**
      * initialize the scene
      */
@@ -85,20 +81,6 @@ public class LoginController{
         synchronized (cl){
             cl.notifyAll();
         }
-       /* String response= (String)in.readObject();
-        if(response.equals("LoginFailed")){
-            result_username.setText("Username errato.. Riprova");
-        }else{*/
-            /*ArrayList<String> join=new ArrayList<>();
-            join=(ArrayList<String>) in.readObject();
-            ArrayList<String> resume=new ArrayList<>();
-            resume=(ArrayList<String>) in.readObject();
-            join.addAll(resume);
-            selectionGames.getItems().addAll(join);
-            login_page.setVisible(false);
-            first.setVisible(true);
-    }*/
-
     }
 
 }

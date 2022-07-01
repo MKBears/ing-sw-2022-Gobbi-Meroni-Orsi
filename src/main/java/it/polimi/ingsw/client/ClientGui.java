@@ -96,15 +96,19 @@ public class ClientGui  extends Thread {
         gr=null;
     }
 
-    public Gui getView(){
-        return view;
-    }
-
+    /**
+     * Sets the username of the player
+     * @param username the username
+     */
     public void setUsername(String username) {
         this.username = username;
         System.out.println("Ho aggiornato lo username: " + username);
     }
 
+    /**
+     * Sets the message received from the server (the first is always a string)
+     * @param received
+     */
     public void setReceived(String received) {
         this.received = received;
     }
@@ -117,11 +121,9 @@ public class ClientGui  extends Thread {
             addr[3]=(byte)255;
             DatagramSocket dSokk = new DatagramSocket();
             dSokk.setSoTimeout(5000);
-            System.out.println("Client inizializzato");
             byte[] buf = new byte[1];
             DatagramPacket starting = new DatagramPacket(buf, 0, buf.length, InetAddress.getByAddress(addr), 4898);
             DatagramPacket packet;
-            System.out.println("Connessione in corso");
             do {
                 dSokk.send(starting);
                 buf = new byte[1];
@@ -151,7 +153,6 @@ public class ClientGui  extends Thread {
             view.setServer(server);
             received = "base";
             dSokk.close();
-            //sleep(2000);
             synchronized (view) {
                 Platform.runLater(new Runnable() {
                     @Override
@@ -162,15 +163,11 @@ public class ClientGui  extends Thread {
                 sleep(2000);
             }
             while (!end) {
-                /*if(!received.equals("base")) {
-                    received = (String) in.readObject();
-                }*/
                 synchronized (in) {
                     System.out.println(received);
                     switch (received) {
                         case "base":
                             do {
-                                //sleep(2000);
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
@@ -180,24 +177,17 @@ public class ClientGui  extends Thread {
                                 synchronized (this) {
                                     this.wait();
                                 }
-                                System.out.println("Ho lo username: " + username);
-                                //username= view.getUs();
                                 response = (String) in.readObject();
-                                System.out.println("Ricevuto in CG: " + response);
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
                                         view.printNotification(response);
                                     }
                                 });
-                                //this.sleep(2000);
                             } while (response.equals("LoginFailed"));
                             received = "ok";
                             mfs = new MessageFromServer(in, server, this);
                             mfs.start();
-                            /*synchronized (this){
-                                this.wait();
-                            }*/
                             break;
                         case "ListOfGames":
                             Platform.runLater(new Runnable() {
@@ -210,18 +200,16 @@ public class ClientGui  extends Thread {
                                 this.wait();
                             }
                         case "ACK":
-                            //view.wakeUp("MoveStudents");
                             break;
                         case "NACK":
-                            //view.setNack();
                             break;
                         case "Wizard":
                             System.out.println("Sono in WIZARD");
-                            view.setWilly(willy);  //un po' inutile
+                            view.setWilly(willy);
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    view.getWizard(willy);//manda lui il wizard scelto
+                                    view.getWizard(willy);
                                 }
                             });
                             synchronized (this) {
@@ -247,7 +235,6 @@ public class ClientGui  extends Thread {
                             break;
                         case "RefillClouds":
                             noch=false;
-                            //if(!pm){
                             Platform.runLater(new Runnable() {
                                 @Override
                             public void run() {
@@ -256,28 +243,18 @@ public class ClientGui  extends Thread {
                                         view.setCharacters(((Expert_Match) match).getCard());
                                 }
                             });
-
-                            //synchronized (this) {
-                            //    this.wait();
-                            //}
                             sleep(4500);
                             server.sendACK();
-                            //pm=false;
-                            //}
                             break;
                         case "ChooseCard":
                             view.setCards(cards);
-                            //System.out.println("Sono in ChooseAssistant");
-                            //synchronized (in) {
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
                                         Platform.setImplicitExit(false);
-                                        //System.out.println("Sono nella run si ChooseCard");
                                         view.getAssistantCard();
                                     }
                                 });
-                            //}
                             synchronized (this) {
                                 this.wait();
                             }
@@ -292,8 +269,8 @@ public class ClientGui  extends Thread {
                             });
                             synchronized (this) {
                                 this.wait();
+                                sleep(500);
                             }
-
                             break;
                         case "MoveMN":
                             System.out.println("Ricevuto " + received);
@@ -305,10 +282,9 @@ public class ClientGui  extends Thread {
                             });
                             synchronized (this) {
                                 this.wait();
+                                sleep(500);
                             }
-                            //System.out.println("View svegliata");
                             break;
-                        //nella nuova versione non è previsto ACK o NACK
                         case "ChooseCloud":
                             Platform.runLater(new Runnable() {
                                 @Override
@@ -318,6 +294,7 @@ public class ClientGui  extends Thread {
                             });
                             synchronized (this) {
                                 this.wait();
+                                sleep(500);
                             }
                             break;
                         case "NotifyChosenCard":
@@ -326,6 +303,14 @@ public class ClientGui  extends Thread {
                                 public void run() {
                                     view.printNotification(pl2.getUserName() +
                                             " ha giocato la carta:" + card.getValue());
+                                    int r=0;
+                                    for(Player p: match.getPlayer()){
+                                        r++;
+                                        if(p.getUserName().equals(play.getUserName())){
+                                            break;
+                                        }
+                                    }
+                                    view.showCard(r-1, card);
                                 }
                             });
                             for (int i = 0; i < match.getPlayer().length; i++) {
@@ -343,7 +328,6 @@ public class ClientGui  extends Thread {
                             for (int i = 0; i < match.getPlayer().length; i++) {
                                 if (match.getPlayer()[i].getUserName().equals(use)) {
                                     match.getPlayer()[i].getBoard().removeStudent(stu);
-                                    //view.clearStudentFromBoard(stu.type());
                                 }
                             }
                             action.checkAllProfessors();
@@ -504,7 +488,6 @@ public class ClientGui  extends Thread {
                                 }
                             });
                             server.sendACK();
-                            //System.out.println("Mandato ack");
                             break;
                         case "NotifyPlayerConnected":
                             if (connected) {
@@ -554,14 +537,12 @@ public class ClientGui  extends Thread {
                         case "Ch":
                             noch=false;
                             Board_Experts becs=(Board_Experts) me.getBoard();
-                            System.out.println("Ho "+ ((Board_Experts) me.getBoard()).getCoinsNumber()+ " monete");
                             for (CharacterCard c: ch) {
                                 if (becs.getCoinsNumber() >= c.getPrice()){
                                     noch=true;
                                 }
                             }
                             if (noch){
-                                System.out.println("Per me puoi giocare le carte personaggio");
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
@@ -829,19 +810,35 @@ public class ClientGui  extends Thread {
         }
     }
 
+    /**
+     * Sets the ArrayList join and the ArrayList resume
+     * @param join the games to join
+     * @param resume the games to resume
+     */
     public void setJoinandResume(ArrayList<String> join, ArrayList<String> resume) {
         this.join = join;
         this.resume = resume;
     }
 
+    /**
+     * Sets the wizard between the player can choose
+     * @param willy the ArrayList of wizards
+     */
     public void setWilly(ArrayList<Wizards> willy) {
         this.willy = willy;
     }
 
+    /**
+     * Sets the Match, match
+     * @param match the Match
+     */
     public void setMatch(Match match) {
         this.match = match;
     }
 
+    /**
+     * Sets the students in the clouds when a "RefillClouds" message is received
+     */
     public void setStudentsClouds() {
         ArrayList<Student> studen;
         for (Cloud clo : match.getCloud()) {
@@ -860,83 +857,151 @@ public class ClientGui  extends Thread {
         }
     }
 
+    /**
+     * Sets the AssistantCards between which the player can choose when a "ChooseAssistant" message is received
+     * @param cards the List of cards
+     */
     public void setCards(List<AssistantCard> cards) {
         System.out.println("Sto settando le carte");
         this.cards =(List<AssistantCard>) cards;
     }
 
-    public void setClouds() {
-    }
-
+    /**
+     * Sets the chosen AssistantCard and the Player that choose it then a "NotifyChosenCard" mesage is received
+     * @param card the chosen card
+     * @param pl2
+     */
     public void setChosenCard(AssistantCard card, Player pl2){
         this.card=card;
         this.pl2=pl2;
     }
 
+    /**
+     *Sets the parameters that we use in this class when a "NotifyMovedStudent(id)" message is received
+     * @param stu the moved student
+     * @param id the id of the land in which he is moved
+     * @param use the username of the player that made this choice
+     */
     public void setNotifyMovedStudentId(Student stu, int id, String use){
         this.stu=stu;
         this.id=id;
         this.use=use;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "NotifyMovedStudent(board)" message is received
+     * @param s the moved student
+     * @param usern the username of the player that made this choice
+     */
     public void setNotifyMovedStudentBoard(Student s, String usern){
         this.s=s;
         this.usern=usern;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "NotifyMovementMN" message is received
+     * @param movement the number of steps of Mother Nature
+     * @param lands the land at the end of the movement od Mother Nature
+     */
     public void setNotifyMovementMN(int movement, ArrayList<Land> lands){
         this.movement=movement;
         this.lands=lands;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "NotifyProfessors" message is received
+     * @param prof the new gained professor
+     */
     public void setProf(Map<Type_Student,Player> prof){
         this.prof=prof;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "NotifyChosenCloud" message is received
+     * @param p the player that chooses the cloud
+     * @param cl the chosen cloud
+     */
     public void setNotifyChosenCLoud(Player p, Cloud cl){
         this.p=p;
         this.cl=cl;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "NotifyTowers (land)" message is received
+     * @param towers the ArryList of towers that are moving
+     * @param land the land in which they have to end
+     * @param f the username of the player that made the choice
+     */
     public void setNotifyTowersLand(ArrayList<Tower> towers, Land land, String f){
         this.towers=towers;
         this.land=land;
         this.f=f;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "NotifyTowers (board)" message is received
+     * @param toewrs1 the ArryList of towers that are moving
+     * @param board the board in wich they have to end
+     * @param u the username of the player that made the choice
+     */
     public  void setNotifyTowersBoard(ArrayList<Tower> toewrs1, Board board, String u){
         this.towers1=toewrs1;
         this.board=board;
         this.u=u;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "NextTurn" message is received
+     * @param play the player that has to start the turn
+     * @param phase the phase of the fame the payer has to start
+     */
     public void setNextTurn(Player play, String phase){
         this.play=play;
         this.phase=phase;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "NotifyPlayerConnected" message is received
+     * @param n the message to print
+     * @param connected the boolean parameter that tells if it is connected or not
+     */
     public void setNotifyPlayerConnected(String n, boolean connected){
         this.n=n;
         this.connected=connected;
     }
 
-    public String getReceived(){
-        return received;
-    }
-
+    /**
+     * Sets the parameters that we use in this class when a "FinishedAssistants" message is received
+     * @param finish the player that has finished the AssistantCards
+     */
     public void setFinish(Player finish){
         this.finish=finish;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "GenericError" message is received
+     * @param error the message to print
+     */
     public void setError(String error){
         this.error=error;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "Ch" message is received
+     * @param ch the CharacterCards updated
+     */
     public void setCh(CharacterCard[] ch){
         this.ch=ch;
         view.setCharacters(ch);
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "NotifyCh_1" message is received
+     * @param l the land interested
+     * @param s the List of students
+     * @param stu the chosen student
+     * @param user the username of the player that played the card
+     */
     public void setCh_1(Land l, List<Student> s, Student stu, String user){
         this.land=l;
         this.ss=s;
@@ -944,55 +1009,108 @@ public class ClientGui  extends Thread {
         this.u=user;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "NotifyCh_2" message is received
+     * @param profs the List of professors to use
+     * @param u the username of the player that played the card
+     */
     public void setCh_2(Map<Type_Student,Player>profs, String u){
         this.profs=profs;
         this.u=u;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "NotifyCh_4" message is received
+     * @param u the username of the player that played the card
+     */
     public void setCh_4(String u){
         this.u=u;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "NotifyCh_5" message is received
+     * @param lala the land chosen
+     * @param name the username of the player that played the card
+     */
     public void setCh_5(Land lala, String name){
         this.land=lala;
         this.u=name;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "NotifyCh_10" message is received
+     * @param neim the username of the player that played the card
+     * @param classroom the ArrayList of the chosen students
+     * @param type the ArrayList of the chosen type of students
+     */
     public void setCh_10(String neim, ArrayList<Student> classroom, ArrayList<Type_Student> type){
         this.u=neim;
         this.classroom=classroom;
         this.type=type;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "NotifyCh_11" message is received
+     * @param card the ArrayList of the chosen students
+     * @param n the username of the player that played the card
+     * @param ss the chosen student
+     */
     public void setCh_11( ArrayList<Student> card, String n, Student ss){
         this.classroom=card;
         this.u=n;
         this.s=ss;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "NotifyCh_12" message is received
+     * @param ty the chose type of students
+     * @param usrnm the username of the player that played the card
+     */
     public void setCh_12(Type_Student ty, String usrnm){
         this.ty=ty;
         this.u=usrnm;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "NotifyCh_8" message is received
+     * @param usr the username of the player that played the card
+     */
     public void setCh_8(String usr){
         this.u=usr;
     }
 
+    /**
+     * Gets the boolean that tells if the player has chosen to use or not the CharacterCard
+     * @return the boolean value
+     */
     public boolean getNoCh(){
         return noch;
     }
 
+    /**
+     * Sets the boolean that tells if the player has chosen to use or not the CharacterCard
+     * @param v the boolean value
+     */
     public void setNoCh(boolean v){
         this.noch=v;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "EndGame" message is received
+     * @param winner the winner player
+     * @param explanation the explaination of his win
+     * @param gameRecap the parameter GameRecap
+     */
     public void setEndGame(Player winner, String explanation,GameRecap gameRecap){
         this.p=winner;
         this.n=explanation;
         this.gr=gameRecap;
     }
 
+    /**
+     * Sets the parameters that we use in this class when a "LastTower" message is received
+     * @param p the player that played his last tower
+     */
     public void setLastTower(Player p){
         this.p=p;
     }
