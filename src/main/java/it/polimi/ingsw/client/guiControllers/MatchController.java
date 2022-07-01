@@ -3580,14 +3580,6 @@ public class MatchController extends Thread {
      */
     private void show_student(ImageView imageView,Student student){
         try {
-            //InputStream inputStream=getClass().getClassLoader().getResourceAsStream("CarteTOT_back_1@3x.png");
-            //imageView.setImage(new Image(inputStream));
-            //case WIZARD1 -> {
-            //                    InputStream inputStream=getClass().getClassLoader().getResourceAsStream("CarteTOT_back_1@3x.png");
-            //                    imageView.setImage(new Image(inputStream));
-            //                }
-            //InputStream f = null;
-
             switch (student.type()){
                 case GNOME -> {
                     yellow_student=getClass().getClassLoader().getResourceAsStream("student_yellow.png");
