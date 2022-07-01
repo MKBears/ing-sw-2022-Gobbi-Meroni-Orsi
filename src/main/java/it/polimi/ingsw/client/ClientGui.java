@@ -260,6 +260,9 @@ public class ClientGui  extends Thread {
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
+                                    view.printMatch(match);
+                                    if (match instanceof Expert_Match)
+                                        view.setCharacters(((Expert_Match) match).getCard());
                                     view.moveStudent();
                                 }
                             });
@@ -296,6 +299,7 @@ public class ClientGui  extends Thread {
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
+
                                     view.printNotification(pl2.getUserName() +
                                             " ha giocato la carta:" + card.getValue());
                                     int r=0;
@@ -478,6 +482,9 @@ public class ClientGui  extends Thread {
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
+                                    view.printMatch(match);
+                                    if (match instanceof Expert_Match)
+                                        view.setCharacters(((Expert_Match) match).getCard());
                                     view.printTurn(play, phase);
                                 }
                             });

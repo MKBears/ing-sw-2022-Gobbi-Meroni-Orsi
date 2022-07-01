@@ -104,6 +104,11 @@ public class Controller extends Thread{
                     case 4 -> p.setState(3);
                 }
             }
+            try {
+                sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
         while (!paused && state<6) {
             try {
@@ -214,6 +219,7 @@ public class Controller extends Thread{
                         notifyTurn("azione");
 
                         synchronized (players[currentPlayer]) {
+                            System.out.println("Sveglio ilplayer "+players[currentPlayer].getUserName());
                             players[currentPlayer].notifyAll();
                         }
                         sleep(100);
