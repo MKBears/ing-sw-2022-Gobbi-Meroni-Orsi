@@ -1,14 +1,20 @@
 package it.polimi.ingsw.client.guiControllers;
 
 import it.polimi.ingsw.characterCards.*;
-import it.polimi.ingsw.client.*;
+import it.polimi.ingsw.client.Action;
+import it.polimi.ingsw.client.ClientGui;
+import it.polimi.ingsw.client.Gui;
+import it.polimi.ingsw.client.Message4Server;
+import it.polimi.ingsw.model.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.effect.*;
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -16,10 +22,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.characterCards.*;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

@@ -2,7 +2,6 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.characterCards.*;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.characterCards.*;
 import it.polimi.ingsw.serverController.GameRecap;
 import javafx.application.Platform;
 
@@ -246,6 +245,7 @@ public class ClientGui  extends Thread {
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
+                                        view.printMatch(match);
                                         Platform.setImplicitExit(false);
                                         view.getAssistantCard();
                                     }
