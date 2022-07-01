@@ -19,7 +19,7 @@
          <Image url="@sfondo.jpg" />
       </image>
    </ImageView>
-    <Pane fx:id="land_view" prefHeight="850.0" prefWidth="1200.0" visible="false">
+    <Pane fx:id="land_view" prefHeight="850.0" prefWidth="1200.0">
       <ImageView fx:id="asschosen" fitHeight="117.0" fitWidth="86.0" layoutX="790.0" layoutY="320.0" pickOnBounds="true" preserveRatio="true" visible="false" />
         <AnchorPane fx:id="land3" layoutX="630.0" layoutY="25.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="218.0" prefWidth="251.0">
             <ImageView fx:id="island3" fitHeight="205.0" fitWidth="227.0" layoutX="25.0" layoutY="10.0" onMouseClicked="#moveto" pickOnBounds="true" preserveRatio="true">
@@ -886,7 +886,7 @@
          </effect>
       </Button>
     </Pane>
-    <Pane fx:id="board_view" prefHeight="720.0" prefWidth="1194.0">
+    <Pane fx:id="board_view" prefHeight="720.0" prefWidth="1194.0" visible="false">
         <AnchorPane layoutX="-121.0" layoutY="92.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="339.0" prefWidth="581.0" rotate="-90.0">
             <ImageView fx:id="board0" fitHeight="220.0" fitWidth="500.0" layoutX="50.0" layoutY="102.0" pickOnBounds="true" preserveRatio="true">
                 <Image url="@Graphical_Assets/Plancia/Plancia_DEF2.png" />
@@ -1871,16 +1871,16 @@
       <children>
          <ImageView fx:id="ch0" fitHeight="344.0" fitWidth="197.0" layoutX="101.0" layoutY="211.0" onMouseClicked="#use_ch" pickOnBounds="true" preserveRatio="true">
             <image>
-               <Image url="@Graphical_Assets/Personaggi/CarteTOT_front.jpg" />
+               <Image url="@CarteTOT_front.jpg" />
             </image>
          </ImageView>
          <ImageView fx:id="ch2" fitHeight="299.0" fitWidth="197.0" layoutX="766.0" layoutY="211.0" onMouseClicked="#use_ch" pickOnBounds="true" preserveRatio="true">
             <image>
-               <Image url="@Graphical_Assets/Personaggi/CarteTOT_front11.jpg" />
+               <Image url="@CarteTOT_front11.jpg" />
             </image></ImageView>
          <ImageView fx:id="ch1" fitHeight="299.0" fitWidth="197.0" layoutX="443.0" layoutY="211.0" onMouseClicked="#use_ch" pickOnBounds="true" preserveRatio="true">
             <image>
-               <Image url="@Graphical_Assets/Personaggi/CarteTOT_front12.jpg" />
+               <Image url="@CarteTOT_front12.jpg" />
             </image></ImageView>
          <Button mnemonicParsing="false" onAction="#go_to_island" prefHeight="70.0" prefWidth="119.0" snapToPixel="false" style="-fx-background-color: orange; -fx-background-radius: 100;" text="Isole" textFill="#080808">
             <font>
