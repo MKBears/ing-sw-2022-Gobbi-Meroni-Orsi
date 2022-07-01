@@ -3,7 +3,6 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.client.guiControllers.*;
 import it.polimi.ingsw.serverController.GameRecap;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -28,7 +27,6 @@ public class Gui extends Application {
     private List<Wizards> willy;
     private List<Cloud> clouds;
     private List<AssistantCard> cards;
-    //private CharacterCard[] characters;
     private String username;
     private Wizards w;
     private FXMLLoader game;
@@ -66,8 +64,6 @@ public class Gui extends Application {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        //time=false;
-        //newgame=false;
     }
 
     /**
@@ -118,7 +114,6 @@ public class Gui extends Application {
      * @param args
      */
     public static void main(String[] args) {
-        System.out.println("BUONGIORNOOOOO");
         launch(args);
     }
 
@@ -168,7 +163,6 @@ public class Gui extends Application {
      * @param wizards that the player can choose
      */
     public void getWizard(List<Wizards> wizards) {
-        System.out.println("Sono in getWizard");
         WizardsController.setServer(server);
         WizardsController.setGui(this);
         WizardsController.setCl(cg);
@@ -179,7 +173,6 @@ public class Gui extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Faccio show di getwizards");
         stage.show();
     }
 
@@ -235,7 +228,6 @@ public class Gui extends Application {
      * request for the assistant card to the player changing the state of the thread
      */
     public void getAssistantCard() {
-        System.out.println("Sono in getAssistantCard");
         try {
             sleep(2000);
         } catch (InterruptedException e) {
@@ -244,9 +236,6 @@ public class Gui extends Application {
         ((MatchController)game.getController()).setStateLabel("Scegli una carta assistente");
         ((MatchController)game.getController()).wakeUp("ChooseAssistant");
         stage.show();
-        /*synchronized (cg){
-            cg.notifyAll();
-        }*/
     }
 
     /**
@@ -281,13 +270,11 @@ public class Gui extends Application {
                 MatchController.setServer(this.server);
                 MatchController.setMe(this.me);
                 MatchController.setClientGui(cg);
-                //game=new FXMLLoader(getClass().getClassLoader().getResource("real_matchh.fxml"));
                 stage.setScene(new Scene(game.load()));
                 ((MatchController)game.getController()).start();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            //printmatch=true;
         }
         else {
             MatchController.setmatch(this.match);
@@ -336,12 +323,8 @@ public class Gui extends Application {
      */
     public void printTurn(Player pl, String phase) {
         popUp("Notifica turni", "E' il turno di "+pl.getUserName()+ " in fase di "+phase.toString());
-        //MatchController.setStateLabel(phase.toString());
         ((MatchController)game.getController()).setStateLabel("E' il turno di "+pl.getUserName()+ " in fase di "+phase.toString());
         ((MatchController)game.getController()).wakeUp("Next Turn");
-        //synchronized (cg){
-        //    cg.notifyAll();
-        //}
     }
 
 
@@ -371,7 +354,7 @@ public class Gui extends Application {
      * set who is playing the match
      * @param me the player
      */
-    public void setMe(Player me) { //Non so a cosa serva
+    public void setMe(Player me) {
         this.me=me;
     }
 
@@ -390,12 +373,8 @@ public class Gui extends Application {
      * @param cards list of the cards
      */
     public void setCards(List<AssistantCard> cards) {
-        System.out.println("Sono all'inizio di setCards di Gui");
         this.cards=cards;
-        //if(!time && newgame) {
         ((MatchController) game.getController()).setVisibleAssCards((List<AssistantCard>) cards);
-        //}else time=true;
-        System.out.println("Sono alla fine di setCards di Gui");
     }
 
     /**
@@ -404,14 +383,6 @@ public class Gui extends Application {
      */
     public void setWilly(List<Wizards> willy) {
         this.willy=willy;
-    }
-
-    /**
-     * set the clouds
-     * @param clouds clouds
-     */
-    public void setClouds(List<Cloud> clouds) {
-        this.clouds=clouds;
     }
 
     /**
@@ -461,10 +432,6 @@ public class Gui extends Application {
         }
     }
 
-    public void clearStudentFromBoard(Type_Student s, int n_player){
-        //((MatchController)game.getController()).clearStudentFromBoard(s, n_player);
-    }
-
     /**
      * change the state and allow moving mother nature
      */
@@ -505,7 +472,6 @@ public class Gui extends Application {
      * @param cards cards of the match
      */
     public void getCharacter(CharacterCard[] cards) {
-        System.out.println("Sono i getcharacter della gui");
         this.ch=cards;
         isch1usable=false;
         isch2usable=false;
@@ -519,7 +485,6 @@ public class Gui extends Application {
         if(((Board_Experts)me.getBoard()).getCoinsNumber()>=ch[2].getPrice()){
             isch3usable=true;
         }
-        System.out.println("Faccio wakeup con ch del matchcontroller");
         ((MatchController)game.getController()).wakeUp("Ch");
     }
 

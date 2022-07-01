@@ -27,15 +27,11 @@ public class MessageFromServer extends Thread{
         while (true) {
             try {
                 message = (String) in.readObject();
-                if(!message.equals("Ping")) {
-                    System.out.println("Ricevuto: " + message);
-                }
                 switch (message) {
                     case "Ping":
                         server.sendPONG();
-                        //System.out.println("Mandato pong");
                         break;
-                    case "NACK": //non lo soooo
+                    case "NACK":
                         break;
                     case "ListOfGames":
                         cg.setJoinandResume((ArrayList<String>) in.readObject(), (ArrayList<String>) in.readObject());
@@ -53,7 +49,7 @@ public class MessageFromServer extends Thread{
                             cg.setStudentsClouds();
                         }
                         break;
-                    case "ChooseCard": //"ChooseCard"
+                    case "ChooseCard":
                         synchronized (in) {
                             cg.setCards((List<AssistantCard>) in.readObject());
                         }

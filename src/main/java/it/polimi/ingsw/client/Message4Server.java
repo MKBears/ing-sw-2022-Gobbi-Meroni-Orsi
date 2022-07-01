@@ -181,7 +181,7 @@ public class Message4Server {
      * @param stu the student involved
      * @param pos must be the id of the land or the board (board is 12, the lands are 0-11)
      */
-    public void sendMovedStudent(Student stu, int pos ){  //dai la possibilità di mettere null negli ultimi due se non ne muove tre
+    public void sendMovedStudent(Student stu, int pos ){
         synchronized (this) {
             try {
                 name = "MovedStudent";

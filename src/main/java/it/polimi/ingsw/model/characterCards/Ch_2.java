@@ -5,7 +5,6 @@ import it.polimi.ingsw.model.Match;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Type_Student;
 
-import java.io.Serializable;
 
 public class Ch_2 implements CharacterCard {
     private boolean activated;
