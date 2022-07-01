@@ -1448,19 +1448,25 @@ public class MatchController extends Thread {
     public void choose_cloud(MouseEvent mouseEvent) {
         switch (((ImageView) mouseEvent.getSource()).getId()) {
             case "cloud0" -> {
-                action.chooseCloud(me, match.getCloud()[0]);
-                server.sendChoiceCloud(match.getCloud()[0]);
-                match.getCloud()[0].clearStudents();
+                if(!match.getCloud()[0].getStudents().isEmpty()) {
+                    action.chooseCloud(me, match.getCloud()[0]);
+                    server.sendChoiceCloud(match.getCloud()[0].clone());
+                    match.getCloud()[0].clearStudents();
+                }
             }
             case "cloud1" -> {
-                action.chooseCloud(me, match.getCloud()[1]);
-                server.sendChoiceCloud(match.getCloud()[1]);
-                match.getCloud()[1].clearStudents();
+                if(!match.getCloud()[1].getStudents().isEmpty()) {
+                    action.chooseCloud(me, match.getCloud()[1]);
+                    server.sendChoiceCloud(match.getCloud()[1].clone());
+                    match.getCloud()[1].clearStudents();
+                }
             }
             case "cloud2" -> {
-                action.chooseCloud(me, match.getCloud()[2]);
-                server.sendChoiceCloud(match.getCloud()[2]);
-                match.getCloud()[2].clearStudents();
+                if(!match.getCloud()[2].getStudents().isEmpty()) {
+                    action.chooseCloud(me, match.getCloud()[2]);
+                    server.sendChoiceCloud(match.getCloud()[2].clone());
+                    match.getCloud()[2].clearStudents();
+                }
             }
         }
         entry00.setVisible(true);
