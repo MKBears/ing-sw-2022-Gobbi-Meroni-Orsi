@@ -560,6 +560,12 @@ public class Controller extends Thread{
                             break;
                     }
                 }
+                else {
+                    if (players[currentPlayer].equals(player))
+                        synchronized (this) {
+                            this.notify();
+                        }
+                }
             }
         }
     }
@@ -574,6 +580,8 @@ public class Controller extends Thread{
         else {
             currentPlayer = 0;
         }
+        if (!players[currentPlayer].isConnected())
+            moveCurrentPlayer();
     }
 
     /**
