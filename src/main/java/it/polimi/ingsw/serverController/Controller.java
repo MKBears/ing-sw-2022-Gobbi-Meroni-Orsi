@@ -219,7 +219,6 @@ public class Controller extends Thread{
                         notifyTurn("azione");
 
                         synchronized (players[currentPlayer]) {
-                            System.out.println("Sveglio ilplayer "+players[currentPlayer].getUserName());
                             players[currentPlayer].notifyAll();
                         }
                         sleep(100);
