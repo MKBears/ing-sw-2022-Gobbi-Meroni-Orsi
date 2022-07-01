@@ -225,6 +225,12 @@ public class ClientGui  extends Thread {
                             }
                             view.setMe(me);
                             view.setMatch(match);
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printMatch(match);
+                                }
+                            });
                             server.sendACK();
                             break;
                         case "RefillClouds":
