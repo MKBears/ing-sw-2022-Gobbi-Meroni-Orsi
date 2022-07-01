@@ -245,16 +245,12 @@ public class ClientGui  extends Thread {
                                 @Override
                                 public void run() {
                                     view.printMatch(match);
+                                    if (match instanceof Expert_Match)
+                                        view.setCharacters(((Expert_Match) match).getCard());
+                                    view.setCards(cards);
+                                    view.getAssistantCard();
                                 }
                             });
-                            view.setCards(cards);
-                                Platform.runLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Platform.setImplicitExit(false);
-                                        view.getAssistantCard();
-                                    }
-                                });
                             synchronized (this) {
                                 this.wait();
                             }
