@@ -241,11 +241,16 @@ public class ClientGui  extends Thread {
                             server.sendACK();
                             break;
                         case "ChooseCard":
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printMatch(match);
+                                }
+                            });
                             view.setCards(cards);
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
-                                        view.printMatch(match);
                                         Platform.setImplicitExit(false);
                                         view.getAssistantCard();
                                     }
