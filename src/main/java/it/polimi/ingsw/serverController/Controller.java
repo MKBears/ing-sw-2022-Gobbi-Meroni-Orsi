@@ -155,11 +155,10 @@ public class Controller extends Thread{
             }
             case 1 -> {
                 //PLANNING phase: all the clouds are filled with 3 or 4 students
-                try {
-                    fillClouds(match.getCloud());
-                } catch (Exception e) {
+                fillClouds(match.getCloud());
+
+                if (match.getBag().isEmpty())
                     notifyFinishedStudents();
-                }
                 currentPlayer = firstPlayer;
 
                 do {
@@ -218,15 +217,10 @@ public class Controller extends Thread{
                         wait();
                         moveCurrentPlayer();
                         go = true;
-                        System.out.println(match.toString());
-
-                        if (!playing)
-                            if (endExplanation.equals("Ha costruito tutte le torri"))
-                                break;
-                    } while (currentPlayer!=firstPlayer);
+                    } while (currentPlayer!=firstPlayer && playing);
                 }
 
-                if (playing) {
+                if (playing && !match.getBag().isEmpty()) {
                     state = 1;
                     save();
                     for (ClientHandler p:players) {
@@ -256,7 +250,6 @@ public class Controller extends Thread{
                     }
                 }
                 gameRecap = new GameRecap(players, match);
-                sleep(4000);
                 for (ClientHandler player : players) {
                     player.setState(6);
 
@@ -538,7 +531,7 @@ public class Controller extends Thread{
 
                 if (connectedPlayers == 1) {
                     p.getOutputStream().sendNotifyAllPlayersDisconnected();
-                    sleep (Timer.ONE_MINUTE/2);
+                    sleep (Timer.ONE_MINUTE/30);
                     switch (connectedPlayers) {
                         case 0:
                             paused = true;
@@ -816,16 +809,16 @@ public class Controller extends Thread{
                     try {
                         towers.add(dominant.getBoard().removeTower());
 
-                        if (dominant.getBoard().hasNoTowersLeft())
+                        if (dominant.getBoard().hasNoTowersLeft()) {
                             for (ClientHandler winner : players)
-                                if (winner.getAvatar().equals(dominant))
+                                if (winner.getAvatar().getUserName().equals(dominant.getUserName()))
                                     synchronized (winner) {
                                         do {
                                             notifyBuiltLastTower(winner);
-                                            winner.wait();
                                         } while (winner.getNack());
                                     }
-
+                            break;
+                        }
                     } catch (Exception e) {
                         for (ClientHandler p : players) {
                             if (p.getAvatar().equals(dominant)) {
@@ -871,6 +864,16 @@ public class Controller extends Thread{
 
                 temp.add(Pmax.getBoard().removeTower());
                 land.changeTower(temp);
+
+                if (Pmax.getBoard().hasNoTowersLeft()) {
+                    for (ClientHandler winner : players)
+                        if (winner.getAvatar().getUserName().equals(Pmax.getUserName()))
+                            synchronized (winner) {
+                                do {
+                                    notifyBuiltLastTower(winner);
+                                } while (winner.getNack());
+                            }
+                }
             }
         }
     }
@@ -941,13 +944,11 @@ public class Controller extends Thread{
                 synchronized (p) {
                     do {
                         p.getOutputStream().sendNotifyTowers(position.getAllTowers(), position, player1);
-                        System.out.println("NotyTowers p1 " + player1);
                         p.wait();
                     } while (p.getNack());
                     if (previousTowers != null) {
                         do {
                             p.getOutputStream().sendNotifyTowers(player2.getAvatar().getBoard(), player2.getUserName());
-                            System.out.println("NotyTowers p2 " + player1);
                             p.wait();
                         } while (p.getNack());
                     }
@@ -963,10 +964,8 @@ public class Controller extends Thread{
         if (playing) {
             for (ClientHandler player : players) {
                 player.getOutputStream().sendNoMoreStudents();
-                player.endMatch();
             }
             endExplanation = "sono finiti gli studenti del sacchetto";
-            playing = false;
         }
     }
 
@@ -979,7 +978,6 @@ public class Controller extends Thread{
             if (p != player){
                 p.getOutputStream().sendFinishedAssistants(player.getAvatar());
             }
-            //p.endMatch();
             p.setFinished_assistant(true);
         }
         endExplanation = player.getUserName()+" ha finito le carte assistente";
@@ -990,16 +988,20 @@ public class Controller extends Thread{
      * Notifies all the connected players when one of them builds their last tower
      * @param player the player who built their last tower
      */
-    public void notifyBuiltLastTower (ClientHandler player) {
+    public void notifyBuiltLastTower (ClientHandler player) throws InterruptedException {
         for (ClientHandler p: players){
-            if (p.isConnected()){
+            if (p.isConnected()) {
                 p.getOutputStream().sendLastTower(player.getAvatar());
                 p.setState(6);
             }
         }
-        endExplanation = "ha costruito tutte le torri";
+        endExplanation = player.getUserName()+" ha costruito tutte le torri";
         state = 5;
         playing = false;
+
+        synchronized (this) {
+            notify();
+        }
     }
 
     /**
@@ -1010,7 +1012,6 @@ public class Controller extends Thread{
             if (p.isConnected()){
                 p.getOutputStream().sendThreeArchipelagos();
             }
-            p.endMatch();
         }
         endExplanation = "si sono formati " + match.getLands().size() + " gruppi di isole";
         state = 5;

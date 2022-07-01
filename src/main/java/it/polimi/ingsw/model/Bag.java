@@ -42,9 +42,17 @@ public class Bag implements Serializable {
     }
 
     /**
+     *
+     * @return true if there are no more students in the bag
+     */
+    public boolean isEmpty() {
+        return students.isEmpty();
+    }
+
+    /**
      * Activates 12th character card's power and puts
      * all the students removed from each player's board again in the bag
-     * @param students
+     * @param students the removed students
      */
     public void ch12effect(List<Student> students){
         this.students.addAll(students);

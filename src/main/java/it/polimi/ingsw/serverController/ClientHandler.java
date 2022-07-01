@@ -80,13 +80,13 @@ public class ClientHandler extends Thread{
                 synchronized (this) {
                     do {
                         this.wait();
-                    } while (!controller.isMyTurn(this));
+                    } while (!controller.isMyTurn(this) && connected);
                 }
             } catch (Exception e) {
                 out.sendGenericError("Internal server error ("+e.getMessage()+")");
                 ongoingMatch = false;
             }
-        } while (ongoingMatch);
+        } while (ongoingMatch && connected);
 
         try {
             sleep(5000);
@@ -94,8 +94,8 @@ public class ClientHandler extends Thread{
             e.printStackTrace();
         }
         try {
-            closeConnection();
-            out.setCondition(false);
+            if (connected)
+                closeConnection();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -151,7 +151,6 @@ public class ClientHandler extends Thread{
                     }
                     if(!controller.isGame_from_memory()) {
                         do {
-                            System.out.println("Player " + userName + ": aspetto la creazione del match");
                             this.wait();
                         } while (!controller.readyToStart());
                     }
@@ -232,10 +231,8 @@ public class ClientHandler extends Thread{
                         e.printStackTrace();
                     }
                     controller.notifyProfessors();
-                    System.out.println("Mandato notyfyprofessors");
 
                     if(expertMatch){
-                        System.out.println("Entro nella fase 7");
                         state = 7;
                         changeState();
                     }
@@ -246,7 +243,6 @@ public class ClientHandler extends Thread{
                 case 4:
                     ///ACTION phase: moving Mother Nature
                     //calculate the influence in that Land and verify if it joins other lands
-                    System.out.println("Entrato nella fase 4");
                     do {
                         out.sendMoveMN();
                         wait();
@@ -278,6 +274,8 @@ public class ClientHandler extends Thread{
                             if (match.getLands().size() <= 3)
                                 controller.notifyThreeArchipelagos();
                         }
+                        else
+                            break;
                     }else{
                         try {
                             match.getMotherNature().getPosition().setNoEntry(false);
@@ -299,7 +297,6 @@ public class ClientHandler extends Thread{
                     }
                 case 5:
                     //ACTION phase: choose a cloud and import students to the entrance
-                    System.out.println("Mando choosecloud");
 
                     do {
                         out.sendChooseCloud();
@@ -349,6 +346,9 @@ public class ClientHandler extends Thread{
                             controller.notifyFinishedStudents();
                         }
                         controller.notifyCh();
+
+                        if (match.getBag().isEmpty())
+                            controller.notifyFinishedStudents();
                     }
 
                     if (state != 6)
@@ -367,7 +367,6 @@ public class ClientHandler extends Thread{
     public synchronized void setAck (boolean ack) throws Exception {
         nack = !ack;
         if (ack) {
-            //out.sendACK();
             nackCounter = 0;
             notifyAll();
         }
@@ -635,13 +634,6 @@ public class ClientHandler extends Thread{
     }
 
     /**
-     * Sets ongoingMatch attribute on false
-     */
-    public synchronized void endMatch() {
-        ongoingMatch = false;
-    }
-
-    /**
      *
      * @return true if the remote player is still connected
      */
@@ -693,7 +685,7 @@ public class ClientHandler extends Thread{
     public synchronized void closeConnection() throws Exception{
         in.halt();
         out.halt();
-        sleep (500);
+        sleep (1000);
         socket.close();
     }
 

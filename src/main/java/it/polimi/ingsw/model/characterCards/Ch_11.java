@@ -69,18 +69,7 @@ public class Ch_11 implements CharacterCard {
 
     @Override
     public String getPowerUp() {
-        StringBuilder pu = new StringBuilder(powerUp);
-        pu.append("\n");
-
-        if (students.isEmpty())
-            pu.append("\tNon ci sono studenti su questa carta.");
-        else {
-
-            for (Student value : students)
-                pu.append("    ").append(value.toString());
-        }
-
-        return pu.toString();
+        return powerUp;
     }
 
     /**

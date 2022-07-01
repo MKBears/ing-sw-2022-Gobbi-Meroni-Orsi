@@ -90,7 +90,6 @@ public class Client  extends Thread{
             while (!end){
                 if(!received.equals("base")) {
                     received = (String) in.readObject();
-                    if(!received.equals("Ping")){System.out.println("Arrivato " + received);}
                 }
                 String response;
                 switch (received) {
@@ -169,7 +168,7 @@ public class Client  extends Thread{
                         AssistantCard card = (AssistantCard) in.readObject();
                         Player pl2 = (Player) in.readObject();
                         view.printNotification(pl2.getColor() + pl2.getUserName() +
-                                "\u001b[0m ha giocatola carta:" + card.toString() + '\n');
+                                "\u001b[0m ha giocato la carta assistente:" + card.toString() + '\n');
 
                         for (int i = 0; i < match.getPlayer().length; i++) {
                             if (match.getPlayer()[i].getUserName().equals(pl2.getUserName())) {
@@ -295,10 +294,14 @@ public class Client  extends Thread{
                         String ex = (String) in.readObject(); //spiegazione di perchè ha vinto
                         GameRecap recap = (GameRecap) in.readObject();
                         server.sendACK();
-                        //view.printMatch(match);
-                        sleep(4000);
+
+                        if (view.running) {
+                            synchronized (view) {
+                                view.wait();
+                            }
+                        }
                         view.getWinner(winner);
-                        view. printNotification(winner.getColor()+winner.getUserName()+" ha vinto perché "+ex);
+                        view. printNotification("La partita é finita perché "+ex);
                         view.printNotification(recap.toString());
                         view.wakeUp("EndGame");
                         sleep(2000);
@@ -307,11 +310,10 @@ public class Client  extends Thread{
                     case "LastTower":
                         Player pl = (Player) in.readObject();
                         view.printNotification(pl.getColor() + pl.getUserName() + "\u001b[0m ha costruito tutte le torri");
-                        server.sendACK();
+                        view.printMatch(match);
                         break;
                     case "NoMoreStudents":
                         view.lastRound();
-                        server.sendACK();
                         break;
                     case "NextTurn":
                         Player play = (Player) in.readObject();
@@ -330,16 +332,13 @@ public class Client  extends Thread{
                         } else {
                             view.playerDisconnected(u);
                         }
-                        server.sendACK();
                         break;
                     case "NotifyAllPlayersDisconnected":
                         view.playerDisconnectedAll();
-                        server.sendACK();
                         break;
                     case "FinishedAssistants":
                         Player who = (Player) in.readObject();
                         view.finishedAC(who);
-                        //server.sendACK();
                         break;
                     case "GenericError":
                         String error = (String) in.readObject();
