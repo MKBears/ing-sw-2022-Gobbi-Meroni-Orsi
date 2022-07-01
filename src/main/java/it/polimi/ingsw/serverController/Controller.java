@@ -89,7 +89,6 @@ public class Controller extends Thread{
         match=gameSaved.match();
         this.firstPlayer=gameSaved.firstPlayer();
         game_from_memory=true;
-        paused=false;
         go=true;
     }
 
@@ -106,6 +105,11 @@ public class Controller extends Thread{
             }
             try {
                 sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                sleep (1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -233,8 +237,10 @@ public class Controller extends Thread{
                     state = 1;
                     save();
                     for (ClientHandler p:players) {
-                        if(p.isFinished_assistant())
-                            state=5;
+                        if (p.isFinished_assistant()) {
+                            state = 5;
+                            break;
+                        }
                     }
                 } else {
                     state = 5;

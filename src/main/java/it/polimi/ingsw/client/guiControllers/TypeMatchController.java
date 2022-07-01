@@ -1,14 +1,13 @@
 package it.polimi.ingsw.client.guiControllers;
 
 import it.polimi.ingsw.client.ClientGui;
-import it.polimi.ingsw.model.Type_Student;
+import it.polimi.ingsw.client.Message4Server;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import it.polimi.ingsw.client.Message4Server;
 
 public class TypeMatchController {
 

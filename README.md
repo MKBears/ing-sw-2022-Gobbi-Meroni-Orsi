@@ -13,4 +13,5 @@ per prima cosa occorre posizionarsi nella directory dove si trova il jar ([direc
 ***Gui***: javaw -cp PSP30.jar it.polimi.ingsw.client.LaunchPad; exit [Windows Powershell] --- <br/> 
 --- javaw -cp PSP30.jar it.polimi.ingsw.client.LaunchPad [cmd]
 
-N.B. il progetto è stato sviluppato interamente su pc Windows e non ci è stato possibile testarlo su altri OS, quindi non garantiamo il corretto funzionamento su di essi
+N.B. il progetto è stato sviluppato interamente su pc Windows e non ci è stato possibile testarlo su altri OS, quindi non garantiamo il corretto funzionamento su di essi.
+Inoltre per il corretto funzionamento è necessario che le macchine siano connesse alla stessa rete locale (non polimi o polimi-protected) e che per connettersi non è necessario inserire l'indirizzi ip del server, ciò avviene in automatico.

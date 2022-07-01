@@ -2,7 +2,6 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.characterCards.*;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.characterCards.*;
 
 
 import java.io.IOException;
