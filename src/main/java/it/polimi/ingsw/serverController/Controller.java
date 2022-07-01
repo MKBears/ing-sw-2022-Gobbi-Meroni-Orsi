@@ -1,8 +1,8 @@
 package it.polimi.ingsw.serverController;
 
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.characterCards.Ch_1;
-import it.polimi.ingsw.model.characterCards.Ch_11;
+import it.polimi.ingsw.characterCards.Ch_1;
+import it.polimi.ingsw.characterCards.Ch_11;
 
 import javax.management.timer.Timer;
 import java.io.*;

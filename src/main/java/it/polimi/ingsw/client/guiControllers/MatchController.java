@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.guiControllers;
 
+import it.polimi.ingsw.characterCards.*;
 import it.polimi.ingsw.client.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -16,10 +17,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.characterCards.*;
+import it.polimi.ingsw.characterCards.*;
 
 import java.io.*;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

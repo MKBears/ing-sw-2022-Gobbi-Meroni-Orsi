@@ -1,26 +1,36 @@
-package it.polimi.ingsw.model.characterCards;
+package it.polimi.ingsw.characterCards;
 
 import it.polimi.ingsw.model.CharacterCard;
 import it.polimi.ingsw.model.Player;
 
+import java.io.Serializable;
 
-public class Ch_8 implements CharacterCard {
+public class Ch_4 implements CharacterCard {
 
     private final short price;
     private boolean activated;
     private final String powerUp;
     private Player player;
 
-    public Ch_8(){
-        price=2;
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public Ch_4(){
+        price=1;
         activated=false;
-        powerUp="In questo turno, durante il calcolo dell'influenza hai due punti d'influenza addizionali.";
+        powerUp="Puoi muovere Madre Natura fino a 2 isole addizionali " +
+                "rispetto a quanto indicato sulla carta assistente che hai giocato.";
     }
 
     @Override
     public void activatePowerUp() {
-        player.setTwo_more_influence(true);
-        if(!activated){
+        player.getPlayedCard().ch_4_effect();
+        if (!activated){
             activated=true;
         }
     }
@@ -46,16 +56,9 @@ public class Ch_8 implements CharacterCard {
     }
 
     @Override
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    @Override
     public int getNumber() {
-        return 8;
+        return 4;
     }
 
     public void setActivated(){activated=true;}
-
 }
-

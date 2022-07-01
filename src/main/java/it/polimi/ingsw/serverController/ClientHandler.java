@@ -1,7 +1,8 @@
 package it.polimi.ingsw.serverController;
 
+import it.polimi.ingsw.characterCards.*;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.characterCards.*;
+import it.polimi.ingsw.characterCards.*;
 
 import java.io.*;
 import java.net.Socket;

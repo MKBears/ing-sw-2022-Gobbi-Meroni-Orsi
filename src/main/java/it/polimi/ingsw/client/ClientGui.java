@@ -1,7 +1,8 @@
 package it.polimi.ingsw.client;
 
+import it.polimi.ingsw.characterCards.*;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.characterCards.*;
+import it.polimi.ingsw.characterCards.*;
 import it.polimi.ingsw.serverController.GameRecap;
 import javafx.application.Platform;
 
