@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.client.guiControllers.*;
+import it.polimi.ingsw.serverController.GameRecap;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -170,7 +171,7 @@ public class Gui extends Application {
         }
     }
     public void popUp(String title, String message){
-
+        boolean b=false;
         FXMLLoader fxmlLoader=new FXMLLoader(getClass().getClassLoader().getResource("popup_notify.fxml"));
         try {
             popup.setScene(new Scene(fxmlLoader.load()));
@@ -178,8 +179,17 @@ public class Gui extends Application {
             throw new RuntimeException(e);
         }
         ((PopUpController)fxmlLoader.getController()).setNotify(message);
-
-        popup.sizeToScene();
+        if(message.contains("vincitore")){
+            if(b){
+                message="Si sono formati tre gruppi di isole\n"+message;
+            }
+            popup.setFullScreen(true);
+        }else {
+            popup.sizeToScene();
+        }
+        if(message.contains("tre gruppi") && b==false){
+            b=true;
+        }
         popup.setTitle(title);
         popup.setAlwaysOnTop(true);
         popup.show();
@@ -187,7 +197,6 @@ public class Gui extends Application {
 
     public void getAssistantCard() {
         System.out.println("Sono in getAssistantCard");
-        //printMatch(match); //non lo so...
         try {
             sleep(2000);
         } catch (InterruptedException e) {
@@ -248,6 +257,30 @@ public class Gui extends Application {
             printmatch=true;
             stage.show();
         }
+    }
+
+    public void printEndGame(Player winner, String exp, GameRecap gr){
+        String finish;
+        String grgui;
+        grgui=gr.toString();
+        if (grgui.contains("\u001B[31m")){
+            grgui.replace("\u001B[31m", "drago");
+        }
+        if (grgui.contains("\u001B[33;1m")){
+            grgui.replace("\u001B[33;1m", "gnomo");
+        }
+        if (grgui.contains("\u001B[35m")){
+            grgui.replace("\u001B[35m", "fata");
+        }
+        if (grgui.contains("\u001B[34m")){
+            grgui.replace("\u001B[34m", "unicorno");
+        }
+        if (grgui.contains("\u001B[32m")){
+            grgui.replace("\u001B[32m", "rana");
+        }
+        finish="Il giocatore "+winner+" ha vinto perchè "+exp+"\n"+grgui;
+        popUp("Abbiamo un vincitore!", finish);
+        ((MatchController)game.getController()).wakeUp("EndGame");
     }
 
 

@@ -860,8 +860,8 @@ public class MatchController extends Thread {
         ich10=false;
         ich11=false;
         ich12=false;
-        stuch10=null;
-        tych10=null;
+        stuch10=new ArrayList<>();
+        tych10= new ArrayList<>();
         selection=0;
         state = "Start";
     }
@@ -2814,7 +2814,6 @@ public class MatchController extends Thread {
             setDisableColumns(true);
             ich12=false;
         }
-        setNoEffectColumns();
     }
 
     /**
@@ -2865,7 +2864,7 @@ public class MatchController extends Thread {
      * @param actionEvent the click of the mouse
      */
     public void Ok(ActionEvent actionEvent) {
-        ((ImageView)actionEvent.getSource()).setVisible(false);
+        ((Button)actionEvent.getSource()).setVisible(false);
         int noprof=0;
         if(me.getBoard().getStudentsOfType(Type_Student.DRAGON)==0){
             redbutton.setVisible(false);
@@ -3095,7 +3094,7 @@ public class MatchController extends Thread {
                 System.out.println(state);
                 switch (state) {
                     case "Start":
-                        //server.sendACK();
+                    case "EndGame":
                     case "Next Turn":
                         setDisableAssistants(true);
                         setDisableBoards(true);
@@ -3189,8 +3188,6 @@ public class MatchController extends Thread {
                         setDisableChCards(true);
                         gui.popUp("Scegliere una nuvola", "Ora puoi scegliere una nuvola");
                         setStateLabel("Ora scegli una nuvola");
-                        break;
-                    case "EndGame": //da fare
                         break;
                     case "Ch":
                         setDisableMN(true);

@@ -2008,9 +2008,9 @@
                 </font>
             </Label>
         </Pane>
-   <Pane fx:id="color" layoutX="337.0" layoutY="325.0" prefHeight="200.0" prefWidth="534.0" style="-fx-background-color: #F87217; -fx-background-radius: 70;" visible="false">
+   <Pane fx:id="color" layoutX="337.0" layoutY="325.0" prefHeight="200.0" prefWidth="534.0" style="-fx-background-color: #CCFFFF; -fx-background-radius: 70;" visible="false">
       <children>
-         <Label layoutX="179.0" layoutY="14.0" prefHeight="55.0" prefWidth="176.0" style="-fx-background-radius: 100;" text="Scegli il colore" textAlignment="CENTER">
+         <Label layoutX="179.0" layoutY="34.0" prefHeight="55.0" prefWidth="176.0" style="-fx-background-radius: 100;" text="Scegli il colore" textAlignment="CENTER">
             <font>
                <Font name="Gabriola" size="39.0" />
             </font>
@@ -2022,26 +2022,41 @@
             <effect>
                <DropShadow />
             </effect>
+            <font>
+               <Font name="System Bold" size="12.0" />
+            </font>
          </Button>
          <Button fx:id="redbutton" layoutX="153.0" layoutY="125.0" mnemonicParsing="false" onMouseClicked="#columnselected" style="-fx-background-color: #FF2400;" text="Rosso">
             <effect>
                <DropShadow />
             </effect>
+            <font>
+               <Font name="System Bold" size="12.0" />
+            </font>
          </Button>
          <Button fx:id="yellowbutton" layoutX="252.0" layoutY="125.0" mnemonicParsing="false" onMouseClicked="#columnselected" style="-fx-background-color: #FFFF00;" text="Giallo">
             <effect>
                <DropShadow />
             </effect>
+            <font>
+               <Font name="System Bold" size="12.0" />
+            </font>
          </Button>
          <Button fx:id="pinkbutton" layoutX="355.0" layoutY="125.0" mnemonicParsing="false" onMouseClicked="#columnselected" style="-fx-background-color: #F660AB;" text="Rosa">
             <effect>
                <DropShadow />
             </effect>
+            <font>
+               <Font name="System Bold" size="12.0" />
+            </font>
          </Button>
          <Button fx:id="bluebutton" layoutX="447.0" layoutY="125.0" mnemonicParsing="false" onMouseClicked="#columnselected" style="-fx-background-color: #38ACEC;" text="Azzurro">
             <effect>
                <DropShadow />
             </effect>
+            <font>
+               <Font name="System Bold" size="12.0" />
+            </font>
          </Button>
       </children>
       <effect>

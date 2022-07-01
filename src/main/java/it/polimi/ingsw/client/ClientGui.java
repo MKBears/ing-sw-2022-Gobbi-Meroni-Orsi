@@ -75,6 +75,7 @@ public class ClientGui  extends Thread {
     private ArrayList<Type_Student> type;
     private Type_Student ty;
     private boolean noch;
+    private GameRecap gr;
 
     /**
      * Constructor of the class Client
@@ -92,6 +93,7 @@ public class ClientGui  extends Thread {
         ass = null;
         pm = false;
         noch=false;
+        gr=null;
     }
 
     public Gui getView(){
@@ -411,10 +413,10 @@ public class ClientGui  extends Thread {
                                     break;
                                 }
                             }
-                            view.printMatch(match);
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
+                                    view.printMatch(match);
                                     view.printNotification(p.getUserName()
                                             + " ha scelto la nuvola");
                                 }
@@ -465,29 +467,33 @@ public class ClientGui  extends Thread {
                             });
                             server.sendACK();
                             break;
-                        case "EndGame": //da mettere a posto
-                            Player winner = (Player) in.readObject();
-                            String ex = (String) in.readObject(); //spiegazione di perchè ha vinto
-                            GameRecap recap = (GameRecap) in.readObject();
-                            //view.printMatch(match);
-                            view.getWinner(winner);
-                            System.out.println("dopo getwinner");
-                            view. printNotification(winner.getColor()+winner.getUserName()+" ha vinto perché "+ex);
-                            System.out.println("Dopo explanation");
-                            view.printNotification(recap.toString());
-                            System.out.println("Dopo recap");
+                        case "EndGame":
                             end = true;
-                            view.wakeUp("EndGame");
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printEndGame(p, n, gr);
+                                }
+                            });
                             server.sendACK();
                             break;
-                        case "LastTower":  //da mettere a posto
-                            Player pl = (Player) in.readObject();
-                            view.printNotification(pl.getColor() + pl.getUserName() + " ha costruito tutte le torri");
+                        case "LastTower":
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printNotification(p.getColor() + p.getUserName() + " ha costruito tutte le torri");
+                                }
+                            });
                             end = true;
                             server.sendACK();
                             break;
-                        case "NoMoreStudents": //da mettere a posto
-                            view.lastRound();
+                        case "NoMoreStudents":
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printNotification("Sono finiti gli studenti nel sacchetto! Questo sarà l'ultimo round\n");
+                                }
+                            });
                             server.sendACK();
                             break;
                         case "NextTurn":
@@ -768,13 +774,22 @@ public class ClientGui  extends Thread {
                                         }
                                     }
                                 }
-                            }Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.printNotification("Il player "+u+" ha giocato la carta personaggio 8");
                             }
-                        });
+                            Platform.runLater(new Runnable() {
+                            @Override
+                                public void run() {
+                                    view.printNotification("Il player " + u + " ha giocato la carta personaggio 8");
+                                }
+                            });
                             server.sendACK();
+                            break;
+                        case "NotifyThreeArchipelagos":
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    view.printNotification("Si sono formati tre gruppi di isole");
+                                }
+                            });
                             break;
                         //:
                         //server.sendNACK();
@@ -970,6 +985,16 @@ public class ClientGui  extends Thread {
 
     public void setNoCh(boolean v){
         this.noch=v;
+    }
+
+    public void setEndGame(Player winner, String explanation,GameRecap gameRecap){
+        this.p=winner;
+        this.n=explanation;
+        this.gr=gameRecap;
+    }
+
+    public void setLastTower(Player p){
+        this.p=p;
     }
 
 }

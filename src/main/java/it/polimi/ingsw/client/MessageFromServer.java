@@ -111,17 +111,16 @@ public class MessageFromServer extends Thread{
                         }
                         break;
                     case "EndGame":
-                        Player winner=(Player) in.readObject();
-                        String explanation=(String) in.readObject();
-                        GameRecap gameRecap=(GameRecap) in.readObject();
-                        //qualcosa
+                        synchronized (in){
+                            cg.setEndGame((Player) in.readObject(),(String) in.readObject(),(GameRecap) in.readObject());
+                        }
                         break;
                     case "LastTower":
-                        Player player=(Player) in.readObject();
-                        //qualcosa
+                        synchronized (in){
+                            cg.setLastTower((Player) in.readObject());
+                        }
                         break;
                     case "NoMoreStudents":
-                        //qualcosa
                         break;
                     case "NextTurn":
                         synchronized (in) {
@@ -185,7 +184,6 @@ public class MessageFromServer extends Thread{
                         }
                         break;
                     case "NotifyThreeArchipelagos":
-                        //qualcosa
                         break;
                 }
             } catch (IOException e) {
