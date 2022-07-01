@@ -56,17 +56,12 @@ public class TypeMatchController {
     public void choosetypematch(ActionEvent actionEvent) {
         if(playernum.getValue().toString()=="2"){
             server.sendNumPlayers(2);
-            System.out.println("Ho mandato numero giocatori: 2");
         }else if(playernum.getValue().toString()=="3"){
             server.sendNumPlayers(3);
-            System.out.println("Ho mandato numero giocatori: 2");
         }else{
             error.setVisible(true);
-            System.out.println("Errore in send num players");
         }
         server.sendExpertMatch(expert.isSelected());
-        System.out.println("Ho mandato expert match: "+ expert.isSelected());
-        System.out.println("Ho mandato tutto per newgame");
         synchronized (cl){
             cl.notifyAll();
         }

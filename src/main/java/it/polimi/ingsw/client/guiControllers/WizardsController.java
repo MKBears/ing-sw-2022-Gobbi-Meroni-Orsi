@@ -74,7 +74,6 @@ public class WizardsController {
     public void chooseWizard(ActionEvent actionEvent){
         switch (((Button)actionEvent.getSource()).getId()){
             case("w_1"):
-                System.out.println("Mando mago 1");
                 server.sendChoice(Wizards.WIZARD1);
                 gui.setW(Wizards.WIZARD1);
                 break;

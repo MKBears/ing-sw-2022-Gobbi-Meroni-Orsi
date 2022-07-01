@@ -3786,9 +3786,7 @@ public class MatchController extends Thread {
      * set you can use the character card
      */
     public void usechyes(ActionEvent actionEvent) {
-        setStateLabel("Momento carte personaggio!");
         youwantusechcards.setVisible(false);
-        //setDisableChCards(false);
         if(gui.getUsability(1)){
             ch0.setDisable(false);
         } else {

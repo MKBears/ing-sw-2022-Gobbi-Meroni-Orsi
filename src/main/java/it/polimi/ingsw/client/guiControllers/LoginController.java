@@ -70,8 +70,6 @@ public class LoginController{
      */
     public void username(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
         us = username.getCharacters().toString();
-        //cl.setUsername(us);
-        System.out.println("Ho inserito: "+us);
         if (newlogin.isSelected()) {
             server.sendRegistration(us);
         } else {
