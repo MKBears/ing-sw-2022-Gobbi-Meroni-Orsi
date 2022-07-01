@@ -2858,7 +2858,6 @@ public class MatchController extends Thread {
                     case "entry27" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(7));
                     case "entry28" -> stuch10.add(match.getPlayer()[2].getBoard().getEntrance().get(8));
                 }
-                //gui.popUp("Ok", "Ora scegli una o due colonne della tua board");
             } else if (selection ==2){
                 switch (((ImageView) mouseEvent.getSource()).getId()) {
                     case "entry00" -> stuch10.add(match.getPlayer()[0].getBoard().getEntrance().get(0));

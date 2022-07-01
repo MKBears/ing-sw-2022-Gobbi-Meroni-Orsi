@@ -410,7 +410,6 @@ public class Gui extends Application {
      */
     public void showLoading(){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("loading_page.fxml"));
-        //Scene scene=new Scene(stage);
         try {
             stage.setScene(new Scene(fxmlLoader.load()));
         } catch (IOException e) {

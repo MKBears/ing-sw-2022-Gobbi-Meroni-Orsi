@@ -93,7 +93,7 @@ public class Client  extends Thread{
                 }
                 String response;
                 switch (received) {
-                    case "base": //login
+                    case "base":
                         do {
                             if (view.chooseLogin().equals("si")) {
                                 username = view.getUsername();

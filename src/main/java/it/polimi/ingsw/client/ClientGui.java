@@ -760,8 +760,6 @@ public class ClientGui  extends Thread {
                                 }
                             });
                             break;
-                        //:
-                        //server.sendNACK();
                     }
                 }
                 synchronized (this) {
