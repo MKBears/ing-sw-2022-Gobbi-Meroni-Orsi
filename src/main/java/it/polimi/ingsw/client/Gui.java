@@ -46,6 +46,9 @@ public class Gui extends Application {
     private boolean isch2usable;
     private boolean isch3usable;
 
+    /**
+     * constructor of the gui
+     */
     public Gui() {
         end=false;
         state="Start";
@@ -67,17 +70,19 @@ public class Gui extends Application {
         //newgame=false;
     }
 
+    /**
+     * set the client gui of the client
+     * @param cg the client gui
+     */
     public void setCG(ClientGui cg){
         this.cg=cg;
     }
-    public void setWhoAmI(int i){
-        this.whoami=i;
-    }
-    public int getWhoAmI(){
-        return whoami;
-    }
+
 
     @Override
+    /**
+     * start of the application
+     */
     public void start(Stage stage) throws Exception {
         setStage(stage);
         ClientGui c=new ClientGui(this);
@@ -85,6 +90,11 @@ public class Gui extends Application {
         setCG(c);
     }
 
+    /**
+     * set the loading page at the beginning of the match
+     * @param s stage of the application
+     * @throws IOException throws by the loading of the file
+     */
     public void setStage(Stage s) throws IOException {
         this.stage = s;
         stage.setTitle("Eryantis");
@@ -95,16 +105,26 @@ public class Gui extends Application {
         stage.show();
     }
 
+    /**
+     * set the username chosen by the player
+     * @param username of the player
+     */
     public void setUsername(String username){
         this.username=username;
     }
 
+    /**
+     * main to start the gui
+     * @param args
+     */
     public static void main(String[] args) {
         System.out.println("BUONGIORNOOOOO");
         launch(args);
     }
 
-
+    /**
+     * set on the screen the request for the username
+     */
     public void getUsername() {
         LoginController.setServer(server);
         LoginController.setGui(this);
@@ -118,20 +138,35 @@ public class Gui extends Application {
         stage.show();
     }
 
+    /**
+     * set the username chosen by the player
+     * @param us the username
+     */
     public void setUs(String us){
         this.us=us;
         cg.setUsername(us);
     }
 
+    /**
+     *
+     * @return the username of the player
+     */
     public String getUs(){
         return us;
     }
 
+    /**
+     * set the server to send the messages
+     * @param server the class with th messages
+     */
     public void setServer(Message4Server server) {
         this.server=server;
     }
 
-
+    /**
+     * request of the wizard to the player
+     * @param wizards that the player can choose
+     */
     public void getWizard(List<Wizards> wizards) {
         System.out.println("Sono in getWizard");
         WizardsController.setServer(server);
@@ -148,16 +183,29 @@ public class Gui extends Application {
         stage.show();
     }
 
+    /**
+     *
+     * @return the wizard chosen from the player
+     */
     public Wizards getW(){
         return w;
     }
 
+    /**
+     * allow the player choosing the clouds changing the state
+     */
     public void getCloud() {
         ((MatchController)game.getController()).wakeUp("ChooseCloud");
         synchronized (cg){
             cg.notifyAll();
         }
     }
+
+    /**
+     * show thw popup with the message to show
+     * @param title of the popup
+     * @param message to show
+     */
     public void popUp(String title, String message){
         boolean b=false;
         FXMLLoader fxmlLoader=new FXMLLoader(getClass().getClassLoader().getResource("popup_notify.fxml"));
@@ -183,6 +231,9 @@ public class Gui extends Application {
         popup.show();
     }
 
+    /**
+     * request for the assistant card to the player changing the state of the thread
+     */
     public void getAssistantCard() {
         System.out.println("Sono in getAssistantCard");
         try {
@@ -198,27 +249,28 @@ public class Gui extends Application {
         }*/
     }
 
+    /**
+     *
+     * @param ass set the assistant card chosen
+     */
     public void setAssistant(AssistantCard ass){
         this.ass=ass;
     }
 
+    /**
+     *
+     * @return the assistant cards
+     */
     public AssistantCard getAssistant(){
         return ass;
     }
 
 
-    public int getNumStep(Player pl) { //serve alla cli
-        return 0;
-    }
 
-    public void getWinner(Player pl) { //da fare
-
-    }
-
-    public int getDestination(Match match) { //serve alla cli
-        return 0;
-    }
-
+    /**
+     *
+     * @param match the match that the player is playing
+     */
     public void printMatch(Match match) {
         this.match=match;
         if(!printmatch){
@@ -247,6 +299,12 @@ public class Gui extends Application {
         }
     }
 
+    /**
+     * print the end of the match
+     * @param winner the player who winn the match
+     * @param exp why he win the game
+     * @param gr recap of the end
+     */
     public void printEndGame(Player winner, String exp, GameRecap gr){
         String finish;
         String grgui;
@@ -271,7 +329,11 @@ public class Gui extends Application {
         ((MatchController)game.getController()).wakeUp("EndGame");
     }
 
-
+    /**
+     * print who has to do the turn
+     * @param pl player who has to do the turn
+     * @param phase the phase of the match
+     */
     public void printTurn(Player pl, String phase) {
         popUp("Notifica turni", "E' il turno di "+pl.getUserName()+ " in fase di "+phase.toString());
         //MatchController.setStateLabel(phase.toString());
@@ -283,15 +345,10 @@ public class Gui extends Application {
     }
 
 
-    public void lastRound() { //da fare
 
-    }
-
-    public Student getStudent(Player pl) { //serve alla cli
-        return null;
-    }
-
-
+    /**
+     * set the title on the screen
+     */
     public void getTitolo() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("initial_page.fxml"));
         try {
@@ -302,22 +359,36 @@ public class Gui extends Application {
         stage.show();
     }
 
+    /**
+     * wake up the thread of match controller to change state and set the view
+     * @param state state of the match
+     */
     public void wakeUp(String state) {
         ((MatchController)game.getController()).wakeUp(state);
     }
 
+    /**
+     * set who is playing the match
+     * @param me the player
+     */
     public void setMe(Player me) { //Non so a cosa serva
         this.me=me;
     }
 
-
+    /**
+     * set the match that the player is playing
+     * @param match the match
+     */
     public void setMatch(Match match) {
         this.match=match;
         action=new Action(match);
     }
 
 
-
+    /**
+     * set visible the cards that you can choose
+     * @param cards list of the cards
+     */
     public void setCards(List<AssistantCard> cards) {
         System.out.println("Sono all'inizio di setCards di Gui");
         this.cards=cards;
@@ -327,16 +398,27 @@ public class Gui extends Application {
         System.out.println("Sono alla fine di setCards di Gui");
     }
 
-
+    /**
+     * set the wizard that the player can choose
+     * @param willy list of the wizard
+     */
     public void setWilly(List<Wizards> willy) {
         this.willy=willy;
     }
 
-
+    /**
+     * set the clouds
+     * @param clouds clouds
+     */
     public void setClouds(List<Cloud> clouds) {
         this.clouds=clouds;
     }
 
+    /**
+     * set the chose of the match (new game or join game)
+     * @param join list of the match you can join to
+     * @param resume list of the match you can resume
+     */
     public void chooseMatch(List<String> join, List<String> resume) {
         SelectionGameController.setJoin((ArrayList<String>) join);
         SelectionGameController.setResume((ArrayList<String>) resume);
@@ -352,6 +434,9 @@ public class Gui extends Application {
         stage.show();
     }
 
+    /**
+     * show the loading on the message
+     */
     public void showLoading(){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("loading_page.fxml"));
         //Scene scene=new Scene(stage);
@@ -363,20 +448,10 @@ public class Gui extends Application {
         stage.show();
     }
 
-    public void setNack() { //non sono sicura che serva a qualcosa
 
-    }
-
-    public String chooseLogin() {
-        //lo fa già in getusername
-        return null;
-    }
-
-    public Land chooseLand(List<Land> lands) { //serve alla cli e ch
-        return null;
-    }
-
-
+    /**
+     * change the state to allow the player moving the students
+     */
     public void moveStudent() {
         ((MatchController)game.getController()).setStateLabel("E' il tuo turno: scegli uno studente dall'ingresso della tua plancia");
         ((MatchController) game.getController()).refreshEntry();
@@ -390,6 +465,9 @@ public class Gui extends Application {
         //((MatchController)game.getController()).clearStudentFromBoard(s, n_player);
     }
 
+    /**
+     * change the state and allow moving mother nature
+     */
     public void moveMN() {
         ((MatchController)game.getController()).setStateLabel("E' il tuo turno: scegli un isola in cui spostare madre natura");
         ((MatchController)game.getController()).wakeUp("ChooseMN");
@@ -399,21 +477,33 @@ public class Gui extends Application {
     }
 
 
-
+    /**
+     * show the popup to show who join the game
+     * @param username of the player
+     */
     public void playerConnected(String username) {
         popUp("Nuovo giocatore connesso!", "Si è connesso "+ username);
     }
 
-
+    /**
+     * show the popup to show who left the game
+     * @param username of the player disconnected
+     */
     public void playerDisconnected(String username) {
         popUp("Giocatore disconnesso!", "Si è disconnesso "+ username);
     }
 
-
+    /**
+     * show the popup the disconnection
+     */
     public void playerDisconnectedAll() {
         popUp("Si sono tutti disconnessi", "Tutti i giocatori si sono disconnessi...");
     }
 
+    /**
+     * set the character card activated if the player has enough money
+     * @param cards cards of the match
+     */
     public void getCharacter(CharacterCard[] cards) {
         System.out.println("Sono i getcharacter della gui");
         this.ch=cards;
@@ -433,6 +523,11 @@ public class Gui extends Application {
         ((MatchController)game.getController()).wakeUp("Ch");
     }
 
+    /**
+     * return if a player can use the card in positon y of the array
+     * @param y number of the card
+     * @return if the player can use the card
+     */
     public boolean getUsability(int y){
         switch (y) {
             case 1:
@@ -445,20 +540,35 @@ public class Gui extends Application {
         return false;
     }
 
+    /**
+     *
+     * @return the character card of the match
+     */
     public CharacterCard[] getCh(){
         return ch;
     }
 
+    /**
+     * set the character of the match
+     * @param ch array of the character
+     */
     public void setCharacters(CharacterCard[] ch){
         this.ch=ch;
         ((MatchController)game.getController()).setCharacters(ch);
     }
 
+    /**
+     * set the notification
+     * @param message to set on the popup
+     */
     public void printNotification(String message) {
         popUp("Notifica", message);
     }
 
-
+    /**
+     * set the wizard
+     * @param w wizard
+     */
     public void setW(Wizards w) {
         this.w = w;
     }

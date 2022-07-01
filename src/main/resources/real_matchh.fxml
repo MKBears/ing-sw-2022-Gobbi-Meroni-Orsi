@@ -273,7 +273,7 @@
                 </font>
             </Label>
         </AnchorPane>
-        <AnchorPane fx:id="land7" layoutX="650.0" layoutY="550.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="218.0" prefWidth="262.0">
+        <AnchorPane fx:id="land7" layoutX="650.0" layoutY="551.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="217.0" prefWidth="251.0">
             <ImageView fx:id="island7" fitHeight="205.0" fitWidth="227.0" layoutX="24.0" layoutY="11.0" onMouseClicked="#moveto" pickOnBounds="true" preserveRatio="true">
                 <Image url="@wooden_pieces/wooden_pieces/island1.png" />
             <effect>
@@ -588,69 +588,6 @@
                 </font>
             </Label>
         </AnchorPane>
-        <AnchorPane fx:id="land6" layoutX="860.0" layoutY="470.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="218.0" prefWidth="291.0">
-            <ImageView fx:id="island6" fitHeight="205.0" fitWidth="227.0" layoutX="25.0" layoutY="10.0" onMouseDragged="#moveto" pickOnBounds="true" preserveRatio="true">
-                <Image url="@wooden_pieces/wooden_pieces/island1.png" />
-            <effect>
-               <DropShadow />
-            </effect>
-            </ImageView>
-            <ImageView fx:id="white6" fitHeight="80.0" fitWidth="70.0" layoutX="92.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@wooden_pieces/wooden_pieces/white_tower.png" />
-            </ImageView>
-            <ImageView fx:id="grey6" fitHeight="80.0" fitWidth="70.0" layoutX="67.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@wooden_pieces/wooden_pieces/grey_tower.png" />
-            </ImageView>
-            <ImageView fx:id="black6" fitHeight="80.0" fitWidth="70.0" layoutX="92.0" layoutY="78.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@wooden_pieces/wooden_pieces/black_tower.png" />
-            </ImageView>
-            <ImageView fx:id="mn6" fitHeight="63.0" fitWidth="59.0" layoutX="137.0" layoutY="73.0" onMouseClicked="#selectmn" pickOnBounds="true" preserveRatio="true">
-                <Image url="@wooden_pieces/wooden_pieces/mother_nature.png" />
-            </ImageView>
-            <ImageView fitHeight="33.0" fitWidth="29.0" layoutX="209.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@wooden_pieces/wooden_pieces/student_red.png" />
-            <effect>
-               <DropShadow />
-            </effect>
-            </ImageView>
-            <Label fx:id="red_6" layoutX="244.0" layoutY="39.0" prefHeight="18.0" prefWidth="59.0" text=":0" />
-            <ImageView fitHeight="33.0" fitWidth="29.0" layoutX="209.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@wooden_pieces/wooden_pieces/student_blue.png" />
-            <effect>
-               <DropShadow />
-            </effect>
-            </ImageView>
-            <Label fx:id="blue_6" layoutX="244.0" layoutY="76.0" text=":0" />
-            <ImageView fitHeight="33.0" fitWidth="29.0" layoutX="209.0" layoutY="104.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@wooden_pieces/wooden_pieces/student_green.png" />
-            <effect>
-               <DropShadow />
-            </effect>
-            </ImageView>
-            <Label fx:id="green_6" layoutX="244.0" layoutY="110.0" text=":0" />
-            <ImageView fitHeight="33.0" fitWidth="29.0" layoutX="209.0" layoutY="140.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@wooden_pieces/wooden_pieces/student_pink.png" />
-            <effect>
-               <DropShadow />
-            </effect>
-            </ImageView>
-            <Label fx:id="pink_6" layoutX="244.0" layoutY="146.0" text=":0" />
-            <ImageView fitHeight="33.0" fitWidth="29.0" layoutX="209.0" layoutY="178.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@wooden_pieces/wooden_pieces/student_yellow.png" />
-            <effect>
-               <DropShadow />
-            </effect>
-            </ImageView>
-            <Label fx:id="yellow_6" layoutX="244.0" layoutY="184.0" text=":0" />
-            <ImageView fx:id="noentry6" fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
-                <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
-            </ImageView>
-            <Label fx:id="size6" layoutX="42.0" layoutY="25.0" prefHeight="29.0" prefWidth="33.0" text="1">
-                <font>
-                    <Font name="Bradley Hand ITC" size="45.0" />
-                </font>
-            </Label>
-        </AnchorPane>
         <AnchorPane fx:id="land5" layoutX="930.0" layoutY="265.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="218.0" prefWidth="291.0">
             <ImageView fx:id="island5" fitHeight="205.0" fitWidth="227.0" layoutX="25.0" layoutY="8.0" onMouseClicked="#moveto" pickOnBounds="true" preserveRatio="true">
                 <Image url="@wooden_pieces/wooden_pieces/island1.png" />
@@ -709,6 +646,69 @@
                 <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
             </ImageView>
             <Label fx:id="size5" layoutX="25.0" layoutY="67.0" prefHeight="29.0" prefWidth="33.0" text="1">
+                <font>
+                    <Font name="Bradley Hand ITC" size="45.0" />
+                </font>
+            </Label>
+        </AnchorPane>
+        <AnchorPane fx:id="land6" layoutX="860.0" layoutY="470.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="218.0" prefWidth="291.0">
+            <ImageView fx:id="island6" fitHeight="218.0" fitWidth="217.0" layoutX="14.0" layoutY="10.0" onMouseDragged="#moveto" pickOnBounds="true" preserveRatio="true">
+                <Image url="@wooden_pieces/wooden_pieces/island1.png" />
+            <effect>
+               <DropShadow />
+            </effect>
+            </ImageView>
+            <ImageView fx:id="white6" fitHeight="80.0" fitWidth="70.0" layoutX="92.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
+                <Image url="@wooden_pieces/wooden_pieces/white_tower.png" />
+            </ImageView>
+            <ImageView fx:id="grey6" fitHeight="80.0" fitWidth="70.0" layoutX="67.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true">
+                <Image url="@wooden_pieces/wooden_pieces/grey_tower.png" />
+            </ImageView>
+            <ImageView fx:id="black6" fitHeight="80.0" fitWidth="70.0" layoutX="92.0" layoutY="78.0" pickOnBounds="true" preserveRatio="true">
+                <Image url="@wooden_pieces/wooden_pieces/black_tower.png" />
+            </ImageView>
+            <ImageView fx:id="mn6" fitHeight="63.0" fitWidth="59.0" layoutX="137.0" layoutY="73.0" onMouseClicked="#selectmn" pickOnBounds="true" preserveRatio="true">
+                <Image url="@wooden_pieces/wooden_pieces/mother_nature.png" />
+            </ImageView>
+            <ImageView fitHeight="33.0" fitWidth="29.0" layoutX="209.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true">
+                <Image url="@wooden_pieces/wooden_pieces/student_red.png" />
+            <effect>
+               <DropShadow />
+            </effect>
+            </ImageView>
+            <Label fx:id="red_6" layoutX="244.0" layoutY="39.0" prefHeight="18.0" prefWidth="59.0" text=":0" />
+            <ImageView fitHeight="33.0" fitWidth="29.0" layoutX="209.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true">
+                <Image url="@wooden_pieces/wooden_pieces/student_blue.png" />
+            <effect>
+               <DropShadow />
+            </effect>
+            </ImageView>
+            <Label fx:id="blue_6" layoutX="244.0" layoutY="76.0" text=":0" />
+            <ImageView fitHeight="33.0" fitWidth="29.0" layoutX="209.0" layoutY="104.0" pickOnBounds="true" preserveRatio="true">
+                <Image url="@wooden_pieces/wooden_pieces/student_green.png" />
+            <effect>
+               <DropShadow />
+            </effect>
+            </ImageView>
+            <Label fx:id="green_6" layoutX="244.0" layoutY="110.0" text=":0" />
+            <ImageView fitHeight="33.0" fitWidth="29.0" layoutX="209.0" layoutY="140.0" pickOnBounds="true" preserveRatio="true">
+                <Image url="@wooden_pieces/wooden_pieces/student_pink.png" />
+            <effect>
+               <DropShadow />
+            </effect>
+            </ImageView>
+            <Label fx:id="pink_6" layoutX="244.0" layoutY="146.0" text=":0" />
+            <ImageView fitHeight="33.0" fitWidth="29.0" layoutX="209.0" layoutY="178.0" pickOnBounds="true" preserveRatio="true">
+                <Image url="@wooden_pieces/wooden_pieces/student_yellow.png" />
+            <effect>
+               <DropShadow />
+            </effect>
+            </ImageView>
+            <Label fx:id="yellow_6" layoutX="244.0" layoutY="184.0" text=":0" />
+            <ImageView fx:id="noentry6" fitHeight="51.0" fitWidth="59.0" layoutX="42.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                <Image url="@wooden_pieces/wooden_pieces/deny_island_icon.png" />
+            </ImageView>
+            <Label fx:id="size6" layoutX="25.0" layoutY="16.0" prefHeight="29.0" prefWidth="33.0" text="1">
                 <font>
                     <Font name="Bradley Hand ITC" size="45.0" />
                 </font>

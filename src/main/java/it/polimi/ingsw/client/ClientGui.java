@@ -523,7 +523,6 @@ public class ClientGui  extends Thread {
                                     view.printNotification(finish.getUserName()+" ha finito le carte assistente: ultimo turno");
                                 }
                             });
-                            server.sendACK();
                             break;
                         case "GenericError":
                             Platform.runLater(new Runnable() {

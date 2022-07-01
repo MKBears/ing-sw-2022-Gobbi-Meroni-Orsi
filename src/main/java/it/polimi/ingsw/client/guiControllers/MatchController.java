@@ -3288,6 +3288,7 @@ public class MatchController extends Thread {
                         setDisableChCards(true);
                         break;
                     case "ChooseAssistant":
+                        //System.out.println("Sono in MatchController ChooseAssistant");
                         setDisableAssistants(false);
                         setDisableBoards(true);
                         setDisableClouds(true);
@@ -3564,6 +3565,10 @@ public class MatchController extends Thread {
         this.notifyAll();
     }
 
+    /**
+     *
+     * @return the match
+     */
     public Match getMatch() {
         return match;
     }
